@@ -1,0 +1,464 @@
+/* Modernismo Português Page */
+.modernismo-portugues-page {
+  min-height: 100vh;
+  padding: clamp(1.5rem, 4vw, 3rem) clamp(1rem, 5vw, 2rem);
+  overflow-x: hidden;
+  width: 100%;
+}
+
+/* Section Layout */
+.page-section {
+  max-width: 1200px;
+  margin: 0 auto clamp(3rem, 6vw, 5rem);
+}
+
+/* Section Header */
+.section-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.section-title {
+  font-size: clamp(2.5rem, 5vw, 3.5rem);
+  font-weight: 800;
+  background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 1rem;
+  line-height: 1.2;
+}
+
+.section-intro {
+  font-size: clamp(1rem, 2vw, 1.2rem);
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1.8;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* Subsection Title */
+.subsection-title {
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.subsection-title .material-icons {
+  color: #f59e0b;
+  font-size: 1.8rem;
+}
+
+/* Text Content */
+.text-content {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.85);
+  line-height: 1.8;
+  margin-bottom: 1.5rem;
+}
+
+.text-content strong {
+  color: #fbbf24;
+  font-weight: 600;
+}
+
+/* Content List */
+.content-list {
+  list-style: none;
+  padding: 0;
+  margin: 1.5rem 0;
+}
+
+.content-list li {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.85);
+  line-height: 1.8;
+  margin-bottom: 1rem;
+  padding-left: 2rem;
+  position: relative;
+}
+
+.content-list li::before {
+  content: '▸';
+  position: absolute;
+  left: 0.5rem;
+  color: #f59e0b;
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.content-list li strong {
+  color: #fbbf24;
+  font-weight: 600;
+}
+
+/* Quick Summary Card */
+.quick-summary-card {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(251, 191, 36, 0.05));
+  border: 2px solid rgba(245, 158, 11, 0.3);
+}
+
+.quick-summary-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.quick-summary-header .material-icons {
+  font-size: 2.5rem;
+  color: #f59e0b;
+}
+
+.quick-summary-header h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #fff;
+  margin: 0;
+}
+
+.quick-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+.summary-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1.5rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+
+.summary-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(245, 158, 11, 0.4);
+  transform: translateY(-3px);
+}
+
+.summary-icon {
+  font-size: 2rem;
+  color: #f59e0b;
+  flex-shrink: 0;
+}
+
+.summary-content h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #fbbf24;
+  margin-bottom: 0.5rem;
+}
+
+.summary-content p {
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Highlight Box */
+.highlight-box {
+  background: rgba(245, 158, 11, 0.1);
+  border-left: 4px solid #f59e0b;
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin: 1.5rem 0;
+}
+
+.highlight-box h3 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #fbbf24;
+  margin-bottom: 1rem;
+}
+
+/* Author Card */
+.author-card {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.05), rgba(251, 191, 36, 0.02));
+  border: 2px solid rgba(245, 158, 11, 0.2);
+}
+
+.author-header {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 2px solid rgba(245, 158, 11, 0.2);
+}
+
+.author-icon {
+  font-size: 4rem;
+  color: #f59e0b;
+  background: rgba(245, 158, 11, 0.1);
+  padding: 1rem;
+  border-radius: 50%;
+}
+
+.author-dates {
+  font-size: 1.1rem;
+  color: rgba(255, 255, 255, 0.6);
+  font-style: italic;
+}
+
+.author-content h3 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #fff;
+  margin: 2rem 0 1rem;
+}
+
+/* Heteronimo Card */
+.heteronimo-card {
+  background: linear-gradient(135deg, rgba(251, 191, 36, 0.08), rgba(245, 158, 11, 0.04));
+  border: 2px solid rgba(251, 191, 36, 0.3);
+}
+
+/* Concept Box */
+.concept-box {
+  background: linear-gradient(135deg, rgba(251, 191, 36, 0.15), rgba(245, 158, 11, 0.1));
+  border: 2px solid rgba(251, 191, 36, 0.4);
+  border-radius: 12px;
+  padding: 2rem;
+  margin: 2rem 0;
+}
+
+.concept-box h3 {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #fbbf24;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.concept-box h3::before {
+  content: '💡';
+  font-size: 1.5rem;
+}
+
+/* Theme Card */
+.theme-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+}
+
+.theme-card h4 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #fbbf24;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.theme-card .material-icons {
+  color: #f59e0b;
+  font-size: 1.5rem;
+}
+
+/* Philosophy Box */
+.philosophy-box {
+  background: rgba(217, 119, 6, 0.1);
+  border: 2px solid rgba(217, 119, 6, 0.3);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+}
+
+.philosophy-box h4 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #fb923c;
+  margin-bottom: 1rem;
+}
+
+/* Insight Box */
+.insight-box {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(251, 191, 36, 0.1));
+  border: 2px dashed rgba(245, 158, 11, 0.5);
+  border-radius: 12px;
+  padding: 2rem;
+  margin: 2rem 0;
+}
+
+.insight-box h4 {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #fbbf24;
+  margin-bottom: 1rem;
+}
+
+/* Quote Box */
+.quote-box {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(251, 191, 36, 0.05));
+  border-left: 4px solid #f59e0b;
+  border-radius: 8px;
+  padding: 2rem;
+  margin: 2rem 0;
+  position: relative;
+}
+
+.quote-icon {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  font-size: 2rem;
+  color: rgba(245, 158, 11, 0.3);
+}
+
+.quote-text {
+  font-size: 1.3rem;
+  font-style: italic;
+  color: #fff;
+  line-height: 1.8;
+  margin: 0 0 1rem 0;
+  padding-left: 3rem;
+}
+
+.quote-author {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 600;
+  text-align: right;
+  margin: 0;
+}
+
+.quote-box.large {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(251, 191, 36, 0.1));
+  border: 2px solid rgba(245, 158, 11, 0.4);
+  padding: 2.5rem;
+}
+
+.quote-explanation {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.quote-explanation p {
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1.7;
+  font-style: normal;
+  padding-left: 0;
+  margin: 0;
+}
+
+/* Quotes Grid */
+.quotes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+/* Exercise List */
+.exercise-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.exercise-item {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(245, 158, 11, 0.2);
+  border-radius: 12px;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.exercise-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(245, 158, 11, 0.4);
+  transform: translateX(5px);
+}
+
+.exercise-item h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #fbbf24;
+  margin-bottom: 1rem;
+  line-height: 1.6;
+}
+
+.exercise-answer {
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1.8;
+  margin: 0;
+}
+
+.exercise-answer strong {
+  color: #f59e0b;
+  font-weight: 600;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .modernismo-portugues-page {
+    padding: 1.5rem 1rem;
+  }
+
+  .section-title {
+    font-size: 2rem;
+  }
+
+  .subsection-title {
+    font-size: 1.4rem;
+  }
+
+  .quick-summary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .author-header {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .quote-text {
+    font-size: 1.1rem;
+    padding-left: 2rem;
+  }
+
+  .quotes-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .section-title {
+    font-size: 1.8rem;
+  }
+
+  .subsection-title {
+    font-size: 1.3rem;
+  }
+
+  .quote-text {
+    font-size: 1rem;
+    padding-left: 0;
+  }
+
+  .quote-icon {
+    position: static;
+    display: block;
+    margin-bottom: 1rem;
+  }
+}
+

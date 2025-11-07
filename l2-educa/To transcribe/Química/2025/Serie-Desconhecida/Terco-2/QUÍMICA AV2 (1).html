@@ -1,0 +1,1173 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Jornada Química: ligações químicas, geometria molecular, termoquímica e óxido-redução com gráficos e fórmulas interativas.">
+    <meta name="theme-color" content="#020412">
+    <title>L2 EDUCA: Jornada Química</title>
+    
+    <!-- Google Fonts: Inter para corpo, Cormorant Garamond para títulos -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <!-- Google Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <!-- Bibliotecas JS via CDN -->
+    <script defer src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Plugin de anotação para o Chart.js -->
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-annotation/3.0.1/chartjs-plugin-annotation.min.js"></script>
+    <script defer src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        /* ---------------------------------- */
+        /* RESET E CONFIGURAÇÕES GLOBAIS      */
+        /* ---------------------------------- */
+        :root {
+            --font-body: 'Inter', sans-serif;
+            --font-heading: 'Cormorant Garamond', serif;
+            
+            --color-text: #e0e0e0;
+            --color-text-muted: #a0a0a0;
+            --color-heading: #ffffff;
+            --color-primary: #89f7fe;
+            --color-secondary: #66a6ff;
+            --color-accent: #ff7eb3;
+            --color-bg: #020412;
+
+            --glass-bg: rgba(10, 15, 40, 0.5);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--color-bg);
+            color: var(--color-text);
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ---------------------------------- */
+        /* FUNDO "AURORA LÍQUIDA"             */
+        /* ---------------------------------- */
+        .aurora-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .aurora-shape {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(150px);
+            opacity: 0.6;
+            will-change: transform, opacity;
+        }
+
+        .shape1 {
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, var(--color-primary), transparent 60%);
+            top: -150px;
+            left: -150px;
+            animation: move1 25s infinite alternate ease-in-out;
+        }
+
+        .shape2 {
+            width: 700px;
+            height: 700px;
+            background: radial-gradient(circle, var(--color-secondary), transparent 60%);
+            bottom: -200px;
+            right: -200px;
+            animation: move2 30s infinite alternate ease-in-out;
+        }
+        
+        .shape3 {
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, var(--color-accent), transparent 60%);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: move3 20s infinite alternate ease-in-out;
+        }
+
+        @keyframes move1 {
+            from { transform: translate(0, 0) rotate(0deg); }
+            to { transform: translate(100px, 50px) rotate(45deg); }
+        }
+        @keyframes move2 {
+            from { transform: translate(0, 0) rotate(0deg); }
+            to { transform: translate(-80px, -60px) rotate(-60deg); }
+        }
+        @keyframes move3 {
+            from { transform: scale(1) rotate(0deg); }
+            to { transform: scale(1.2) rotate(30deg); }
+        }
+
+        /* ---------------------------------- */
+        /* TELA DE CARREGAMENTO               */
+        /* ---------------------------------- */
+        #loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--color-bg);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.8s ease-out;
+        }
+
+        .loading-logo {
+            font-family: var(--font-heading);
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            color: var(--color-heading);
+            font-weight: 600;
+            letter-spacing: 2px;
+            margin-bottom: 2rem;
+        }
+
+        .loading-logo span {
+            display: inline-block;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+        }
+
+        .progress-bar-container {
+            width: 250px;
+            height: 2px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 1px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            width: 0;
+            height: 100%;
+            background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
+            transition: width 1.5s ease-out;
+        }
+
+        /* ---------------------------------- */
+        /* NAVEGAÇÃO                          */
+        /* ---------------------------------- */
+        .main-nav {
+            position: fixed;
+            z-index: 100;
+            transition: all 0.4s ease-out;
+        }
+        
+        /* Desktop - Barra Lateral */
+        @media (min-width: 1024px) {
+            .main-nav {
+                left: 2rem;
+                top: 50%;
+                transform: translateY(-50%);
+            }
+            .main-nav ul {
+                list-style: none;
+                display: flex;
+                flex-direction: column;
+                gap: 1rem;
+            }
+            .main-nav a {
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+                text-decoration: none;
+                color: var(--color-text-muted);
+                font-weight: 500;
+                transition: all 0.3s ease;
+                padding: 0.5rem;
+                border-radius: 8px;
+            }
+            .nav-text {
+                opacity: 0;
+                visibility: hidden;
+                transform: translateX(-10px);
+                transition: all 0.3s ease;
+                white-space: nowrap;
+            }
+            .main-nav a:hover .nav-text,
+            .main-nav a.active-nav .nav-text {
+                opacity: 1;
+                visibility: visible;
+                transform: translateX(0);
+            }
+            .main-nav a.active-nav {
+                color: var(--color-heading);
+                background-color: var(--glass-bg);
+            }
+            .main-nav a .material-icons {
+                font-size: 28px;
+            }
+        }
+
+        /* Mobile - Barra Superior */
+        @media (max-width: 1023px) {
+            .main-nav {
+                top: 0;
+                left: 0;
+                width: 100%;
+                padding: 1rem;
+                background: linear-gradient(180deg, rgba(2, 4, 18, 0.8), transparent);
+            }
+            .main-nav ul {
+                list-style: none;
+                display: flex;
+                justify-content: space-around;
+                width: 100%;
+            }
+            .main-nav a {
+                color: var(--color-text-muted);
+                transition: color 0.3s ease;
+            }
+            .main-nav a.active-nav {
+                color: var(--color-primary);
+            }
+            .nav-text {
+                display: none;
+            }
+             .main-nav a .material-icons {
+                font-size: 24px;
+            }
+        }
+
+        /* Foco visível na navegação para acessibilidade */
+        .main-nav a:focus-visible {
+            outline: 2px solid var(--color-accent);
+            outline-offset: 3px;
+            border-radius: 8px;
+        }
+
+        /* ---------------------------------- */
+        /* ARQUITETURA DE LAYOUT E ROLAGEM    */
+        /* ---------------------------------- */
+        .content-section {
+            min-height: 100vh;
+            width: 100%;
+            padding: clamp(2rem, 8vw, 6rem) clamp(1rem, 5vw, 4rem);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+            opacity: 0;
+            transition: opacity 0.8s ease-in-out, transform 0.8s ease-in-out;
+            transform: scale(1.05);
+            scroll-margin-top: 72px; /* Evita que âncoras fiquem encobertas pela barra */
+        }
+
+        .content-section.is-active {
+            z-index: 2;
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .content-section.is-previous {
+            z-index: 1;
+            opacity: 0;
+            transform: scale(0.95);
+        }
+
+        .content-wrapper {
+            max-width: 900px;
+            width: 100%;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: clamp(1.5rem, 4vw, 3rem);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+
+        .portal-section {
+            background: none;
+            border: none;
+            backdrop-filter: none;
+            text-align: center;
+        }
+        
+        .portal-section .content-wrapper {
+            background: none;
+            border: none;
+            backdrop-filter: none;
+        }
+
+        /* ---------------------------------- */
+        /* CONTEÚDO E TIPOGRAFIA              */
+        /* ---------------------------------- */
+        h1, h2, h3 {
+            font-family: var(--font-heading);
+            color: var(--color-heading);
+            font-weight: 600;
+            line-height: 1.2;
+            margin-bottom: 1rem;
+            letter-spacing: 0.5px;
+        }
+
+        h1 { /* Títulos de portal */
+            font-size: clamp(3rem, 8vw, 6rem);
+            margin-bottom: 1.5rem;
+            background: linear-gradient(45deg, var(--color-primary), var(--color-secondary), var(--color-accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        h2 { /* Títulos de subseção */
+            font-size: clamp(2rem, 5vw, 3rem);
+            border-bottom: 2px solid var(--color-primary);
+            padding-bottom: 0.5rem;
+            margin-bottom: 2rem;
+        }
+
+        h3 { /* Títulos menores */
+            font-size: clamp(1.5rem, 4vw, 2rem);
+            color: var(--color-secondary);
+            margin-top: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        p, li {
+            font-size: clamp(1rem, 2.5vw, 1.1rem);
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+            max-width: 75ch;
+        }
+
+        ul, ol {
+            padding-left: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        strong {
+            color: var(--color-primary);
+            font-weight: 500;
+        }
+        
+        a {
+            color: var(--color-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        a:hover {
+            color: var(--color-accent);
+        }
+
+        /* ---------------------------------- */
+        /* COMPONENTES E ELEMENTOS INTERATIVOS*/
+        /* ---------------------------------- */
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+            margin: 2rem 0;
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95rem;
+        }
+
+        th, td {
+            padding: 1rem 1.25rem;
+            text-align: left;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        th {
+            font-family: var(--font-heading);
+            font-size: 1.2rem;
+            color: var(--color-heading);
+            background-color: rgba(137, 247, 254, 0.1);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+        
+        tr:hover {
+            background-color: rgba(102, 166, 255, 0.1);
+        }
+
+        .chart-container {
+            position: relative; /* Essencial para o canvas responsivo */
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background: rgba(0,0,0,0.2);
+            border-radius: 12px;
+            height: 50vh; /* Altura robusta para mobile */
+            min-height: 350px;
+        }
+        
+        @media (min-width: 768px) {
+            .chart-container {
+                height: auto;
+                aspect-ratio: 16 / 9; /* Proporção para telas maiores */
+            }
+        }
+
+        .formula-box {
+            background: rgba(0,0,0,0.25);
+            border-left: 4px solid var(--color-accent);
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border-radius: 0 8px 8px 0;
+            font-size: 1.2rem;
+            overflow-x: auto;
+        }
+
+        /* Animação de revelação ao rolar */
+        .reveal-on-scroll {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+
+        .reveal-on-scroll.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Atraso escalonado para listas */
+        .stagger-reveal > * {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+
+        /* Manipulação de tabela em mobile */
+        @media (max-width: 768px) {
+            .table-responsive-wrapper {
+                position: relative;
+                border-radius: 12px;
+                overflow-x: auto; /* Permite rolagem horizontal no mobile */
+                overflow-y: visible;
+                -webkit-overflow-scrolling: touch;
+            }
+            .table-responsive-wrapper::after {
+                content: 'Vire o dispositivo para visualizar a tabela';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(2, 4, 18, 0.8);
+                backdrop-filter: blur(4px);
+                -webkit-backdrop-filter: blur(4px);
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                color: var(--color-heading);
+                font-family: var(--font-heading);
+                font-size: 1.5rem;
+                text-align: center;
+                padding: 1rem;
+                z-index: 5;
+                pointer-events: none; /* Não bloquear interação com a tabela */
+                transition: opacity 0.3s ease;
+            }
+            .table-responsive-wrapper .material-icons {
+                font-size: 3rem;
+                margin-bottom: 1rem;
+                animation: rotate-anim 2.5s infinite ease-in-out;
+            }
+            .table-responsive-wrapper::before {
+                content: 'screen_rotation';
+                font-family: 'Material Icons';
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -100%);
+                font-size: 3rem;
+                z-index: 6;
+                color: var(--color-heading);
+                animation: rotate-anim-center 2.5s infinite ease-in-out;
+                pointer-events: none;
+                transition: opacity 0.3s ease;
+            }
+
+            /* Roda no lugar mantendo a centralização do ícone pseudo-elemento */
+            @keyframes rotate-anim-center {
+                0% { transform: translate(-50%, -100%) rotate(0deg); }
+                50% { transform: translate(-50%, -100%) rotate(90deg); }
+                100% { transform: translate(-50%, -100%) rotate(0deg); }
+            }
+            /* Rotação simples para ícones reais (sem reposicionamento) */
+            @keyframes rotate-anim {
+                0% { transform: rotate(0deg); }
+                50% { transform: rotate(90deg); }
+                100% { transform: rotate(0deg); }
+            }
+
+            /* Oculta as dicas quando o usuário já rolou horizontalmente */
+            .table-responsive-wrapper[data-scrolled="true"]::before,
+            .table-responsive-wrapper[data-scrolled="true"]::after {
+                opacity: 0;
+            }
+        }
+
+
+        /* ---------------------------------- */
+        /* RODAPÉ                             */
+        /* ---------------------------------- */
+        .main-footer {
+            text-align: center;
+            padding: 2rem;
+            font-size: 0.9rem;
+            color: var(--color-text-muted);
+            background-color: rgba(2, 4, 18, 0.5);
+        }
+
+        /* Respeita usuários com preferência por movimento reduzido */
+        @media (prefers-reduced-motion: reduce) {
+            * { animation: none !important; transition: none !important; }
+            .aurora-shape { filter: none; }
+        }
+
+        /* Skip link para acessibilidade */
+        .skip-link {
+            position: absolute;
+            left: -9999px;
+            top: auto;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+        }
+        .skip-link:focus {
+            left: 1rem;
+            top: 1rem;
+            width: auto;
+            height: auto;
+            background: var(--glass-bg);
+            color: var(--color-heading);
+            padding: 0.5rem 0.75rem;
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            z-index: 10000;
+        }
+
+    </style>
+</head>
+<body>
+
+    <a class="skip-link" href="#main-content">Pular para o conteúdo principal</a>
+
+    <!-- Tela de Carregamento -->
+    <div id="loading-screen">
+        <div class="loading-logo">
+            <span>L</span><span>2</span><span> </span><span>E</span><span>D</span><span>U</span><span>C</span><span>A</span>
+        </div>
+        <div class="progress-bar-container">
+            <div class="progress-bar"></div>
+        </div>
+    </div>
+
+    <!-- Fundo Aurora -->
+    <div class="aurora-background">
+        <div class="aurora-shape shape1"></div>
+        <div class="aurora-shape shape2"></div>
+        <div class="aurora-shape shape3"></div>
+    </div>
+
+    <!-- Navegação Principal -->
+    <nav class="main-nav" aria-label="Navegação de seções">
+        <ul>
+            <li><a href="#inicio-ligacoes" title="Ligações Químicas" aria-label="Ligações Químicas"><i class="material-icons" aria-hidden="true">share</i><span class="nav-text">Ligações</span></a></li>
+            <li><a href="#inicio-termoquimica" title="Termoquímica" aria-label="Termoquímica"><i class="material-icons" aria-hidden="true">local_fire_department</i><span class="nav-text">Termoquímica</span></a></li>
+            <li><a href="#inicio-redox" title="Óxido-Redução" aria-label="Óxido-Redução"><i class="material-icons" aria-hidden="true">sync_alt</i><span class="nav-text">Óxido-Redução</span></a></li>
+        </ul>
+    </nav>
+
+    <!-- Conteúdo Principal -->
+    <main id="main-content">
+
+        <!-- =================================================================== -->
+        <!-- TEMA 1: LIGAÇÕES, GEOMETRIA E POLARIDADE                          -->
+        <!-- =================================================================== -->
+
+        <!-- Seção Portal: Ligações -->
+        <section id="inicio-ligacoes" class="content-section portal-section">
+            <div class="content-wrapper">
+                <h1 class="reveal-on-scroll">Ligações Químicas</h1>
+                <p class="reveal-on-scroll" style="transition-delay: 0.2s;">
+                    A arquitetura invisível da matéria. Explore as forças que unem os átomos, definem a forma das moléculas e ditam as propriedades do universo que nos cerca. Da rigidez do diamante à fluidez da água, tudo começa aqui.
+                </p>
+            </div>
+        </section>
+
+        <!-- Subseção: Tipos de Ligações -->
+        <section id="tipos-ligacoes" class="content-section">
+            <div class="content-wrapper">
+                <h2 class="reveal-on-scroll">Os Pilares da Matéria</h2>
+                <p class="reveal-on-scroll">
+                    Átomos se unem em busca de estabilidade, geralmente completando sua camada de valência com oito elétrons (a Regra do Octeto). Essa busca se manifesta através de três tipos principais de ligações químicas, cada uma com características únicas.
+                </p>
+
+                <h3 class="reveal-on-scroll">Ligação Iônica: A Transferência Decisiva</h3>
+                <p class="reveal-on-scroll">
+                    Ocorre entre um <strong>metal</strong> (baixa eletronegatividade, tende a doar elétrons) e um <strong>ametal</strong> (alta eletronegatividade, tende a receber elétrons). Há uma transferência completa de elétrons, formando íons de cargas opostas (cátions e ânions) que se atraem eletrostaticamente, criando um retículo cristalino rígido e ordenado.
+                </p>
+                <div class="formula-box reveal-on-scroll">
+                    Exemplo: Formação do Cloreto de Sódio (NaCl)
+                    <br>
+                    \( \text{Na} \; (2, 8, 1) \rightarrow \text{Na}^+ \; (2, 8) + 1e^- \)
+                    <br>
+                    \( \text{Cl} \; (2, 8, 7) + 1e^- \rightarrow \text{Cl}^- \; (2, 8, 8) \)
+                </div>
+
+                <h3 class="reveal-on-scroll">Ligação Covalente: O Compartilhamento Estratégico</h3>
+                <p class="reveal-on-scroll">
+                    Típica entre <strong>ametais</strong>, onde a diferença de eletronegatividade não é grande o suficiente para uma transferência. Os átomos compartilham pares de elétrons para atingir a estabilidade. Essa é a base da maioria das moléculas orgânicas e de substâncias como a água e o dióxido de carbono.
+                </p>
+                <div class="formula-box reveal-on-scroll">
+                     Exemplo: Molécula de Água (H₂O)
+                     <br>
+                     O Oxigênio compartilha um elétron com cada um dos dois Hidrogênios.
+                     <br>
+                     \( \text{H} \cdot + \cdot \ddot{\text{O}}: + \cdot \text{H} \rightarrow \text{H}:\ddot{\text{O}}:\text{H} \)
+                </div>
+
+                <h3 class="reveal-on-scroll">Ligação Metálica: O Mar de Elétrons</h3>
+                <p class="reveal-on-scroll">
+                    Encontrada em metais e ligas metálicas. Os átomos de metal liberam seus elétrons de valência, que formam uma "nuvem" ou "mar" de elétrons deslocalizados que se movem livremente entre os cátions metálicos fixos. Essa mobilidade eletrônica explica a alta condutividade elétrica e térmica, a maleabilidade e a ductilidade dos metais.
+                </p>
+            </div>
+        </section>
+        
+        <!-- Subseção: Geometria Molecular -->
+        <section id="geometria-molecular" class="content-section">
+            <div class="content-wrapper">
+                <h2 class="reveal-on-scroll">A Forma das Moléculas</h2>
+                <p class="reveal-on-scroll">
+                    A Teoria da Repulsão dos Pares de Elétrons da Camada de Valência (VSEPR) postula que os pares de elétrons (ligantes e não ligantes) ao redor do átomo central se arranjam para minimizar a repulsão, determinando a geometria da molécula.
+                </p>
+                <div class="table-responsive-wrapper reveal-on-scroll">
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Pares de e⁻</th>
+                                    <th>Geometria Eletrônica</th>
+                                    <th>Geometria Molecular</th>
+                                    <th>Exemplo</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>2</td>
+                                    <td>Linear</td>
+                                    <td>Linear</td>
+                                    <td>CO₂, BeH₂</td>
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td>Trigonal Plana</td>
+                                    <td>Trigonal Plana</td>
+                                    <td>BF₃</td>
+                                </tr>
+                                <tr>
+                                    <td>4</td>
+                                    <td>Tetraédrica</td>
+                                    <td>Tetraédrica</td>
+                                    <td>CH₄</td>
+                                </tr>
+                                <tr>
+                                    <td>4 (1 par isolado)</td>
+                                    <td>Tetraédrica</td>
+                                    <td>Piramidal Trigonal</td>
+                                    <td>NH₃</td>
+                                </tr>
+                                <tr>
+                                    <td>4 (2 pares isolados)</td>
+                                    <td>Tetraédrica</td>
+                                    <td>Angular</td>
+                                    <td>H₂O</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Subseção: Polaridade -->
+        <section id="polaridade" class="content-section">
+            <div class="content-wrapper">
+                <h2 class="reveal-on-scroll">Distribuição de Cargas</h2>
+                <p class="reveal-on-scroll">
+                    A polaridade de uma ligação depende da diferença de eletronegatividade entre os átomos. A polaridade da molécula, por sua vez, depende da <strong>soma vetorial</strong> dos momentos de dipolo de cada ligação. Uma molécula pode ter ligações polares e ser apolar se a geometria for simétrica e os vetores se anularem.
+                </p>
+                <ul class="stagger-reveal">
+                    <li style="transition-delay: 0.1s;"><strong>Molécula Polar:</strong> O vetor resultante dos momentos de dipolo é diferente de zero. Ex: H₂O. Os dipolos das ligações O-H não se anulam devido à geometria angular.</li>
+                    <li style="transition-delay: 0.2s;"><strong>Molécula Apolar:</strong> O vetor resultante é nulo. Ex: CO₂. As duas ligações C=O são polares, mas opostas na geometria linear, anulando-se.</li>
+                </ul>
+                <p class="reveal-on-scroll">
+                    A polaridade é crucial, pois governa a solubilidade ("semelhante dissolve semelhante") e as forças intermoleculares.
+                </p>
+            </div>
+        </section>
+
+        <!-- =================================================================== -->
+        <!-- TEMA 2: TERMOQUÍMICA                                              -->
+        <!-- =================================================================== -->
+
+        <!-- Seção Portal: Termoquímica -->
+        <section id="inicio-termoquimica" class="content-section portal-section">
+            <div class="content-wrapper">
+                <h1 class="reveal-on-scroll">Termoquímica</h1>
+                <p class="reveal-on-scroll" style="transition-delay: 0.2s;">
+                    O estudo da energia em trânsito. Mergulhe no calor das reações químicas, desvendando como a energia é liberada ou absorvida quando as ligações são quebradas e formadas, e como podemos prever e quantificar essas transformações.
+                </p>
+            </div>
+        </section>
+
+        <!-- Subseção: Conceitos Fundamentais -->
+        <section id="conceitos-termo" class="content-section">
+            <div class="content-wrapper">
+                <h2 class="reveal-on-scroll">Calor e Reações</h2>
+                <p class="reveal-on-scroll">
+                    <strong>Entalpia (H)</strong> é a medida do conteúdo de energia de um sistema a pressão constante. Não podemos medir H diretamente, mas sim sua variação, a <strong>Variação de Entalpia (ΔH)</strong>.
+                </p>
+                <div class="formula-box reveal-on-scroll">
+                    \( \Delta H = H_{\text{produtos}} - H_{\text{reagentes}} \)
+                </div>
+                <ul class="stagger-reveal">
+                    <li style="transition-delay: 0.1s;">
+                        <strong>Reação Exotérmica:</strong> Libera calor para a vizinhança. Os produtos são mais estáveis (menor entalpia) que os reagentes. \( \Delta H < 0 \). Ex: Combustão.
+                    </li>
+                    <li style="transition-delay: 0.2s;">
+                        <strong>Reação Endotérmica:</strong> Absorve calor da vizinhança. Os produtos são menos estáveis (maior entalpia) que os reagentes. \( \Delta H > 0 \). Ex: Fotossíntese.
+                    </li>
+                </ul>
+                <div class="chart-container reveal-on-scroll">
+                    <canvas id="termoChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- Subseção: Lei de Hess -->
+        <section id="lei-hess" class="content-section">
+            <div class="content-wrapper">
+                <h2 class="reveal-on-scroll">A Soma das Energias</h2>
+                <p class="reveal-on-scroll">
+                    A Lei de Hess, uma consequência da conservação de energia, afirma que a variação de entalpia de uma reação global é a <strong>soma das variações de entalpia das etapas intermediárias</strong> que a compõem, independentemente do caminho percorrido.
+                </p>
+                <p class="reveal-on-scroll">
+                    Isso nos permite calcular o ΔH de reações difíceis de medir experimentalmente, combinando reações conhecidas.
+                </p>
+                <div class="formula-box reveal-on-scroll">
+                    <strong>Exemplo:</strong> Calcular o ΔH para a formação do CO a partir de C e O₂.
+                    <br>
+                    Reação Alvo: \( \text{C(grafite)} + \frac{1}{2} \text{O}_2(g) \rightarrow \text{CO}(g) \quad \Delta H = ? \)
+                    <br><br>
+                    Dados:
+                    <br>
+                    1) \( \text{C(grafite)} + \text{O}_2(g) \rightarrow \text{CO}_2(g) \quad \Delta H_1 = -393,5 \, \text{kJ} \)
+                    <br>
+                    2) \( \text{CO}(g) + \frac{1}{2} \text{O}_2(g) \rightarrow \text{CO}_2(g) \quad \Delta H_2 = -283,0 \, \text{kJ} \)
+                    <br><br>
+                    <strong>Solução:</strong> Manter a equação (1) e inverter a (2).
+                    <br>
+                    \( \Delta H_{\text{reação}} = \Delta H_1 + (-\Delta H_2) = -393,5 + 283,0 = \mathbf{-110,5 \, \text{kJ}} \)
+                </div>
+            </div>
+        </section>
+
+        <!-- =================================================================== -->
+        <!-- TEMA 3: NOX E ÓXIDO-REDUÇÃO                                       -->
+        <!-- =================================================================== -->
+
+        <!-- Seção Portal: Óxido-Redução -->
+        <section id="inicio-redox" class="content-section portal-section">
+            <div class="content-wrapper">
+                <h1 class="reveal-on-scroll">Óxido-Redução</h1>
+                <p class="reveal-on-scroll" style="transition-delay: 0.2s;">
+                    A dança dos elétrons. Testemunhe a transferência de elétrons que alimenta baterias, causa a corrosão e sustenta a vida. Entender a óxido-redução é entender a base da eletroquímica e de inúmeros processos industriais e biológicos.
+                </p>
+            </div>
+        </section>
+
+        <!-- Subseção: Conceitos Redox -->
+        <section id="conceitos-redox" class="content-section">
+            <div class="content-wrapper">
+                <h2 class="reveal-on-scroll">A Transferência de Elétrons</h2>
+                <p class="reveal-on-scroll">
+                    Reações de óxido-redução (redox) envolvem a mudança no <strong>Número de Oxidação (NOX)</strong> dos átomos. O NOX é uma carga teórica que um átomo teria se as ligações fossem 100% iônicas.
+                </p>
+                <ul class="stagger-reveal">
+                    <li style="transition-delay: 0.1s;"><strong>Oxidação:</strong> Perda de elétrons. O NOX <strong>aumenta</strong>. A espécie que oxida é o <strong>agente redutor</strong>.</li>
+                    <li style="transition-delay: 0.2s;"><strong>Redução:</strong> Ganho de elétrons. O NOX <strong>diminui</strong>. A espécie que reduz é o <strong>agente oxidante</strong>.</li>
+                </ul>
+                <div class="formula-box reveal-on-scroll">
+                    Exemplo: Reação entre Zinco e Cobre
+                    <br>
+                    \( \overset{0}{\text{Zn}}(s) + \overset{+2}{\text{Cu}}\text{SO}_4(aq) \rightarrow \overset{+2}{\text{Zn}}\text{SO}_4(aq) + \overset{0}{\text{Cu}}(s) \)
+                    <br><br>
+                    - Zinco (Zn): NOX vai de 0 para +2. <strong>Oxidou</strong> (agente redutor).
+                    <br>
+                    - Cobre (Cu): NOX vai de +2 para 0. <strong>Reduziu</strong> (agente oxidante).
+                </div>
+            </div>
+        </section>
+
+        <!-- Subseção: Balanceamento Redox -->
+        <section id="balanceamento-redox" class="content-section">
+            <div class="content-wrapper">
+                <h2 class="reveal-on-scroll">Equilibrando as Cargas</h2>
+                <p class="reveal-on-scroll">
+                    Balancear equações redox exige que não apenas os átomos, mas também os elétrons transferidos estejam equilibrados. O método das semi-reações (íon-elétron) é poderoso para isso, especialmente em meio ácido ou básico.
+                </p>
+                <h3 class="reveal-on-scroll">Passos (Meio Ácido):</h3>
+                <ol class="stagger-reveal">
+                    <li style="transition-delay: 0.1s;">Escrever as semi-reações de oxidação e redução.</li>
+                    <li style="transition-delay: 0.2s;">Balancear todos os átomos, exceto O e H.</li>
+                    <li style="transition-delay: 0.3s;">Balancear os átomos de O adicionando H₂O.</li>
+                    <li style="transition-delay: 0.4s;">Balancear os átomos de H adicionando H⁺.</li>
+                    <li style="transition-delay: 0.5s;">Balancear as cargas adicionando elétrons (e⁻).</li>
+                    <li style="transition-delay: 0.6s;">Igualar o número de elétrons nas duas semi-reações, multiplicando-as se necessário.</li>
+                    <li style="transition-delay: 0.7s;">Somar as semi-reações e simplificar.</li>
+                </ol>
+            </div>
+        </section>
+
+    </main>
+    
+    <footer class="main-footer">
+        <p>Página educacional desenvolvida como uma ferramenta de aprendizado. Design e conteúdo por L2.</p>
+    </footer>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+
+        // --- TELA DE CARREGAMENTO COREOGRAFADA ---
+        const loadingScreen = document.getElementById('loading-screen');
+        const logoLetters = document.querySelectorAll('.loading-logo span');
+        const progressBar = document.querySelector('.progress-bar');
+
+        const startLoadingAnimation = () => {
+            let delay = 0;
+            logoLetters.forEach(letter => {
+                setTimeout(() => {
+                    letter.style.opacity = '1';
+                    letter.style.transform = 'translateY(0)';
+                }, delay);
+                delay += 100;
+            });
+
+            setTimeout(() => {
+                progressBar.style.width = '100%';
+            }, 200);
+        };
+
+        // Inicia a animação assim que o DOM está pronto
+        startLoadingAnimation();
+
+        // Esconde a tela de carregamento quando todos os recursos terminarem de carregar
+        window.addEventListener('load', () => {
+            loadingScreen.style.opacity = '0';
+            loadingScreen.style.pointerEvents = 'none';
+            // Ativa a primeira seção após o carregamento
+            if (!ticking) {
+                window.requestAnimationFrame(() => {
+                    updateActiveSection();
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        });
+
+        // --- ORQUESTRADOR DE ROLAGEM CINEMATOGRÁFICA (LÓGICA REFINADA) ---
+        const sections = Array.from(document.querySelectorAll('.content-section'));
+        let ticking = false;
+
+        function updateActiveSection() {
+            const screenCenter = window.innerHeight / 2;
+            let activeSection = sections[0];
+
+            for (const section of sections) {
+                const rect = section.getBoundingClientRect();
+                if (rect.top <= screenCenter) {
+                    activeSection = section;
+                } else {
+                    break;
+                }
+            }
+            
+            const activeIndex = sections.findIndex(s => s.id === activeSection.id);
+            sections.forEach((section, index) => {
+                section.classList.toggle('is-active', index === activeIndex);
+                section.classList.toggle('is-previous', index < activeIndex);
+            });
+        }
+
+        window.addEventListener('scroll', () => {
+            if (!ticking) {
+                window.requestAnimationFrame(() => {
+                    updateActiveSection();
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        });
+
+        // --- NAVEGAÇÃO ATIVA COM INTERSECTION OBSERVER ---
+        const navLinks = document.querySelectorAll('.main-nav a');
+        const navObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const id = entry.target.getAttribute('id');
+                    navLinks.forEach(link => {
+                        link.classList.toggle('active-nav', link.getAttribute('href') === `#${id}`);
+                    });
+                }
+            });
+        }, { rootMargin: '-50% 0px -50% 0px' });
+
+        sections.forEach(section => navObserver.observe(section));
+        
+        // --- ANIMAÇÃO DE REVELAÇÃO AO ROLAR COM INTERSECTION OBSERVER ---
+        const revealElements = document.querySelectorAll('.reveal-on-scroll');
+        const revealObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+
+        revealElements.forEach(el => revealObserver.observe(el));
+
+        // --- ANIMAÇÃO ESCALONADA ---
+        const staggerContainers = document.querySelectorAll('.stagger-reveal');
+        const staggerObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const children = entry.target.children;
+                    for (let i = 0; i < children.length; i++) {
+                        children[i].style.transitionDelay = `${i * 150}ms`;
+                        children[i].style.opacity = '1';
+                        children[i].style.transform = 'translateY(0)';
+                    }
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.2 });
+
+        staggerContainers.forEach(container => staggerObserver.observe(container));
+
+        // --- GRÁFICO DE TERMOQUÍMICA (CHART.JS) - VERSÃO APRIMORADA ---
+        // Garantir que o plugin de anotação esteja registrado
+        const maybeRegisterAnnotation = () => {
+            if (window.Chart) {
+                const annotationPlugin = window['chartjs-plugin-annotation'] || window.ChartAnnotation;
+                if (annotationPlugin) {
+                    try { window.Chart.register(annotationPlugin); } catch (e) { /* noop */ }
+                }
+            }
+        };
+        maybeRegisterAnnotation();
+
+        const ctx = document.getElementById('termoChart');
+        if (ctx) {
+            const data = {
+                reagentes: 100,
+                complexoExo: 150,
+                produtosExo: 50,
+                complexoEndo: 180,
+                produtosEndo: 140,
+            };
+            
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Reagentes', 'Complexo Ativado', 'Produtos'],
+                    datasets: [{
+                        label: 'Reação Exotérmica',
+                        data: [data.reagentes, data.complexoExo, data.produtosExo],
+                        borderColor: 'hsl(330, 100%, 71%)', // Cor do --color-accent
+                        backgroundColor: 'hsla(330, 100%, 71%, 0.1)',
+                        fill: '-1',
+                        tension: 0.4,
+                        pointRadius: 5,
+                        pointBackgroundColor: 'hsl(330, 100%, 71%)',
+                    }, {
+                        label: 'Reação Endotérmica',
+                        data: [data.reagentes, data.complexoEndo, data.produtosEndo],
+                        borderColor: 'hsl(217, 100%, 70%)', // Cor do --color-secondary
+                        backgroundColor: 'hsla(217, 100%, 70%, 0.1)',
+                        fill: '-1',
+                        tension: 0.4,
+                        pointRadius: 5,
+                        pointBackgroundColor: 'hsl(217, 100%, 70%)',
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false, // Chave para responsividade robusta
+                    plugins: {
+                        legend: {
+                            labels: { 
+                                color: 'white',
+                                font: {
+                                    family: "'Inter', sans-serif"
+                                }
+                            }
+                        },
+                        title: {
+                            display: true,
+                            text: 'Caminho da Reação e Variação de Entalpia',
+                            color: 'white',
+                            font: { size: 16, family: "'Inter', sans-serif" }
+                        },
+                        // Configuração das anotações
+                        annotation: {
+                            annotations: {
+                                // Anotação para Ea (Exotérmica)
+                                eaExo: {
+                                    type: 'line',
+                                    yMin: data.reagentes,
+                                    yMax: data.complexoExo,
+                                    xMin: 'Reagentes',
+                                    xMax: 'Reagentes',
+                                    borderColor: 'white',
+                                    borderWidth: 1,
+                                    borderDash: [6, 6],
+                                    label: {
+                                        content: 'Ea',
+                                        display: true,
+                                        position: 'start',
+                                        color: 'white',
+                                        font: { style: 'italic' }
+                                    }
+                                },
+                                // Anotação para ΔH (Exotérmica)
+                                dhExo: {
+                                    type: 'line',
+                                    yMin: data.produtosExo,
+                                    yMax: data.reagentes,
+                                    xMin: 'Produtos',
+                                    xMax: 'Produtos',
+                                    borderColor: 'hsl(330, 100%, 71%)',
+                                    borderWidth: 2,
+                                    label: {
+                                        content: 'ΔH < 0',
+                                        display: true,
+                                        position: 'center',
+                                        color: 'hsl(330, 100%, 71%)',
+                                        font: { weight: 'bold' }
+                                    }
+                                },
+                                // Anotação para Ea (Endotérmica)
+                                eaEndo: {
+                                    type: 'line',
+                                    yMin: data.reagentes,
+                                    yMax: data.complexoEndo,
+                                    xMin: 'Reagentes',
+                                    xMax: 'Reagentes',
+                                    borderColor: 'white',
+                                    borderWidth: 1,
+                                    borderDash: [6, 6],
+                                    label: {
+                                        content: 'Ea',
+                                        display: true,
+                                        position: 'start',
+                                        color: 'white',
+                                        font: { style: 'italic' }
+                                    }
+                                },
+                                // Anotação para ΔH (Endotérmica)
+                                dhEndo: {
+                                    type: 'line',
+                                    yMin: data.reagentes,
+                                    yMax: data.produtosEndo,
+                                    xMin: 'Produtos',
+                                    xMax: 'Produtos',
+                                    borderColor: 'hsl(217, 100%, 70%)',
+                                    borderWidth: 2,
+                                    label: {
+                                        content: 'ΔH > 0',
+                                        display: true,
+                                        position: 'center',
+                                        color: 'hsl(217, 100%, 70%)',
+                                        font: { weight: 'bold' }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            title: { display: true, text: 'Entalpia (H)', color: 'white' },
+                            ticks: { color: 'white' },
+                            grid: { color: 'rgba(255, 255, 255, 0.1)' }
+                        },
+                        x: {
+                            ticks: { color: 'white' },
+                            grid: { color: 'rgba(255, 255, 255, 0.1)' }
+                        }
+                    }
+                }
+            });
+        }
+        
+        // --- MANIPULAÇÃO DE TABELA RESPONSIVA ---
+        const tableScrollHandler = (event) => {
+            const el = event.currentTarget;
+            if (el.scrollLeft > 0) {
+                el.setAttribute('data-scrolled', 'true');
+            }
+        };
+
+        const checkTableResponsiveness = () => {
+            const table = document.querySelector('.table-container');
+            if (table) {
+                const wrapper = table.parentElement;
+                if (window.innerWidth <= 768) {
+                    wrapper.classList.add('table-responsive-wrapper');
+                    // Observa rolagem horizontal para esconder as dicas
+                    wrapper.addEventListener('scroll', tableScrollHandler, { passive: true });
+                } else {
+                    wrapper.classList.remove('table-responsive-wrapper');
+                    wrapper.removeEventListener('scroll', tableScrollHandler);
+                    wrapper.removeAttribute('data-scrolled');
+                }
+            }
+        };
+        
+        window.addEventListener('resize', checkTableResponsiveness);
+        checkTableResponsiveness(); // Checa no carregamento inicial
+    });
+    </script>
+</body>
+</html>

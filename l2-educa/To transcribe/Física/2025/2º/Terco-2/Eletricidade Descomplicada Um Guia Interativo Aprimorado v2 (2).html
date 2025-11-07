@@ -1,0 +1,1267 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eletricidade na física</title>
+    <!-- MathJax Configuration -->
+    <script>
+        MathJax = {
+          tex: {
+            inlineMath: [['$', '$'], ['\\(', '\\)']],
+            displayMath: [['$$', '$$'], ['\\[', '\\]']],
+            tags: 'ams'
+          },
+          svg: {
+            fontCache: 'global'
+          }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        /* (Todo o CSS anterior é mantido exatamente como está) */
+        /* === GERAL === */
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.7; margin: 0; padding: 0; background-color: #f0f4f8; color: #333; font-size: 16px; }
+        .container { width: 85%; max-width: 1000px; margin: 20px auto; padding: 25px; background-color: #ffffff; box-shadow: 0 5px 15px rgba(0,0,0,0.1); border-radius: 8px; }
+        header { background: #005a9c; color: #fff; padding: 1.5rem 0; text-align: center; border-bottom: #ffc107 5px solid; }
+        header h1 { margin: 0; font-size: 2.8em; font-weight: 600; }
+        nav#main-nav { background: #007bff; padding: 0.8em; text-align: center; border-radius: 0 0 8px 8px; margin-bottom: 25px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 1000; }
+        nav#main-nav a { color: #fff; text-decoration: none; padding: 0.6em 1.2em; margin: 0 0.3em; border-radius: 5px; transition: background-color 0.3s ease; font-weight: 500; }
+        nav#main-nav a:hover { background-color: #0056b3; }
+        /* === CAPÍTULOS E ARTIGOS === */
+        .chapter { margin-bottom: 40px; padding-bottom: 25px; border-bottom: 2px solid #e0e0e0; }
+        .chapter:last-child { border-bottom: none; }
+        .chapter h2 { font-size: 2.2em; color: #005a9c; border-bottom: 3px solid #ffc107; padding-bottom: 10px; margin-top: 30px; margin-bottom: 20px; scroll-margin-top: 80px; /* Adicionado para ancoragem correta */ }
+        .chapter h3 { font-size: 1.7em; color: #007bff; margin-top: 30px; margin-bottom: 15px; }
+        .chapter h4 { font-size: 1.3em; color: #333; margin-top: 20px; margin-bottom: 10px; }
+        p, ul, ol { margin-bottom: 1.2em; }
+        ul, ol { padding-left: 25px; }
+        strong { color: #005a9c; }
+        code { background-color: #e9ecef; padding: 0.2em 0.4em; border-radius: 3px; font-family: 'Courier New', Courier, monospace; }
+        /* === ELEMENTOS DIDÁTICOS === */
+        .highlight-box { background-color: #e7f3fe; border-left: 6px solid #007bff; padding: 20px; margin: 25px 0; border-radius: 0 8px 8px 0; box-shadow: 2px 2px 8px rgba(0,0,0,0.05); }
+        .highlight-box strong { color: #0056b3; }
+        .formula-explanation { background-color: #fff9e6; border: 1px solid #ffe0b3; border-left: 6px solid #ffc107; padding: 20px; margin: 25px 0; border-radius: 0 8px 8px 0; box-shadow: 2px 2px 8px rgba(0,0,0,0.05); }
+        .formula-explanation dt { font-weight: bold; color: #005a9c; }
+        .formula-explanation dd { margin-left: 20px; margin-bottom: 8px; }
+        mjx-display { margin: 1em 0 !important; }
+        /* === VISUALIZAÇÕES CSS/SVG === */
+        .conduct-isolate-container { display: flex; justify-content: space-around; margin: 25px 0; flex-wrap: wrap; }
+        .material-box { width: 45%; min-width: 280px; border: 2px solid #007bff; border-radius: 8px; padding: 20px; text-align: center; margin-bottom: 20px; background-color: #fdfdfd; }
+        .material-box h4 { margin-top: 0; color: #005a9c;}
+        .particles { height: 120px; position: relative; background-color: #e9ecef; border-radius: 4px; margin-bottom: 15px; overflow: hidden; border: 1px solid #d0d0d0; }
+        .particles .atom-group { position: absolute; }
+        .particles .atom-core { position: relative; width: 18px; height: 18px; background-color: #5a6268; border-radius: 50%; left: 50%; top: 50%; transform: translate(-50%, -50%); }
+        .particles .electron { position: absolute; width: 8px; height: 8px; background-color: #007bff; border-radius: 50%; box-shadow: 0 0 3px rgba(0, 123, 255, 0.7); }
+        .conductor-example .electron.free { animation: moveFreely 4s cubic-bezier(0.42, 0, 0.58, 1) infinite; }
+        .insulator-example .electron.bound { animation: vibrateBound 0.8s ease-in-out infinite alternate; }
+        @keyframes moveFreely { 0% { transform: translate(10px, 10px); } 20% { transform: translate(calc(100% - 30px), 20px); } 40% { transform: translate(calc(100% - 50px), calc(100% - 30px)); } 60% { transform: translate(30px, calc(100% - 20px)); } 80% { transform: translate(50px, 30px); } 100% { transform: translate(10px, 10px); } }
+        @keyframes vibrateBound { 0% { transform: translate(-4px, -2px) rotate(0deg); } 25% { transform: translate(2px, 4px) rotate(90deg); } 50% { transform: translate(3px, -3px) rotate(180deg); } 75% { transform: translate(-2px, 2px) rotate(270deg); } 100% { transform: translate(-4px, -2px) rotate(360deg); } }
+        .circuit-diagram-svg { display: block; margin: 20px auto; border: 1px dashed #ccc; background-color: #fdfdfd; }
+        .symbol-table-svg { width: 40px; height: 25px; vertical-align: middle; }
+        .symbol-table-svg.large { width: 50px; height: 35px; }
+        /* === SEÇÕES INTERATIVAS (EXISTENTES) === */
+        .interactive-section { background-color: #f9f9f9; padding: 25px; border: 1px solid #ccc; border-radius: 8px; margin-top: 25px; box-shadow: inset 0 0 10px rgba(0,0,0,0.05); }
+        .interactive-section label { display: block; margin-bottom: 8px; font-weight: 500; color: #333;}
+        .interactive-section input[type="range"] { width: calc(100% - 100px); margin-bottom: 10px; cursor: pointer;}
+        .interactive-section input[type="number"], .interactive-section select { padding: 8px; margin-bottom: 10px; border-radius: 4px; border: 1px solid #ccc; width: 100px;}
+        .interactive-section .output, .interactive-section .value-display { font-size: 1.2em; font-weight: bold; color: #007bff; display: inline-block; min-width: 50px;}
+        .interactive-section button { background-color: #28a745; color: white; padding: 10px 18px; border: none; border-radius: 5px; cursor: pointer; font-size: 1em; transition: background-color 0.3s; margin-top: 10px; }
+        .interactive-section button:hover { background-color: #218838; }
+        canvas { border:1px solid #aaa; margin-top:15px; background-color: #fff; border-radius: 5px;}
+        /* === SUMÁRIO (TOC) === */
+        #toc { background: #e9ecef; padding: 20px; border-radius: 8px; margin-bottom: 30px;}
+        #toc h2 { margin-top: 0; color: #005a9c; border-bottom-color: #007bff;}
+        #toc ul { list-style-type: none; padding: 0;}
+        #toc ul li { margin-bottom: 0.5em;}
+        #toc ul li a { text-decoration: none; color: #0056b3; font-weight: 500;}
+        #toc ul li a:hover { text-decoration: underline; color: #007bff;}
+        #toc ul ul { padding-left: 20px; margin-top: 0.3em;}
+        #toc ul ul li a { font-weight: normal; color: #333;}
+        #toc ul ul li a:hover { color: #0056b3;}
+        /* === RODAPÉ === */
+        footer { text-align:center; padding: 25px; background-color:#005a9c; color:#fff; margin-top:40px; font-size: 0.9em;}
+        /* === RESPONSIVIDADE SIMPLES === */
+        @media (max-width: 768px) {
+            .container { width: 95%; padding: 15px;}
+            header h1 { font-size: 2em;}
+            nav#main-nav { position: static; }
+            .chapter h2 { font-size: 1.8em; margin-top: 20px; scroll-margin-top: 10px; }
+            .chapter h3 { font-size: 1.4em; }
+            .interactive-section input[type="range"] { width: calc(100% - 70px);}
+            .material-box { width: 90%; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Todo o corpo HTML (header, nav, container, chapters, footer) é mantido como antes -->
+    <header>
+        <h1>Eletricidade Av1 2º trimestre</h1>
+    </header>
+
+    <nav id="main-nav">
+        <a href="#cap1">Cap. 1: Faísca Inicial</a>
+        <a href="#cap2">Cap. 2: Elétrons em Marcha</a>
+        <a href="#cap3">Cap. 3: Tensão e Resistência</a>
+        <a href="#cap4">Cap. 4: Circuitos</a>
+        <a href="#cap5">Cap. 5: Potência e Consumo</a>
+        <a href="#cap6">Cap. 6: Campo e Força</a>
+    </nav>
+
+    <div class="container">
+        <section id="toc" class="chapter">
+            <h2>Sumário</h2>
+            <ul>
+                <li><a href="#cap1">Capítulo 1: A Faísca Inicial – Introdução à Eletricidade</a>
+                    <ul>
+                        <li><a href="#sec1-1">1.1 O que é essa tal de Eletricidade?</a></li>
+                        <li><a href="#sec1-2">1.2 Mergulhando no Átomo</a></li>
+                        <li><a href="#sec1-3">1.3 Condutores e Isolantes (Visual)</a></li>
+                        <li><a href="#sec1-4">1.4 Eletrizando!</a></li>
+                    </ul>
+                </li>
+                <li><a href="#cap2">Capítulo 2: Elétrons em Marcha – A Corrente Elétrica</a>
+                    <ul>
+                        <li><a href="#sec2-1">2.1 O Fluxo Organizado</a></li>
+                        <li><a href="#sec2-2">2.2 Sentido Real vs. Convencional</a></li>
+                        <li><a href="#sec2-3">2.3 Intensidade da Corrente (Ampère)</a></li>
+                        <li><a href="#sec2-4">2.4 Efeitos Elétricos</a></li>
+                    </ul>
+                </li>
+                <li><a href="#cap3">Capítulo 3: Dando um Empurrãozinho e Encontrando Barreiras – Tensão e Resistência</a>
+                    <ul>
+                        <li><a href="#sec3-1">3.1 Tensão Elétrica (Volt)</a></li>
+                        <li><a href="#sec3-2">3.2 Resistência Elétrica (Ohm)</a></li>
+                        <li><a href="#sec3-3">3.3 Conhecendo os Resistores</a></li>
+                        <li><a href="#sec3-4">3.4 1ª Lei de Ohm (Interativa)</a></li>
+                    </ul>
+                </li>
+                 <li><a href="#cap4">Capítulo 4: Montando o Quebra-Cabeça – Circuitos Elétricos</a>
+                    <ul>
+                        <li><a href="#sec4-1">4.1 Circuitos Simples</a></li>
+                        <li><a href="#sec4-2">4.2 Símbolos Elétricos</a></li>
+                        <li><a href="#sec4-3">4.3 Associação em Série</a></li>
+                        <li><a href="#sec4-4">4.4 Associação em Paralelo</a></li>
+                        <li><a href="#sec4-5">4.5 Associação Mista</a></li>
+                        <li><a href="#sec4-6">4.6 Medindo no Circuito</a></li>
+                    </ul>
+                </li>
+                <li><a href="#cap5">Capítulo 5: Quanta Energia Gastamos? Potência e Consumo</a>
+                    <ul>
+                        <li><a href="#sec5-1">5.1 Potência Elétrica (Watt)</a></li>
+                        <li><a href="#sec5-2">5.2 Energia Elétrica Consumida (kWh)</a></li>
+                        <li><a href="#sec5-3">5.3 Decifrando a Conta de Luz (Interativo)</a></li>
+                    </ul>
+                </li>
+                <li><a href="#cap6">Capítulo 6: Forças Invisíveis no Mundo Elétrico – Campo e Força Elétrica</a>
+                    <ul>
+                        <li><a href="#sec6-1">6.1 Atração e Repulsão</a></li>
+                        <li><a href="#sec6-2">6.2 Lei de Coulomb</a></li>
+                        <li><a href="#sec6-3">6.3 Campo Elétrico (Visualização Interativa)</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </section>
+
+        <!-- ============================================================ -->
+        <!-- CAPÍTULO 1: A FAÍSCA INICIAL (Conteúdo textual revisado)     -->
+        <!-- ============================================================ -->
+        <section id="cap1" class="chapter">
+            <h2>Capítulo 1: A Faísca Inicial – Introdução à Eletricidade</h2>
+            <article id="sec1-1">
+                <h3>1.1 O que é essa tal de Eletricidade?</h3>
+                <p>Imagine um mundo sem o brilho das luzes à noite, sem a conveniência da geladeira para manter seus alimentos frescos, ou a janela para o mundo que são a televisão, os computadores e os celulares. Seria um cenário bem diferente, não é? A <strong>eletricidade</strong> é uma forma de energia incrivelmente versátil e fundamental que permeia quase todos os aspectos da vida moderna. Ela se manifesta de formas espetaculares, como nos raios cortando o céu durante uma tempestade, e de maneiras sutis, mas vitais, como nos minúsculos impulsos elétricos que permitem que seus neurônios se comuniquem, formando seus pensamentos e ações.</p>
+                <p>Desde o aquecimento do seu chuveiro até o funcionamento do motor que movimenta um trem, a eletricidade é a força invisível que impulsiona incontáveis tecnologias. Neste guia, vamos desvendar os mistérios dessa energia, começando pelos seus fundamentos mais básicos.</p>
+                <div class="highlight-box">
+                    <strong>Você Sabia? Uma Descoberta Milenar!</strong> A palavra "eletricidade" tem raízes antigas, vindo do grego "elektron" (<em>ήλεκτρον</em>), que significa âmbar. Há mais de 2500 anos, por volta de 600 a.C., o filósofo grego Tales de Mileto fez uma observação curiosa: ao esfregar um pedaço de âmbar com lã, ele notou que o âmbar adquiria a propriedade de atrair objetos leves, como penas, palha ou poeira. Essa foi uma das primeiras observações registradas sobre os intrigantes fenômenos elétricos, o primeiro passo numa longa jornada de descobertas!
+                </div>
+            </article>
+            <article id="sec1-2">
+                <h3>1.2 Mergulhando no Átomo: Onde Tudo Começa</h3>
+                <p>Para entender a eletricidade em sua essência, precisamos fazer uma viagem ao mundo microscópico, ao coração da matéria: o <strong>átomo</strong>. Tudo o que você vê, toca ou sente – desde a cadeira em que você está sentado até as estrelas distantes no céu – é composto por essas partículas minúsculas. Cada átomo possui uma estrutura fundamental:</p>
+                <ul>
+                    <li><strong>Núcleo:</strong> O centro denso do átomo. Ele contém:
+                        <ul>
+                            <li><strong>Prótons:</strong> Partículas com carga elétrica <strong>positiva (+)</strong>.</li>
+                            <li><strong>Nêutrons:</strong> Partículas sem carga elétrica (são <strong>neutros</strong>).</li>
+                        </ul>
+                    </li>
+                    <li><strong>Eletrosfera:</strong> A vasta região ao redor do núcleo, onde encontramos os:
+                        <ul>
+                            <li><strong>Elétrons:</strong> Partículas com carga elétrica <strong>negativa (-)</strong>, muito mais leves que os prótons e nêutrons, que orbitam o núcleo em diferentes níveis de energia.</li>
+                        </ul>
+                    </li>
+                </ul>
+                <p>A carga de um elétron é igual em magnitude à carga de um próton, mas de sinal oposto. É a movimentação desses elétrons, especialmente os mais externos e menos ligados ao núcleo, que está na base da maioria dos fenômenos elétricos que estudaremos.</p>
+                <p>Um corpo pode ser classificado de acordo com seu estado elétrico:</p>
+                <ul>
+                    <li><strong>Eletricamente Neutro:</strong> Quando o número de prótons no núcleo é igual ao número de elétrons na eletrosfera. As cargas positivas e negativas se cancelam, resultando em uma carga total nula. A maioria dos objetos ao nosso redor está nesse estado.</li>
+                    <li><strong>Eletricamente Positivo:</strong> Se um corpo perde elétrons, ele fica com um excesso de prótons (cargas positivas) em relação aos elétrons. Dizemos que ele está <strong>carregado positivamente</strong>.</li>
+                    <li><strong>Eletricamente Negativo:</strong> Se um corpo ganha elétrons, ele fica com um excesso de elétrons (cargas negativas) em relação aos prótons. Dizemos que ele está <strong>carregado negativamente</strong>.</li>
+                </ul>
+                <div class="highlight-box">
+                    <strong>Analogia Visual: A Gangorra das Cargas</strong><br>
+                    Pense numa gangorra perfeitamente equilibrada. De um lado, coloque "pesinhos" dourados representando os prótons (+). Do outro lado, "pesinhos" prateados para os elétrons (-).
+                    <ul>
+                        <li>Se o número de pesinhos dourados e prateados for o mesmo, a gangorra fica reta, em equilíbrio: o corpo está <strong>neutro</strong>.</li>
+                        <li>Se você remover alguns pesinhos prateados (elétrons), o lado dourado (prótons) ficará mais pesado e a gangorra penderá para o lado positivo: o corpo está <strong>carregado positivamente</strong>.</li>
+                        <li>Se você adicionar mais pesinhos prateados (elétrons), este lado ficará mais pesado e a gangorra penderá para o lado negativo: o corpo está <strong>carregado negativamente</strong>.</li>
+                    </ul>
+                    Essa simples analogia nos ajuda a visualizar como o desequilíbrio entre prótons e elétrons define a carga elétrica de um corpo.
+                </div>
+            </article>
+            <article id="sec1-3">
+                <h3>1.3 Quem Deixa a Eletricidade Passar? Condutores e Isolantes (Visual)</h3>
+                <p>Os materiais se comportam de maneiras diferentes em relação à passagem da eletricidade. Essa diferença está ligada à facilidade com que os elétrons podem se mover através deles.</p>
+                <p><strong>Condutores Elétricos: As "Rodovias" dos Elétrons</strong><br>
+                São materiais onde os elétrons, especialmente os das camadas mais externas dos átomos (chamados elétrons de valência ou elétrons livres), podem se mover com grande liberdade. Imagine uma rodovia com muitas pistas livres: os carros (elétrons) fluem sem grandes obstáculos. Os metais como <strong>cobre, alumínio, prata e ouro</strong> são excelentes condutores. É por isso que os fios que transportam eletricidade em nossas casas e aparelhos são feitos, na maioria das vezes, de cobre ou alumínio. O corpo humano e a água (especialmente se contiver sais dissolvidos) também são condutores.</p>
+
+                <p><strong>Isolantes Elétricos (Dielétricos): As "Barreiras" para os Elétrons</strong><br>
+                Nestes materiais, os elétrons estão fortemente ligados aos seus átomos e não conseguem se mover facilmente. Pense numa estrada cheia de barreiras e obstáculos: o tráfego é quase impossível. <strong>Borracha, plástico, vidro, cerâmica, madeira seca e o ar seco</strong> são bons exemplos de isolantes. Eles são cruciais para nossa segurança, pois são usados para revestir fios (a capa plástica), construir suportes e impedir que a corrente elétrica siga caminhos indesejados ou perigosos (como atravessar nosso corpo!).</p>
+
+                <div class="conduct-isolate-container">
+                    <div class="material-box conductor-example">
+                        <h4>Condutor (Ex: Cobre)</h4>
+                        <div class="particles" id="conductor-particles-canvas">
+                            <!-- Elétrons e átomos serão adicionados por JS -->
+                        </div>
+                        <p>Os elétrons (azuis) se movem livremente entre os átomos (cinzas).</p>
+                    </div>
+                    <div class="material-box insulator-example">
+                        <h4>Isolante (Ex: Borracha)</h4>
+                        <div class="particles" id="insulator-particles-canvas">
+                            <!-- Elétrons e átomos serão adicionados por JS -->
+                        </div>
+                        <p>Os elétrons (azuis) estão firmemente presos aos seus átomos (cinzas), vibrando no lugar.</p>
+                    </div>
+                </div>
+
+                <p><strong>Semicondutores: Os "Controladores de Tráfego"</strong><br>
+                Existe uma classe intermediária fascinante de materiais chamada <strong>semicondutores</strong>, como o silício (Si) e o germânio (Ge). Eles não são nem tão bons condutores quanto os metais, nem tão bons isolantes quanto a borracha. A beleza dos semicondutores é que sua condutividade pode ser controlada com precisão, por exemplo, pela adição de pequenas impurezas (um processo chamado dopagem) ou pela aplicação de campos elétricos. Eles são a espinha dorsal de toda a eletrônica moderna, formando a base de transistores, chips de computador, LEDs e células solares. Pense neles como rodovias com pedágios e semáforos muito inteligentes, capazes de controlar o fluxo de elétrons de maneiras complexas.</p>
+            </article>
+            <article id="sec1-4">
+                <h3>1.4 Eletrizando! Como os Corpos Ganham Carga</h3>
+                <p>Um corpo, inicialmente neutro, pode se tornar eletrizado – ou seja, adquirir uma carga elétrica líquida (positiva ou negativa) – através de alguns processos fundamentais. Entender esses processos é chave para manipular e compreender a eletricidade.</p>
+                
+                <h4>Eletrização por Atrito: A "Esfregação" que Transfere Carga</h4>
+                <p>Este é talvez o processo mais antigo observado. Quando dois materiais diferentes e inicialmente neutros são esfregados (atritados) um contra o outro, pode ocorrer uma transferência de elétrons de um material para o outro. O material que tem uma tendência maior a "segurar" seus elétrons os manterá, enquanto o outro, com elétrons menos presos, pode perdê-los.</p>
+                <ul>
+                    <li>O material que <strong>perde elétrons</strong> fica com um excesso de prótons, tornando-se <strong>positivo</strong>.</li>
+                    <li>O material que <strong>ganha elétrons</strong> fica com um excesso de elétrons, tornando-se <strong>negativo</strong>.</li>
+                </ul>
+                <p><em>Exemplo Clássico:</em> Imagine esfregar vigorosamente um canudo de plástico (como os de refrigerante) com um pedaço de lã ou papel toalha. O plástico tende a ganhar elétrons da lã. Após o atrito, o canudo ficará carregado negativamente, e a lã, que perdeu esses elétrons, ficará carregada positivamente. Se você aproximar o canudo de pequenos pedaços de papel, verá que ele os atrai!</p>
+                <p><strong>Importante:</strong> No atrito, os dois corpos ficam eletrizados com cargas de mesmo valor (módulo), mas de sinais opostos. A quantidade total de carga no sistema (canudo + lã) permanece a mesma, apenas foi redistribuída – é o princípio da conservação da carga elétrica.</p>
+
+                <h4>Eletrização por Contato: O Toque que Compartilha Carga</h4>
+                <p>Neste processo, é necessário que pelo menos um dos corpos já esteja eletrizado e que haja contato físico entre eles. Além disso, para que a carga se distribua bem, pelo menos um deles (idealmente ambos, ou o corpo neutro) deve ser condutor.</p>
+                <p>Imagine um corpo A, carregado (digamos, negativamente, com excesso de elétrons), e um corpo B, neutro e condutor. Ao tocar A em B, parte do excesso de elétrons de A pode se transferir para B, repelidos pela concentração de cargas negativas em A e buscando uma distribuição mais espaçada. Após o contato e a separação:</p>
+                <ul>
+                    <li>Ambos os corpos (A e B) ficarão carregados com cargas de <strong>mesmo sinal</strong> (negativo, no nosso exemplo).</li>
+                    <li>Se os corpos forem condutores idênticos em forma e tamanho, a carga total se dividirá igualmente entre eles. Se forem diferentes, a divisão será proporcional às suas "capacidades" de armazenar carga.</li>
+                </ul>
+                <p>Se o corpo A estivesse carregado positivamente (falta de elétrons), ao tocar B (neutro e condutor), elétrons do corpo B seriam atraídos para A. Assim, B perderia elétrons e também ficaria positivo, como A.</p>
+
+                <h4>Eletrização por Indução: O "Flerte" Elétrico à Distância</h4>
+                <p>A indução é um processo mais sutil e engenhoso, pois permite eletrizar um corpo condutor sem que haja contato direto com o corpo indutor (o corpo já carregado que causa a eletrização). Siga os passos mentais desta "dança" elétrica:</p>
+                <ol>
+                    <li><strong>Aproximação do Indutor:</strong> Pegue um corpo condutor neutro (vamos chamá-lo de <strong>induzido</strong>), por exemplo, uma esfera metálica isolada (apoiada num suporte de borracha para que não perca carga para o chão). Agora, aproxime dele um corpo já eletrizado (o <strong>indutor</strong>), digamos um bastão carregado positivamente, mas <em>sem tocar</em> na esfera.</li>
+                    <li><strong>Separação de Cargas no Induzido:</strong> A presença do bastão positivo (indutor) perto da esfera (induzido) causa um reboliço nos elétrons livres da esfera. Os elétrons da esfera, sendo negativos, são fortemente atraídos pelo bastão positivo e se acumulam na região da esfera mais próxima do bastão. Consequentemente, a região da esfera mais distante do bastão fica com uma deficiência de elétrons, apresentando uma carga positiva. <br><strong>Atenção:</strong> Neste momento, a esfera como um todo ainda está neutra; apenas suas cargas internas se reorganizaram, criando uma polarização (um lado negativo e um lado positivo).</li>
+                    <li><strong>Aterramento Estratégico:</strong> Mantenha o bastão indutor positivo próximo à esfera. Agora, conecte um fio condutor (fio terra) do lado da esfera que ficou positivo (o lado mais afastado do indutor) até o chão (a Terra é um imenso reservatório de cargas). Como essa região da esfera está positiva (com falta de elétrons), elétrons fluirão da Terra, através do fio, para essa região da esfera, neutralizando aquela parte. Visualize os elétrons subindo da terra e "preenchendo os buracos" de carga positiva.</li>
+                    <li><strong>Desfazendo o Aterramento:</strong> Ainda com o bastão indutor positivo por perto (mantendo os elétrons atraídos para o lado próximo a ele), remova o fio terra. A esfera agora tem um excesso de elétrons que vieram da Terra, mas eles ainda estão concentrados no lado próximo ao indutor.</li>
+                    <li><strong>Afastando o Indutor:</strong> Finalmente, afaste o bastão indutor. Sem a atração do bastão, o excesso de elétrons que a esfera adquiriu se espalha por toda a sua superfície, buscando o maior espaçamento possível.</li>
+                </ol>
+                <p>Resultado: A esfera, que era neutra, agora está eletrizada com carga <strong>negativa</strong>, ou seja, com carga de sinal oposto à do indutor (que era positivo). Se o indutor fosse negativo, a esfera terminaria positiva. A indução é fundamental em muitas tecnologias, como em máquinas eletrostáticas e na pintura automotiva.</p>
+            </article>
+        </section>
+
+        <!-- ============================================================ -->
+        <!-- CAPÍTULO 2: ELÉTRONS EM MARCHA (Conteúdo textual revisado)   -->
+        <!-- ============================================================ -->
+        <section id="cap2" class="chapter">
+            <h2>Capítulo 2: Elétrons em Marcha – A Corrente Elétrica</h2>
+             <article id="sec2-1">
+                <h3>2.1 O Fluxo Organizado: Entendendo a Corrente Elétrica</h3>
+                <p>Vimos que os condutores possuem elétrons livres que podem se mover. Em um pedaço de fio metálico desconectado, esses elétrons se movem caoticamente, como um enxame de abelhas agitadas, sem uma direção preferencial. O movimento resultante é nulo.</p>
+                <p>Porém, se aplicarmos uma <strong>diferença de potencial (ddp)</strong> ou <strong>tensão elétrica (U)</strong> nas extremidades desse condutor (por exemplo, conectando-o a uma pilha ou bateria), surge um campo elétrico em seu interior. Esse campo elétrico exerce uma força sobre os elétrons livres, fazendo com que eles passem a ter um movimento predominantemente ordenado, um fluxo direcionado, do potencial menor para o potencial maior (ou seja, do polo negativo para o polo positivo da fonte de tensão).</p>
+                <p>Esse movimento ordenado de portadores de carga elétrica (geralmente elétrons em condutores metálicos, mas podem ser íons em soluções ou gases) é o que chamamos de <strong>Corrente Elétrica</strong>. Pense num rio: a água (cargas) flui de um ponto mais alto (maior potencial) para um ponto mais baixo (menor potencial) através do leito do rio (condutor).</p>
+            </article>
+            <article id="sec2-2">
+                <h3>2.2 Para Onde Eles Vão? Sentido Real vs. Convencional</h3>
+                <p>Aqui temos um detalhe histórico importante:</p>
+                <ul>
+                    <li><strong>Sentido Real da Corrente:</strong> Em condutores metálicos, os portadores de carga que se movem são os <strong>elétrons</strong> (negativos). Como são atraídos pelo polo positivo da fonte de tensão e repelidos pelo negativo, o sentido real do movimento dos elétrons é do <strong>polo negativo para o polo positivo</strong> da fonte (gerador), através do circuito externo.</li>
+                    <li><strong>Sentido Convencional da Corrente:</strong> No entanto, muito antes da descoberta do elétron, os cientistas já estudavam a eletricidade e acreditavam que a corrente era um fluxo de cargas positivas. Por convenção, e para manter a validade de muitas regras e leis desenvolvidas naquela época (como a regra da mão direita no magnetismo), adotou-se um <strong>sentido convencional</strong> para a corrente elétrica. Este sentido é o do movimento de cargas positivas fictícias, ou seja, <strong>do polo positivo para o polo negativo</strong> da fonte (gerador), através do circuito externo.</li>
+                </ul>
+                <p><strong>Qual usar?</strong> Para a maioria das análises de circuitos elétricos, usamos o <strong>sentido convencional</strong>. É importante saber que o sentido real é o dos elétrons, mas as setas que você verá nos diagramas de circuito geralmente indicam o sentido convencional.</p>
+                 <div class="highlight-box">
+                    <strong>Visualizando:</strong> Imagine uma fila de pessoas (elétrons) querendo entrar num cinema (polo positivo). Elas saem da bilheteria (polo negativo) e caminham em direção à entrada do cinema. Esse é o sentido real. Mas, se imaginássemos que são "vagas" positivas se movendo da entrada do cinema para a bilheteria, esse seria o sentido convencional.
+                </div>
+            </article>
+            <article id="sec2-3">
+                <h3>2.3 Medindo o Fluxo: Intensidade da Corrente (Ampère)</h3>
+                <p>A corrente elétrica pode ser mais forte ou mais fraca. Para quantificar esse "volume" de carga que passa, definimos a <strong>Intensidade da Corrente Elétrica (I)</strong>.</p>
+                <p>Ela é definida como a quantidade de carga elétrica ($\Delta Q$) que atravessa uma seção transversal (uma "fatia" imaginária) de um condutor em um determinado intervalo de tempo ($\Delta t$).</p>
+                <div class="formula-explanation">
+                    <div>\[I = \frac{\Delta Q}{\Delta t}\]</div>
+                    <dl>
+                        <dt>$I$</dt>
+                        <dd><strong>Intensidade da Corrente Elétrica</strong>. Unidade no SI: <strong>Ampère (A)</strong>.</dd>
+                        <dt>$\Delta Q$</dt>
+                        <dd><strong>Quantidade de Carga Elétrica</strong> que atravessa a seção do condutor. Unidade no SI: <strong>Coulomb (C)</strong>.</dd>
+                        <dt>$\Delta t$</dt>
+                        <dd><strong>Intervalo de Tempo</strong> durante o qual a carga $\Delta Q$ atravessou. Unidade no SI: <strong>Segundo (s)</strong>.</dd>
+                    </dl>
+                    <p><strong>Por quê? / Significado:</strong> Esta fórmula nos diz o quão "rápido" as cargas estão fluindo. Se uma grande quantidade de carga (muitos Coulombs) passa por um ponto em pouco tempo (poucos segundos), a corrente é intensa (muitos Ampères). Se pouca carga passa ou leva muito tempo, a corrente é fraca. Um Ampère (1A) significa que 1 Coulomb de carga está passando por uma seção do condutor a cada segundo.</p>
+                </div>
+                <p>A corrente elétrica é medida com um aparelho chamado <strong>Amperímetro</strong>, que deve ser ligado em série no circuito.</p>
+            </article>
+            <article id="sec2-4">
+                 <h3>2.4 Os Superpoderes da Corrente: Efeitos Elétricos</h3>
+                <p>Quando a corrente elétrica atravessa diferentes materiais ou dispositivos, ela pode produzir diversos efeitos. Sąo essas transformações de energia elétrica em outras formas de energia que tornam a eletricidade tão útil:</p>
+                <ul>
+                    <li><strong>Efeito Joule (Térmico):</strong> É a transformação de energia elétrica em <strong>energia térmica (calor)</strong>. Ocorre quando os elétrons em movimento colidem com os átomos do condutor, agitando-os e aumentando sua temperatura.
+                        <ul>
+                            <li><em>Onde vemos?</em> Chuveiros elétricos, aquecedores, secadores de cabelo, torradeiras, lâmpadas incandescentes (aquelas antigas que esquentam muito), fusíveis (que se derretem para proteger circuitos).</li>
+                        </ul>
+                    </li>
+                    <li><strong>Efeito Luminoso:</strong> É a transformação de energia elétrica em <strong>energia luminosa (luz)</strong>.
+                        <ul>
+                            <li><em>Onde vemos?</em> Lâmpadas LED (Light Emitting Diode), lâmpadas fluorescentes, tubos de neon, telas de TV e smartphones. Em alguns casos, como nas lâmpadas incandescentes, a luz é uma consequência do intenso aquecimento (efeito Joule), mas em LEDs e fluorescentes, os mecanismos são mais diretos e eficientes.</li>
+                        </ul>
+                    </li>
+                    <li><strong>Efeito Magnético:</strong> Toda corrente elétrica cria um <strong>campo magnético</strong> ao seu redor. Este é um dos efeitos mais fundamentais e importantes.
+                        <ul>
+                            <li><em>Onde vemos?</em> Motores elétricos (que transformam energia elétrica em movimento), geradores (que fazem o oposto), eletroímãs (usados em campainhas, guindastes magnéticos, relés), transformadores.</li>
+                        </ul>
+                    </li>
+                    <li><strong>Efeito Químico:</strong> Ocorre quando a corrente elétrica atravessa certas soluções condutoras (eletrólitos), provocando <strong>reações químicas</strong>.
+                        <ul>
+                            <li><em>Onde vemos?</em> Processo de eletrólise (usado para revestir metais – galvanoplastia, como cromagem; ou para obter substâncias como cloro e soda cáustica), carregamento e descarregamento de baterias recarregáveis, pilhas.</li>
+                        </ul>
+                    </li>
+                    <li><strong>Efeito Fisiológico (Cuidado!):</strong> É a ação da corrente elétrica sobre organismos vivos. Pode causar desde formigamento até contrações musculares, queimaduras, parada cardiorrespiratória e morte.
+                        <ul>
+                            <li><em>Onde vemos?</em> O choque elétrico! A intensidade e os efeitos dependem de fatores como o valor da corrente, o caminho percorrido pelo corpo, o tempo de exposição e a resistência da pele. Por isso, <strong>segurança com eletricidade é fundamental!</strong> Também é usado de forma controlada na medicina (eletrocardiograma, desfibriladores, estimulação muscular).</li>
+                        </ul>
+                    </li>
+                </ul>
+            </article>
+        </section>
+        
+        <!-- ============================================================ -->
+        <!-- CAPÍTULO 3: TENSÃO E RESISTÊNCIA (Fórmulas com MathJax)       -->
+        <!-- ============================================================ -->
+        <section id="cap3" class="chapter">
+            <h2>Capítulo 3: Dando um Empurrãozinho e Encontrando Barreiras – Tensão e Resistência</h2>
+            <article id="sec3-1">
+                <h3>3.1 A Força que Move: Tensão Elétrica (Volt)</h3>
+                <p>Para que a corrente elétrica que vimos no capítulo anterior possa fluir de forma contínua por um condutor, é preciso uma "força" ou "pressão" que impulsione os elétrons. Essa "força motriz" é a <strong>Tensão Elétrica</strong>, também conhecida como <strong>Diferença de Potencial (ddp)</strong>. Ela é geralmente representada pela letra <strong>U</strong> (do alemão "Unterschied", que significa diferença) ou, em alguns contextos, <strong>V</strong> (de Voltagem).</p>
+                <p>Pense novamente na analogia do rio. Para a água fluir, precisa haver uma diferença de nível entre a nascente e a foz. A tensão elétrica é análoga a essa diferença de nível de energia potencial elétrica entre dois pontos de um circuito. Um ponto tem um "potencial elétrico" maior, e o outro, um potencial menor. Os elétrons (cargas negativas) são então "empurrados" do ponto de menor potencial para o de maior potencial (ou, no sentido convencional, as cargas positivas fictícias são empurradas do maior para o menor potencial).</p>
+                <div class="highlight-box">
+                    <strong>Analogia Detalhada: As Caixas D'água e a Tensão</strong><br>
+                    Imagine duas grandes caixas d'água transparentes, A e B, posicionadas lado a lado, mas com uma diferença crucial: a caixa A está sobre uma plataforma bem alta, enquanto a caixa B está no nível do chão. Ambas são conectadas na parte de baixo por um cano largo e transparente, inicialmente fechado por uma válvula.
+                    <ul>
+                        <li>A <strong>altura da água</strong> na caixa A em relação à caixa B representa o <strong>potencial elétrico</strong>. A diferença de altura entre os níveis de água das duas caixas é a <strong>Diferença de Potencial (Tensão)</strong>. Quanto maior essa diferença de altura, maior a "pressão" potencial da água.</li>
+                        <li>Se você abrir a válvula, a água fluirá vigorosamente da caixa A (maior potencial/altura) para a caixa B (menor potencial/altura) através do cano. Esse fluxo de água é análogo à <strong>corrente elétrica</strong>.</li>
+                        <li>Se as caixas estivessem no mesmo nível (mesma altura de água), não haveria fluxo, mesmo com a válvula aberta. Da mesma forma, sem tensão, não há corrente contínua.</li>
+                    </ul>
+                    As fontes que estabelecem e mantêm essa diferença de potencial em um circuito elétrico são chamadas de <strong>geradores</strong>, como pilhas, baterias e as tomadas da sua casa (que recebem energia das usinas hidrelétricas, termelétricas, etc.).
+                </div>
+                <p>A unidade de medida da tensão elétrica no Sistema Internacional (SI) é o <strong>Volt (V)</strong>, em homenagem ao físico italiano Alessandro Volta, inventor da pilha voltaica.</p>
+                <p>Um aparelho chamado <strong>Voltímetro</strong> é usado para medir a tensão elétrica, e ele deve ser conectado em paralelo com o trecho do circuito cuja ddp se quer medir.</p>
+            </article>
+            <article id="sec3-2">
+                <h3>3.2 Segura Aí! Resistência Elétrica (Ohm)</h3>
+                <p>Mesmo nos melhores condutores, os elétrons em movimento não têm um caminho totalmente livre. Eles colidem com os átomos e outras partículas que compõem o material do condutor. Essas colisões dificultam o movimento dos elétrons, criando uma oposição à passagem da corrente elétrica. Essa "dificuldade" ou "oposição" é chamada de <strong>Resistência Elétrica</strong>, representada pela letra <strong>R</strong>.</p>
+                <p>Quanto maior a resistência de um material, mais difícil é para a corrente elétrica fluir através dele, para uma mesma tensão aplicada. Materiais condutores, como os metais, têm baixa resistência. Materiais isolantes, como a borracha ou o vidro, têm resistência altíssima, praticamente impedindo o fluxo de corrente em tensões usuais.</p>
+                <div class="highlight-box">
+                    <strong>Analogia Detalhada: O Cano e a Resistência</strong><br>
+                    Voltemos à nossa analogia hidráulica. Imagine que a água (corrente) está fluindo de uma caixa d'água alta (tensão) através de um cano.
+                    <ul>
+                        <li>Se o cano for <strong>largo, curto e liso por dentro</strong>, a água fluirá com facilidade, encontrando pouca "resistência". Isso é como um bom condutor com baixa resistência elétrica.</li>
+                        <li>Agora, substitua esse cano por um que seja <strong>muito estreito, muito longo, ou cheio de obstáculos internos</strong> como pedras, areia, ou uma esponja entupindo parte dele. Mesmo com a mesma pressão da caixa d'água (tensão), o fluxo de água será bem menor, pois o cano oferece grande "resistência". Isso é como um material com alta resistência elétrica.</li>
+                    </ul>
+                    Essa resistência interna ao fluxo é o que define a Resistência Elétrica.
+                </div>
+                <p>A resistência elétrica de um condutor depende de vários fatores:</p>
+                <ul>
+                    <li><strong>Material:</strong> Cada material tem uma propriedade intrínseca chamada <strong>resistividade ($\rho$)</strong>. Bons condutores (cobre, prata) têm baixa resistividade; isolantes têm alta resistividade.</li>
+                    <li><strong>Comprimento (L):</strong> Quanto mais longo o condutor, maior a sua resistência (mais caminho para os elétrons percorrerem e colidirem).</li>
+                    <li><strong>Área da Seção Transversal (A):</strong> Quanto maior a área (mais "grosso" o fio), menor a resistência (mais espaço para os elétrons passarem).</li>
+                    <li><strong>Temperatura:</strong> Para a maioria dos condutores metálicos, a resistência aumenta com o aumento da temperatura (maior agitação dos átomos dificulta a passagem dos elétrons). Em semicondutores, geralmente ocorre o oposto.</li>
+                </ul>
+                <p>A unidade de medida da resistência elétrica no SI é o <strong>Ohm ($\Omega$)</strong>, em homenagem ao físico alemão Georg Simon Ohm, que formulou a lei fundamental que relaciona tensão, corrente e resistência.</p>
+            </article>
+            <article id="sec3-3">
+                <h3>3.3 Conhecendo os Resistores</h3>
+                <p>Os <strong>resistores</strong> são componentes eletrônicos especificamente projetados para apresentar um valor definido de resistência elétrica em um circuito. Eles são um dos componentes mais comuns e fundamentais na eletrônica.</p>
+                <p><strong>Para que servem?</strong></p>
+                <ul>
+                    <li><strong>Limitar a corrente elétrica:</strong> Protegem componentes mais sensíveis de correntes excessivas.</li>
+                    <li><strong>Dividir tensões:</strong> Em certas configurações, podem fornecer diferentes níveis de tensão a partir de uma única fonte.</li>
+                    <li><strong>Gerar calor:</strong> No efeito Joule (ex: resistências de chuveiros, aquecedores).</li>
+                    <li><strong>Ajustar sinais, polarizar transistores</strong>, e muitas outras funções em circuitos analógicos e digitais.</li>
+                </ul>
+                <p><strong>Como eles são?</strong><br>
+                Os resistores vêm em muitas formas e tamanhos. Os mais comuns em projetos eletrônicos didáticos são os resistores de filme de carbono ou filme metálico. Eles são pequenos cilindros, geralmente de cor bege, marrom claro ou azul claro, com fios (terminais) saindo de cada extremidade para conexão. O aspecto mais característico são as <strong>faixas coloridas</strong> pintadas em seu corpo. Essas faixas formam um código que indica o valor da sua resistência (em Ohms) e sua tolerância (a variação percentual permitida em relação ao valor nominal).</p>
+                <p>Por exemplo, um resistor pode ter faixas como Marrom-Preto-Vermelho-Dourado. Cada cor representa um número ou um multiplicador, e a última faixa (ou a penúltima, em alguns casos) indica a tolerância. Aprender a ler esse código de cores é uma habilidade útil para quem monta circuitos.</p>
+                <p>Existem também resistores variáveis, chamados <strong>potenciômetros</strong> ou <strong>trimpots</strong>, cuja resistência pode ser ajustada manualmente, como o botão de volume de um rádio antigo.</p>
+            </article>
+            <article id="sec3-4">
+                <h3>3.4 A Lei Mais Famosa: 1ª Lei de Ohm (Interativa)</h3>
+                <p>O físico alemão Georg Simon Ohm, através de experimentos cuidadosos, descobriu uma relação matemática simples e fundamental que descreve como a tensão, a corrente e a resistência se relacionam em muitos tipos de condutores elétricos (especialmente os metálicos, mantidos a uma temperatura constante). Esses condutores que obedecem a essa relação são chamados de <strong>condutores ôhmicos</strong> ou <strong>resistores ôhmicos</strong>.</p>
+                <p>A <strong>Primeira Lei de Ohm</strong> estabelece que, para um condutor ôhmico, a razão entre a tensão elétrica ($U$) aplicada em seus terminais e a corrente elétrica ($I$) que o atravessa é uma constante. Essa constante é precisamente a resistência elétrica ($R$) do condutor.</p>
+                <div class="formula-explanation">
+                    <div>\[U = R \times I\]</div>
+                    <p style="text-align:center;">Ou, de forma equivalente:</p>
+                    <div style="display:flex; justify-content:space-around; margin: 10px 0;">
+                        <span>\[R = \frac{U}{I}\]</span>
+                        <span>\[I = \frac{U}{R}\]</span>
+                    </div>
+                    <dl>
+                        <dt>$U$ (ou $V$)</dt>
+                        <dd><strong>Tensão Elétrica</strong> (ou Diferença de Potencial - ddp) aplicada aos terminais do condutor. Unidade no SI: <strong>Volt (V)</strong>.</dd>
+                        <dt>$R$</dt>
+                        <dd><strong>Resistência Elétrica</strong> do condutor. Unidade no SI: <strong>Ohm ($\Omega$)</strong>.</dd>
+                        <dt>$I$</dt>
+                        <dd><strong>Intensidade da Corrente Elétrica</strong> que atravessa o condutor. Unidade no SI: <strong>Ampère (A)</strong>.</dd>
+                    </dl>
+                    <p><strong>Por quê? / Significado:</strong></p>
+                    <ul>
+                        <li>$U = R \times I$: Esta forma nos diz que a "queda de tensão" através de um resistor é diretamente proporcional à corrente que passa por ele e à sua resistência. Para uma mesma resistência, se você quiser mais corrente, precisará de mais tensão. Para uma mesma corrente, um resistor maior causará uma queda de tensão maior.</li>
+                        <li>$I = U / R$: Esta é talvez a forma mais intuitiva. A corrente é diretamente proporcional à tensão (quanto mais "empurrão", mais fluxo) e inversamente proporcional à resistência (quanto mais "dificuldade", menos fluxo).</li>
+                        <li>$R = U / I$: Define a resistência como a razão entre a tensão aplicada e a corrente resultante. Se um material permite passar pouca corrente mesmo com muita tensão, ele tem alta resistência.</li>
+                    </ul>
+                    <p>A Lei de Ohm é uma das pedras angulares da análise de circuitos elétricos.</p>
+                </div>
+
+                <div class="interactive-section" id="ohm-law-interactive">
+                    <h4>Experimente a Lei de Ohm!</h4>
+                    <div>
+                        <label for="voltageSlider">Tensão (U): <span id="voltageValue" class="value-display">12</span> V</label>
+                        <input type="range" id="voltageSlider" min="1" max="100" value="12" step="1">
+                    </div>
+                    <div>
+                        <label for="resistanceSlider">Resistência (R): <span id="resistanceValue" class="value-display">4</span> Ω</label>
+                        <input type="range" id="resistanceSlider" min="1" max="50" value="4" step="1">
+                    </div>
+                    <p>Corrente (I) calculada: <span id="currentValue" class="output">3.00</span> A</p>
+                    <canvas id="ohmChart" width="400" height="200"></canvas>
+                </div>
+            </article>
+        </section>
+
+        <!-- ============================================================ -->
+        <!-- CAPÍTULO 4: CIRCUITOS ELÉTRICOS (Fórmulas com MathJax)     -->
+        <!-- ============================================================ -->
+        <section id="cap4" class="chapter">
+            <h2>Capítulo 4: Montando o Quebra-Cabeça – Circuitos Elétricos</h2>
+             <article id="sec4-1">
+                <h3>4.1 Circuitos Simples: O Caminho da Eletricidade</h3>
+                <p>Um <strong>circuito elétrico</strong> é, em sua forma mais básica, um caminho fechado e contínuo que permite que a corrente elétrica flua. Para que um circuito funcione e a corrente elétrica realize algum trabalho útil (como acender uma lâmpada ou mover um motor), ele geralmente precisa de alguns componentes essenciais:</p>
+                <ol>
+                    <li><strong>Fonte de Tensão (Gerador):</strong> É o componente que fornece a "energia" ou a "pressão" (tensão elétrica) para impulsionar os elétrons. Exemplos: pilhas, baterias, tomadas (conectadas à rede elétrica).</li>
+                    <li><strong>Condutores:</strong> São os "caminhos" por onde a corrente flui. Geralmente são fios metálicos (cobre, alumínio) que conectam os outros componentes do circuito.</li>
+                    <li><strong>Dispositivo de Carga (Receptor ou Resistor):</strong> É o componente que utiliza a energia elétrica para realizar algum trabalho ou que oferece resistência à passagem da corrente. Exemplos: uma lâmpada (transforma energia elétrica em luz e calor), um motor (transforma em movimento), um resistor (limita a corrente, gera calor).</li>
+                    <li><strong>Interruptor (Chave):</strong> É um dispositivo opcional, mas muito útil, que permite abrir ou fechar o circuito, controlando o fluxo da corrente. Quando o interruptor está "fechado", o caminho está completo e a corrente flui. Quando está "aberto", o caminho é interrompido e a corrente cessa.</li>
+                </ol>
+                <p>Pense num circuito simples: uma pilha conectada por fios a uma pequena lâmpada. A pilha é a fonte. Os fios são os condutores. A lâmpada é o dispositivo de carga. Se você adicionar um interruptor no meio de um dos fios, poderá acender e apagar a lâmpada.</p>
+                <div class="highlight-box">
+                    <strong>Circuito Aberto vs. Fechado:</strong><br>
+                    Um <strong>circuito fechado</strong> é um caminho completo, sem interrupções, permitindo que a corrente flua do polo positivo ao polo negativo da fonte (sentido convencional) através dos componentes. É quando a lâmpada acende!<br>
+                    Um <strong>circuito aberto</strong> é um caminho interrompido. Isso pode ser causado por um fio rompido, um interruptor desligado, ou um componente queimado que não conduz mais. Em um circuito aberto, a corrente não pode fluir. A lâmpada apaga.
+                </div>
+            </article>
+            <article id="sec4-2">
+                <h3>4.2 A Linguagem dos Circuitos: Símbolos Elétricos</h3>
+                <p>Para representar circuitos elétricos de forma clara e universal, os engenheiros e técnicos usam um conjunto padronizado de <strong>símbolos gráficos</strong>. Cada componente importante de um circuito tem seu próprio símbolo. Aprender esses símbolos é como aprender o alfabeto de uma nova linguagem – a linguagem dos circuitos!</p>
+                <p>Aqui estão alguns dos símbolos mais comuns que você encontrará:</p>
+                <table id="symbol-table">
+                    <thead>
+                        <tr>
+                            <th>Componente</th>
+                            <th>Símbolo</th>
+                            <th>Descrição</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Linhas da tabela serão preenchidas por JavaScript -->
+                    </tbody>
+                </table>
+                 <p><small>(Nota: Símbolos desenhados via SVG. Alguns podem ter variações, mas os mostrados são amplamente reconhecidos.)</small></p>
+            </article>
+
+            <article id="sec4-3">
+                <h3>4.3 Resistores em Fila Indiana: Associação em Série</h3>
+                <p>Quando vários resistores (ou outros componentes) são conectados em um circuito de forma que a corrente elétrica tenha apenas <strong>um único caminho</strong> para percorrer através de todos eles, um após o outro, dizemos que eles estão em uma <strong>associação em série</strong>.</p>
+                <p>Imagine uma estrada de pista única com vários pedágios em sequência. Todos os carros que passam pelo primeiro pedágio obrigatoriamente passam pelo segundo, pelo terceiro, e assim por diante. Não há desvios.</p>
+                <div id="seriesCircuitDiagramContainer">
+                    <p style="text-align:center;"><em>Diagrama de um circuito com três resistores ($R_1, R_2, R_3$) em série com uma fonte de tensão ($U$).</em></p>
+                    <!-- SVG será inserido aqui pelo JavaScript -->
+                </div>
+                <p>Características importantes da associação em série:</p>
+                <ul>
+                    <li><strong>Corrente Elétrica ($I$):</strong> A corrente elétrica é a <strong>mesma</strong> em todos os resistores e em qualquer ponto do trecho em série. ($I_{total} = I_1 = I_2 = I_3 = \dots$)</li>
+                    <li><strong>Tensão Elétrica ($U$):</strong> A tensão total ($U_{total}$) aplicada pela fonte se <strong>divide</strong> entre os resistores. A soma das quedas de tensão em cada resistor é igual à tensão total. ($U_{total} = U_1 + U_2 + U_3 + \dots$)</li>
+                    <li><strong>Resistência Equivalente ($R_{eq}$):</strong> É a resistência única que poderia substituir toda a associação em série, produzindo o mesmo efeito no restante do circuito. Para resistores em série, a resistência equivalente é a <strong>soma das resistências individuais</strong>:
+                        <div class="formula-explanation">
+                            <div>\[R_{eq} = R_1 + R_2 + R_3 + \dots\]</div>
+                            <p>Onde $R_1, R_2, R_3$ são as resistências dos componentes individuais.</p>
+                            <p><strong>Por quê? / Significado:</strong> Cada resistor em série adiciona mais "dificuldade" à passagem da corrente. Portanto, a resistência total do caminho aumenta linearmente com cada resistor adicionado.</p>
+                        </div>
+                    </li>
+                </ul>
+                <p><em>Aplicação Comum:</em> Antigamente, as luzinhas de Natal (pisca-pisca) eram frequentemente ligadas em série. Se uma lâmpada queimasse (interrompendo o circuito), todas as outras apagavam, pois o único caminho da corrente era bloqueado. Fusíveis também são sempre ligados em série com o circuito que protegem.</p>
+            </article>
+
+            <article id="sec4-4">
+                <h3>4.4 Resistores Lado a Lado: Associação em Paralelo (Visual SVG)</h3>
+                <p>Na <strong>associação em paralelo</strong>, os resistores (ou outros componentes) são conectados de tal forma que a corrente elétrica se <strong>divide</strong> entre eles, percorrendo caminhos diferentes, e depois se reagrupa.</p>
+                <p>Imagine um rio que se divide em vários braços menores (canais paralelos) e depois todos esses braços se juntam novamente para formar o rio principal. A água (corrente) se distribui entre os canais.</p>
+                <div id="parallelCircuitDiagramContainer">
+                     <p style="text-align:center;"><em>Diagrama de um circuito com três resistores ($R_1, R_2, R_3$) em paralelo com uma fonte de tensão ($U$).</em></p>
+                    <!-- SVG será inserido aqui pelo JavaScript -->
+                </div>
+                <p>Características importantes da associação em paralelo:</p>
+                <ul>
+                    <li><strong>Tensão Elétrica ($U$):</strong> A tensão elétrica (diferença de potencial) é a <strong>mesma</strong> em todos os resistores (ou componentes) conectados em paralelo. ($U_{total} = U_1 = U_2 = U_3 = \dots$)</li>
+                    <li><strong>Corrente Elétrica ($I$):</strong> A corrente total ($I_{total}$) fornecida pela fonte se <strong>divide</strong> entre os diferentes ramos do circuito. A corrente em cada ramo depende da resistência daquele ramo. A soma das correntes em cada ramo é igual à corrente total. ($I_{total} = I_1 + I_2 + I_3 + \dots$)</li>
+                    <li><strong>Resistência Equivalente ($R_{eq}$):</strong> O cálculo da resistência equivalente em paralelo é um pouco diferente. O inverso da resistência equivalente é igual à soma dos inversos das resistências individuais:
+                        <div class="formula-explanation">
+                            <div>\[\frac{1}{R_{eq}} = \frac{1}{R_1} + \frac{1}{R_2} + \frac{1}{R_3} + \dots\]</div>
+                             <p>Para apenas dois resistores em paralelo, uma fórmula derivada e mais direta é: $R_{eq} = \frac{R_1 \times R_2}{R_1 + R_2}$</p>
+                            <p><strong>Por quê? / Significado:</strong> Adicionar mais caminhos em paralelo é como abrir mais "portas" para a corrente passar. Isso efetivamente <em>diminui</em> a resistência total do circuito, pois a corrente tem mais opções. Por isso, a resistência equivalente em paralelo é sempre <em>menor</em> que a menor das resistências individuais da associação.</p>
+                        </div>
+                    </li>
+                </ul>
+                <p><em>Aplicação Comum:</em> A fiação elétrica em nossas casas é um exemplo de associação em paralelo. Cada tomada e cada lâmpada são conectadas em paralelo à rede elétrica. Isso garante que todos os aparelhos recebam a mesma tensão (110V ou 220V, por exemplo) e que, se um aparelho for desligado ou uma lâmpada queimar, os outros continuem funcionando independentemente.</p>
+            </article>
+
+            <article id="sec4-5">
+                <h3>4.5 Misturando Tudo: Associação Mista</h3>
+                <p>Muitos circuitos reais são mais complexos e envolvem combinações de associações em série e em paralelo. Esses são chamados de <strong>circuitos mistos</strong>.</p>
+                <p>Para analisar um circuito misto e encontrar sua resistência equivalente total (ou outras grandezas como corrente e tensão em cada componente), a estratégia é simplificá-lo passo a passo:</p>
+                <ol>
+                    <li>Identifique trechos do circuito que estão claramente em série ou claramente em paralelo.</li>
+                    <li>Calcule a resistência equivalente desses trechos identificados.</li>
+                    <li>Redesenhe o circuito (mentalmente ou no papel) substituindo o trecho original pela sua resistência equivalente recém-calculada. O circuito agora está um pouco mais simples.</li>
+                    <li>Repita os passos 1 a 3, identificando novos trechos em série ou paralelo no circuito simplificado, até que reste apenas uma única resistência equivalente para todo o circuito em relação à fonte.</li>
+                </ol>
+                <p>Este processo de "redução" do circuito é fundamental para a análise de circuitos mais complexos.</p>
+            </article>
+             <article id="sec4-6">
+                <h3>4.6 Medindo no Circuito: Amperímetro e Voltímetro</h3>
+                <p>Para verificar experimentalmente os valores de corrente e tensão em um circuito, usamos instrumentos de medição específicos:</p>
+                <ul>
+                    <li><strong>Amperímetro:</strong> Mede a <strong>intensidade da corrente elétrica ($I$)</strong>.
+                        <ul>
+                            <li><strong>Como conectar:</strong> Deve ser conectado <strong>em série</strong> com o trecho do circuito onde se deseja medir a corrente. Isso significa que o circuito precisa ser "aberto" e o amperímetro inserido no caminho, para que toda a corrente daquele trecho passe por dentro dele.</li>
+                            <li><strong>Resistência interna ideal:</strong> Um amperímetro ideal teria resistência interna <strong>zero</strong>, para não interferir no circuito e não causar uma queda de tensão adicional. Amperímetros reais têm resistência interna muito baixa.</li>
+                        </ul>
+                    </li>
+                    <li><strong>Voltímetro:</strong> Mede a <strong>tensão elétrica ($U$)</strong> ou diferença de potencial entre dois pontos.
+                        <ul>
+                            <li><strong>Como conectar:</strong> Deve ser conectado <strong>em paralelo</strong> com o componente ou trecho do circuito cuja ddp se quer medir. Seus terminais são ligados aos dois pontos entre os quais se quer saber a tensão.</li>
+                            <li><strong>Resistência interna ideal:</strong> Um voltímetro ideal teria resistência interna <strong>infinita</strong>, para não desviar nenhuma corrente do trecho que está sendo medido. Voltímetros reais têm resistência interna muito alta.</li>
+                        </ul>
+                    </li>
+                </ul>
+                <p>Muitas vezes, esses dois instrumentos (e outros, como o ohmímetro, que mede resistência) são combinados em um único aparelho chamado <strong>multímetro</strong>.</p>
+                <div class="highlight-box">
+                    <strong>Lembre-se:</strong> Conectar um amperímetro em paralelo com uma fonte de tensão pode danificá-lo (ou queimar um fusível), pois sua baixa resistência resultaria em uma corrente muito alta! Da mesma forma, um voltímetro em série interromperia significativamente o circuito devido à sua alta resistência. A conexão correta é crucial!
+                </div>
+            </article>
+        </section>
+
+        <!-- ============================================================ -->
+        <!-- CAPÍTULO 5: POTÊNCIA E CONSUMO (Fórmulas com MathJax)         -->
+        <!-- ============================================================ -->
+        <section id="cap5" class="chapter">
+            <h2>Capítulo 5: Quanta Energia Gastamos? Potência e Consumo</h2>
+            <article id="sec5-1">
+                <h3>5.1 A Rapidez do Trabalho: Potência Elétrica (Watt)</h3>
+                <p>Quando a corrente elétrica flui através de um dispositivo (como uma lâmpada, um motor ou um aquecedor), a energia elétrica é transformada em outra forma de energia (luz, movimento, calor, etc.). A <strong>Potência Elétrica ($P$)</strong> de um dispositivo nos diz com que <strong>rapidez</strong> essa transformação de energia ocorre, ou seja, quanta energia elétrica é consumida ou convertida por unidade de tempo.</p>
+                <p>Um aparelho de alta potência transforma muita energia rapidamente (como um chuveiro elétrico), enquanto um de baixa potência transforma energia mais lentamente (como uma pequena lâmpada LED).</p>
+                <p>A potência elétrica pode ser calculada de algumas maneiras, dependendo das grandezas que conhecemos:</p>
+                <div class="formula-explanation">
+                    <div>\[P = U \times I\]</div>
+                    <dl>
+                        <dt>$P$</dt><dd><strong>Potência Elétrica</strong>. Unidade no SI: <strong>Watt (W)</strong>.</dd>
+                        <dt>$U$</dt><dd><strong>Tensão Elétrica</strong> (ddp) aplicada ao dispositivo. Unidade no SI: <strong>Volt (V)</strong>.</dd>
+                        <dt>$I$</dt><dd><strong>Intensidade da Corrente Elétrica</strong> que atravessa o dispositivo. Unidade no SI: <strong>Ampère (A)</strong>.</dd>
+                    </dl>
+                    <p><strong>Por quê? / Significado:</strong> Esta é a fórmula fundamental. A potência é o produto da "força" (tensão) que impulsiona as cargas pela "quantidade de cargas por segundo" (corrente) que estão realizando o trabalho. Se a tensão é alta e a corrente também, a potência será alta.</p>
+                </div>
+                <p>Se o dispositivo for um resistor ôhmico (obedece à Lei de Ohm, $U = R \times I$), podemos substituir $U$ ou $I$ na fórmula acima para obter outras duas expressões úteis para a potência dissipada por um resistor (chamada de potência Joule):</p>
+                <div class="formula-explanation">
+                    <p>Substituindo $U = R \times I$ em $P = U \times I$, obtemos:</p>
+                    <div>\[P = R \times I^2\]</div>
+                    <dl>
+                        <dt>$P, R, I$</dt><dd>Mesmas grandezas e unidades acima.</dd>
+                    </dl>
+                    <p><strong>Por quê? / Significado:</strong> Mostra que a potência dissipada em um resistor aumenta com o quadrado da corrente. Dobrar a corrente quadruplica a potência dissipada como calor (se $R$ for constante).</p>
+                </div>
+                <div class="formula-explanation">
+                    <p>Substituindo $I = U / R$ em $P = U \times I$, obtemos:</p>
+                    <div>\[P = \frac{U^2}{R}\]</div>
+                    <dl>
+                        <dt>$P, U, R$</dt><dd>Mesmas grandezas e unidades acima.</dd>
+                    </dl>
+                    <p><strong>Por quê? / Significado:</strong> Mostra que a potência dissipada em um resistor aumenta com o quadrado da tensão aplicada (se $R$ for constante) e é inversamente proporcional à resistência (para uma mesma tensão, menor resistência significa maior corrente e, portanto, maior potência).</p>
+                </div>
+                <p>A unidade de potência, o <strong>Watt (W)</strong>, é uma homenagem a James Watt, engenheiro escocês que fez contribuições importantes para a máquina a vapor. 1 Watt significa que 1 Joule de energia está sendo transformado a cada segundo ($1 \text{ W} = 1 \text{ J/s}$).</p>
+                 <div class="highlight-box">
+                    <strong>Exemplo Prático:</strong> Um chuveiro elétrico indica em sua etiqueta "5500W - 220V".
+                    <p>Qual a corrente que ele utiliza? Usando $P = U \times I \implies I = P / U = 5500\text{W} / 220\text{V} = 25\text{A}$.</p>
+                    <p>Qual a resistência do chuveiro? Usando $P = U^2 / R \implies R = U^2 / P = (220\text{V})^2 / 5500\text{W} = 48400 / 5500 = 8,8 \Omega$.</p>
+                    Essa é uma corrente considerável, por isso os fios para chuveiros precisam ser grossos e a instalação cuidadosa!
+                </div>
+            </article>
+            <article id="sec5-2">
+                 <h3>5.2 O Gasto Total: Energia Elétrica Consumida (kWh)</h3>
+                <p>A potência nos diz a <em>taxa</em> com que a energia é consumida. Mas para saber quanta energia <em>total</em> foi consumida por um aparelho, precisamos levar em conta por quanto <strong>tempo ($\Delta t$)</strong> ele ficou ligado com aquela potência.</p>
+                <p>A energia elétrica consumida ($E$) é calculada multiplicando-se a potência ($P$) do aparelho pelo intervalo de tempo ($\Delta t$) de funcionamento:</p>
+                <div class="formula-explanation">
+                    <div>\[E = P \times \Delta t\]</div>
+                    <dl>
+                        <dt>$E$</dt><dd><strong>Energia Elétrica Consumida</strong>. Unidade no SI: <strong>Joule (J)</strong>. Unidade usual em contas de luz: <strong>Quilowatt-hora (kWh)</strong>.</dd>
+                        <dt>$P$</dt><dd><strong>Potência Elétrica</strong> do aparelho. Unidade no SI: <strong>Watt (W)</strong>. Para kWh, usar <strong>Quilowatt (kW)</strong>.</dd>
+                        <dt>$\Delta t$</dt><dd><strong>Intervalo de Tempo</strong> de funcionamento. Unidade no SI: <strong>Segundo (s)</strong>. Para kWh, usar <strong>Hora (h)</strong>.</dd>
+                    </dl>
+                    <p><strong>Por quê? / Significado:</strong> Simplesmente, se você usa um aparelho potente por muito tempo, o consumo de energia será alto. Se usa um aparelho de baixa potência ou por pouco tempo, o consumo será baixo.</p>
+                </div>
+                <p>No Sistema Internacional (SI), se a potência está em Watts (W) e o tempo em segundos (s), a energia será calculada em <strong>Joules (J)</strong>. O Joule é uma unidade pequena para o consumo de energia em residências e indústrias.</p>
+                <p>Por isso, as companhias de eletricidade usam uma unidade mais prática: o <strong>Quilowatt-hora (kWh)</strong>.</p>
+                <ul>
+                    <li>$1 \text{ Quilowatt (kW)} = 1000 \text{ Watts (W)}$</li>
+                    <li>$1 \text{ hora (h)} = 3600 \text{ segundos (s)}$</li>
+                </ul>
+                <p>Portanto, 1 kWh é a energia consumida por um aparelho de 1000 Watts de potência ligado continuamente durante 1 hora.</p>
+                <p><strong>Conversão:</strong> $1 \text{ kWh} = 1000 \text{ W} \times 3600 \text{ s} = 3.600.000 \text{ J} = 3,6 \times 10^6 \text{ J}$.</p>
+            </article>
+            <article id="sec5-3">
+                <h3>5.3 Decifrando a Conta de Luz (Interativo)</h3>
+                <p>A conta de energia elétrica que recebemos mensalmente é, basicamente, o resultado do nosso consumo de energia em kWh multiplicado pelo preço (tarifa) que a companhia elétrica cobra por cada kWh, mais impostos e outras taxas.</p>
+                <p>Entender como calcular o consumo de cada aparelho pode nos ajudar a economizar energia e dinheiro!</p>
+                <div class="interactive-section" id="energy-bill-calculator">
+                    <h4>Calcule o Custo do Consumo de um Aparelho!</h4>
+                    <div>
+                        <label for="appliancePowerW">Potência do Aparelho (em Watts):</label>
+                        <input type="number" id="appliancePowerW" value="100" min="1"> W
+                    </div>
+                    <div>
+                        <label for="hoursUsedPerDay">Horas de Uso por Dia:</label>
+                        <input type="number" id="hoursUsedPerDay" value="4" min="0.1" step="0.1"> horas
+                    </div>
+                    <div>
+                        <label for="daysInMonth">Dias no Mês (para cálculo mensal):</label>
+                        <input type="number" id="daysInMonth" value="30" min="1" max="31"> dias
+                    </div>
+                    <div>
+                        <label for="kwhPrice">Preço do kWh (em R$, ex: 0.75):</label>
+                        <input type="number" id="kwhPrice" value="0.75" min="0.01" step="0.01"> R$/kWh
+                    </div>
+                    <button id="calculateEnergyCostButton">Calcular Custo Mensal</button>
+                    <p>Consumo Mensal: <span id="monthlyConsumptionKWh" class="output">--</span> kWh</p>
+                    <p>Custo Mensal Estimado: R$ <span id="monthlyCostValue" class="output">--.--</span></p>
+                    <div class="highlight-box" style="margin-top:15px;">
+                        <strong>Como o cálculo é feito:</strong><br>
+                        1. Potência em kW = Potência em Watts / 1000<br>
+                        2. Consumo Diário (kWh) = Potência em kW × Horas de Uso por Dia<br>
+                        3. Consumo Mensal (kWh) = Consumo Diário × Dias no Mês<br>
+                        4. Custo Mensal (R$) = Consumo Mensal × Preço do kWh
+                    </div>
+                </div>
+            </article>
+        </section>
+
+         <!-- ============================================================ -->
+        <!-- CAPÍTULO 6: CAMPO E FORÇA ELÉTRICA (Fórmulas com MathJax)   -->
+        <!-- ============================================================ -->
+        <section id="cap6" class="chapter">
+            <h2>Capítulo 6: Forças Invisíveis no Mundo Elétrico – Campo e Força Elétrica</h2>
+            <article id="sec6-1">
+                 <h3>6.1 Atração e Repulsão: A Regra Fundamental</h3>
+                <p>No coração das interações elétricas está um princípio fundamental e simples, conhecido como <strong>Princípio da Atração e Repulsão</strong> (ou Lei Qualitativa de Du Fay):</p>
+                <ul>
+                    <li>Cargas elétricas de <strong>mesmo sinal se repelem</strong>. (Positivo repele positivo; negativo repele negativo).</li>
+                    <li>Cargas elétricas de <strong>sinais opostos se atraem</strong>. (Positivo atrai negativo).</li>
+                </ul>
+                <p>Imagine duas pequenas esferas carregadas. Se ambas estiverem positivas, elas tentarão se afastar uma da outra. O mesmo acontece se ambas forem negativas. Mas se uma for positiva e a outra negativa, elas sentirão uma força puxando-as uma em direção à outra. Essa força, que pode ser de atração ou repulsão, é chamada de <strong>Força Elétrica</strong>.</p>
+                <div class="highlight-box">
+                    <strong>Visualizando as Interações:</strong>
+                    <ul>
+                        <li><strong>(+) &harr; (+):</strong> Duas cargas positivas se empurrando para longe.</li>
+                        <li><strong>(&ndash;) &harr; (&ndash;):</strong> Duas cargas negativas também se empurrando para longe.</li>
+                        <li><strong>(+) &rarr;&larr; (&ndash;):</strong> Uma carga positiva e uma negativa se puxando mutuamente.</li>
+                    </ul>
+                    Essas interações ocorrem mesmo que as cargas não se toquem, atuando à distância através do espaço.
+                </div>
+            </article>
+             <article id="sec6-2">
+                <h3>6.2 Medindo a Força: Lei de Coulomb</h3>
+                <p>Charles Augustin de Coulomb, um físico francês, investigou quantitativamente a força elétrica entre duas cargas elétricas puntiformes (cargas cujas dimensões são desprezíveis em comparação com a distância entre elas). Ele descobriu que esta força depende da magnitude das cargas e da distância que as separa.</p>
+                <p>A <strong>Lei de Coulomb</strong> é expressa pela seguinte fórmula:</p>
+                <div class="formula-explanation">
+                    <div>\[F_e = k \frac{|Q_1| \cdot |Q_2|}{d^2}\]</div>
+                    <dl>
+                        <dt>$F_e$</dt>
+                        <dd><strong>Intensidade da Força Elétrica</strong> entre as duas cargas. Unidade no SI: <strong>Newton (N)</strong>.</dd>
+                        <dt>$k$</dt>
+                        <dd><strong>Constante Eletrostática do Meio</strong>. É um valor que depende do meio onde as cargas estão imersas. No vácuo (e aproximadamente no ar), $k \approx 9 \times 10^9 \text{ N} \cdot \text{m}^2/\text{C}^2$.</dd>
+                        <dt>$|Q_1|$ e $|Q_2|$</dt>
+                        <dd><strong>Módulos (valores absolutos) das Cargas Elétricas</strong> das duas partículas. Usamos o módulo porque a fórmula calcula a intensidade (valor) da força; a direção e o sentido (atração ou repulsão) são determinados pelos sinais das cargas (mesmo sinal = repulsão, sinais opostos = atração). Unidade no SI: <strong>Coulomb (C)</strong>.</dd>
+                        <dt>$d$</dt>
+                        <dd><strong>Distância</strong> entre os centros das duas cargas puntiformes. Unidade no SI: <strong>Metro (m)</strong>.</dd>
+                    </dl>
+                    <p><strong>Por quê? / Significado:</strong></p>
+                    <ul>
+                        <li>A força elétrica é <strong>diretamente proporcional ao produto dos módulos das cargas</strong>: quanto maiores as cargas, maior a força entre elas (seja atração ou repulsão).</li>
+                        <li>A força elétrica é <strong>inversamente proporcional ao quadrado da distância</strong> entre as cargas: esta é uma relação crucial! Se você dobrar a distância, a força se reduz a 1/4 do valor original. Se triplicar a distância, a força cai para 1/9. Isso significa que a força elétrica enfraquece rapidamente com o aumento da distância.</li>
+                    </ul>
+                    <p>A Lei de Coulomb é muito similar em forma à Lei da Gravitação Universal de Newton, ambas descrevendo forças que variam com o inverso do quadrado da distância.</p>
+                </div>
+            </article>
+            <article id="sec6-3">
+                <h3>6.3 A Zona de Influência: Campo Elétrico (Visualização Interativa)</h3>
+                <p>Como uma carga elétrica "sabe" da existência de outra para exercer uma força sobre ela, mesmo à distância? O conceito de <strong>Campo Elétrico ($\vec{E}$)</strong> nos ajuda a entender isso.</p>
+                <p>Podemos dizer que uma carga elétrica (ou uma distribuição de cargas) modifica as propriedades do espaço ao seu redor. Essa região do espaço, agora alterada pela presença da carga, é o que chamamos de campo elétrico. Se outra carga (uma "carga de prova") for colocada nesse campo, ela sentirá uma força elétrica devido à ação do campo naquele ponto.</p>
+                <p>O campo elétrico ($\vec{E}$) em um ponto é definido como a força elétrica ($\vec{F_e}$) que atuaria sobre uma carga de prova positiva ($q$) colocada naquele ponto, dividida pelo valor dessa carga de prova:</p>
+                <div class="formula-explanation">
+                    <div>\[\vec{E} = \frac{\vec{F_e}}{q}\]</div>
+                    <dl>
+                        <dt>$\vec{E}$</dt><dd><strong>Vetor Campo Elétrico</strong>. Unidade no SI: <strong>Newton por Coulomb (N/C)</strong> ou Volt por metro (V/m).</dd>
+                        <dt>$\vec{F_e}$</dt><dd><strong>Força Elétrica</strong> sobre a carga de prova. Unidade no SI: <strong>Newton (N)</strong>.</dd>
+                        <dt>$q$</dt><dd><strong>Valor da Carga de Prova</strong> (positiva e pequena, para não perturbar o campo que se quer medir). Unidade no SI: <strong>Coulomb (C)</strong>.</dd>
+                    </dl>
+                    <p><strong>Por quê? / Significado:</strong> O campo elétrico é uma propriedade do ponto no espaço, criado pela(s) carga(s) fonte(s), independentemente da carga de prova. Ele nos diz qual seria a força por unidade de carga naquele local.</p>
+                </div>
+                <p>Para o caso específico de um campo elétrico criado por uma única carga puntiforme $Q$ (carga fonte), a intensidade do campo elétrico a uma distância $d$ dela é dada por:</p>
+                 <div class="formula-explanation">
+                    <div>\[E = k \frac{|Q|}{d^2}\]</div>
+                    <dl>
+                        <dt>$E, k, |Q|, d$</dt><dd>Mesmas grandezas da Lei de Coulomb ($Q$ é a carga fonte). $E$ aqui é a magnitude do campo.</dd>
+                    </dl>
+                    <p><strong>Por quê? / Significado:</strong> Similar à força, o campo elétrico de uma carga puntiforme é mais forte perto da carga e enfraquece rapidamente com o quadrado da distância.</p>
+                </div>
+                <p><strong>Linhas de Campo (ou Linhas de Força):</strong> Para visualizar os campos elétricos, usamos um artifício chamado <strong>linhas de campo</strong>. São linhas imaginárias desenhadas de tal forma que:</p>
+                <ul>
+                    <li>Elas <strong>saem</strong> de cargas positivas e <strong>entram</strong> em cargas negativas.</li>
+                    <li>O vetor campo elétrico ($\vec{E}$) é <strong>tangente</strong> à linha de campo em qualquer ponto.</li>
+                    <li>A <strong>densidade</strong> das linhas (o quão próximas elas estão umas das outras) indica a intensidade do campo: onde as linhas estão mais próximas, o campo é mais forte; onde estão mais afastadas, o campo é mais fraco.</li>
+                    <li>As linhas de campo <strong>nunca se cruzam</strong>.</li>
+                </ul>
+
+                <div class="interactive-section" id="electric-field-visualization">
+                    <h4>Visualização Interativa do Campo Elétrico (Simplificada)</h4>
+                    <p>Abaixo, um círculo colorido representa uma carga fonte no centro. As linhas de campo radiais são mostradas. Clique no canvas para simular uma "carga de prova" positiva (ponto preto) e veja a direção e intensidade relativa do vetor campo elétrico (seta preta) naquele ponto.</p>
+                    <canvas id="fieldCanvas" width="400" height="300" style="cursor:crosshair;"></canvas>
+                    <div>
+                        Carga Fonte (Q) no centro:
+                        <select id="sourceChargeSign">
+                            <option value="1">Positiva (+)</option>
+                            <option value="-1">Negativa (-)</option>
+                        </select>
+                        Magnitude: <input type="range" id="sourceChargeMagnitude" min="1" max="10" value="5">
+                        <span id="sourceChargeMagValue" class="value-display">5</span>
+                    </div>
+                </div>
+            </article>
+        </section>
+
+        <footer>
+            <p>L2 &copy; 2025</p>
+        </footer>
+
+    </div> <!-- Fim .container -->
+
+    <script>
+    // SCRIPT CORRIGIDO
+    window.addEventListener('DOMContentLoaded', (event) => {
+        const svgNS = "http://www.w3.org/2000/svg";
+
+        // --- NAVEGAÇÃO SUAVE ---
+        document.querySelectorAll('#main-nav a, #toc ul li a').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                const href = this.getAttribute('href');
+                if (href.startsWith('#')) {
+                    e.preventDefault();
+                    const targetId = href.substring(1);
+                    const targetElement = document.getElementById(targetId);
+                    if (targetElement) {
+                        const navHeight = document.getElementById('main-nav').offsetHeight;
+                        const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - navHeight - 15;
+                        window.scrollTo({ top: targetPosition, behavior: 'smooth' });
+                    }
+                }
+            });
+        });
+
+        // --- VISUALIZAÇÃO CONDUTORES/ISOLANTES (CAP 1.3) ---
+        function setupMaterialParticlesV2() {
+            const conductorCanvas = document.getElementById('conductor-particles-canvas');
+            const insulatorCanvas = document.getElementById('insulator-particles-canvas');
+            if (!conductorCanvas || !insulatorCanvas) return;
+            const numAtoms = 5;
+            const numFreeElectrons = 7;
+
+            // Limpa containers antes de popular
+            conductorCanvas.innerHTML = '';
+            insulatorCanvas.innerHTML = '';
+
+            for (let i = 0; i < numAtoms; i++) {
+                let atomCore = document.createElement('span');
+                atomCore.className = 'atom-core';
+                atomCore.style.left = `${Math.random() * 88 + 6}%`;
+                atomCore.style.top = `${Math.random() * 88 + 6}%`;
+                conductorCanvas.appendChild(atomCore);
+            }
+            for (let i = 0; i < numFreeElectrons; i++) {
+                let electron = document.createElement('span');
+                electron.className = 'electron free';
+                electron.style.left = `${Math.random() * 90 + 5}%`;
+                electron.style.top = `${Math.random() * 90 + 5}%`;
+                electron.style.animationDelay = `${Math.random() * -4}s`;
+                conductorCanvas.appendChild(electron);
+            }
+
+            for (let i = 0; i < numAtoms; i++) {
+                let atomGroup = document.createElement('div');
+                atomGroup.className = 'atom-group';
+                atomGroup.style.left = `${15 + i * 18}%`;
+                atomGroup.style.top = `${Math.random() * 60 + 20}%`;
+                let atomCore = document.createElement('span');
+                atomCore.className = 'atom-core';
+                let electron = document.createElement('span');
+                electron.className = 'electron bound';
+                electron.style.left = '50%';
+                electron.style.top = '50%';
+                electron.style.transform = 'translate(-50%, -50%)';
+                atomCore.appendChild(electron);
+                atomGroup.appendChild(atomCore);
+                insulatorCanvas.appendChild(atomGroup);
+            }
+        }
+        setupMaterialParticlesV2();
+
+        // --- TABELA DE SÍMBOLOS ELÉTRICOS COM SVG (CAP 4.2) ---
+        function setupSymbolTable() {
+            const symbols = [
+                { name: "Fio Condutor", desc: "Linha contínua, representa o caminho da corrente.", draw: drawSymbolWire },
+                { name: "Fonte de Tensão DC (Pilha/Bateria)", desc: "Linhas paralelas de tamanhos diferentes (a mais longa é o polo positivo).", draw: drawSymbolBatteryDC },
+                { name: "Fonte de Tensão AC", desc: "Um círculo com uma onda senoidal dentro.", draw: drawSymbolSourceAC },
+                { name: "Resistor", desc: "Retângulo (padrão IEC) ou linha em zigue-zague.", draw: drawSymbolResistorIEC },
+                { name: "Lâmpada", desc: "Um círculo com um 'X' ou filamento desenhado dentro.", draw: drawSymbolLamp },
+                { name: "Interruptor (Chave Aberta)", desc: "Dois terminais com uma alavanca levantada.", draw: drawSymbolSwitchOpen },
+                { name: "Interruptor (Chave Fechada)", desc: "A alavanca conecta os terminais.", draw: drawSymbolSwitchClosed },
+                { name: "Terra (Ground)", desc: "Linhas horizontais de tamanho decrescente.", draw: drawSymbolGround },
+                { name: "Capacitor", desc: "Duas linhas paralelas iguais, representando as placas.", draw: drawSymbolCapacitor },
+                { name: "Indutor", desc: "Uma série de laços ou curvas, representando uma bobina.", draw: drawSymbolInductor },
+                { name: "Amperímetro", desc: "Um círculo com a letra 'A' dentro.", draw: drawSymbolAmmeter },
+                { name: "Voltímetro", desc: "Um círculo com a letra 'V' dentro.", draw: drawSymbolVoltmeter }
+            ];
+
+            const symbolTable = document.getElementById('symbol-table')?.getElementsByTagName('tbody')[0];
+            if (!symbolTable) return;
+            symbolTable.innerHTML = ''; // Limpa tabela
+            symbols.forEach(symbol => {
+                const row = symbolTable.insertRow();
+                row.insertCell().textContent = symbol.name;
+                const svgCell = row.insertCell();
+                const svgContainer = document.createElementNS(svgNS, "svg");
+                svgContainer.setAttribute("viewBox", "0 0 50 30");
+                svgContainer.classList.add("symbol-table-svg");
+                if (symbol.name.includes("Bateria") || symbol.name.includes("Ground")) {
+                    svgContainer.setAttribute("viewBox", "0 0 50 40");
+                    svgContainer.classList.add("large");
+                }
+                if (symbol.name === "Indutor") {
+                    svgContainer.setAttribute("viewBox", "0 0 50 30"); // Ajustado para ser mais compacto
+                }
+                symbol.draw(svgContainer, 25, 15);
+                svgCell.appendChild(svgContainer);
+                row.insertCell().textContent = symbol.desc;
+            });
+        }
+        setupSymbolTable();
+        // Funções de desenho de símbolos individuais
+        function drawSymbolWire(svg, cx, cy) { const line = document.createElementNS(svgNS, "line"); line.setAttribute("x1", "5"); line.setAttribute("y1", cy); line.setAttribute("x2", "45"); line.setAttribute("y2", cy); line.setAttribute("stroke", "black"); line.setAttribute("stroke-width", "2"); svg.appendChild(line); }
+        function drawSymbolBatteryDC(svg, cx, cy) { const yOffset = 7; const longLine = document.createElementNS(svgNS, "line"); longLine.setAttribute("x1", cx - 3); longLine.setAttribute("y1", cy - yOffset); longLine.setAttribute("x2", cx - 3); longLine.setAttribute("y2", cy + yOffset); longLine.setAttribute("stroke", "black"); longLine.setAttribute("stroke-width", "3"); svg.appendChild(longLine); const shortLine = document.createElementNS(svgNS, "line"); shortLine.setAttribute("x1", cx + 3); shortLine.setAttribute("y1", cy - yOffset/2); shortLine.setAttribute("x2", cx + 3); shortLine.setAttribute("y2", cy + yOffset/2); shortLine.setAttribute("stroke", "black"); shortLine.setAttribute("stroke-width", "2"); svg.appendChild(shortLine); const plus = document.createElementNS(svgNS, "text"); plus.setAttribute("x", cx - 10); plus.setAttribute("y", cy + 4); plus.textContent = "+"; plus.style.fontSize="10px"; svg.appendChild(plus); const minus = document.createElementNS(svgNS, "text"); minus.setAttribute("x", cx + 7); minus.setAttribute("y", cy + 4); minus.textContent = "-"; minus.style.fontSize="10px"; svg.appendChild(minus); }
+        function drawSymbolSourceAC(svg, cx, cy) { const circle = document.createElementNS(svgNS, "circle"); circle.setAttribute("cx", cx); circle.setAttribute("cy", cy); circle.setAttribute("r", "10"); circle.setAttribute("fill", "none"); circle.setAttribute("stroke", "black"); circle.setAttribute("stroke-width", "1.5"); svg.appendChild(circle); const sine = document.createElementNS(svgNS, "path"); sine.setAttribute("d", `M ${cx-6} ${cy} Q ${cx-3} ${cy-5}, ${cx} ${cy} T ${cx+6} ${cy}`); sine.setAttribute("fill", "none"); sine.setAttribute("stroke", "black"); sine.setAttribute("stroke-width", "1.5"); svg.appendChild(sine); }
+        function drawSymbolResistorIEC(svg, cx, cy) { const rect = document.createElementNS(svgNS, "rect"); rect.setAttribute("x", cx - 15); rect.setAttribute("y", cy - 7); rect.setAttribute("width", "30"); rect.setAttribute("height", "14"); rect.setAttribute("fill", "none"); rect.setAttribute("stroke", "black"); rect.setAttribute("stroke-width", "1.5"); svg.appendChild(rect); }
+        function drawSymbolLamp(svg, cx, cy) { const circle = document.createElementNS(svgNS, "circle"); circle.setAttribute("cx", cx); circle.setAttribute("cy", cy); circle.setAttribute("r", "8"); circle.setAttribute("fill", "none"); circle.setAttribute("stroke", "black"); circle.setAttribute("stroke-width", "1.5"); svg.appendChild(circle); const line1 = document.createElementNS(svgNS, "line"); line1.setAttribute("x1", cx - 4); line1.setAttribute("y1", cy - 4); line1.setAttribute("x2", cx + 4); line1.setAttribute("y2", cy + 4); line1.setAttribute("stroke", "black"); line1.setAttribute("stroke-width", "1"); svg.appendChild(line1); const line2 = document.createElementNS(svgNS, "line"); line2.setAttribute("x1", cx - 4); line2.setAttribute("y1", cy + 4); line2.setAttribute("x2", cx + 4); line2.setAttribute("y2", cy - 4); line2.setAttribute("stroke", "black"); line2.setAttribute("stroke-width", "1"); svg.appendChild(line2); }
+        function drawSymbolSwitchOpen(svg, cx, cy) { const c1 = document.createElementNS(svgNS, "circle"); c1.setAttribute("cx", cx-10); c1.setAttribute("cy",cy); c1.setAttribute("r", "2"); c1.setAttribute("fill","black"); svg.appendChild(c1); const c2 = document.createElementNS(svgNS, "circle"); c2.setAttribute("cx", cx+10); c2.setAttribute("cy",cy); c2.setAttribute("r", "2"); c2.setAttribute("fill","black"); svg.appendChild(c2); const lever = document.createElementNS(svgNS, "line"); lever.setAttribute("x1", cx-10); lever.setAttribute("y1", cy); lever.setAttribute("x2", cx+8); lever.setAttribute("y2", cy-8); lever.setAttribute("stroke","black"); lever.setAttribute("stroke-width","1.5"); svg.appendChild(lever); }
+        function drawSymbolSwitchClosed(svg, cx, cy) { const c1 = document.createElementNS(svgNS, "circle"); c1.setAttribute("cx", cx-10); c1.setAttribute("cy",cy); c1.setAttribute("r", "2"); c1.setAttribute("fill","black"); svg.appendChild(c1); const c2 = document.createElementNS(svgNS, "circle"); c2.setAttribute("cx", cx+10); c2.setAttribute("cy",cy); c2.setAttribute("r", "2"); c2.setAttribute("fill","black"); svg.appendChild(c2); const lever = document.createElementNS(svgNS, "line"); lever.setAttribute("x1", cx-10); lever.setAttribute("y1", cy); lever.setAttribute("x2", cx+10); lever.setAttribute("y2", cy); lever.setAttribute("stroke","black"); lever.setAttribute("stroke-width","1.5"); svg.appendChild(lever); }
+        function drawSymbolGround(svg, cx, cy) { const yStart = cy-5; const line1 = document.createElementNS(svgNS, "line"); line1.setAttribute("x1",cx-10); line1.setAttribute("y1",yStart); line1.setAttribute("x2",cx+10); line1.setAttribute("y2",yStart); line1.setAttribute("stroke","black"); line1.setAttribute("stroke-width","1.5"); svg.appendChild(line1); const line2 = document.createElementNS(svgNS, "line"); line2.setAttribute("x1",cx-7); line2.setAttribute("y1",yStart+4); line2.setAttribute("x2",cx+7); line2.setAttribute("y2",yStart+4); line2.setAttribute("stroke","black"); line2.setAttribute("stroke-width","1.5"); svg.appendChild(line2); const line3 = document.createElementNS(svgNS, "line"); line3.setAttribute("x1",cx-4); line3.setAttribute("y1",yStart+8); line3.setAttribute("x2",cx+4); line3.setAttribute("y2",yStart+8); line3.setAttribute("stroke","black"); line3.setAttribute("stroke-width","1.5"); svg.appendChild(line3); const connector = document.createElementNS(svgNS, "line"); connector.setAttribute("x1",cx); connector.setAttribute("y1",cy-10); connector.setAttribute("x2",cx); connector.setAttribute("y2",yStart); connector.setAttribute("stroke","black"); connector.setAttribute("stroke-width","1.5"); svg.appendChild(connector); }
+        function drawSymbolCapacitor(svg, cx, cy) { const plate1 = document.createElementNS(svgNS, "line"); plate1.setAttribute("x1",cx-3); plate1.setAttribute("y1",cy-8); plate1.setAttribute("x2",cx-3); plate1.setAttribute("y2",cy+8); plate1.setAttribute("stroke","black"); plate1.setAttribute("stroke-width","1.5"); svg.appendChild(plate1); const plate2 = document.createElementNS(svgNS, "line"); plate2.setAttribute("x1",cx+3); plate2.setAttribute("y1",cy-8); plate2.setAttribute("x2",cx+3); plate2.setAttribute("y2",cy+8); plate2.setAttribute("stroke","black"); plate2.setAttribute("stroke-width","1.5"); svg.appendChild(plate2); }
+        function drawSymbolInductor(svg, cx, cy) { const r = 4; const path = document.createElementNS(svgNS, "path"); path.setAttribute("d", `M ${cx-r*3-2} ${cy} C ${cx-r*3-2} ${cy-r*1.5}, ${cx-r*2+2} ${cy-r*1.5}, ${cx-r*2} ${cy} S ${cx-r*1-2} ${cy+r*1.5}, ${cx-r} ${cy} S ${cx-2} ${cy-r*1.5}, ${cx} ${cy} S ${cx+r-2} ${cy+r*1.5}, ${cx+r} ${cy}`); path.setAttribute("fill", "none"); path.setAttribute("stroke", "black"); path.setAttribute("stroke-width", "1.5"); svg.appendChild(path); }
+        function drawSymbolGenericMeter(svg, cx, cy, letter) { const circle = document.createElementNS(svgNS, "circle"); circle.setAttribute("cx",cx); circle.setAttribute("cy",cy); circle.setAttribute("r", "10"); circle.setAttribute("fill","none"); circle.setAttribute("stroke","black"); circle.setAttribute("stroke-width","1.5"); svg.appendChild(circle); const text = document.createElementNS(svgNS, "text"); text.setAttribute("x",cx); text.setAttribute("y",cy+5); text.setAttribute("text-anchor","middle"); text.style.fontSize="12px"; text.textContent = letter; svg.appendChild(text); }
+        function drawSymbolAmmeter(svg, cx, cy) { drawSymbolGenericMeter(svg, cx, cy, "A"); }
+        function drawSymbolVoltmeter(svg, cx, cy) { drawSymbolGenericMeter(svg, cx, cy, "V"); }
+        
+
+        // --- LEI DE OHM INTERATIVA (CAP 3.4) CORRIGIDA ---
+        function setupOhmChart() {
+            const voltageSlider = document.getElementById('voltageSlider');
+            const resistanceSlider = document.getElementById('resistanceSlider');
+            const voltageValueSpan = document.getElementById('voltageValue');
+            const resistanceValueSpan = document.getElementById('resistanceValue');
+            const currentValueSpan = document.getElementById('currentValue');
+            const ohmChartCanvas = document.getElementById('ohmChart');
+            if (!ohmChartCanvas || !voltageSlider) return;
+
+            const ohmChartCtx = ohmChartCanvas.getContext('2d');
+            
+            function updateOhmLaw() {
+                const voltage = parseFloat(voltageSlider.value);
+                const resistance = parseFloat(resistanceSlider.value);
+                voltageValueSpan.textContent = voltage;
+                resistanceValueSpan.textContent = resistance;
+                if (resistance > 0) {
+                    const current = voltage / resistance;
+                    currentValueSpan.textContent = current.toFixed(2);
+                    drawOhmChart(voltage, resistance, current);
+                } else {
+                    currentValueSpan.textContent = "Infinito!";
+                    clearOhmChart();
+                }
+            }
+
+            function drawOhmChartGrid() {
+                const canvas = ohmChartCanvas;
+                ohmChartCtx.clearRect(0, 0, canvas.width, canvas.height);
+                ohmChartCtx.strokeStyle = '#ccc';
+                ohmChartCtx.lineWidth = 0.5;
+                const padding = 30;
+                ohmChartCtx.beginPath();
+                ohmChartCtx.moveTo(padding, padding / 2); ohmChartCtx.lineTo(padding, canvas.height - padding);
+                ohmChartCtx.lineTo(canvas.width - padding / 2, canvas.height - padding);
+                ohmChartCtx.stroke();
+                ohmChartCtx.fillStyle = '#333';
+                ohmChartCtx.textAlign = 'center';
+                ohmChartCtx.fillText("I (A)", padding / 2, padding - 5);
+                ohmChartCtx.fillText("U (V)", canvas.width - padding / 2, canvas.height - padding / 2.5);
+            }
+            
+            function drawOhmChart(voltage, resistance, current) {
+                drawOhmChartGrid();
+                const canvas = ohmChartCanvas;
+                const padding = 30;
+                const plotWidth = canvas.width - 2 * padding;
+                const plotHeight = canvas.height - 2 * padding;
+                const maxVoltageSlider = parseFloat(voltageSlider.max);
+                const maxCurrentDisplay = maxVoltageSlider / Math.max(1, parseFloat(resistanceSlider.min));
+                
+                ohmChartCtx.beginPath();
+                ohmChartCtx.strokeStyle = '#007bff';
+                ohmChartCtx.lineWidth = 2;
+                for (let u_plot = 0; u_plot <= maxVoltageSlider; u_plot++) {
+                    let i_plot = u_plot / resistance;
+                    let x_coord = padding + (u_plot / maxVoltageSlider) * plotWidth;
+                    let y_coord = (canvas.height - padding) - (i_plot / maxCurrentDisplay) * plotHeight;
+                    y_coord = Math.max(padding, Math.min(y_coord, canvas.height - padding));
+                    if (u_plot === 0) ohmChartCtx.moveTo(x_coord, y_coord);
+                    else ohmChartCtx.lineTo(x_coord, y_coord);
+                }
+                ohmChartCtx.stroke();
+                
+                let current_x = padding + (voltage / maxVoltageSlider) * plotWidth;
+                let current_y = (canvas.height - padding) - (current / maxCurrentDisplay) * plotHeight;
+                current_y = Math.max(padding, Math.min(current_y, canvas.height - padding));
+                ohmChartCtx.beginPath();
+                ohmChartCtx.arc(current_x, current_y, 5, 0, 2 * Math.PI);
+                ohmChartCtx.fillStyle = 'red';
+                ohmChartCtx.fill();
+                ohmChartCtx.fillStyle = '#333';
+                ohmChartCtx.textAlign = 'left';
+                ohmChartCtx.fillText(`R = ${resistance.toFixed(1)} Ω`, padding + 5, padding + 10);
+            }
+            
+            function clearOhmChart() {
+                 drawOhmChartGrid();
+            }
+
+            voltageSlider.addEventListener('input', updateOhmLaw);
+            resistanceSlider.addEventListener('input', updateOhmLaw);
+            updateOhmLaw(); // Chamada inicial para desenhar o estado inicial
+        }
+        setupOhmChart();
+
+        // --- CALCULADORA DE CONTA DE LUZ (CAP 5.3) CORRIGIDA ---
+        function setupEnergyCalculator() {
+            const powerInput = document.getElementById('appliancePowerW');
+            const hoursInput = document.getElementById('hoursUsedPerDay');
+            const daysInput = document.getElementById('daysInMonth');
+            const priceInput = document.getElementById('kwhPrice');
+            const consumptionSpan = document.getElementById('monthlyConsumptionKWh');
+            const costSpan = document.getElementById('monthlyCostValue');
+            const calcButton = document.getElementById('calculateEnergyCostButton');
+            if (!powerInput) return;
+
+            function calculateEnergyCost() {
+                const powerW = parseFloat(powerInput.value);
+                const hoursDay = parseFloat(hoursInput.value);
+                const daysMonth = parseInt(daysInput.value);
+                const priceKWh = parseFloat(priceInput.value);
+
+                if ([powerW, hoursDay, daysMonth, priceKWh].some(isNaN) || powerW <= 0) {
+                    consumptionSpan.textContent = "--";
+                    costSpan.textContent = "--.--";
+                    return;
+                }
+                const powerKW = powerW / 1000;
+                const monthlyConsumption = powerKW * hoursDay * daysMonth;
+                const monthlyCost = monthlyConsumption * priceKWh;
+                consumptionSpan.textContent = monthlyConsumption.toFixed(2);
+                costSpan.textContent = monthlyCost.toFixed(2);
+            }
+
+            [powerInput, hoursInput, daysInput, priceInput].forEach(input => {
+                input.addEventListener('input', calculateEnergyCost);
+            });
+            calcButton.addEventListener('click', calculateEnergyCost);
+            calculateEnergyCost(); // Chamada inicial
+        }
+        setupEnergyCalculator();
+
+        // --- VISUALIZAÇÃO DE CAMPO ELÉTRICO (CAP 6.3) CORRIGIDA ---
+        function setupFieldCanvas() {
+            const fieldCanvas = document.getElementById('fieldCanvas');
+            const signSelect = document.getElementById('sourceChargeSign');
+            const magnitudeSlider = document.getElementById('sourceChargeMagnitude');
+            const magValueSpan = document.getElementById('sourceChargeMagValue');
+            if (!fieldCanvas || !signSelect) return;
+
+            const fieldCtx = fieldCanvas.getContext('2d');
+            let lastClickPoint = null;
+
+            function drawArrow(ctx, fromx, fromy, tox, toy, color = 'black', lineWidth = 1) {
+                const headlen = 10;
+                const dx = tox - fromx;
+                const dy = toy - fromy;
+                const angle = Math.atan2(dy, dx);
+                ctx.strokeStyle = color;
+                ctx.lineWidth = lineWidth;
+                ctx.beginPath();
+                ctx.moveTo(fromx, fromy);
+                ctx.lineTo(tox, toy);
+                ctx.moveTo(tox, toy);
+                ctx.lineTo(tox - headlen * Math.cos(angle - Math.PI / 6), toy - headlen * Math.sin(angle - Math.PI / 6));
+                ctx.moveTo(tox, toy);
+                ctx.lineTo(tox - headlen * Math.cos(angle + Math.PI / 6), toy - headlen * Math.sin(angle + Math.PI / 6));
+                ctx.stroke();
+            }
+
+            function drawElectricFieldBase() {
+                const canvas = fieldCanvas;
+                fieldCtx.clearRect(0, 0, canvas.width, canvas.height);
+                const centerX = canvas.width / 2;
+                const centerY = canvas.height / 2;
+                const sourceSign = parseInt(signSelect.value);
+                const sourceMagnitude = parseInt(magnitudeSlider.value);
+                const chargeRadius = 8 + sourceMagnitude * 0.5;
+
+                // Desenha carga fonte
+                fieldCtx.beginPath();
+                fieldCtx.arc(centerX, centerY, chargeRadius, 0, 2 * Math.PI);
+                fieldCtx.fillStyle = sourceSign > 0 ? 'rgba(255,0,0,0.7)' : 'rgba(0,0,255,0.7)';
+                fieldCtx.fill();
+                fieldCtx.fillStyle = 'white';
+                fieldCtx.font = `bold ${chargeRadius}px Arial`;
+                fieldCtx.textAlign = 'center';
+                fieldCtx.textBaseline = 'middle';
+                fieldCtx.fillText(sourceSign > 0 ? '+' : '–', centerX, centerY);
+
+                // Desenha linhas de campo
+                const numLines = 8 + Math.floor(sourceMagnitude);
+                for (let i = 0; i < numLines; i++) {
+                    const angle = (i / numLines) * 2 * Math.PI;
+                    const startX = centerX + chargeRadius * Math.cos(angle);
+                    const startY = centerY + chargeRadius * Math.sin(angle);
+                    const lineLength = 40;
+                    const endX = startX + lineLength * Math.cos(angle);
+                    const endY = startY + lineLength * Math.sin(angle);
+                    if (sourceSign > 0) {
+                        drawArrow(fieldCtx, startX, startY, endX, endY, 'rgba(100,100,100,0.6)', 0.5);
+                    } else {
+                        drawArrow(fieldCtx, endX, endY, startX, startY, 'rgba(100,100,100,0.6)', 0.5);
+                    }
+                }
+            }
+            
+            function drawFieldVectorAtPoint(point) {
+                if (!point) return;
+                drawElectricFieldBase(); // Limpa e redesenha a base
+                const { x: clickX, y: clickY } = point;
+                const centerX = fieldCanvas.width / 2;
+                const centerY = fieldCanvas.height / 2;
+                const sourceSign = parseInt(signSelect.value);
+                const sourceMagnitude = parseInt(magnitudeSlider.value);
+                
+                const dx = clickX - centerX;
+                const dy = clickY - centerY;
+                const distSq = dx * dx + dy * dy;
+                if (distSq < (15*15)) return; // Evita cálculo muito perto
+
+                const fieldStrengthFactor = sourceMagnitude * 3000;
+                let vectorLength = fieldStrengthFactor / distSq;
+                vectorLength = Math.min(vectorLength, 70);
+                vectorLength = Math.max(vectorLength, 5);
+
+                const angle = Math.atan2(dy, dx);
+                const endX = clickX + (sourceSign * vectorLength * Math.cos(angle));
+                const endY = clickY + (sourceSign * vectorLength * Math.sin(angle));
+                
+                drawArrow(fieldCtx, clickX, clickY, endX, endY, 'black', 2);
+                
+                fieldCtx.beginPath();
+                fieldCtx.arc(clickX, clickY, 3, 0, 2 * Math.PI);
+                fieldCtx.fillStyle = 'black';
+                fieldCtx.fill();
+            }
+
+            function handleCanvasInteraction(event) {
+                const rect = fieldCanvas.getBoundingClientRect();
+                const x = event.clientX - rect.left;
+                const y = event.clientY - rect.top;
+                lastClickPoint = { x, y };
+                drawFieldVectorAtPoint(lastClickPoint);
+            }
+
+            function updateSliderDisplay() {
+                 magValueSpan.textContent = magnitudeSlider.value;
+                 drawElectricFieldBase();
+                 drawFieldVectorAtPoint(lastClickPoint);
+            }
+            
+            signSelect.addEventListener('change', updateSliderDisplay);
+            magnitudeSlider.addEventListener('input', updateSliderDisplay);
+            fieldCanvas.addEventListener('click', handleCanvasInteraction);
+            updateSliderDisplay(); // Chamada inicial
+        }
+        setupFieldCanvas();
+
+        // --- SVG CIRCUIT DIAGRAMS (CAP 4) ---
+        //  CORREÇÃO APLICADA AQUI
+        function drawCircuitDiagrams() {
+            // Funções auxiliares para desenhar componentes nos diagramas maiores
+            const drawWireDiagram = (svg, x1, y1, x2, y2) => {
+                const line = document.createElementNS(svgNS, "line");
+                line.setAttribute("x1", x1); line.setAttribute("y1", y1);
+                line.setAttribute("x2", x2); line.setAttribute("y2", y2);
+                line.setAttribute("stroke", "black"); line.setAttribute("stroke-width", "2");
+                svg.appendChild(line);
+            };
+
+            const drawResistorDiagram = (svg, x, y) => {
+                const g = document.createElementNS(svgNS, "g");
+                g.setAttribute("transform", `translate(${x}, ${y})`);
+                // A caixa do resistor tem 30 de largura, então o desenho real é de x-15 a x+15
+                drawSymbolResistorIEC(g, 0, 0); 
+                svg.appendChild(g);
+            };
+
+            const drawBatteryDiagram = (svg, x, y) => {
+                const g = document.createElementNS(svgNS, "g");
+                g.setAttribute("transform", `translate(${x}, ${y})`);
+                const longLine = document.createElementNS(svgNS, "line");
+                longLine.setAttribute("x1", 0); longLine.setAttribute("y1", -15);
+                longLine.setAttribute("x2", 0); longLine.setAttribute("y2", 15);
+                longLine.setAttribute("stroke", "black"); longLine.setAttribute("stroke-width", "3");
+                g.appendChild(longLine);
+                const shortLine = document.createElementNS(svgNS, "line");
+                shortLine.setAttribute("x1", 8); shortLine.setAttribute("y1", -8);
+                shortLine.setAttribute("x2", 8); shortLine.setAttribute("y2", 8);
+                shortLine.setAttribute("stroke", "black"); shortLine.setAttribute("stroke-width", "2");
+                g.appendChild(shortLine);
+                const plus = document.createElementNS(svgNS, "text");
+                plus.setAttribute("x", -15); plus.setAttribute("y", 5); plus.textContent = "+";
+                g.appendChild(plus);
+                const minus = document.createElementNS(svgNS, "text");
+                minus.setAttribute("x", 12); minus.setAttribute("y", 5); minus.textContent = "-";
+                g.appendChild(minus);
+                svg.appendChild(g);
+            };
+
+            // Desenhar circuito em série (CORRIGIDO)
+            const seriesContainer = document.getElementById('seriesCircuitDiagramContainer');
+            if (seriesContainer) {
+                const existingSVG = seriesContainer.querySelector('svg');
+                if (existingSVG) existingSVG.remove();
+
+                const svgSeries = document.createElementNS(svgNS, "svg");
+                svgSeries.setAttribute("width", "350");
+                svgSeries.setAttribute("height", "100");
+                svgSeries.classList.add("circuit-diagram-svg");
+                
+                const yPos = 50;
+                const r1_x = 100, r2_x = 180, r3_x = 260;
+                
+                drawBatteryDiagram(svgSeries, 30, yPos);
+                // Conecta polo positivo (x=30) ao R1
+                drawWireDiagram(svgSeries, 30, yPos, r1_x - 15, yPos); 
+                drawResistorDiagram(svgSeries, r1_x, yPos);
+                drawWireDiagram(svgSeries, r1_x + 15, yPos, r2_x - 15, yPos); // R1 para R2
+                drawResistorDiagram(svgSeries, r2_x, yPos);
+                drawWireDiagram(svgSeries, r2_x + 15, yPos, r3_x - 15, yPos); // R2 para R3
+                drawResistorDiagram(svgSeries, r3_x, yPos);
+                
+                // Fio de retorno para o polo negativo
+                drawWireDiagram(svgSeries, r3_x + 15, yPos, 320, yPos); 
+                drawWireDiagram(svgSeries, 320, yPos, 320, 80); 
+                drawWireDiagram(svgSeries, 320, 80, 10, 80); 
+                drawWireDiagram(svgSeries, 10, 80, 10, yPos); 
+                drawWireDiagram(svgSeries, 10, yPos, 38, yPos); // Conecta ao polo negativo (x=38)
+                seriesContainer.appendChild(svgSeries);
+            }
+
+            // Desenhar circuito em paralelo (CORRIGIDO)
+            const parallelContainer = document.getElementById('parallelCircuitDiagramContainer');
+            if (parallelContainer) {
+                const existingSVG = parallelContainer.querySelector('svg');
+                if (existingSVG) existingSVG.remove();
+
+                const svgParallel = document.createElementNS(svgNS, "svg");
+                svgParallel.setAttribute("width", "300");
+                svgParallel.setAttribute("height", "180");
+                svgParallel.classList.add("circuit-diagram-svg");
+
+                const yTop = 30, yBot = 150, yMid = 90;
+                const xBatt = 30, xBus1 = 100, xBus2 = 220;
+                const xResistor = (xBus1 + xBus2) / 2;
+                
+                drawBatteryDiagram(svgParallel, xBatt, yMid);
+                
+                // Conexão do polo positivo (+) da bateria ao barramento esquerdo
+                drawWireDiagram(svgParallel, xBatt, yMid, xBus1, yMid);
+                
+                // Desenha os barramentos de conexão vertical
+                drawWireDiagram(svgParallel, xBus1, yTop, xBus1, yBot); // Barramento esquerdo
+                drawWireDiagram(svgParallel, xBus2, yTop, xBus2, yBot); // Barramento direito
+
+                // Conexão do barramento direito ao polo negativo (-) da bateria, contornando por baixo para clareza
+                drawWireDiagram(svgParallel, xBus2, yMid, xBus2 + 20, yMid);
+                drawWireDiagram(svgParallel, xBus2 + 20, yMid, xBus2 + 20, yBot + 20);
+                drawWireDiagram(svgParallel, xBus2 + 20, yBot + 20, xBatt - 10, yBot + 20);
+                drawWireDiagram(svgParallel, xBatt - 10, yBot + 20, xBatt - 10, yMid);
+                drawWireDiagram(svgParallel, xBatt - 10, yMid, xBatt + 8, yMid); // Conecta ao terminal negativo (em xBatt + 8)
+
+                // Desenha os três resistores em paralelo
+                const resistorYPositions = [50, 90, 130];
+                resistorYPositions.forEach(yPos => {
+                    drawWireDiagram(svgParallel, xBus1, yPos, xResistor - 15, yPos);
+                    drawResistorDiagram(svgParallel, xResistor, yPos);
+                    drawWireDiagram(svgParallel, xResistor + 15, yPos, xBus2, yPos);
+                });
+
+                parallelContainer.appendChild(svgParallel);
+            }
+        }
+        drawCircuitDiagrams();
+    });
+    </script>
+
+</body>
+</html>

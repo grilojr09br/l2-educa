@@ -1,0 +1,19 @@
+/* Text with Math - handles mixed text and LaTeX */
+.text-with-math {
+  display: inline;
+  color: inherit;
+  line-height: inherit;
+}
+
+.text-with-math mjx-container {
+  display: inline-block !important;
+  margin: 0 0.15em;
+  vertical-align: middle;
+  color: inherit !important;
+}
+
+.text-with-math mjx-container[jax="CHTML"][display="false"] {
+  display: inline-block !important;
+  vertical-align: middle;
+}
+

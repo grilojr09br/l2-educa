@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explorador Interativo de Química Orgânica</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/smiles-drawer@2.0.1/dist/smiles-drawer.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Scholarly Neutrals -->
+    <!-- Application Structure Plan: A aplicação é estruturada como um painel de aprendizado de página única com navegação lateral fixa (que se torna superior em telas menores). Essa abordagem foi escolhida para decompor um tópico acadêmico denso e extenso em seções temáticas e gerenciáveis, promovendo uma exploração não linear. A estrutura consiste em: 1) 'Fundamentos' para os princípios básicos; 2) 'O Mapa Molecular' para classificar cadeias; 3) 'Radicais e Ramificações' um guia visual para substituintes; 4) 'Explorador de Funções' um guia de referência para grupos funcionais; 5) 'Propriedades em Ação' para visualizar dados quantitativos com um gráfico interativo; 6) 'Pratique & Construa', uma seção interativa para aplicar o conhecimento. Esta arquitetura transforma a leitura passiva em uma experiência de aprendizado ativa. -->
+    <!-- Visualization & Content Choices: 1. Geometrias de Hibridização (Fundamentos): Objetivo: Informar. Método: HTML/CSS. Interação: Hover. Justificativa: Leve e eficaz. 2. Classificação de Cadeias (Mapa Molecular): Objetivo: Organizar. Método: Cartões HTML/CSS. 3. Visualizador de Radicais (Radicais e Ramificações): Objetivo: Informar/Visualizar. Método: Renderização 2D via SmilesDrawer em canvas. Justificativa: Fornece representações claras dos blocos de construção de moléculas ramificadas. 4. Visualizador de Funções Orgânicas (Explorador de Funções): Objetivo: Informar/Visualizar. Método: Renderização 2D via SmilesDrawer. Justificativa: Fornece representações quimicamente precisas das funções. 5. Comparação de Propriedades (Propriedades em Ação): Objetivo: Comparar/Analisar. Método: Gráfico de barras com Chart.js. Interação: Alternar dados. 6. Construtor de Nomenclatura com Renderização 2D (Pratique & Construa): Objetivo: Sintetizar/Aplicar. Método: Selects HTML e renderização com SmilesDrawer. Justificativa: Oferece feedback visual imediato e preciso, reforçando a conexão entre nome e estrutura. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9fa;
+            color: #212529;
+        }
+        .nav-link {
+            transition: all 0.2s ease-in-out;
+            border-left: 3px solid transparent;
+        }
+        .nav-link.active {
+            background-color: #e9ecef;
+            border-left-color: #4f46e5;
+            color: #343a40;
+            font-weight: 500;
+        }
+        .nav-link:hover {
+            background-color: #e9ecef;
+        }
+        .content-section {
+            display: none;
+        }
+        .content-section.active {
+            display: block;
+        }
+        .card {
+            background-color: #ffffff;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+        .btn-primary {
+            background-color: #4f46e5;
+            color: white;
+            transition: background-color 0.2s;
+        }
+        .btn-primary:hover {
+            background-color: #4338ca;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 400px;
+            max-height: 50vh;
+        }
+        .molecule-canvas {
+            width: 100%;
+            height: 120px;
+        }
+        #builder-canvas {
+             width: 100%;
+             height: 250px;
+             max-width: 500px;
+             margin: 0 auto;
+        }
+        @media (max-width: 768px) {
+            .chart-container {
+                height: 300px;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+
+    <div class="flex flex-col md:flex-row min-h-screen">
+        <nav id="sidebar" class="w-full md:w-64 bg-white shadow-md md:fixed md:h-full">
+            <div class="p-6">
+                <h1 class="text-xl font-bold text-indigo-700">Química Orgânica</h1>
+                <p class="text-sm text-gray-500">O Guia Interativo</p>
+            </div>
+            <ul id="nav-menu" class="flex flex-row md:flex-col mt-4 md:mt-0 border-t border-b md:border-b-0 border-gray-200">
+                <li><a href="#fundamentos" class="nav-link block p-4 text-gray-700">Fundamentos</a></li>
+                <li><a href="#mapa" class="nav-link block p-4 text-gray-700">O Mapa Molecular</a></li>
+                <li><a href="#radicais" class="nav-link block p-4 text-gray-700">Radicais e Ramificações</a></li>
+                <li><a href="#funcoes" class="nav-link block p-4 text-gray-700">Explorador de Funções</a></li>
+                <li><a href="#propriedades" class="nav-link block p-4 text-gray-700">Propriedades em Ação</a></li>
+                <li><a href="#pratica" class="nav-link block p-4 text-gray-700">Pratique & Construa</a></li>
+            </ul>
+        </nav>
+
+        <main class="flex-1 md:ml-64 p-6 md:p-10">
+            <section id="fundamentos" class="content-section">
+                <h2 class="text-3xl font-bold mb-4">Os Pilares da Química Orgânica</h2>
+                <p class="mb-6 text-gray-600">Bem-vindo ao mundo da química do carbono. A incrível diversidade de moléculas orgânicas, da mais simples à que compõe a vida, começa com as propriedades únicas do átomo de carbono. Esta seção explora os conceitos fundamentais que permitem ao carbono ser o bloco de construção da vida: sua capacidade de formar quatro ligações (tetravalência) e a maneira como seus orbitais se reorganizam (hibridização) para criar geometrias moleculares distintas.</p>
+
+                <div class="card p-6">
+                    <h3 class="text-xl font-bold mb-4">Hibridização e Geometria Molecular</h3>
+                    <p class="mb-6 text-gray-600">A hibridização é um modelo que explica como o carbono forma quatro ligações estáveis. Dependendo do tipo de ligação (simples, dupla ou tripla), o carbono adota diferentes geometrias, ditando a forma tridimensional e a reatividade da molécula.</p>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+                        <div class="border border-gray-200 p-4 rounded-lg">
+                            <h4 class="font-bold text-lg">sp³ (Tetraédrica)</h4>
+                            <div class="h-24 flex items-center justify-center my-3">
+                                <span class="text-5xl">⬢</span>
+                            </div>
+                            <p class="text-sm text-gray-600">Quatro ligações simples ($\sigma$). Geometria 3D flexível com ângulos de 109,5°. Típica de alcanos.</p>
+                        </div>
+                        <div class="border border-gray-200 p-4 rounded-lg">
+                            <h4 class="font-bold text-lg">sp² (Trigonal Planar)</h4>
+                            <div class="h-24 flex items-center justify-center my-3">
+                               <span class="text-5xl">▲</span>
+                            </div>
+                             <p class="text-sm text-gray-600">Uma ligação dupla ($1\sigma, 1\pi$). Geometria 2D rígida com ângulos de 120°. Encontrada em alcenos.</p>
+                        </div>
+                        <div class="border border-gray-200 p-4 rounded-lg">
+                            <h4 class="font-bold text-lg">sp (Linear)</h4>
+                            <div class="h-24 flex items-center justify-center my-3">
+                               <span class="text-5xl">▬</span>
+                            </div>
+                             <p class="text-sm text-gray-600">Uma ligação tripla ($1\sigma, 2\pi$). Geometria 1D rígida com ângulo de 180°. Característica de alcinos.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="mapa" class="content-section">
+                 <h2 class="text-3xl font-bold mb-4">O Mapa Molecular: Classificação e Nomenclatura</h2>
+                <p class="mb-6 text-gray-600">Para navegar na vasta paisagem dos compostos orgânicos, os químicos criaram um sistema de mapeamento: a classificação das cadeias e a nomenclatura da IUPAC. A classificação organiza os esqueletos de carbono com base em sua forma e ligações. A nomenclatura IUPAC fornece um "endereço" único e lógico para cada molécula, permitindo que sua estrutura seja decifrada a partir de seu nome. Esta seção detalha essa lógica.</p>
+
+                <div class="card p-6 mb-8">
+                    <h3 class="text-xl font-bold mb-4">Classificação das Cadeias Carbônicas</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <h4 class="font-semibold">Quanto ao Fechamento:</h4>
+                            <p class="text-gray-600 text-sm pl-4"><strong class="text-indigo-600">Abertas (Acíclicas):</strong> Com duas extremidades. Ex: Propano.</p>
+                            <p class="text-gray-600 text-sm pl-4"><strong class="text-indigo-600">Fechadas (Cíclicas):</strong> Formam anéis. Ex: Cicloexano.</p>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold">Quanto às Ligações:</h4>
+                            <p class="text-gray-600 text-sm pl-4"><strong class="text-indigo-600">Saturada:</strong> Apenas ligações simples. Ex: Etano.</p>
+                            <p class="text-gray-600 text-sm pl-4"><strong class="text-indigo-600">Insaturada:</strong> Contém ligações duplas ou triplas. Ex: Eteno.</p>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold">Quanto à Natureza:</h4>
+                            <p class="text-gray-600 text-sm pl-4"><strong class="text-indigo-600">Homogênea:</strong> Apenas carbonos na cadeia principal. Ex: Butano.</p>
+                            <p class="text-gray-600 text-sm pl-4"><strong class="text-indigo-600">Heterogênea:</strong> Contém outro átomo (heteroátomo) na cadeia. Ex: Éter dietílico.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card p-6">
+                    <h3 class="text-xl font-bold mb-4">A Lógica da Nomenclatura IUPAC</h3>
+                    <p class="mb-4 text-gray-600">Um nome IUPAC é como uma frase com uma gramática rigorosa, composta por três partes que respondem a três perguntas essenciais sobre a molécula.</p>
+                    <div class="flex flex-col md:flex-row gap-4 text-center">
+                        <div class="flex-1 p-4 bg-red-100 rounded-lg">
+                            <p class="font-bold text-red-800">PREFIXO(S)</p>
+                            <p class="text-sm text-red-700">O que está ligado e onde?</p>
+                            <p class="font-mono mt-2">2-metil-</p>
+                        </div>
+                        <div class="flex-1 p-4 bg-blue-100 rounded-lg">
+                            <p class="font-bold text-blue-800">PAI (INFIXO)</p>
+                            <p class="text-sm text-blue-700">Qual o tamanho do esqueleto?</p>
+                            <p class="font-mono mt-2">-prop-</p>
+                        </div>
+                         <div class="flex-1 p-4 bg-green-100 rounded-lg">
+                            <p class="font-bold text-green-800">SUFIXO</p>
+                            <p class="text-sm text-green-700">Qual a identidade química?</p>
+                            <p class="font-mono mt-2">-an-ol</p>
+                        </div>
+                    </div>
+                    <div class="mt-4 text-center p-4 bg-gray-100 rounded-lg">
+                        <p class="font-mono text-lg font-semibold">2-metilpropan-2-ol</p>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="radicais" class="content-section">
+                <h2 class="text-3xl font-bold mb-4">As Peças do Lego Molecular: Radicais e Ramificações</h2>
+                <p class="mb-6 text-gray-600">Quando uma cadeia carbônica não é linear, as partes que se projetam do esqueleto principal são chamadas de ramificações ou, mais formalmente, substituintes (ou radicais). Eles são como peças de Lego que se conectam à estrutura principal, alterando sua forma, tamanho e, consequentemente, suas propriedades. Entender os radicais mais comuns é essencial para nomear corretamente compostos complexos.</p>
+                <div id="radical-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                </div>
+            </section>
+
+            <section id="funcoes" class="content-section">
+                <h2 class="text-3xl font-bold mb-4">Explorador de Funções Orgânicas</h2>
+                <p class="mb-6 text-gray-600">Os grupos funcionais são os centros de reatividade de uma molécula, definindo sua "personalidade" química. Cada grupo funcional confere propriedades específicas e segue regras de nomenclatura particulares. Use este explorador para se familiarizar com as funções mais comuns.</p>
+                
+                <div id="function-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                </div>
+            </section>
+
+            <section id="propriedades" class="content-section">
+                <h2 class="text-3xl font-bold mb-4">Propriedades em Ação</h2>
+                <p class="mb-6 text-gray-600">A estrutura de uma molécula, codificada em seu nome IUPAC, determina diretamente suas propriedades físicas, como ponto de ebulição e solubilidade. Isso ocorre porque a estrutura dita a força das interações entre as moléculas (forças intermoleculares). Este gráfico interativo compara compostos de massa molar semelhante para ilustrar como diferentes grupos funcionais alteram drasticamente essas propriedades.</p>
+
+                <div class="card p-6">
+                    <div class="flex justify-center mb-4 space-x-2">
+                        <button id="show-bp" class="btn-primary py-2 px-4 rounded-md text-sm font-medium">Ponto de Ebulição</button>
+                        <button id="show-sol" class="bg-gray-200 text-gray-700 py-2 px-4 rounded-md text-sm font-medium hover:bg-gray-300">Solubilidade em Água</button>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="propertiesChart"></canvas>
+                    </div>
+                    <p id="chart-explanation" class="text-center mt-4 text-sm text-gray-600"></p>
+                </div>
+            </section>
+            
+            <section id="pratica" class="content-section">
+                <h2 class="text-3xl font-bold mb-4">Pratique & Construa</h2>
+                <p class="mb-6 text-gray-600">A melhor maneira de dominar a nomenclatura IUPAC é praticando. Use a ferramenta abaixo para construir nomes de compostos e ver a lógica em ação. Selecione os componentes da molécula (função principal, cadeia principal e um substituinte) para gerar o nome IUPAC sistemático e visualizar uma renderização 2D de sua estrutura.</p>
+
+                <div class="card p-6">
+                    <h3 class="text-xl font-bold mb-4">Construtor de Nomenclatura IUPAC</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                        <div>
+                            <label for="builder-parent" class="block text-sm font-medium text-gray-700">Cadeia Principal (Pai)</label>
+                            <select id="builder-parent" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                <option value="prop">Prop (3C)</option>
+                                <option value="but" selected>But (4C)</option>
+                                <option value="pent">Pent (5C)</option>
+                                <option value="hex">Hex (6C)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="builder-substituent" class="block text-sm font-medium text-gray-700">Substituinte (Prefixo)</label>
+                            <select id="builder-substituent" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                <option value="nenhum">Nenhum</option>
+                                <option value="metil" selected>Metil</option>
+                                <option value="etil">Etil</option>
+                                <option value="cloro">Cloro</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="builder-suffix" class="block text-sm font-medium text-gray-700">Função Principal (Sufixo)</label>
+                            <select id="builder-suffix" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                <option value="ano">Alcano (-ano)</option>
+                                <option value="ol" selected>Álcool (-ol)</option>
+                                <option value="ona">Cetona (-ona)</option>
+                                <option value="al">Aldeído (-al)</option>
+                                <option value="oico">Ácido Carboxílico (-oico)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div id="builder-output" class="mt-6 p-6 bg-gray-50 border border-gray-200 rounded-lg text-center">
+                        <p class="text-gray-500 mb-2">Nome Gerado:</p>
+                        <p id="generated-name" class="text-2xl font-mono font-bold text-indigo-700"></p>
+                        <p class="text-gray-500 mt-4 mb-2">Estrutura 2D:</p>
+                        <canvas id="builder-canvas"></canvas>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+    const navLinks = document.querySelectorAll('.nav-link');
+    const contentSections = document.querySelectorAll('.content-section');
+    const smilesDrawer = new SmilesDrawer.Drawer({ width: 450, height: 300 });
+
+    function updateContent(hash) {
+        let targetHash = hash || window.location.hash || '#fundamentos';
+
+        contentSections.forEach(section => {
+            if ('#' + section.id === targetHash) {
+                section.classList.add('active');
+            } else {
+                section.classList.remove('active');
+            }
+        });
+
+        navLinks.forEach(link => {
+            if (link.getAttribute('href') === targetHash) {
+                link.classList.add('active');
+            } else {
+                link.classList.remove('active');
+            }
+        });
+        
+        if (targetHash === '#radicais') {
+            drawRadicalMolecules();
+        }
+        if (targetHash === '#funcoes') {
+            drawFunctionMolecules();
+        }
+    }
+
+    navLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const targetHash = e.currentTarget.getAttribute('href');
+            window.location.hash = targetHash;
+        });
+    });
+
+    window.addEventListener('hashchange', () => updateContent());
+    updateContent();
+
+    const organicRadicals = [
+        { name: 'Metil', structure: 'CH₃-', desc: 'O substituinte mais simples, com um carbono.', smiles: '[CH3]*' },
+        { name: 'Etil', structure: 'CH₃CH₂-', desc: 'Uma ramificação com dois átomos de carbono.', smiles: 'C[CH2]*' },
+        { name: 'Propil', structure: 'CH₃CH₂CH₂-', desc: 'Cadeia linear de três carbonos ligada pela extremidade.', smiles: 'CC[CH2]*' },
+        { name: 'Isopropil', structure: '(CH₃)₂CH-', desc: 'Cadeia de três carbonos ligada pelo carbono central.', smiles: 'C([CH]*)(C)' },
+        { name: 'Butil', structure: 'CH₃(CH₂)₃-', desc: 'Cadeia linear de quatro carbonos.', smiles: 'CCC[CH2]*' },
+        { name: 'sec-Butil', structure: 'CH₃CH(CH₂CH₃)-', desc: 'Ligado por um carbono secundário da cadeia de butano.', smiles: 'CC([CH]*)(C)' },
+        { name: 'Isobutil', structure: '(CH₃)₂CHCH₂-', desc: 'Grupo "iso" com quatro carbonos totais.', smiles: 'CC(C)[CH2]*' },
+        { name: 'terc-Butil', structure: '(CH₃)₃C-', desc: 'Altamente ramificado, ligado por um carbono terciário.', smiles: 'C(C)(C)[C]*' },
+        { name: 'Fenil', structure: 'C₆H₅-', desc: 'Um anel benzênico atuando como substituinte.', smiles: 'c1ccc(*)cc1' },
+        { name: 'Benzil', structure: 'C₆H₅CH₂-', desc: 'Grupo fenil ligado através de um grupo CH₂.', smiles: 'c1ccccc1[CH2]*' }
+    ];
+
+    let radicalsDrawn = false;
+    function drawRadicalMolecules() {
+        if (radicalsDrawn) return;
+        const radicalGrid = document.getElementById('radical-grid');
+        if (!radicalGrid) return;
+
+        radicalGrid.innerHTML = '';
+
+        organicRadicals.forEach((rad, index) => {
+            const card = document.createElement('div');
+            card.className = 'card p-5 flex flex-col justify-between';
+            const canvasId = `rad-canvas-${index}`;
+            card.innerHTML = `
+                <div>
+                    <h4 class="font-bold text-lg text-indigo-700">${rad.name}</h4>
+                    <p class="font-mono text-gray-500 text-sm">${rad.structure}</p>
+                    <canvas id="${canvasId}" class="molecule-canvas my-2"></canvas>
+                    <p class="text-sm text-gray-600">${rad.desc}</p>
+                </div>
+            `;
+            radicalGrid.appendChild(card);
+            
+            const localDrawer = new SmilesDrawer.Drawer({ width: 250, height: 120 });
+            SmilesDrawer.parse(rad.smiles, (tree) => {
+                localDrawer.draw(tree, canvasId, 'light', false);
+            }, (err) => { console.error("Error drawing radical:", err); });
+        });
+        radicalsDrawn = true;
+    }
+
+
+    const organicFunctions = [
+        { name: 'Álcool', group: '-OH', structure: 'R-OH', suffix: '-ol', prefix: 'hidroxi-', desc: 'Hidroxila ligada a carbono sp³.', smiles: 'CCO' },
+        { name: 'Fenol', group: '-OH', structure: 'Ar-OH', suffix: '-fenol', prefix: 'hidroxi-', desc: 'Hidroxila ligada a anel aromático.', smiles: 'c1ccccc1O' },
+        { name: 'Éter', group: '-O-', structure: 'R-O-R\'', suffix: 'N/A', prefix: 'alcóxi-', desc: 'Oxigênio entre dois carbonos.', smiles: 'COC' },
+        { name: 'Aldeído', group: '-CHO', structure: 'R-CHO', suffix: '-al', prefix: 'formil-', desc: 'Carbonila na extremidade da cadeia.', smiles: 'CC=O' },
+        { name: 'Cetona', group: '>C=O', structure: 'R-CO-R\'', suffix: '-ona', prefix: 'oxo-', desc: 'Carbonila em carbono secundário.', smiles: 'CC(=O)C' },
+        { name: 'Ácido Carboxílico', group: '-COOH', structure: 'R-COOH', suffix: '-oico', prefix: 'carboxi-', desc: 'Grupo carboxila.', smiles: 'CC(=O)O' },
+        { name: 'Éster', group: '-COO-', structure: 'R-COO-R\'', suffix: '-oato de alquila', prefix: 'alcoxicarbonil-', desc: 'Derivado de ácido carboxílico.', smiles: 'CC(=O)OC' },
+        { name: 'Sal Orgânico', group: '-COO⁻M⁺', structure: 'R-COO⁻ M⁺', suffix: '-oato de (metal)', prefix: 'N/A', desc: 'Sal de um ácido carboxílico.', smiles: 'CC(=O)[O-].[Na+]' },
+        { name: 'Haleto Orgânico', group: '-X', structure: 'R-X', suffix: 'N/A', prefix: 'halo-', desc: 'Contém um halogênio (F, Cl, Br, I).', smiles: 'CCCl' },
+        { name: 'Enol', group: '>C=C-OH', structure: 'R₂C=CR-OH', suffix: '-enol', prefix: 'hidroxi-', desc: 'Hidroxila em carbono sp², instável.', smiles: 'C=CO' },
+    ];
+    
+    let functionsDrawn = false;
+    function drawFunctionMolecules() {
+        if (functionsDrawn) return;
+        const functionGrid = document.getElementById('function-grid');
+        if (!functionGrid) return;
+
+        functionGrid.innerHTML = ''; 
+
+        organicFunctions.forEach((func, index) => {
+            const card = document.createElement('div');
+            card.className = 'card p-5 flex flex-col justify-between';
+            const canvasId = `func-canvas-${index}`;
+            card.innerHTML = `
+                <div>
+                    <h4 class="font-bold text-lg text-indigo-700">${func.name}</h4>
+                    <canvas id="${canvasId}" class="molecule-canvas my-2"></canvas>
+                    <p class="text-sm text-gray-600">${func.desc}</p>
+                </div>
+                <div class="mt-4 pt-3 border-t border-gray-100">
+                    <p class="text-xs text-gray-500">Sufixo: <strong class="text-gray-700">${func.suffix}</strong></p>
+                    <p class="text-xs text-gray-500">Prefixo: <strong class="text-gray-700">${func.prefix}</strong></p>
+                </div>
+            `;
+            functionGrid.appendChild(card);
+            
+            const localDrawer = new SmilesDrawer.Drawer({ width: 250, height: 120 });
+            SmilesDrawer.parse(func.smiles, (tree) => {
+                localDrawer.draw(tree, canvasId, 'light', false);
+            });
+        });
+        functionsDrawn = true;
+    }
+
+
+    const propertiesData = {
+        labels: ['Pentano (Alcano)', 'Metoxipropano (Éter)', 'Butanal (Aldeído)', 'Butanona (Cetona)', 'Butan-1-ol (Álcool)', 'Ácido Propanoico (Ácido)'],
+        boilingPoints: [36, 39, 75, 80, 118, 141],
+        solubility: [0, 1, 2, 2, 2, 3] 
+    };
+    
+    const solubilityLabels = ['Insolúvel', 'Levemente Solúvel', 'Solúvel', 'Miscível'];
+
+    const ctx = document.getElementById('propertiesChart');
+    let propertiesChart;
+    
+    function createOrUpdateChart(dataType) {
+        const isBP = dataType === 'bp';
+        const data = isBP ? propertiesData.boilingPoints : propertiesData.solubility;
+        const label = isBP ? 'Ponto de Ebulição (°C)' : 'Solubilidade em Água';
+        const backgroundColor = isBP ? 'rgba(79, 70, 229, 0.7)' : 'rgba(30, 144, 255, 0.7)';
+        const borderColor = isBP ? 'rgba(79, 70, 229, 1)' : 'rgba(30, 144, 255, 1)';
+        const explanationText = isBP 
+            ? 'Forças intermoleculares mais fortes (Pontes de Hidrogênio em álcoois/ácidos) exigem mais energia para ferver.'
+            : 'A capacidade de formar pontes de hidrogênio com a água aumenta drasticamente a solubilidade.';
+        
+        document.getElementById('chart-explanation').textContent = explanationText;
+
+        if (propertiesChart) {
+            propertiesChart.destroy();
+        }
+
+        propertiesChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: propertiesData.labels,
+                datasets: [{
+                    label: label,
+                    data: data,
+                    backgroundColor: backgroundColor,
+                    borderColor: borderColor,
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value, index, values) {
+                                if (!isBP) {
+                                    return solubilityLabels[value] || '';
+                                }
+                                return value + ' °C';
+                            }
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            maxRotation: 0,
+                            minRotation: 0,
+                             autoSkip: false,
+                            callback: function(value, index, values) {
+                                const label = this.getLabelForValue(value);
+                                if (label.length > 15) {
+                                   return label.split(' ');
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                if (context.parsed.y !== null) {
+                                     if (!isBP) {
+                                        label += solubilityLabels[context.parsed.y];
+                                    } else {
+                                        label += context.parsed.y + ' °C';
+                                    }
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    const showBpBtn = document.getElementById('show-bp');
+    const showSolBtn = document.getElementById('show-sol');
+    
+    if (showBpBtn && showSolBtn) {
+        showBpBtn.addEventListener('click', () => {
+            createOrUpdateChart('bp');
+            showBpBtn.classList.add('btn-primary');
+            showBpBtn.classList.remove('bg-gray-200', 'text-gray-700');
+            showSolBtn.classList.remove('btn-primary');
+            showSolBtn.classList.add('bg-gray-200', 'text-gray-700');
+        });
+
+        showSolBtn.addEventListener('click', () => {
+            createOrUpdateChart('sol');
+            showSolBtn.classList.add('btn-primary');
+            showSolBtn.classList.remove('bg-gray-200', 'text-gray-700');
+            showBpBtn.classList.remove('btn-primary');
+            showBpBtn.classList.add('bg-gray-200', 'text-gray-700');
+        });
+
+        if (document.querySelector('#propriedades.active')) {
+            createOrUpdateChart('bp');
+        }
+    }
+
+    const builderParent = document.getElementById('builder-parent');
+    const builderSubstituent = document.getElementById('builder-substituent');
+    const builderSuffix = document.getElementById('builder-suffix');
+    const generatedName = document.getElementById('generated-name');
+    
+    function updateBuilder() {
+        if (!builderParent) return;
+
+        const parentVal = builderParent.value;
+        const parentText = builderParent.options[builderParent.selectedIndex].text.split(' ')[0].toLowerCase();
+        const parentLen = {prop: 3, but: 4, pent: 5, hex: 6}[parentVal];
+        
+        const subVal = builderSubstituent.value;
+        const suffixVal = builderSuffix.value;
+
+        let smiles = 'C'.repeat(parentLen);
+        let subSmiles = { metil: 'C', etil: 'CC', cloro: 'Cl' }[subVal];
+
+        let prefix = '';
+        let prefixPos = 3;
+        let suffixPos = 2;
+
+        if (suffixVal === 'al' || suffixVal === 'oico') {
+            suffixPos = 1;
+            prefixPos = 3; 
+        } else {
+            suffixPos = 2;
+            prefixPos = (parentLen > 4) ? 4 : (parentLen === 3 ? 2 : 3);
+        }
+
+        let tempSmiles = smiles.split('');
+        if (suffixVal === 'ol') tempSmiles[suffixPos - 1] = 'C(O)';
+        if (suffixVal === 'ona') tempSmiles[suffixPos - 1] = 'C(=O)';
+        if (suffixVal === 'al') tempSmiles[0] = 'C(=O)';
+        if (suffixVal === 'oico') tempSmiles[0] = 'C(=O)O';
+        
+        if (subVal !== 'nenhum') {
+            tempSmiles[prefixPos - 1] = `C(${subSmiles})`;
+            prefix = `${prefixPos}-${subVal}-`;
+        }
+
+        smiles = tempSmiles.join('');
+        
+        let position = `${suffixPos}-`;
+        if (suffixVal === 'ona' && parentLen === 3) position = ''; 
+        if (suffixVal === 'al' || suffixVal === 'oico' || suffixVal === 'ano') position = '';
+        
+
+        let nameSuf = { ano: 'ano', ol: 'ol', ona: 'ona', al: 'al', oico: 'oico' }[suffixVal];
+        let infix = (suffixVal === 'al' || suffixVal === 'oico' || suffixVal === 'ano') ? '' : 'an-';
+        
+        let fullName = `${prefix}${parentText}${infix}${position}${nameSuf}`;
+        if (suffixVal === 'oico') {
+            fullName = `ácido ${prefix}${parentText}anoico`;
+        }
+        
+        generatedName.textContent = fullName;
+
+        SmilesDrawer.parse(smiles, (tree) => {
+            smilesDrawer.draw(tree, 'builder-canvas', 'light', false);
+        }, (err) => {
+            console.error(err);
+        });
+    }
+
+    if (builderParent) {
+        [builderParent, builderSubstituent, builderSuffix].forEach(el => {
+            el.addEventListener('change', updateBuilder);
+        });
+        updateBuilder();
+    }
+});
+</script>
+
+</body>
+</html>

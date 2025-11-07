@@ -1,0 +1,198 @@
+/* Loading Screen - Enhanced with rotating gradient */
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  transition: opacity 0.8s ease-out;
+  opacity: 1;
+}
+
+.loading-overlay.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.loading-content {
+  text-align: center;
+  max-width: 500px;
+  width: 90%;
+}
+
+/* Rotating gradient ring loader */
+.loading-logo-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: clamp(180px, 30vw, 240px);
+  height: clamp(180px, 30vw, 240px);
+  margin: 0 auto clamp(2rem, 5vw, 3rem);
+}
+
+.rotating-gradient-ring {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background-color: transparent;
+  animation: ring-rotate 2.5s linear infinite;
+  z-index: 0;
+  box-shadow:
+    0 10px 30px 0 rgba(255, 255, 255, 0.15) inset,
+    0 20px 40px 0 #a855f7 inset,
+    0 60px 80px 0 #471eec inset,
+    0 0 50px rgba(99, 102, 241, 0.5);
+}
+
+@keyframes ring-rotate {
+  0% {
+    transform: rotate(90deg);
+    box-shadow:
+      0 10px 30px 0 rgba(255, 255, 255, 0.15) inset,
+      0 20px 40px 0 #a855f7 inset,
+      0 60px 80px 0 #471eec inset,
+      0 0 50px rgba(99, 102, 241, 0.5);
+  }
+  50% {
+    transform: rotate(270deg);
+    box-shadow:
+      0 10px 30px 0 rgba(255, 255, 255, 0.15) inset,
+      0 20px 30px 0 #d60a47 inset,
+      0 40px 80px 0 #311e80 inset,
+      0 0 60px rgba(168, 85, 247, 0.6);
+  }
+  100% {
+    transform: rotate(450deg);
+    box-shadow:
+      0 10px 30px 0 rgba(255, 255, 255, 0.15) inset,
+      0 20px 40px 0 #a855f7 inset,
+      0 60px 80px 0 #471eec inset,
+      0 0 50px rgba(99, 102, 241, 0.5);
+  }
+}
+
+/* Logo text with animated letters */
+.logo-text-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.15em;
+  position: relative;
+  z-index: 1;
+  font-family: 'Poppins', sans-serif;
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 900;
+  letter-spacing: 0.15em;
+}
+
+.logo-letter {
+  display: inline-block;
+  color: #fff;
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  animation: letter-pulse 2s infinite ease-in-out;
+  text-shadow: 
+    0 0 20px rgba(168, 85, 247, 0.8),
+    0 0 40px rgba(99, 102, 241, 0.6),
+    0 0 60px rgba(59, 130, 246, 0.4);
+  filter: drop-shadow(0 0 15px rgba(168, 85, 247, 0.8));
+}
+
+@keyframes letter-pulse {
+  0%, 100% {
+    opacity: 0.8;
+    transform: translateY(0) scale(1);
+  }
+  20% {
+    opacity: 1;
+    transform: translateY(-5px) scale(1.15);
+    text-shadow: 
+      0 0 30px rgba(168, 85, 247, 1),
+      0 0 50px rgba(99, 102, 241, 0.8),
+      0 0 70px rgba(59, 130, 246, 0.6);
+  }
+  40% {
+    opacity: 0.9;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Progress bar with glow */
+.loading-bar-container {
+  width: 100%;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: clamp(1rem, 3vw, 1.5rem);
+  box-shadow: 
+    inset 0 2px 4px rgba(0, 0, 0, 0.3),
+    0 0 20px rgba(99, 102, 241, 0.2);
+}
+
+.loading-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #6366f1 0%, #a855f7 50%, #3b82f6 100%);
+  border-radius: 3px;
+  transition: width 0.3s ease-out;
+  box-shadow: 
+    0 0 20px rgba(99, 102, 241, 0.8),
+    0 0 40px rgba(168, 85, 247, 0.6),
+    inset 0 1px 2px rgba(255, 255, 255, 0.3);
+  position: relative;
+}
+
+.loading-bar-fill::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.4), transparent);
+  border-radius: 3px 3px 0 0;
+}
+
+.loading-text {
+  font-size: clamp(0.875rem, 2vw, 1rem);
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 300;
+  letter-spacing: 0.08em;
+  animation: text-fade 2s ease-in-out infinite;
+}
+
+@keyframes text-fade {
+  0%, 100% {
+    opacity: 0.7;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .loading-logo-wrapper {
+    width: 160px;
+    height: 160px;
+  }
+  
+  .logo-text-container {
+    font-size: 1.5rem;
+  }
+}
+
+/* Graceful degradation para iOS/WhatsApp */
+html.no-js .loading-overlay {
+  display: none !important;
+}
+

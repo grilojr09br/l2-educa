@@ -1,0 +1,464 @@
+.analytic-geometry-page {
+  min-height: 100vh;
+  padding: clamp(6rem, 10vw, 8rem) clamp(1rem, 5vw, 2rem) clamp(2rem, 5vw, 4rem);
+}
+
+/* Derivation Box */
+.derivation-box {
+  background: rgba(99, 102, 241, 0.05);
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  border-radius: 12px;
+  padding: clamp(1.5rem, 4vw, 2rem);
+  margin: clamp(2.5rem, 5vw, 4rem) 0; /* Balanced spacing */
+}
+
+.derivation-box strong {
+  color: #6366f1;
+  font-size: 1.2rem;
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.derivation-box p {
+  color: rgba(255, 255, 255, 0.85);
+  line-height: 1.7;
+  margin: 0.75rem 0;
+  font-size: 1.05rem;
+}
+
+/* Geometry Calculator */
+.geometry-calculator {
+  margin: clamp(2.5rem, 5vw, 4rem) 0; /* Balanced spacing */
+}
+
+.geometry-canvas {
+  width: 100%;
+  max-width: 600px;
+  height: auto;
+  aspect-ratio: 3/2;
+  border-radius: 12px;
+  display: block;
+  margin: 0 auto 2rem;
+  background: rgba(10, 10, 10, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Point Controls */
+.point-controls {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.point-control-group {
+  background: rgba(99, 102, 241, 0.05);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  border-radius: 12px;
+  padding: 1.5rem;
+}
+
+.point-control-group h4 {
+  color: #6366f1;
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.coordinate-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.coord-input {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.coord-input label {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 1rem;
+  min-width: 30px;
+  font-weight: 600;
+}
+
+.coord-input input[type="number"] {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  padding: 0.75rem;
+  color: #fff;
+  font-size: 1rem;
+  transition: all 0.3s ease-out;
+}
+
+.coord-input input[type="number"]:focus {
+  outline: none;
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+}
+
+.result-display {
+  text-align: center;
+  background: rgba(168, 85, 247, 0.1);
+  border: 2px solid rgba(168, 85, 247, 0.4);
+  border-radius: 12px;
+  padding: 2rem;
+  margin-top: 2rem;
+}
+
+.result-display h4 {
+  color: #a855f7;
+  font-size: 1.3rem;
+  margin-bottom: 1rem;
+  font-weight: 700;
+}
+
+.result-value {
+  color: #fff;
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin: 0;
+  font-family: 'Courier New', monospace;
+}
+
+/* Equation Forms */
+.equation-forms {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.5rem;
+  margin: 2rem 0;
+}
+
+.form-item {
+  background: rgba(59, 130, 246, 0.05);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  border-radius: 12px;
+  padding: 1.5rem;
+  transition: all 0.3s ease-out;
+}
+
+.form-item:hover {
+  background: rgba(59, 130, 246, 0.1);
+  border-color: rgba(59, 130, 246, 0.5);
+  transform: translateY(-4px);
+}
+
+.form-item h4 {
+  color: #3b82f6;
+  font-size: 1.15rem;
+  margin-bottom: 0.75rem;
+  font-weight: 600;
+}
+
+.form-item p {
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Equations Display */
+.equations-display {
+  background: rgba(168, 85, 247, 0.05);
+  border: 1px solid rgba(168, 85, 247, 0.3);
+  border-radius: 12px;
+  padding: 2rem;
+  margin-top: 2rem;
+}
+
+.equation-result {
+  margin: 1.5rem 0;
+  padding: 1rem;
+  background: rgba(99, 102, 241, 0.1);
+  border-left: 4px solid #6366f1;
+  border-radius: 8px;
+}
+
+.equation-result strong {
+  color: #6366f1;
+  display: block;
+  margin-bottom: 0.75rem;
+  font-size: 1.1rem;
+}
+
+.equation-result p {
+  color: rgba(255, 255, 255, 0.95);
+  font-size: 1.15rem;
+  margin: 0;
+  font-family: 'Courier New', monospace;
+  font-weight: 600;
+}
+
+/* Point-Line Controls */
+.point-line-controls,
+.two-lines-controls {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.control-section {
+  background: rgba(168, 85, 247, 0.05);
+  border: 1px solid rgba(168, 85, 247, 0.2);
+  border-radius: 12px;
+  padding: 1.5rem;
+}
+
+.control-section h4 {
+  color: #a855f7;
+  font-size: 1.15rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+/* Classification */
+.classification-box {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin: 2rem 0;
+}
+
+.class-item {
+  background: rgba(59, 130, 246, 0.05);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  border-radius: 12px;
+  padding: 1.5rem;
+}
+
+.class-item h4 {
+  color: #3b82f6;
+  font-size: 1.2rem;
+  margin-bottom: 0.75rem;
+  font-weight: 600;
+}
+
+.class-item p {
+  color: rgba(255, 255, 255, 0.85);
+  line-height: 1.6;
+  margin: 0.5rem 0;
+}
+
+.classification-result {
+  background: rgba(168, 85, 247, 0.05);
+  border: 1px solid rgba(168, 85, 247, 0.3);
+  border-radius: 12px;
+  padding: 2rem;
+  margin-top: 2rem;
+}
+
+.result-item {
+  margin: 1.5rem 0;
+}
+
+.result-item strong {
+  color: #a855f7;
+  display: block;
+  margin-bottom: 0.75rem;
+  font-size: 1.15rem;
+}
+
+.result-item p {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 1.1rem;
+  margin: 0;
+  font-weight: 500;
+}
+
+.classification-intersecting {
+  color: #22c55e !important;
+}
+
+.classification-parallel {
+  color: #f59e0b !important;
+}
+
+.classification-coincident {
+  color: #3b82f6 !important;
+}
+
+/* Matrices */
+.matrix-display {
+  text-align: center;
+  margin: clamp(2.5rem, 5vw, 4rem) 0; /* Balanced spacing */
+}
+
+.matrix-notation {
+  display: inline-block;
+  font-family: 'Courier New', monospace;
+  font-size: 1.2rem;
+  line-height: 2;
+  color: rgba(255, 255, 255, 0.95);
+  background: rgba(99, 102, 241, 0.1);
+  padding: 1.5rem 2rem;
+  border-radius: 12px;
+  border: 2px solid rgba(99, 102, 241, 0.3);
+}
+
+.matrix-calculator {
+  background: rgba(168, 85, 247, 0.05);
+  border: 1px solid rgba(168, 85, 247, 0.3);
+  border-radius: 12px;
+  padding: 2rem;
+  margin: clamp(2.5rem, 5vw, 4rem) 0; /* Balanced spacing */
+}
+
+.matrix-calculator h4 {
+  color: #a855f7;
+  font-size: 1.3rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  font-weight: 700;
+}
+
+.matrix-input-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-width: 300px;
+  margin: 0 auto 2rem;
+}
+
+.matrix-input-grid.matrix-3x3 {
+  max-width: 400px;
+}
+
+.matrix-row {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.matrix-row input {
+  width: 80px;
+  height: 80px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px solid rgba(99, 102, 241, 0.4);
+  border-radius: 12px;
+  padding: 1rem;
+  color: #fff;
+  font-size: 1.3rem;
+  font-weight: 700;
+  text-align: center;
+  font-family: 'Courier New', monospace;
+  transition: all 0.3s ease-out;
+}
+
+.matrix-row input:focus {
+  outline: none;
+  border-color: #6366f1;
+  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.2);
+  background: rgba(99, 102, 241, 0.1);
+}
+
+.determinant-result {
+  text-align: center;
+  background: rgba(99, 102, 241, 0.2);
+  border: 2px solid rgba(99, 102, 241, 0.5);
+  border-radius: 12px;
+  padding: 1.5rem;
+}
+
+.determinant-result strong {
+  color: #6366f1;
+  display: block;
+  margin-bottom: 0.75rem;
+  font-size: 1.2rem;
+}
+
+.determinant-result .result-value {
+  color: #fff;
+  font-size: 2rem;
+  font-weight: 700;
+  font-family: 'Courier New', monospace;
+}
+
+/* Sarrus Explanation */
+.sarrus-explanation {
+  background: rgba(59, 130, 246, 0.05);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin: 2rem 0;
+}
+
+.sarrus-explanation strong {
+  color: #3b82f6;
+  font-size: 1.15rem;
+  display: block;
+  margin-bottom: 1rem;
+}
+
+/* Applications Grid */
+.applications-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin: 2rem 0;
+}
+
+.application-item {
+  background: rgba(168, 85, 247, 0.05);
+  border: 1px solid rgba(168, 85, 247, 0.3);
+  border-radius: 12px;
+  padding: 1.5rem;
+  transition: all 0.3s ease-out;
+}
+
+.application-item:hover {
+  background: rgba(168, 85, 247, 0.1);
+  border-color: rgba(168, 85, 247, 0.5);
+  transform: translateY(-4px);
+}
+
+.application-item h4 {
+  color: #a855f7;
+  font-size: 1.15rem;
+  margin-bottom: 0.75rem;
+  font-weight: 600;
+}
+
+.application-item p {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin: 0.75rem 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .point-controls,
+  .point-line-controls,
+  .two-lines-controls {
+    grid-template-columns: 1fr;
+  }
+
+  .equation-forms,
+  .applications-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .geometry-canvas {
+    max-width: 100%;
+  }
+
+  .matrix-row input {
+    width: 60px;
+    height: 60px;
+    font-size: 1.1rem;
+  }
+
+  .matrix-input-grid {
+    max-width: 240px;
+  }
+
+  .matrix-input-grid.matrix-3x3 {
+    max-width: 300px;
+  }
+}
+

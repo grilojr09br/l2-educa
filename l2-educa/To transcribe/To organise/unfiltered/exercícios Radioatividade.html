@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análise Nuclear | Atividade Crítica</title>
+    <!-- MathJax Configuration -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            },
+            svg: {
+                fontCache: 'global'
+            },
+            startup: {
+                ready: () => {
+                    MathJax.startup.defaultReady();
+                    MathJax.startup.promise.then(() => {
+                        console.log('MathJax initial typesetting complete');
+                    });
+                }
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <!-- Styles -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Special+Elite&family=Roboto+Mono:wght@400;700&display=swap');
+
+        /* :root define as variáveis de cor para um tema coeso e fácil de manter */
+        :root {
+            --bg-color: #1a1a1a;
+            --card-bg-color: rgba(26, 32, 28, 0.75);
+            --text-color: #c5c8c6;
+            --text-muted-color: #8a9a8a;
+            --header-color: #f0e68c; /* Khaki */
+            --primary-color: #ffb300; /* Amber */
+            --primary-hover-color: #ffa000;
+            --border-color: rgba(255, 179, 0, 0.25);
+            --shadow-color: rgba(0, 0, 0, 0.5);
+            --solution-bg-color: rgba(30, 35, 31, 0.85); /* Cor ligeiramente ajustada */
+            --solution-border-color: var(--primary-color);
+            --correct-answer-color: #a5d6a7; /* Light Green */
+            --incorrect-answer-color: #ef9a9a; /* Light Red */
+            --hint-bg-color: rgba(255, 249, 196, 0.1);
+        }
+
+        /* Reset básico e box-sizing para um layout consistente */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Estilo base do corpo da página */
+        body {
+            font-family: 'Roboto Mono', monospace;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.8;
+            overflow-x: hidden; /* Previne scroll horizontal */
+        }
+
+        /* Canvas para o fundo animado, posicionado atrás de todo o conteúdo */
+        #canvas-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.4;
+        }
+
+        /* Container principal que centraliza o conteúdo */
+        .container {
+            width: 95%;
+            max-width: 950px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Cabeçalho da página */
+        .page-header {
+            text-align: center;
+            padding: 40px 0;
+            border-bottom: 2px solid var(--border-color);
+            margin-bottom: 40px;
+        }
+
+        .page-header h1 {
+            font-family: 'Special Elite', cursive;
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: var(--header-color);
+            text-shadow: 0 0 5px var(--primary-color), 0 0 15px rgba(255,179,0,0.5);
+            margin-bottom: 10px;
+        }
+
+        .page-header p {
+            font-size: 1.1rem;
+            color: var(--text-muted-color);
+        }
+        
+        /* Estilo base para os cartões de questão */
+        .question-card {
+            background: var(--card-bg-color);
+            border-radius: 8px; /* Bordas mais suaves */
+            border: 1px solid var(--border-color);
+            padding: 30px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px 0 var(--shadow-color);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .question-header {
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: var(--text-muted-color);
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 15px; /* Mais espaço */
+        }
+        
+        .question-header .icon {
+            color: var(--primary-color);
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+        
+        /* Bloco para exibir equações matemáticas */
+        .equation {
+            font-family: 'Roboto Mono', monospace;
+            background-color: rgba(0,0,0,0.3);
+            padding: 20px;
+            border-radius: 4px;
+            text-align: center;
+            font-size: 1.2rem;
+            margin: 25px 0;
+            overflow-x: auto;
+            border-left: 4px solid var(--primary-color);
+            color: var(--header-color);
+        }
+
+        /* Lista de opções de resposta */
+        .options-list {
+            list-style-type: none;
+            padding: 0;
+            margin: 25px 0;
+        }
+
+        .options-list li {
+            margin-bottom: 12px;
+            padding: 15px 20px; /* Mais padding para toque */
+            border-radius: 6px; /* Bordas mais suaves */
+            border: 1px solid var(--border-color);
+            transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+            cursor: pointer;
+        }
+
+        .options-list:not(.answered) li:hover {
+            background-color: rgba(255, 179, 0, 0.1);
+            border-color: var(--primary-color);
+            transform: translateX(5px);
+        }
+        
+        .options-list.answered li {
+            cursor: default;
+            opacity: 0.7;
+        }
+        
+        .options-list li.correct {
+            background-color: rgba(165, 214, 167, 0.15);
+            border-color: var(--correct-answer-color);
+            color: var(--correct-answer-color);
+            opacity: 1;
+            transform: translateX(0); /* Reseta o hover */
+        }
+        
+        .options-list li.incorrect {
+            background-color: rgba(239, 154, 154, 0.15);
+            border-color: var(--incorrect-answer-color);
+            color: var(--incorrect-answer-color);
+            opacity: 1;
+            transform: translateX(0); /* Reseta o hover */
+        }
+
+        /* Estilo dos botões */
+        .btn {
+            display: inline-block;
+            background-color: var(--primary-color); /* Fundo sólido para destaque */
+            color: var(--bg-color); /* Texto escuro */
+            padding: 12px 25px;
+            border: 2px solid var(--primary-color);
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 1rem;
+            font-family: 'Roboto Mono', monospace;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            margin-top: 15px;
+        }
+
+        .btn:hover {
+            background-color: transparent; /* Inverte no hover */
+            color: var(--primary-color);
+            box-shadow: 0 0 15px 0 rgba(255, 179, 0, 0.5);
+        }
+        
+        /* Animação de expansão para a solução e feedback */
+        .solution, .feedback-box {
+            max-height: 0;
+            overflow: hidden;
+            opacity: 0;
+            visibility: hidden;
+            transition: max-height 0.6s ease-in-out, margin-top 0.6s ease-in-out, padding 0.6s ease-in-out, opacity 0.4s ease-in-out 0.1s;
+            padding-top: 0;
+            padding-bottom: 0;
+            margin-top: 0;
+        }
+        
+        .solution.visible, .feedback-box.visible {
+            max-height: 1500px;
+            opacity: 1;
+            visibility: visible;
+            padding: 25px;
+            margin-top: 25px;
+        }
+        
+        .feedback-box {
+            background-color: var(--hint-bg-color);
+            border-left: 4px solid var(--primary-color);
+            border-radius: 4px;
+            color: var(--text-color);
+        }
+        .feedback-box p { margin: 0; }
+        .feedback-box .hint { margin-top: 15px; font-style: italic; color: var(--text-muted-color); }
+        .feedback-box .correct-feedback { color: var(--correct-answer-color); font-weight: bold; }
+        .feedback-box .incorrect-feedback { color: var(--incorrect-answer-color); font-weight: bold; }
+
+        .solution {
+            background-color: var(--solution-bg-color);
+            border-left: 4px solid var(--solution-border-color);
+            border-radius: 0 8px 8px 0;
+            line-height: 1.8;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .solution h4 {
+            margin-top: 0;
+            color: var(--primary-color);
+            font-size: 1.4rem;
+            margin-bottom: 0; /* Gap cuida do espaço */
+            font-family: 'Special Elite', cursive;
+        }
+
+        .solution .equation-step {
+            background-color: rgba(0,0,0,0.25);
+            padding: 1rem;
+            border-radius: 4px;
+            border-left: 2px solid var(--primary-color);
+            margin-top: 0.5rem;
+            overflow-x: auto;
+            font-size: 1.1rem;
+        }
+
+        .solution ul {
+            padding-left: 20px;
+        }
+        .solution li {
+            margin-bottom: 1rem;
+        }
+
+        .correct-answer {
+            font-weight: bold;
+            color: var(--correct-answer-color);
+            display: block;
+            margin-top: 1rem;
+            padding: 15px;
+            background-color: rgba(165, 214, 167, 0.1);
+            border: 1px solid var(--correct-answer-color);
+            border-left: 4px solid var(--correct-answer-color);
+            border-radius: 6px;
+        }
+
+        /* --- MEDIA QUERIES PARA RESPONSIVIDADE --- */
+
+        @media (max-width: 768px) {
+            .page-header h1 {
+                font-size: 2.8rem;
+            }
+            .page-header {
+                padding: 30px 0;
+                margin-bottom: 30px;
+            }
+            .question-card {
+                padding: 25px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            body {
+                line-height: 1.7;
+            }
+            .container {
+                padding: 15px;
+            }
+            .page-header h1 {
+                font-size: 2.2rem;
+            }
+            .page-header p {
+                font-size: 1rem;
+            }
+            .question-card {
+                padding: 20px;
+            }
+            .question-header {
+                font-size: 1.1rem;
+            }
+            .equation, .solution .equation-step {
+                padding: 15px;
+                font-size: 1rem;
+            }
+            .btn {
+                padding: 14px 20px;
+                font-size: 0.9rem;
+                width: 100%;
+                text-align: center;
+            }
+            .solution.visible, .feedback-box.visible {
+                padding: 20px;
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+    <canvas id="canvas-bg"></canvas>
+
+    <main class="container">
+        <header class="page-header">
+            <h1><span class="icon">☢</span> Análise Nuclear <span class="icon">☢</span></h1>
+            <p>Atividade Crítica: Decaimento, Estequiometria e Energia.</p>
+        </header>
+
+        <article class="question-card" id="q1">
+            <header class="question-header"><span class="icon">☢</span>Questão 01 (FM Petrópolis RJ)</header>
+            <section class="question-content">
+                <p>Na minissérie Chernobyl, o desastre da usina nuclear expôs o mundo aos perigos da fissão descontrolada. Nos reatores, o urânio-235 absorve um nêutron, sofrendo fissão. O núcleo pesado se divide em núcleos mais leves, nêutrons livres e energia, como na reação:</p>
+                <div class="equation">$$_{92}^{235}\text{U} + n \rightarrow _{Z}^{A}\text{X} + _{36}^{92}\text{Kr} + 3n$$</div>
+                <p>O elemento químico X, um dos subprodutos da fissão, é o:</p>
+                <ul class="options-list">
+                    <li data-correct="true" data-hint="Lembre-se de que tanto o número de massa (A) quanto o número atômico (Z) devem ser conservados. Some os valores dos reagentes e iguale-os aos dos produtos.">a) bário</li>
+                    <li data-hint="Verifique a soma dos números atômicos (Z). O valor para o elemento X deve balancear a equação.">b) zircônio</li>
+                    <li data-hint="O chumbo (Pb) tem número atômico 82. Isso se encaixa no balanceamento da carga nuclear?">c) chumbo</li>
+                    <li data-hint="O germânio (Ge) tem número atômico 32. Calcule o Z do elemento X e compare.">d) germânio</li>
+                    <li data-hint="O frâncio (Fr) é um metal alcalino com Z=87. Verifique se este valor equilibra a reação.">e) frâncio</li>
+                </ul>
+                <div class="feedback-box" id="fb1" aria-live="polite"></div>
+            </section>
+            <button class="btn" aria-expanded="false" aria-controls="sol1">Exibir Resolução</button>
+            <div class="solution" id="sol1" role="region">
+                <h4>Cálculo de Resolução</h4>
+                <p>Para identificar o elemento X, aplicamos a conservação de massa e carga em duas etapas:</p>
+                <div>
+                    <strong>1. Conservação do Número de Massa (A):</strong>
+                    <p style="margin-bottom: 0.5rem; color: var(--text-muted-color);">A soma dos números de massa dos reagentes deve ser igual à dos produtos.</p>
+                    <div class="equation-step">
+                        $235 + 1 = A + 92 + (3 \times 1)$ <br>
+                        $236 = A + 95$ <br>
+                        $A = 236 - 95 = 141$
+                    </div>
+                </div>
+                <div>
+                    <strong>2. Conservação do Número Atômico (Z):</strong>
+                    <p style="margin-bottom: 0.5rem; color: var(--text-muted-color);">A soma dos números atômicos deve ser igual à dos produtos.</p>
+                    <div class="equation-step">
+                        $92 + 0 = Z + 36 + (3 \times 0)$ <br>
+                        $92 = Z + 36$ <br>
+                        $Z = 92 - 36 = 56$
+                    </div>
+                </div>
+                <p>O elemento com número atômico (Z) 56 na tabela periódica é o <strong>Bário (Ba)</strong>.</p>
+                <p class="correct-answer">Resposta Correta: a) bário</p>
+            </div>
+        </article>
+        
+        <article class="question-card" id="q2">
+            <header class="question-header"><span class="icon">☢</span>Questão 02 (IME RJ)</header>
+            <section class="question-content">
+                <p>Analise as reações nucleares abaixo:</p>
+                <div class="equation">
+                    I. $$_{13}^{27}\text{Al} + \alpha \rightarrow _{15}^{30}\text{P} + n$$
+                    II. $$_{92}^{235}\text{U} + n \rightarrow _{56}^{141}\text{Ba} + _{36}^{92}\text{Kr} + 3n$$
+                    III. $$_{1}^{2}\text{H} + _{1}^{3}\text{H} \rightarrow _{2}^{4}\text{He} + n$$
+                </div>
+                <p>Assinale a alternativa <strong>INCORRETA</strong>.</p>
+                 <ul class="options-list">
+                    <li data-hint="Esta reação transforma um elemento em outro por bombardeamento. Qual o nome desse processo?">a) A reação I é uma reação de transmutação artificial.</li>
+                    <li data-hint="A reação II mostra a quebra de um núcleo grande em menores. Como se chama esse fenômeno?">b) A reação II é uma reação de fissão nuclear.</li>
+                    <li data-hint="A reação III mostra a junção de núcleos pequenos para formar um maior. Qual o nome disso?">c) A reação III é uma reação de fusão nuclear.</li>
+                    <li data-correct="true" data-hint="O número de nêutrons é a diferença entre o número de massa (A) e o número atômico (Z). Calcule para o Criptônio-92.">d) O número de nêutrons do criptônio da reação II é 55.</li>
+                    <li data-hint="A massa atômica de um nuclídeo é representada pelo número de massa (A), o número superior.">e) A massa atômica do nuclídeo criptônio na reação II é 92.</li>
+                </ul>
+                 <div class="feedback-box" id="fb2" aria-live="polite"></div>
+            </section>
+            <button class="btn" aria-expanded="false" aria-controls="sol2">Exibir Resolução</button>
+            <div class="solution" id="sol2" role="region">
+                <h4>Análise das Afirmativas</h4>
+                <ul>
+                    <li><strong>a) Correta.</strong> Transmutação artificial: um elemento (Al) é transformado em outro (P) pelo bombardeamento com uma partícula.</li>
+                    <li><strong>b) Correta.</strong> Fissão nuclear: um núcleo pesado (U) se divide em núcleos menores (Ba, Kr).</li>
+                    <li><strong>c) Correta.</strong> Fusão nuclear: núcleos leves (isótopos de H) se unem para formar um núcleo mais pesado (He).</li>
+                    <li><strong>d) Incorreta.</strong> Para o $_{36}^{92}\text{Kr}$, o número de nêutrons é A - Z = $92 - 36 = 56$. A afirmativa está errada.</li>
+                    <li><strong>e) Correta.</strong> O número de massa (A) do criptônio na notação é 92.</li>
+                </ul>
+                <p class="correct-answer">Resposta Correta: d) O número de nêutrons do criptônio da reação II é 55.</p>
+            </div>
+        </article>
+
+        <article class="question-card" id="q3">
+            <header class="question-header"><span class="icon">☢</span>Questão 03 (Adaptada)</header>
+            <section class="question-content">
+                <p>A datação por carbono-14 é uma técnica usada para determinar a idade de fósseis e artefatos. Um artefato de madeira encontrado em uma escavação arqueológica apresenta uma atividade de C-14 que é 12,5% da atividade encontrada em uma amostra de madeira viva. Sabendo que a meia-vida do carbono-14 é de 5730 anos, qual é a idade aproximada do artefato?</p>
+                 <ul class="options-list">
+                    <li data-hint="5730 anos corresponde a apenas uma meia-vida. Qual seria a atividade restante após esse tempo?">a) 5730 anos</li>
+                    <li data-hint="11460 anos são duas meias-vidas. Calcule a atividade restante.">b) 11460 anos</li>
+                    <li data-correct="true" data-hint="A cada meia-vida, a porcentagem de C-14 cai pela metade. Descubra quantas vezes você precisa dividir 100% por 2 para chegar em 12,5%.">c) 17190 anos</li>
+                    <li data-hint="Este valor corresponde a 4 meias-vidas. A atividade seria menor que 12,5%.">d) 22920 anos</li>
+                    <li data-hint="Este valor corresponde a 5 meias-vidas. Calcule qual seria a atividade final.">e) 28650 anos</li>
+                </ul>
+                <div class="feedback-box" id="fb3" aria-live="polite"></div>
+            </section>
+            <button class="btn" aria-expanded="false" aria-controls="sol3">Exibir Resolução</button>
+            <div class="solution" id="sol3" role="region">
+                <h4>Cálculo de Resolução</h4>
+                <p>A cada meia-vida ($T_{1/2}$), a atividade do C-14 cai para metade:</p>
+                <ul>
+                    <li><strong>Início (0 meias-vidas):</strong> 100% de atividade</li>
+                    <li><strong>Após 1ª meia-vida:</strong> 100% / 2 = 50% de atividade</li>
+                    <li><strong>Após 2ª meia-vida:</strong> 50% / 2 = 25% de atividade</li>
+                    <li><strong>Após 3ª meia-vida:</strong> 25% / 2 = 12,5% de atividade</li>
+                </ul>
+                <p>Para que a atividade se reduza a 12,5%, foram necessárias 3 meias-vidas.</p>
+                <div>
+                    <strong>Cálculo do tempo total:</strong>
+                    <div class="equation-step">
+                        Tempo = (Nº de meias-vidas) \times T_{1/2} <br>
+                        Tempo = 3 \times 5730 \text{ anos} = 17190 \text{ anos}
+                    </div>
+                </div>
+                 <p class="correct-answer">Resposta Correta: c) 17190 anos</p>
+            </div>
+        </article>
+        
+        <article class="question-card" id="q4">
+            <header class="question-header"><span class="icon">☢</span>Questão 04 (Interconectada - Parte 1)</header>
+            <section class="question-content">
+                <p>O Cobalto-60 ($_{27}^{60}\text{Co}$) é um isótopo radioativo usado em radioterapia. Ele decai para Níquel-60 ($_{28}^{60}\text{Ni}$) estável. Uma amostra de 2,00 mg de Co-60 puro é armazenada por 10,52 anos. Sabendo que a meia-vida do Co-60 é de 5,26 anos, qual a massa aproximada de Níquel-60 formada nesse período?</p>
+                <div class="equation">$$_{27}^{60}\text{Co} \rightarrow _{28}^{60}\text{Ni} + \beta^{-} + \overline{\nu}_e$$</div>
+                 <ul class="options-list">
+                    <li data-hint="Esta é a massa de Co-60 que resta, não a massa de Ni-60 formada.">a) 0,50 mg</li>
+                    <li data-hint="Esta seria a massa formada após apenas uma meia-vida. Quantas meias-vidas se passaram?">b) 1,00 mg</li>
+                    <li data-correct="true" data-hint="Primeiro, determine quantas meias-vidas se passaram. Depois, calcule a massa de Co-60 que restou. A massa que desapareceu foi convertida em Níquel-60.">c) 1,50 mg</li>
+                    <li data-hint="A massa de Ni-60 formada deve ser igual à massa de Co-60 que decaiu. Verifique seus cálculos de decaimento.">d) 1,75 mg</li>
+                    <li data-hint="Esta é a massa inicial de Co-60. A massa de Ni-60 só pode ser formada a partir do Co-60 que decaiu.">e) 2,00 mg</li>
+                </ul>
+                <div class="feedback-box" id="fb4" aria-live="polite"></div>
+            </section>
+            <button class="btn" aria-expanded="false" aria-controls="sol4">Exibir Resolução</button>
+            <div class="solution" id="sol4" role="region">
+                <h4>Cálculo de Resolução</h4>
+                 <div>
+                    <strong>1. Calcular o número de meias-vidas (n):</strong>
+                    <div class="equation-step">
+                        $n = \frac{\text{Tempo total}}{\text{Meia-vida}} = \frac{10,52 \text{ anos}}{5,26 \text{ anos}} = 2$ meias-vidas
+                    </div>
+                </div>
+                <div>
+                    <strong>2. Calcular a massa de Co-60 remanescente:</strong>
+                     <p style="margin-bottom: 0.5rem; color: var(--text-muted-color);">Após 2 meias-vidas, a massa cai para $(\frac{1}{2})^2 = \frac{1}{4}$ da inicial.</p>
+                     <div class="equation-step">
+                        Massa final = Massa inicial / 4 <br>
+                        Massa final = 2,00 mg / 4 = 0,50 mg
+                    </div>
+                </div>
+                 <div>
+                    <strong>3. Calcular a massa de Co-60 que decaiu:</strong>
+                     <p style="margin-bottom: 0.5rem; color: var(--text-muted-color);">Essa massa é a diferença entre a inicial e a final.</p>
+                     <div class="equation-step">
+                        Massa decaída = 2,00 mg - 0,50 mg = 1,50 mg
+                    </div>
+                </div>
+                <p>A estequiometria é de 1:1, então a massa de Co-60 que decaiu é convertida numa massa aproximadamente igual de Ni-60.</p>
+                 <p class="correct-answer">Resposta Correta: c) 1,50 mg</p>
+            </div>
+        </article>
+
+        <article class="question-card" id="q5">
+            <header class="question-header"><span class="icon">☢</span>Questão 05 (Interconectada - Parte 2)</header>
+            <section class="question-content">
+                <p>Considerando o decaimento da amostra de 1,50 mg de Co-60 que se transformou em Ni-60 na questão anterior, calcule a energia total liberada (em joules). Utilize os seguintes dados:</p>
+                <ul>
+                    <li>Massa atômica do $_{27}^{60}\text{Co}$: 59,933817 u</li>
+                    <li>Massa atômica do $_{28}^{60}\text{Ni}$: 59,930786 u</li>
+                    <li>1 u = $1.6605 \times 10^{-27}$ kg</li>
+                    <li>Velocidade da luz (c) = $3.00 \times 10^8$ m/s</li>
+                </ul>
+                 <ul class="options-list">
+                      <li data-hint="Verifique a ordem de magnitude do seu resultado. A energia liberada por miligramas de material costuma ser menor.">a) $1,2 \times 10^{8}$ J</li>
+                      <li data-hint="Este valor parece muito alto. Lembre-se que a energia é liberada apenas pela pequena 'perda de massa'.">b) $2,1 \times 10^{10}$ J</li>
+                      <li data-hint="Energia na ordem de 10^11 J é típica de reações em escala de mols, não miligramas.">c) $4,5 \times 10^{11}$ J</li>
+                      <li data-correct="true" data-hint="A energia vem da 'massa perdida' (defeito de massa) durante o decaimento. Calcule essa pequena diferença de massa, converta para kg e aplique a famosa equação de Einstein, E=mc².">d) $6,8 \times 10^{6}$ J</li>
+                      <li data-hint="Seu cálculo está próximo, mas talvez haja um erro na conversão de unidades ou no número de átomos.">e) $7,5 \times 10^{7}$ J</li>
+                 </ul>
+                <div class="feedback-box" id="fb5" aria-live="polite"></div>
+            </section>
+            <button class="btn" aria-expanded="false" aria-controls="sol5">Exibir Resolução</button>
+            <div class="solution" id="sol5" role="region">
+                <h4>Cálculo de Resolução</h4>
+                <div>
+                    <strong>1. Calcular defeito de massa ($\Delta m$) por átomo:</strong>
+                    <div class="equation-step">
+                        $\Delta m = \text{Massa(Co)} - \text{Massa(Ni)}$ <br>
+                        $\Delta m = 59,933817\text{u} - 59,930786\text{u} = 0,003031\text{u}$
+                    </div>
+                </div>
+                 <div>
+                    <strong>2. Calcular massa total convertida em energia ($m_{conv}$):</strong>
+                    <p style="margin-bottom: 0.5rem; color: var(--text-muted-color);">Primeiro, calculamos a fração da massa que vira energia.</p>
+                    <div class="equation-step">
+                       Fração = $\frac{0,003031\text{u}}{59,933817\text{u}} \approx 5.057 \times 10^{-5}$ <br>
+                       $m_{conv} = (1.50 \times 10^{-6} \text{ kg}) \times (5.057 \times 10^{-5})$ <br>
+                       $m_{conv} \approx 7.586 \times 10^{-11} \text{ kg}$
+                    </div>
+                </div>
+                <div>
+                    <strong>3. Calcular a Energia Total com E=mc²:</strong>
+                    <div class="equation-step">
+                        $E = m c^2$<br>
+                        $E = (7.586 \times 10^{-11} \text{ kg}) \times (3 \times 10^8 \text{ m/s})^2$ <br>
+                        $E \approx 6.83 \times 10^6 \text{ J}$
+                    </div>
+                </div>
+                 <p class="correct-answer">Resposta Correta: d) $6,8 \times 10^{6}$ J</p>
+            </div>
+        </article>
+    </main>
+    
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // --- Animação do Canvas de Fundo (Fallout Effect) ---
+        const canvas = document.getElementById('canvas-bg');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        let particlesArray;
+
+        // Classe para criar as partículas da animação
+        class Particle {
+            constructor(x, y, size, speed, color) {
+                this.x = x; this.y = y; this.size = size; this.speed = speed; this.color = color;
+            }
+            draw() {
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+            // Atualiza a posição da partícula e a redesenha
+            update() {
+                this.y += this.speed;
+                if (this.y > canvas.height + this.size) {
+                    this.y = 0 - this.size;
+                    this.x = Math.random() * canvas.width;
+                    this.speed = Math.random() * 1 + 0.5;
+                }
+                this.draw();
+            }
+        }
+        
+        // Inicializa o array de partículas
+        function initParticles() {
+            particlesArray = [];
+            let numberOfParticles = (canvas.width * canvas.height) / 9000; // Ajustado para não sobrecarregar
+            for (let i = 0; i < numberOfParticles; i++) {
+                let size = Math.random() * 2 + 1;
+                let x = Math.random() * canvas.width;
+                let y = Math.random() * canvas.height;
+                let speed = Math.random() * 1 + 0.5;
+                let color = 'rgba(255, 179, 0, 0.5)';
+                particlesArray.push(new Particle(x, y, size, speed, color));
+            }
+        }
+
+        // Loop de animação
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < particlesArray.length; i++) {
+                particlesArray[i].update();
+            }
+            requestAnimationFrame(animateParticles);
+        }
+        
+        initParticles();
+        animateParticles();
+        
+        // Redimensiona o canvas e reinicia as partículas quando a janela muda de tamanho
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            initParticles();
+        });
+
+        // --- Lógica Interativa das Questões ---
+        const questionCards = document.querySelectorAll('.question-card');
+        questionCards.forEach(card => {
+            const optionsList = card.querySelector('.options-list');
+            const feedbackBox = card.querySelector('.feedback-box');
+            
+            // Evento de clique na lista de opções
+            optionsList.addEventListener('click', (e) => {
+                // Garante que o alvo é um LI e que a questão ainda não foi respondida
+                if (e.target.tagName === 'LI' && !optionsList.classList.contains('answered')) {
+                    const selectedOption = e.target;
+                    const isCorrect = selectedOption.getAttribute('data-correct') === 'true';
+                    const hint = selectedOption.getAttribute('data-hint');
+
+                    optionsList.classList.add('answered');
+
+                    // Verifica se a resposta está correta e exibe o feedback
+                    if (isCorrect) {
+                        selectedOption.classList.add('correct');
+                        feedbackBox.innerHTML = `<p class="correct-feedback">Correto!</p><p class="hint">${hint}</p>`;
+                    } else {
+                        selectedOption.classList.add('incorrect');
+                        const correctOption = optionsList.querySelector('li[data-correct="true"]');
+                        correctOption.classList.add('correct');
+                        feedbackBox.innerHTML = `<p class="incorrect-feedback">Incorreto.</p><p class="hint"><strong>Dica:</strong> ${hint}</p>`;
+                    }
+                    feedbackBox.classList.add('visible');
+                }
+            });
+
+            // Evento de clique no botão de solução
+            const solutionButton = card.querySelector('.btn');
+            const solution = card.querySelector('.solution');
+            solutionButton.addEventListener('click', () => {
+                const isExpanded = solutionButton.getAttribute('aria-expanded') === 'true';
+                solutionButton.setAttribute('aria-expanded', !isExpanded);
+                solution.classList.toggle('visible');
+                solutionButton.textContent = !isExpanded ? 'Ocultar Resolução' : 'Exibir Resolução';
+                // Renderiza o MathJax apenas quando a solução se torna visível
+                if (solution.classList.contains('visible')) {
+                    MathJax.typesetPromise([solution]).catch((err) => console.log('MathJax Typeset Error: ' + err.message));
+                }
+            });
+        });
+    });
+    </script>
+</body>
+</html>

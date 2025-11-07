@@ -1,0 +1,97 @@
+.aurora-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  overflow: hidden;
+  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
+}
+
+.aurora-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(180px);
+  opacity: 0.5;
+  animation: aurora-float 20s ease-in-out infinite;
+  will-change: transform;
+}
+
+/* Pause animations when out of viewport (desktop) */
+.aurora-background.paused .aurora-blob {
+  animation-play-state: paused;
+}
+
+/* Mobile static version - no animations */
+.aurora-background.mobile-static .aurora-blob {
+  animation: none;
+  will-change: auto;
+}
+
+.aurora-blob-1 {
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.8) 0%, rgba(99, 102, 241, 0) 70%);
+  top: -10%;
+  left: -10%;
+  animation-delay: 0s;
+  animation-duration: 25s;
+}
+
+.aurora-blob-2 {
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(168, 85, 247, 0.8) 0%, rgba(168, 85, 247, 0) 70%);
+  top: 20%;
+  right: -10%;
+  animation-delay: 5s;
+  animation-duration: 30s;
+}
+
+.aurora-blob-3 {
+  width: 550px;
+  height: 550px;
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.8) 0%, rgba(59, 130, 246, 0) 70%);
+  bottom: -10%;
+  left: 20%;
+  animation-delay: 10s;
+  animation-duration: 28s;
+}
+
+.aurora-blob-4 {
+  width: 450px;
+  height: 450px;
+  background: radial-gradient(circle, rgba(139, 92, 246, 0.8) 0%, rgba(139, 92, 246, 0) 70%);
+  bottom: 20%;
+  right: 30%;
+  animation-delay: 15s;
+  animation-duration: 22s;
+}
+
+@keyframes aurora-float {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  33% {
+    transform: translate(30px, -50px) scale(1.1);
+  }
+  66% {
+    transform: translate(-20px, 20px) scale(0.9);
+  }
+}
+
+@media (max-width: 768px) {
+  .aurora-blob {
+    filter: blur(80px); /* Reduced from 120px for better mobile performance */
+  }
+  
+  .aurora-blob-1,
+  .aurora-blob-2,
+  .aurora-blob-3,
+  .aurora-blob-4 {
+    width: 250px; /* Reduced from 300px for better mobile performance */
+    height: 250px;
+  }
+}
+

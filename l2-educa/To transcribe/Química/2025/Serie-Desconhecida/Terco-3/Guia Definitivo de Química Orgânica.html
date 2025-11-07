@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guia Definitivo de Química Orgânica</title>
+    
+    <!-- Google Fonts: Share Tech Mono para um look técnico -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+
+    <!-- Google Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    
+    <!-- SmilesDrawer.js para renderização de moléculas -->
+    <script src="https://unpkg.com/smiles-drawer@2.0.1/dist/smiles-drawer.min.js"></script>
+
+    <style>
+        /* CSS Reset e Configurações Globais */
+        :root {
+            --primary-green: #2eff7b;
+            --dark-bg: #1a1a1a;
+            --medium-bg: #2b2b2b;
+            --light-bg: #3c3c3c;
+            --text-color: #e0e0e0;
+            --text-muted-color: #a0a0a0;
+            --border-color: rgba(46, 255, 123, 0.2);
+            --font-main: 'Share Tech Mono', monospace;
+            --ease-out-quart: cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--dark-bg);
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column; /* Alterado para empilhar em mobile */
+            overflow-x: hidden;
+        }
+        
+        /* --- Barra de Navegação Lateral --- */
+        .sidebar-nav {
+            width: 250px;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: #111;
+            border-right: 1px solid var(--border-color);
+            padding: 2rem 0;
+            display: flex;
+            flex-direction: column;
+            z-index: 100;
+            transition: width 0.3s var(--ease-out-quart), transform 0.3s var(--ease-out-quart);
+        }
+        
+        .sidebar-header {
+            padding: 0 1.5rem 1.5rem 1.5rem;
+            text-align: center;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .sidebar-header h1 {
+            font-size: 1.5rem;
+            color: var(--primary-green);
+        }
+
+        .sidebar-header span {
+            font-size: 0.9rem;
+            color: var(--text-muted-color);
+        }
+
+        .sidebar-nav ul {
+            list-style: none;
+            padding: 1rem 0;
+            flex-grow: 1;
+        }
+
+        .sidebar-nav li a {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 1.5rem;
+            color: var(--text-muted-color);
+            text-decoration: none;
+            font-size: 1rem;
+            transition: all 0.3s var(--ease-out-quart);
+            position: relative;
+            white-space: nowrap;
+        }
+
+        .sidebar-nav li a:hover, .sidebar-nav li a.active {
+            color: #fff;
+            background-color: rgba(46, 255, 123, 0.1);
+        }
+        
+        .sidebar-nav li a::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 4px;
+            background-color: var(--primary-green);
+            transform: scaleY(0);
+            transition: transform 0.3s var(--ease-out-quart);
+        }
+        
+        .sidebar-nav li a:hover::before, .sidebar-nav li a.active::before {
+            transform: scaleY(1);
+        }
+
+        /* --- Conteúdo Principal --- */
+        .main-content {
+            margin-left: 250px;
+            width: calc(100% - 250px);
+            padding: 4rem;
+            transition: margin-left 0.3s var(--ease-out-quart), width 0.3s var(--ease-out-quart);
+        }
+
+        .content-section {
+            padding-top: 4rem;
+            margin-top: -2rem;
+            margin-bottom: 4rem;
+            border-top: 1px solid var(--border-color);
+        }
+        
+        .content-section:first-child {
+            padding-top: 2rem;
+            border-top: none;
+        }
+        
+        .section-header {
+            margin-bottom: 2rem;
+        }
+
+        .section-header h2 {
+            font-size: 2.5rem;
+            color: #fff;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .section-header h2 .material-icons {
+            font-size: 2.5rem;
+            color: var(--primary-green);
+        }
+        
+        .section-header p {
+            color: var(--text-muted-color);
+            max-width: 80ch;
+        }
+
+        .content-wrapper h3 {
+            font-size: 1.5rem;
+            margin: 2.5rem 0 1.5rem 0;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--primary-green);
+        }
+
+        .content-wrapper strong { color: var(--primary-green); }
+        .content-wrapper code {
+            font-family: inherit;
+            background: var(--dark-bg);
+            padding: 0.2em 0.4em;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+            color: #fff;
+        }
+        .content-wrapper ul { padding-left: 1.5rem; }
+        .content-wrapper li { margin-bottom: 0.5rem; }
+        
+        /* Grid de Funções Orgânicas */
+        .functions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .function-card {
+            background: var(--medium-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .function-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 25px rgba(46, 255, 123, 0.15);
+        }
+
+        .function-card h4 {
+            font-size: 1.5rem;
+            color: var(--primary-green);
+            margin-bottom: 1rem;
+        }
+        
+        .molecule-canvas {
+            width: 100%;
+            height: 150px;
+            background-color: #fff;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+        }
+
+        .function-card p {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: var(--text-color);
+        }
+
+        .function-card p strong { font-weight: normal; }
+
+        /* Tabela */
+        .styled-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+            display: block;
+            overflow-x: auto; /* Permite scroll horizontal em tabelas largas */
+        }
+        .styled-table th, .styled-table td {
+            padding: 1rem;
+            border: 1px solid var(--border-color);
+            text-align: left;
+        }
+        .styled-table thead {
+            background-color: var(--medium-bg);
+        }
+        .styled-table th { color: var(--primary-green); }
+        
+        /* --- Responsividade Robusta --- */
+        @media (max-width: 1024px) {
+            body {
+                flex-direction: column;
+            }
+
+            .sidebar-nav {
+                width: 100%;
+                height: auto;
+                position: fixed; /* Alterado para menu superior dinâmico */
+                top: 0;
+                left: 0;
+                z-index: 1000;
+                background-color: #111; /* Garante fundo sólido */
+                flex-direction: column;
+                border-right: none;
+                border-bottom: 1px solid var(--border-color);
+                transform: translateY(-100%); /* Escondido por padrão */
+                transition: transform 0.4s var(--ease-out-quart);
+            }
+            .sidebar-nav.nav-visible {
+                transform: translateY(0); /* Mostra o menu */
+            }
+            .sidebar-header {
+                display: none;
+            }
+            .sidebar-nav ul {
+                display: flex;
+                flex-direction: row;
+                justify-content: center;
+                flex-wrap: wrap;
+                width: 100%;
+                padding: 0.5rem 0;
+            }
+            .sidebar-nav li a {
+                padding: 0.75rem 1rem;
+                justify-content: center;
+            }
+            .sidebar-nav li a .material-icons {
+                 display: none;
+            }
+            .sidebar-nav li a::before {
+                bottom: 0;
+                top: auto;
+                height: 3px;
+                width: 100%;
+                transform: scaleX(0);
+            }
+             .sidebar-nav li a:hover::before, .sidebar-nav li a.active::before {
+                transform: scaleX(1);
+            }
+
+            .main-content {
+                margin-left: 0;
+                width: 100%;
+                padding: 2rem 1.5rem;
+            }
+             .content-section {
+                padding-top: 3rem;
+                margin-top: 0;
+             }
+        }
+
+        @media (max-width: 600px) {
+            .section-header h2, .section-header h2 .material-icons { font-size: 1.8rem; }
+            .functions-grid {
+                 grid-template-columns: 1fr; /* Força uma única coluna */
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+    <nav class="sidebar-nav">
+        <div class="sidebar-header">
+            <h1>Química Orgânica</h1>
+            <span>Guia Definitivo</span>
+        </div>
+        <ul>
+            <li><a href="#fundamentos" class="nav-link active"><span class="material-icons">science</span> Fundamentos</a></li>
+            <li><a href="#cadeias" class="nav-link"><span class="material-icons">account_tree</span> Cadeias</a></li>
+            <li><a href="#nomenclatura" class="nav-link"><span class="material-icons">spellcheck</span> Nomenclatura</a></li>
+            <li><a href="#funcoes" class="nav-link"><span class="material-icons">bubble_chart</span> Funções</a></li>
+        </ul>
+    </nav>
+
+    <main class="main-content">
+        <!-- SEÇÃO 1: FUNDAMENTOS -->
+        <section id="fundamentos" class="content-section">
+            <header class="section-header">
+                <h2><span class="material-icons">science</span>Fundamentos do Carbono</h2>
+                <p>A base da vida e da química orgânica. O átomo que dá origem a tudo.</p>
+            </header>
+            <div class="content-wrapper">
+                <h3>Postulados de Kekulé</h3>
+                <p>Quatro postulados definem o comportamento excepcional do átomo de carbono:</p>
+                <ul>
+                    <li><strong>Tetravalência:</strong> O carbono realiza quatro ligações covalentes para atingir sua estabilidade.</li>
+                    <li><strong>Ligações Iguais:</strong> As quatro valências do carbono são quimicamente equivalentes.</li>
+                    <li><strong>Encadeamento:</strong> Átomos de carbono formam cadeias longas e estáveis, uma propriedade rara na tabela periódica.</li>
+                    <li><strong>Ligações Múltiplas:</strong> O carbono pode formar ligações simples (saturadas), duplas ou triplas (insaturadas).</li>
+                </ul>
+                <h3>Hibridização e Geometria</h3>
+                <p>A teoria da hibridização de orbitais explica a geometria tridimensional das moléculas orgânicas.</p>
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Hibridização</th>
+                            <th>Ligações</th>
+                            <th>Geometria</th>
+                            <th>Exemplo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>sp³</code></td>
+                            <td>4 ligações Simples (σ)</td>
+                            <td>Tetraédrica (109.5°)</td>
+                            <td>Alcanos</td>
+                        </tr>
+                        <tr>
+                            <td><code>sp²</code></td>
+                            <td>1 Dupla (1σ, 1π), 2 Simples (σ)</td>
+                            <td>Trigonal Plana (120°)</td>
+                            <td>Alcenos</td>
+                        </tr>
+                        <tr>
+                            <td><code>sp</code></td>
+                            <td>1 Tripla (1σ, 2π), 1 Simples (σ)</td>
+                            <td>Linear (180°)</td>
+                            <td>Alcinos</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- SEÇÃO 2: CLASSIFICAÇÃO DE CADEIAS -->
+        <section id="cadeias" class="content-section">
+            <header class="section-header">
+                <h2><span class="material-icons">account_tree</span>Classificação de Cadeias</h2>
+                <p>A organização do esqueleto carbônico. Como descrever a estrutura das moléculas.</p>
+            </header>
+            <div class="content-wrapper">
+                <h3>Critérios de Classificação Estrutural</h3>
+                <p>Analisar uma cadeia carbônica é como ler sua identidade. Usamos quatro critérios principais:</p>
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Critério</th>
+                            <th>Classificação</th>
+                            <th>Descrição</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><strong>Fechamento</strong></td><td>Aberta (Acíclica) vs. Fechada (Cíclica)</td><td>A cadeia possui extremidades livres ou forma um anel?</td></tr>
+                        <tr><td><strong>Disposição</strong></td><td>Normal vs. Ramificada</td><td>A cadeia segue uma única sequência ou possui "ramos" (radicais)?</td></tr>
+                        <tr><td><strong>Saturação</strong></td><td>Saturada vs. Insaturada</td><td>A cadeia possui apenas ligações simples ou também duplas/triplas entre carbonos?</td></tr>
+                        <tr><td><strong>Natureza</strong></td><td>Homogênea vs. Heterogênea</td><td>A cadeia principal contém apenas carbonos ou também heteroátomos (O, N, S)?</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- SEÇÃO 3: NOMENCLATURA IUPAC -->
+        <section id="nomenclatura" class="content-section">
+            <header class="section-header">
+                <h2><span class="material-icons">spellcheck</span>A Lógica da Nomenclatura</h2>
+                <p>O idioma universal da química. Como nomear qualquer composto orgânico segundo a IUPAC.</p>
+            </header>
+            <div class="content-wrapper">
+                 <h3>A Estrutura do Nome: Prefixo + Infixo + Sufixo</h3>
+                 <p>Cada parte do nome fornece uma informação precisa sobre a molécula:</p>
+                 <table class="styled-table">
+                    <thead><tr><th>Parte</th><th>Exemplos</th><th>Significado</th></tr></thead>
+                    <tbody>
+                        <tr><td><strong>PREFIXO</strong></td><td>MET (1C), ET (2C), PROP (3C), BUT (4C)...</td><td>Número de Carbonos na Cadeia Principal</td></tr>
+                        <tr><td><strong>INFIXO</strong></td><td>AN (lig. simples), EN (lig. dupla), IN (lig. tripla)</td><td>Tipo de Ligação entre Carbonos</td></tr>
+                        <tr><td><strong>SUFIXO</strong></td><td>-O (hidrocarboneto), -OL (álcool), -ONA (cetona)...</td><td>Função Orgânica Principal</td></tr>
+                    </tbody>
+                 </table>
+                 <h3>Nomenclatura de Cadeias Ramificadas</h3>
+                 <p>Para moléculas complexas, seguimos um protocolo:</p>
+                 <ol>
+                     <li><strong>Identificar a Cadeia Principal:</strong> A maior sequência de carbonos que contém o grupo funcional.</li>
+                     <li><strong>Numerar a Cadeia:</strong> Iniciar pela extremidade mais próxima do grupo funcional, dando-lhe o menor número possível.</li>
+                     <li><strong>Identificar e Posicionar os Radicais:</strong> Nomear as ramificações e indicar em qual carbono elas se ligam.</li>
+                     <li><strong>Montar o Nome:</strong> [Radicais] + [Prefixo] + [Infixo] + [Sufixo].</li>
+                 </ol>
+            </div>
+        </section>
+
+        <!-- SEÇÃO 4: FUNÇÕES ORGÂNICAS -->
+        <section id="funcoes" class="content-section">
+            <header class="section-header">
+                <h2><span class="material-icons">bubble_chart</span>Guia de Funções Orgânicas</h2>
+                <p>O coração da reatividade. O catálogo dos grupos funcionais que definem a química.</p>
+            </header>
+            <div class="content-wrapper">
+                <h3>Funções Oxigenadas</h3>
+                <div class="functions-grid">
+                    <div class="function-card"><canvas class="molecule-canvas" data-smiles="CCO"></canvas><h4>Álcool</h4><p><strong>Grupo:</strong> Hidroxila (-OH) em carbono saturado. <strong>Sufixo:</strong> -ol. <strong>Ex:</strong> Etanol. Polares, altos pontos de ebulição (pontes de H).</p></div>
+                    <div class="function-card"><canvas class="molecule-canvas" data-smiles="c1ccccc1O"></canvas><h4>Fenol</h4><p><strong>Grupo:</strong> Hidroxila (-OH) em anel aromático. <strong>Nome:</strong> Hidróxi-benzeno. Caráter ácido, usado como desinfetante.</p></div>
+                    <div class="function-card"><canvas class="molecule-canvas" data-smiles="COCC"></canvas><h4>Éter</h4><p><strong>Grupo:</strong> Oxigênio entre carbonos (R-O-R'). <strong>Nome:</strong> (Radical)oxi(hidrocarboneto). Voláteis, usados como solventes.</p></div>
+                    <div class="function-card"><canvas class="molecule-canvas" data-smiles="C=O"></canvas><h4>Aldeído</h4><p><strong>Grupo:</strong> Carbonila (C=O) em carbono primário. <strong>Sufixo:</strong> -al. <strong>Ex:</strong> Metanal (formol). Usado em conservantes e polímeros.</p></div>
+                    <div class="function-card"><canvas class="molecule-canvas" data-smiles="CC(=O)C"></canvas><h4>Cetona</h4><p><strong>Grupo:</strong> Carbonila (C=O) em carbono secundário. <strong>Sufixo:</strong> -ona. <strong>Ex:</strong> Propanona (acetona). Excelente solvente.</p></div>
+                    <div class="function-card"><canvas class="molecule-canvas" data-smiles="CC(=O)O"></canvas><h4>Ácido Carboxílico</h4><p><strong>Grupo:</strong> Carboxila (-COOH). <strong>Nome:</strong> Ácido (...) -óico. <strong>Ex:</strong> Ácido Etanoico (vinagre). Caráter ácido.</p></div>
+                    <div class="function-card"><canvas class="molecule-canvas" data-smiles="CC(=O)OC"></canvas><h4>Éster</h4><p><strong>Grupo:</strong> Carboxilato (R-COO-R'). <strong>Nome:</strong> (...)oato de (...ila). Aromas de frutas, flavorizantes.</p></div>
+                    <div class="function-card"><canvas class="molecule-canvas" data-smiles="CC(=O)OC(=O)C"></canvas><h4>Anidrido de Ácido</h4><p><strong>Grupo:</strong> R-CO-O-CO-R'. <strong>Nome:</strong> Anidrido (...)-óico. Usado na síntese da aspirina.</p></div>
+                    <div class="function-card"><canvas class="molecule-canvas" data-smiles="CC(=O)[O-].[Na+]"></canvas><h4>Sal Orgânico</h4><p><strong>Grupo:</strong> R-COO⁻M⁺. <strong>Nome:</strong> (...)oato de (metal). <strong>Ex:</strong> Etanoato de Sódio. Usados como conservantes.</p></div>
+                    <div class="function-card"><canvas class="molecule-canvas" data-smiles="C=CO"></canvas><h4>Enol</h4><p><strong>Grupo:</strong> Hidroxila (-OH) em carbono com dupla ligação. Instáveis, geralmente em equilíbrio com aldeídos/cetonas.</p></div>
+                </div>
+                <h3>Funções Nitrogenadas</h3>
+                <div class="functions-grid">
+                    <div class="function-card"><canvas class="molecule-canvas" data-smiles="CCN"></canvas><h4>Amina</h4><p><strong>Grupo:</strong> Nitrogênio ligado a carbonos. <strong>Nome:</strong> (...)amina. Caráter básico. Presentes em alcaloides e aminoácidos.</p></div>
+                    <div class="function-card"><canvas class="molecule-canvas" data-smiles="CC(=O)N"></canvas><h4>Amida</h4><p><strong>Grupo:</strong> Nitrogênio ligado a carbonila. <strong>Sufixo:</strong> -amida. A ligação peptídica das proteínas é uma amida.</p></div>
+                    <div class="function-card"><canvas class="molecule-canvas" data-smiles="c1ccccc1[N+](=O)[O-]"></canvas><h4>Nitrocomposto</h4><p><strong>Grupo:</strong> Nitro (-NO₂). <strong>Nome:</strong> Nitro(...). Altamente energéticos, usados em explosivos (TNT).</p></div>
+                    <div class="function-card"><canvas class="molecule-canvas" data-smiles="CC#N"></canvas><h4>Nitrila</h4><p><strong>Grupo:</strong> Ciano (-C≡N). <strong>Sufixo:</strong> -nitrila. Usadas em supercolas e borrachas sintéticas.</p></div>
+                    <div class="function-card"><canvas class="molecule-canvas" data-smiles="CC=N"></canvas><h4>Imina</h4><p><strong>Grupo:</strong> Carbono com dupla ligação a um Nitrogênio (C=N). Intermediários em reações bioquímicas.</p></div>
+                    <div class="function-card"><canvas class="molecule-canvas" data-smiles="CN=C=O"></canvas><h4>Isocianato</h4><p><strong>Grupo:</strong> -N=C=O. Altamente reativos, usados na produção de poliuretanos.</p></div>
+                </div>
+                <h3>Haletos e Funções com Enxofre</h3>
+                <div class="functions-grid">
+                    <div class="function-card"><canvas class="molecule-canvas" data-smiles="C(Cl)"></canvas><h4>Haleto Orgânico</h4><p><strong>Grupo:</strong> Halogênio (-F, -Cl, -Br, -I) em carbono. <strong>Nome:</strong> (Halogênio)(...). Usados como solventes e na produção de PVC.</p></div>
+                    <div class="function-card"><canvas class="molecule-canvas" data-smiles="CC(=O)Cl"></canvas><h4>Haleto de Acila</h4><p><strong>Grupo:</strong> Halogênio em uma carbonila. <strong>Nome:</strong> Cloreto de (...)oíla. Reagentes muito reativos em síntese orgânica.</p></div>
+                    <div class="function-card"><canvas class="molecule-canvas" data-smiles="CC[Mg]Br"></canvas><h4>Composto de Grignard</h4><p><strong>Grupo:</strong> R-Mg-X. Reagentes organometálicos cruciais para formar novas ligações carbono-carbono.</p></div>
+                    <div class="function-card"><canvas class="molecule-canvas" data-smiles="c1ccccc1S(=O)(=O)O"></canvas><h4>Ácido Sulfônico</h4><p><strong>Grupo:</strong> Sulfônico (-SO₃H). Ácidos fortes, formam a base de muitos detergentes.</p></div>
+                    <div class="function-card"><canvas class="molecule-canvas" data-smiles="CCS"></canvas><h4>Tiol</h4><p><strong>Grupo:</strong> Sulfidrila (-SH). Análogo do álcool com enxofre. Conhecidos por odores fortes (gás de cozinha).</p></div>
+                    <div class="function-card"><canvas class="molecule-canvas" data-smiles="CSC"></canvas><h4>Tioéter (Sulfeto)</h4><p><strong>Grupo:</strong> Enxofre entre carbonos (R-S-R'). Análogo do éter com enxofre. Encontrados no alho e cebola.</p></div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        window.onload = function() {
+            // Opções para o SmilesDrawer
+            const options = {
+                width: 300, 
+                height: 150,
+                themes: {
+                    light: {
+                        C: '#2D3A3A', O: '#d63031', N: '#0984e3',
+                        Cl: '#00b894', Br: '#a29bfe', I: '#6c5ce7', F: '#00cec9',
+                        S: '#fdcb6e', P: '#fd79a8', Mg: '#2d3a3a',
+                        '[O-]': '#d63031', '[N+]': '#0984e3', '[C-]': '#2D3A3A'
+                    }
+                }
+            };
+            
+            // Instancia o drawer uma vez
+            const smilesDrawer = new SmilesDrawer.Drawer(options);
+
+            function drawVisibleMolecules(entries, observer) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const canvas = entry.target;
+                        const smiles = canvas.dataset.smiles;
+                        if (smiles) {
+                            SmilesDrawer.parse(smiles, function(tree) {
+                                smilesDrawer.draw(tree, canvas, 'light', false);
+                            }, function(err) {
+                                console.error("Erro ao desenhar SMILES:", smiles, err);
+                            });
+                        }
+                        // Para de observar o canvas uma vez que ele foi desenhado
+                        observer.unobserve(canvas);
+                    }
+                });
+            }
+
+            // Cria um IntersectionObserver para os canvases
+            const canvasObserver = new IntersectionObserver(drawVisibleMolecules, {
+                root: null, // viewport
+                rootMargin: '0px',
+                threshold: 0.1 // Inicia o desenho quando 10% do canvas está visível
+            });
+
+            // Observa cada canvas de molécula
+            document.querySelectorAll('.molecule-canvas').forEach(canvas => {
+                canvasObserver.observe(canvas);
+            });
+            
+            // --- Script para Navegação Ativa com Scroll ---
+            const sections = document.querySelectorAll('.content-section');
+            const navLinks = document.querySelectorAll('.nav-link');
+            
+            const sectionObserver = new IntersectionObserver(entries => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const id = entry.target.id;
+                        navLinks.forEach(link => {
+                           link.classList.toggle('active', link.getAttribute('href') === `#${id}`);
+                        });
+                    }
+                });
+            }, { rootMargin: '-50% 0px -50% 0px' });
+
+            sections.forEach(section => {
+                sectionObserver.observe(section);
+            });
+
+            // --- Script para Menu Dinâmico em Mobile ---
+            let lastScrollTop = 0;
+            const sidebar = document.querySelector('.sidebar-nav');
+            window.addEventListener("scroll", function() {
+                if (window.innerWidth <= 1024) {
+                    let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                    if (scrollTop > lastScrollTop && scrollTop > 50) { // Adicionado > 50 para não esconder no topo
+                        // Scroll Down
+                        sidebar.classList.remove('nav-visible');
+                    } else {
+                        // Scroll Up
+                        sidebar.classList.add('nav-visible');
+                    }
+                    lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+                } else {
+                    // Garante que o menu esteja visível em telas maiores
+                    sidebar.classList.remove('nav-visible');
+                }
+            }, false);
+        };
+    </script>
+
+</body>
+</html>

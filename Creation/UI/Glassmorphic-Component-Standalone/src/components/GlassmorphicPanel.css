@@ -1,0 +1,66 @@
+/* GlassmorphicPanel Styles */
+
+.glassmorphic-panel {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 300px;
+  overflow: hidden;
+  border-radius: 16px;
+}
+
+.glassmorphic-panel__canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.glassmorphic-panel__content {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  color: rgba(0, 0, 0, 0.85);
+  text-align: center;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.5s ease-out;
+}
+
+.glassmorphic-panel__content.visible {
+  opacity: 1;
+}
+
+.glassmorphic-panel__content > * {
+  pointer-events: auto;
+}
+
+/* Optional: Hover effect for interactive panels */
+.glassmorphic-panel--interactive {
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.glassmorphic-panel--interactive:hover {
+  transform: translateY(-4px);
+}
+
+/* Optional: Card-style variant */
+.glassmorphic-panel--card {
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .glassmorphic-panel__content {
+    color: rgba(255, 255, 255, 0.9);
+  }
+}
+

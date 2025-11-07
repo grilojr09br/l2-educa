@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guia Mestre: Pronomes e Suas Funções</title>
+    
+    <!-- Dependências Externas (CDNs) -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;700&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <style>
+        /* ----------------------------------- */
+        /* 1. RESET E GLOBAIS         */
+        /* ----------------------------------- */
+        :root {
+            --font-primary: 'Poppins', sans-serif;
+            --font-code: 'Source Code Pro', monospace;
+
+            --color-text-light: #f0f0f0;
+            --color-text-medium: #c0c0c0;
+            --color-text-dark: #1a1a1a;
+            
+            --color-accent-primary: #8e44ad;
+            --color-accent-secondary: #3498db;
+            --color-accent-tertiary: #1abc9c;
+            --color-accent-quaternary: #e67e22;
+
+            --glass-bg: rgba(20, 20, 30, 0.4);
+            --glass-border: rgba(255, 255, 255, 0.15);
+            --backdrop-blur: 15px;
+
+            --nav-width-desktop: 280px;
+            --nav-height-mobile: 60px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-primary);
+            color: var(--color-text-light);
+            background-color: #0a0a10;
+            line-height: 1.7;
+            overflow-x: hidden; /* Previne scroll horizontal */
+        }
+
+        /* Fundo Dinâmico com Partículas */
+        #particles-js {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            background-image: linear-gradient(45deg, #020024 0%, #090979 35%, #002147 100%);
+        }
+
+        /* Tipografia Fluida com clamp() */
+        h1, h2, h3, h4 {
+            font-weight: 700;
+            margin-bottom: 1rem;
+            letter-spacing: 1px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+
+        h1 { font-size: clamp(2.2rem, 5vw, 2.8rem); color: #fff; }
+        h2 { font-size: clamp(1.8rem, 4vw, 2.2rem); color: var(--color-accent-primary); }
+        h3 { font-size: clamp(1.4rem, 3.5vw, 1.6rem); color: var(--color-accent-secondary); }
+        h4 { font-size: clamp(1.2rem, 3vw, 1.3rem); color: var(--color-accent-tertiary); }
+
+        p, li, .explanation-text {
+            font-size: clamp(1rem, 2.5vw, 1.1rem);
+            margin-bottom: 1rem;
+            color: var(--color-text-medium);
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+        
+        a {
+            color: var(--color-accent-secondary);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: #fff;
+        }
+
+        /* ----------------------------------- */
+        /* 2. NAVEGAÇÃO (UI/UX)        */
+        /* ----------------------------------- */
+        .main-nav {
+            position: fixed;
+            top: 0;
+            background: rgba(10, 10, 20, 0.7);
+            backdrop-filter: blur(var(--backdrop-blur));
+            border-bottom: 1px solid var(--glass-border);
+            z-index: 1000;
+            transition: top 0.4s ease-in-out;
+        }
+
+        .main-nav ul {
+            list-style: none;
+            display: flex;
+        }
+
+        .main-nav a {
+            display: flex;
+            align-items: center;
+            padding: 0 1.5rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--color-text-medium);
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        .main-nav a .material-icons {
+            margin-right: 15px;
+            font-size: 20px;
+        }
+
+        .main-nav a.active {
+            color: #fff;
+            background: var(--color-accent-primary);
+        }
+
+        /* Desktop: Sidebar Lateral */
+        @media (min-width: 1025px) {
+            .main-nav {
+                left: 0;
+                width: var(--nav-width-desktop);
+                height: 100vh;
+                border-right: 1px solid var(--glass-border);
+                border-bottom: none;
+            }
+            .main-nav ul {
+                flex-direction: column;
+                padding-top: 2rem;
+            }
+            .main-nav a {
+                height: 50px;
+            }
+            main {
+                margin-left: var(--nav-width-desktop);
+            }
+        }
+        
+        /* Mobile & Tablet: Barra Superior */
+        @media (max-width: 1024px) {
+            body {
+                padding-top: var(--nav-height-mobile); /* Evita que o conteúdo comece sob a barra */
+            }
+            .main-nav {
+                width: 100%;
+                height: var(--nav-height-mobile);
+            }
+            .main-nav.nav-hidden {
+                top: calc(-1 * var(--nav-height-mobile));
+            }
+            .main-nav ul {
+                justify-content: space-around;
+                width: 100%;
+            }
+             .main-nav a {
+                flex-grow: 1;
+                justify-content: center;
+                height: var(--nav-height-mobile);
+                padding: 0 0.5rem;
+            }
+            .main-nav a .nav-text {
+                display: none; /* Esconde o texto, mostra só o ícone */
+            }
+        }
+
+        /* ----------------------------------- */
+        /* 3. ESTRUTURA E LAYOUT GERAL       */
+        /* ----------------------------------- */
+        main {
+            width: 100%;
+        }
+
+        section {
+            padding: clamp(4rem, 10vh, 6rem) clamp(1rem, 5vw, 4rem); 
+            min-height: 100vh;
+            border-bottom: 2px solid var(--glass-border);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .container {
+            max-width: 1100px;
+            width: 100%; 
+            margin: 0 auto;
+        }
+        
+        .glass-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            padding: clamp(1.25rem, 4vw, 2.5rem);
+            backdrop-filter: blur(var(--backdrop-blur));
+            -webkit-backdrop-filter: blur(var(--backdrop-blur));
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            margin-bottom: 2rem;
+        }
+
+        /* ----------------------------------- */
+        /* 4. COMPONENTES DE CONTEÚDO        */
+        /* ----------------------------------- */
+        .expand-btn {
+            display: inline-flex;
+            align-items: center;
+            background: linear-gradient(45deg, var(--color-accent-primary), var(--color-accent-secondary));
+            color: #fff;
+            padding: 12px 25px;
+            border-radius: 50px;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            margin-top: 1rem;
+        }
+
+        .expand-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+
+        .expand-btn .material-icons {
+            margin-left: 10px;
+            transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        }
+
+        .expand-btn.active .material-icons {
+            transform: rotate(180deg);
+        }
+
+        .expand-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.8s ease-in-out, margin-top 0.8s ease-in-out;
+        }
+        
+        .expand-content.show {
+            margin-top: 2rem;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            margin: 2rem 0;
+            border-radius: 8px;
+        }
+        table {
+            width: 100%;
+            min-width: 600px;
+            border-collapse: collapse;
+            background: rgba(0,0,0,0.2);
+        }
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--glass-border);
+        }
+        th {
+            background-color: var(--color-accent-primary);
+            color: #fff;
+            font-weight: 600;
+        }
+        tr:nth-child(even) {
+            background-color: rgba(0,0,0,0.1);
+        }
+        tr:hover {
+            background-color: rgba(142, 68, 173, 0.3);
+        }
+        td code { white-space: nowrap; }
+
+        .tip-box {
+            background: rgba(26, 188, 156, 0.1);
+            border-left: 5px solid var(--color-accent-tertiary);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        ul, ol {
+            padding-left: 2rem;
+            margin-bottom: 1rem;
+        }
+        
+        li {
+            margin-bottom: 0.75rem;
+        }
+        
+        code {
+            font-family: var(--font-code);
+            background: rgba(0,0,0,0.3);
+            color: var(--color-accent-quaternary);
+            padding: 0.2rem 0.5rem;
+            border-radius: 5px;
+        }
+        
+        /* ------------------------------------------ */
+        /* 5. DIAGRAMAS E ANÁLISE PRÁTICA */
+        /* ------------------------------------------ */
+        .analysis-box {
+            border: 1px solid var(--glass-border);
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .diagram-sentence {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.8;
+            font-style: italic;
+        }
+        
+        .antecedent {
+            padding: 2px 6px;
+            border-radius: 4px;
+            background-color: var(--color-accent-secondary);
+            color: #fff;
+            font-weight: bold;
+        }
+        
+        .pronoun {
+            padding: 2px 6px;
+            border-radius: 4px;
+            background-color: var(--color-accent-tertiary);
+            color: var(--color-text-dark);
+            font-weight: bold;
+        }
+        
+        .diagram-explanation {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap; 
+            gap: 1rem;
+            margin-top: 1rem;
+            padding-left: 1rem;
+            border-left: 3px solid var(--color-accent-primary);
+        }
+        
+        .diagram-explanation .pronoun, .diagram-explanation .antecedent {
+            flex-shrink: 0;
+        }
+
+        .arrow-connector {
+            font-size: 2rem;
+            color: var(--color-accent-primary);
+            font-weight: bold;
+        }
+        
+        /* ----------------------------------- */
+        /* 6. RODAPÉ              */
+        /* ----------------------------------- */
+        footer {
+            text-align: center;
+            padding: 2rem;
+            background: #05050a;
+            font-size: 0.9rem;
+            color: var(--color-text-medium);
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Fundo de Partículas -->
+    <div id="particles-js"></div>
+
+    <!-- Navegação Principal -->
+    <nav class="main-nav" id="mainNav">
+        <ul>
+            <li>
+                <a href="#introducao" class="active">
+                    <i class="material-icons">architecture</i>
+                    <span class="nav-text">Introdução</span>
+                </a>
+            </li>
+            <li>
+                <a href="#pronomes-essenciais">
+                    <i class="material-icons">people</i>
+                    <span class="nav-text">Pronomes Essenciais</span>
+                </a>
+            </li>
+            <li>
+                <a href="#pronomes-referenciais">
+                    <i class="material-icons">explore</i>
+                    <span class="nav-text">Pronomes Referenciais</span>
+                </a>
+            </li>
+            <li>
+                <a href="#pronomes-relacionais">
+                    <i class="material-icons">link</i>
+                    <span class="nav-text">Pronomes Relacionais</span>
+                </a>
+            </li>
+             <li>
+                <a href="#funcoes-sintaticas">
+                    <i class="material-icons">functions</i>
+                    <span class="nav-text">Funções Sintáticas</span>
+                </a>
+            </li>
+            <li>
+                <a href="#analise-pratica">
+                    <i class="material-icons">science</i>
+                    <span class="nav-text">Análise Prática</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Conteúdo Principal -->
+    <main>
+        <!-- SEÇÃO 1: INTRODUÇÃO -->
+        <section id="introducao">
+            <div class="container">
+                <div class="glass-card">
+                    <h1>A Arquitetura da Referência</h1>
+                    <p>Desvendando o universo dos <strong>Pronomes</strong>, as peças fundamentais que constroem a coesão e a clareza na linguagem. Eles são os arquitetos invisíveis que substituem e referenciam nomes, evitando a repetição e tecendo a complexa tapeçaria do discurso.</p>
+                    <p>Este guia é um mergulho profundo na lógica, função e aplicação de cada tipo de pronome. Prepare-se para transcender a simples memorização e alcançar a maestria na arte da referência pronominal.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEÇÃO 2: PRONOMES ESSENCIAIS -->
+        <section id="pronomes-essenciais" style="background: rgba(52, 152, 219, 0.1);">
+            <div class="container">
+                <h2>Pronomes Essenciais: Os Pilares do Discurso</h2>
+                <p>Aqui exploramos as categorias que formam o núcleo da identidade e da posse na comunicação. Sua principal característica é a <strong>flexão</strong> para concordar com as pessoas do discurso, gênero e número.</p>
+                
+                <div class="glass-card">
+                    <h3>Pronomes Pessoais e de Tratamento</h3>
+                    <p>Indicam as pessoas do discurso (quem fala, com quem se fala, de quem se fala) e as formas de tratamento. Flexionam-se em pessoa (1ª, 2ª, 3ª) e número (singular, plural).</p>
+                    <button class="expand-btn" data-target="pessoais-content">
+                        Explorar Guia Completo <i class="material-icons">expand_more</i>
+                    </button>
+                    <div id="pessoais-content" class="expand-content">
+                        <h4>A Lógica Central: Função Sintática</h4>
+                        <p>A distinção entre <strong>Reto</strong> e <strong>Oblíquo</strong> é puramente funcional. Pense nisto como papéis em uma peça: o ator principal (sujeito) e os coadjuvantes (complementos).</p>
+                        <ul>
+                            <li><strong>Caso Reto (Função de Sujeito):</strong> Atua exclusivamente como <strong>sujeito</strong>. É quem executa a ação verbal. Ex: <code>Eu</code> li o livro.</li>
+                            <li><strong>Caso Oblíquo (Função de Complemento):</strong> Atua como <strong>complemento</strong> (objeto direto ou indireto). Ex: Ele <code>me</code> deu o livro.</li>
+                        </ul>
+
+                        <h4>Tabela de Flexões e Funções</h4>
+                        <div class="table-wrapper">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Pessoa</th>
+                                        <th>Pronome Reto (Sujeito)</th>
+                                        <th>Pronome Oblíquo Átono</th>
+                                        <th>Pronome Oblíquo Tônico (com preposição)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>1ª sing.</td><td>Eu</td><td>me</td><td>mim, comigo</td></tr>
+                                    <tr><td>2ª sing.</td><td>Tu</td><td>te</td><td>ti, contigo</td></tr>
+                                    <tr><td>3ª sing.</td><td>Ele/Ela</td><td>o, a, lhe, se</td><td>ele, ela, si, consigo</td></tr>
+                                    <tr><td>1ª plural</td><td>Nós</td><td>nos</td><td>nós, conosco</td></tr>
+                                    <tr><td>2ª plural</td><td>Vós</td><td>vos</td><td>vós, convosco</td></tr>
+                                    <tr><td>3ª plural</td><td>Eles/Elas</td><td>os, as, lhes, se</td><td>eles, elas, si, consigo</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="tip-box">
+                            <h4>Emprego Chave: "Eu" vs. "Mim"</h4>
+                            <p>A regra de ouro é: "Mim não faz nada". "Mim" é sempre o alvo (complemento), nunca o agente (sujeito). Por isso, "Para mim fazer" está errado. A forma correta é "Para <strong>eu</strong> fazer", pois "eu" é o sujeito do verbo "fazer".</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-card">
+                    <h3>Pronomes Possessivos</h3>
+                    <p>Estabelecem uma relação de posse, conectando um possuidor a algo possuído. Flexionam-se em gênero e número para concordar com a coisa possuída.</p>
+                     <button class="expand-btn" data-target="possessivos-content">
+                        Explorar Guia Completo <i class="material-icons">expand_more</i>
+                    </button>
+                    <div id="possessivos-content" class="expand-content">
+                        <h4>A Lógica Central: Concordância Dupla</h4>
+                        <p>O pronome possessivo concorda com a <strong>pessoa do possuidor</strong> e com o <strong>gênero/número da coisa possuída</strong>.</p>
+                        <p>Exemplo: <code>Ele</code> (3ª pessoa, possuidor) pegou sua <code>bicicleta</code> (feminino, singular, coisa possuída).</p>
+                        <h4>Tabela de Flexões</h4>
+                        <div class="table-wrapper">
+                            <table>
+                                <thead><tr><th>Possuidor</th><th>Masculino Sing.</th><th>Feminino Sing.</th><th>Masculino Plural</th><th>Feminino Plural</th></tr></thead>
+                                <tbody>
+                                    <tr><td>Eu</td><td>meu</td><td>minha</td><td>meus</td><td>minhas</td></tr>
+                                    <tr><td>Tu</td><td>teu</td><td>tua</td><td>teus</td><td>tuas</td></tr>
+                                    <tr><td>Ele/Ela/Você</td><td>seu</td><td>sua</td><td>seus</td><td>suas</td></tr>
+                                    <tr><td>Nós</td><td>nosso</td><td>nossa</td><td>nossos</td><td>nossas</td></tr>
+                                    <tr><td>Vós</td><td>vosso</td><td>vossa</td><td>vossos</td><td>vossas</td></tr>
+                                    <tr><td>Eles/Elas/Vocês</td><td>seu</td><td>sua</td><td>seus</td><td>suas</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="tip-box">
+                            <h4>Emprego e Ambiguidade: Cuidado com 'Seu/Sua'!</h4>
+                            <p>A frase "Maria disse a João que seu carro quebrou" é ambígua. Para resolver, use "dele(s)" ou "dela(s)".</p>
+                            <p><strong>Correção:</strong> "Maria disse a João que o carro <strong>dele</strong> quebrou."</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- SEÇÃO 3: PRONOMES REFERENCIAIS -->
+        <section id="pronomes-referenciais" style="background: rgba(26, 188, 156, 0.1);">
+            <div class="container">
+                 <h2>Pronomes Referenciais: Apontando, Indefinindo e Questionando</h2>
+                <p>Este grupo de pronomes situa seres no espaço/tempo, referencia-os de forma vaga ou os utiliza para formular perguntas.</p>
+                
+                <div class="glass-card">
+                    <h3>Pronomes Demonstrativos</h3>
+                    <p>Funcionam como "apontadores" gramaticais, localizando seres no espaço, no tempo ou no próprio texto. Flexionam-se em gênero e número.</p>
+                     <button class="expand-btn" data-target="demonstrativos-content">
+                        Explorar Guia Completo <i class="material-icons">expand_more</i>
+                    </button>
+                    <div id="demonstrativos-content" class="expand-content">
+                        <h4>A Lógica Central: O GPS da Linguagem</h4>
+                        <p>A escolha do pronome cria um "mapa" para o ouvinte, baseado na proximidade.</p>
+                        <h4>Tabela de Emprego</h4>
+                        <div class="table-wrapper">
+                            <table>
+                                <thead><tr><th>Pronome</th><th>Posição Espacial</th><th>Posição Temporal</th><th>Posição no Discurso</th></tr></thead>
+                                <tbody>
+                                    <tr><td>este, esta, isto</td><td>Perto de quem fala (1ª p.)</td><td>Presente ou futuro próximo</td><td>O que será dito (catáfora)</td></tr>
+                                    <tr><td>esse, essa, isso</td><td>Perto de quem ouve (2ª p.)</td><td>Passado ou futuro próximos</td><td>O que já foi dito (anáfora)</td></tr>
+                                    <tr><td>aquele, aquela, aquilo</td><td>Longe de ambos (3ª p.)</td><td>Passado remoto</td><td>Referência a termo mais distante</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-card">
+                    <h3>Pronomes Indefinidos</h3>
+                    <p>Referem-se à 3ª pessoa do discurso de forma vaga, imprecisa ou genérica. Podem ser variáveis (flexionando-se) ou invariáveis.</p>
+                     <button class="expand-btn" data-target="indefinidos-content">
+                        Explorar Guia Completo <i class="material-icons">expand_more</i>
+                    </button>
+                    <div id="indefinidos-content" class="expand-content">
+                        <h4>Classificação e Emprego</h4>
+                        <ul>
+                            <li><strong>Variáveis:</strong> <code>algum, nenhum, todo, outro, muito, pouco, certo, vário, tanto, quanto, qualquer...</code> (Flexionam-se em gênero e número).
+                                <br>Ex: "<strong>Certas</strong> pessoas não se importam."
+                            </li>
+                            <li><strong>Invariáveis:</strong> <code>alguém, ninguém, tudo, outrem, nada, cada, algo.</code>
+                                <br>Ex: "<strong>Ninguém</strong> entendeu a pergunta."
+                            </li>
+                        </ul>
+                         <p>Sua função sintática mais comum é de <strong>sujeito</strong> ou <strong>complemento</strong> (objeto).</p>
+                         <p>Ex: "<strong>Alguém</strong> (sujeito) quebrou a janela." / "Não vi <strong>ninguém</strong> (objeto direto) na sala."</p>
+                    </div>
+                </div>
+                
+                <div class="glass-card">
+                    <h3>Pronomes Interrogativos</h3>
+                    <p>São usados para formular perguntas, diretas ou indiretas. Referem-se à 3ª pessoa de modo inquisitivo.</p>
+                     <button class="expand-btn" data-target="interrogativos-content">
+                        Explorar Guia Completo <i class="material-icons">expand_more</i>
+                    </button>
+                    <div id="interrogativos-content" class="expand-content">
+                         <h4>Classificação e Emprego</h4>
+                        <ul>
+                            <li><strong>Variáveis:</strong> <code>qual, quais, quanto, quanta, quantos, quantas.</code>
+                                <br>Ex: "<strong>Quantos</strong> livros você leu?"
+                            </li>
+                            <li><strong>Invariáveis:</strong> <code>que, quem.</code>
+                                <br>Ex: "<strong>Quem</strong> chegou?"
+                            </li>
+                        </ul>
+                        <h4>Perguntas Diretas vs. Indiretas</h4>
+                        <ul>
+                            <li><strong>Direta (com "?"):</strong> "<strong>Que</strong> aconteceu?"</li>
+                            <li><strong>Indireta (sem "?"):</strong> "Eu não sei <strong>que</strong> aconteceu."</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEÇÃO 4: PRONOMES RELACIONAIS (RELATIVOS) -->
+        <section id="pronomes-relacionais" style="background: rgba(142, 68, 173, 0.1);">
+            <div class="container">
+                <h2>Pronomes Relacionais: A Engenharia das Orações</h2>
+                <p>Os pronomes relativos são a ferramenta mais sofisticada para conectar orações, substituindo um termo anterior (o antecedente) para evitar repetição e criar fluidez.</p>
+                
+                <div class="glass-card">
+                    <h3>A Mecânica dos Relativos</h3>
+                    <p>Dominar os pronomes relativos é o que distingue uma escrita articulada. Eles funcionam como "ganchos" que ligam uma ideia a outra de forma elegante.</p>
+                    <button class="expand-btn" data-target="relativos-content">
+                        Explorar Guia Completo <i class="material-icons">expand_more</i>
+                    </button>
+                    <div id="relativos-content" class="expand-content">
+                        <h4>Análise Detalhada dos Principais Relativos</h4>
+                        <ul>
+                            <li><strong>QUE (O Universal):</strong> Retoma pessoas ou coisas. Ex: "O livro <strong>que</strong> li é ótimo."</li>
+                            <li><strong>QUEM (Pessoas):</strong> Apenas para pessoas, quase sempre com preposição. Ex: "A mulher <strong>a quem</strong> me referi é a diretora."</li>
+                            <li><strong>CUJO (Posse):</strong> Expressa posse. Fica entre o possuidor e a coisa possuída. NUNCA use artigo depois dele. Ex: "Vi o autor <strong>cujo</strong> livro foi premiado."</li>
+                            <li><strong>ONDE (Lugar Fixo):</strong> Apenas para lugar físico. Ex: "A cidade <strong>onde</strong> moro é tranquila."</li>
+                            <li><strong>QUANTO (Quantidade):</strong> Usado após pronomes indefinidos como 'tudo', 'tanto', 'todos'. Ex: "Ele fez tudo <strong>quanto</strong> podia."</li>
+                            <li><strong>QUANDO (Tempo):</strong> Retoma um termo que expressa tempo. Ex: "Lembro-me do dia <strong>quando</strong> nos conhecemos."</li>
+                        </ul>
+                        <div class="tip-box">
+                             <h4>Próximo Passo</h4>
+                             <p>Agora que você conhece os principais relativos, veja a seção seguinte para um guia detalhado sobre a <strong>função sintática</strong> que cada um deles pode exercer dentro da oração.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- NOVA SEÇÃO 5: FUNÇÕES SINTÁTICAS DO PRONOME RELATIVO -->
+        <section id="funcoes-sintaticas" style="background: rgba(230, 126, 34, 0.1);">
+            <div class="container">
+                <h2>Funções Sintáticas do Pronome Relativo</h2>
+                <p>O pronome relativo, além de conectar orações, desempenha uma <strong>função sintática</strong> dentro da oração que ele introduz. Para descobrir a função, substitua o pronome pelo seu antecedente e analise o papel desse termo na oração adjetiva.</p>
+                
+                <div class="glass-card">
+                    <h3>Tabela de Funções Sintáticas</h3>
+                    <p>Vamos desmembrar cada possibilidade:</p>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Função Sintática</th>
+                                    <th>Exemplo com Pronome Relativo</th>
+                                    <th>Análise (Substituindo pelo antecedente)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Sujeito</strong></td>
+                                    <td>Os artistas <strong>que</strong> são talentosos merecem aplausos.</td>
+                                    <td>Análise: [Os artistas] são talentosos. (<u>Os artistas</u> = Sujeito de "são")</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Objeto Direto</strong></td>
+                                    <td>O livro <strong>que</strong> li era fascinante.</td>
+                                    <td>Análise: Eu li [o livro]. (<u>O livro</u> = Objeto Direto de "li")</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Objeto Indireto</strong></td>
+                                    <td>O projeto <strong>de que</strong> discordo foi aprovado.</td>
+                                    <td>Análise: Eu discordo [do projeto]. (<u>Do projeto</u> = Objeto Indireto de "discordo")</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Complemento Nominal</strong></td>
+                                    <td>As pessoas <strong>a quem</strong> sou grato são muitas.</td>
+                                    <td>Análise: Eu sou grato [às pessoas]. (<u>Às pessoas</u> = Complemento Nominal de "grato")</td>
+                                </tr>
+                                 <tr>
+                                    <td><strong>Predicativo do Sujeito</strong></td>
+                                    <td>A pessoa honesta <strong>que</strong> sempre fui me guia.</td>
+                                    <td>Análise: Eu sempre fui [a pessoa honesta]. (<u>A pessoa honesta</u> = Predicativo do Sujeito "eu")</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Agente da Passiva</strong></td>
+                                    <td>O júri <strong>por quem</strong> fui julgado era rigoroso.</td>
+                                    <td>Análise: Eu fui julgado [pelo júri]. (<u>Pelo júri</u> = Agente da Passiva)</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Adjunto Adverbial</strong></td>
+                                    <td>A cidade <strong>onde</strong> (em que) nasci é pequena.</td>
+                                    <td>Análise: Eu nasci [na cidade]. (<u>Na cidade</u> = Adjunto Adverbial de Lugar)</td>
+                                </tr>
+                                 <tr>
+                                    <td><strong>Adjunto Adnominal</strong></td>
+                                    <td>O autor, <strong>cujo</strong> livro li, virá amanhã.</td>
+                                    <td>Análise: Eu li o livro [do autor]. (O pronome 'cujo' sempre atua como Adjunto Adnominal)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEÇÃO 6: ANÁLISE PRÁTICA E DIAGRAMAS LÓGICOS -->
+        <section id="analise-pratica">
+            <div class="container">
+                <h2>Análise Prática e Diagramas Lógicos</h2>
+                <p>A teoria ganha vida na prática. Aqui, vamos dissecar orações complexas para visualizar como os pronomes constroem o sentido e a coesão, funcionando como a "argamassa" do texto.</p>
+
+                <div class="glass-card">
+                    <h3>Estudo de Caso 1: A Conexão com Pronome Relativo</h3>
+                    <div class="analysis-box">
+                        <p class="diagram-sentence">O projeto, <span class="pronoun">que</span> o engenheiro apresentou, recebeu o prêmio <span class="pronoun">que</span> todos cobiçavam.</p>
+                        
+                        <div class="diagram-explanation">
+                            <span class="pronoun">que</span>
+                            <span class="arrow-connector">&rarr;</span>
+                            <span class="antecedent">O projeto</span>
+                            <span class="explanation-text">Função: Objeto Direto (o engenheiro apresentou [o projeto]).</span>
+                        </div>
+                        <div class="diagram-explanation">
+                            <span class="pronoun">que</span>
+                            <span class="arrow-connector">&rarr;</span>
+                            <span class="antecedent">o prêmio</span>
+                             <span class="explanation-text">Função: Objeto Direto (todos cobiçavam [o prêmio]).</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-card">
+                    <h3>Estudo de Caso 2: A Lógica da Posse com 'Cujo'</h3>
+                    <div class="analysis-box">
+                        <p class="diagram-sentence">O escritor, <span class="pronoun">cuja</span> obra analisei, é o mesmo autor de quem <span class="pronoun">lhe</span> falei ontem.</p>
+                        
+                        <div class="diagram-explanation">
+                             <span class="antecedent">O escritor</span>
+                             <span class="arrow-connector">&larr; POSSUI &rarr;</span>
+                             <span class="explanation-text">a obra. O pronome <span class="pronoun">cuja</span> conecta o possuidor ao possuído e tem função de Adjunto Adnominal.</span>
+                        </div>
+                         <div class="diagram-explanation">
+                             <span class="pronoun">lhe</span>
+                             <span class="arrow-connector">&rarr;</span>
+                             <span class="antecedent">a você (implícito)</span>
+                             <span class="explanation-text">'Lhe' (pronome pessoal oblíquo) funciona como Objeto Indireto de "falei" (falei A você).</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Rodapé -->
+    <footer>
+        <p>Página educacional desenvolvida como uma ferramenta de aprendizado.</p>
+    </footer>
+
+    <!-- Scripts (Carregados no final para melhor performance) -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        // --- Inicialização do Fundo de Partículas --- //
+        particlesJS("particles-js", {
+            "particles": {
+                "number": { "value": 60, "density": { "enable": true, "value_area": 800 } },
+                "color": { "value": "#ffffff" },
+                "shape": { "type": "circle" },
+                "opacity": { "value": 0.5, "random": true },
+                "size": { "value": 3, "random": true },
+                "line_linked": { "enable": true, "distance": 150, "color": "#ffffff", "opacity": 0.2, "width": 1 },
+                "move": { "enable": true, "speed": 1, "direction": "none", "random": true, "straight": false, "out_mode": "out" }
+            },
+            "interactivity": {
+                "detect_on": "canvas",
+                "events": { "onhover": { "enable": true, "mode": "grab" }, "onclick": { "enable": true, "mode": "push" }, "resize": true },
+                "modes": { "grab": { "distance": 140, "line_linked": { "opacity": 0.5 } }, "push": { "particles_nb": 4 } }
+            },
+            "retina_detect": true
+        });
+
+        // --- Navegação Ativa com IntersectionObserver --- //
+        const sections = document.querySelectorAll('section');
+        const navLinks = document.querySelectorAll('.main-nav a');
+
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.4 
+        };
+
+        const sectionObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const activeId = entry.target.id;
+                    navLinks.forEach(link => {
+                        link.classList.remove('active');
+                        if (link.getAttribute('href') === `#${activeId}`) {
+                            link.classList.add('active');
+                        }
+                    });
+                }
+            });
+        }, observerOptions);
+
+        sections.forEach(section => {
+            sectionObserver.observe(section);
+        });
+
+        // --- Menu que se esconde em Mobile ao rolar --- //
+        let lastScrollY = window.scrollY;
+        const mainNav = document.getElementById('mainNav');
+
+        window.addEventListener('scroll', () => {
+            if (window.innerWidth <= 1024) { 
+                if (lastScrollY < window.scrollY && window.scrollY > mainNav.clientHeight) {
+                    mainNav.classList.add('nav-hidden');
+                } else {
+                    mainNav.classList.remove('nav-hidden');
+                }
+                lastScrollY = window.scrollY;
+            }
+        });
+
+        // --- Conteúdo Expansível (Acordeão) --- //
+        const expandButtons = document.querySelectorAll('.expand-btn');
+        expandButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const targetId = button.dataset.target;
+                const content = document.getElementById(targetId);
+
+                button.classList.toggle('active');
+                
+                if (content.style.maxHeight) {
+                    content.style.maxHeight = null;
+                    content.classList.remove('show');
+                } else {
+                    content.classList.add('show');
+                    content.style.maxHeight = content.scrollHeight + 'px';
+                }
+            });
+        });
+    });
+    </script>
+</body>
+</html>

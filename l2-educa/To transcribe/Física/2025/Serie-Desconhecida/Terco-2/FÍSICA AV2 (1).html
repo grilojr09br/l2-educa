@@ -1,0 +1,1054 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guia Mestre: Geradores, Receptores e Circuitos Elétricos</title>
+
+    <!-- Carregamento de Fontes e Ícones via CDN -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Source+Sans+Pro:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <!-- Carregamento de Bibliotecas JS via CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Configuração do MathJax para renderizar LaTeX
+        MathJax = {
+          tex: {
+            inlineMath: [['$', '$'], ['\\(', '\\)']]
+          },
+          svg: {
+            fontCache: 'global'
+          }
+        };
+    </script>
+    <script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
+    <style>
+        /* 1. RESET E VARIÁVEIS GLOBAIS */
+        :root {
+            --font-heading: 'Poppins', sans-serif;
+            --font-body: 'Source Sans Pro', sans-serif;
+
+            /* Paleta de Cores Base */
+            --color-light: #f0f2f5;
+            --color-dark: #121212;
+            --color-accent: #00aaff;
+            --color-accent-hover: #0088cc;
+            --shadow-light: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+            --shadow-dark: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+
+            /* Temas de Seção */
+            --bg-intro: #0f0c29;
+            --text-intro: #e0e0e0;
+            --accent-intro: #7f7fd5;
+            --glass-intro: rgba(200, 200, 255, 0.1);
+
+            --bg-gerador: #003942;
+            --text-gerador: #cceeee;
+            --accent-gerador: #42f2a6;
+            --glass-gerador: rgba(66, 242, 166, 0.1);
+
+            --bg-receptor: #4a0e35;
+            --text-receptor: #f8ddee;
+            --accent-receptor: #ff6b6b;
+            --glass-receptor: rgba(255, 107, 107, 0.1);
+            
+            --bg-resistor: #4f3200;
+            --text-resistor: #fdeecf;
+            --accent-resistor: #ffc400;
+            --glass-resistor: rgba(255, 196, 0, 0.1);
+
+            --bg-circuito: #1d2b3a;
+            --text-circuito: #d0d8e0;
+            --accent-circuito: #fca311;
+            --glass-circuito: rgba(252, 163, 17, 0.1);
+            
+            --bg-interativo: #333333;
+            --text-interativo: #f5f5f5;
+            --accent-interativo: #00e5ff;
+            --glass-interativo: rgba(0, 229, 255, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--color-dark);
+            color: var(--color-light);
+            line-height: 1.7;
+        }
+
+        /* 2. ESTRUTURA PRINCIPAL E NAVEGAÇÃO */
+        #main-container {
+            display: flex;
+        }
+
+        #nav-menu {
+            width: 280px;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background: rgba(20, 20, 30, 0.6);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 40px 0;
+            transition: transform 0.4s ease-in-out, top 0.4s ease-in-out;
+            z-index: 1000;
+        }
+
+        #nav-menu .nav-header {
+            padding: 0 30px 20px 30px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        #nav-menu .nav-header h1 {
+            font-family: var(--font-heading);
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #fff;
+        }
+        
+        #nav-menu .nav-header p {
+            font-size: 0.85rem;
+            color: #aaa;
+        }
+
+        #nav-menu ul {
+            list-style: none;
+            padding-top: 20px;
+        }
+
+        #nav-menu ul li a {
+            display: flex;
+            align-items: center;
+            padding: 15px 30px;
+            color: #ccc;
+            text-decoration: none;
+            font-family: var(--font-heading);
+            font-weight: 400;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+        }
+        
+        #nav-menu ul li a .material-icons {
+            margin-right: 15px;
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+        }
+
+        #nav-menu ul li a:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+        }
+
+        #nav-menu ul li a.active {
+            color: #fff;
+            background: var(--color-accent);
+            border-left-color: #fff;
+        }
+        
+        #nav-menu ul li a.active .material-icons {
+            transform: scale(1.1);
+        }
+
+        #main-content {
+            margin-left: 280px;
+            width: calc(100% - 280px);
+        }
+
+        /* 3. ESTILOS DE SEÇÃO E CONTEÚDO */
+        section {
+            min-height: 100vh;
+            padding: 100px 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Temas específicos por seção */
+        #introducao { background: var(--bg-intro); color: var(--text-intro); }
+        #geradores { background: var(--bg-gerador); color: var(--text-gerador); }
+        #receptores { background: var(--bg-receptor); color: var(--text-receptor); }
+        #resistores { background: var(--bg-resistor); color: var(--text-resistor); }
+        #circuitos { background: var(--bg-circuito); color: var(--text-circuito); }
+        #interativo { background: var(--bg-interativo); color: var(--text-interativo); }
+
+        .section-header {
+            margin-bottom: 40px;
+        }
+
+        .section-header h2 {
+            font-family: var(--font-heading);
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .section-header h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 60%;
+            height: 4px;
+            border-radius: 2px;
+        }
+        
+        /* Cores de destaque para os títulos */
+        #introducao .section-header h2::after { background: var(--accent-intro); }
+        #geradores .section-header h2::after { background: var(--accent-gerador); }
+        #receptores .section-header h2::after { background: var(--accent-receptor); }
+        #resistores .section-header h2::after { background: var(--accent-resistor); }
+        #circuitos .section-header h2::after { background: var(--accent-circuito); }
+        #interativo .section-header h2::after { background: var(--accent-interativo); }
+
+        .section-header p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+        #introducao .section-header p { color: var(--text-intro); opacity: 0.8; }
+        #geradores .section-header p { color: var(--text-gerador); opacity: 0.8; }
+        #receptores .section-header p { color: var(--text-receptor); opacity: 0.8; }
+        #resistores .section-header p { color: var(--text-resistor); opacity: 0.8; }
+        #circuitos .section-header p { color: var(--text-circuito); opacity: 0.8; }
+        #interativo .section-header p { color: var(--text-interativo); opacity: 0.8; }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .card {
+            background: var(--glass-intro);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        #geradores .card { background: var(--glass-gerador); }
+        #receptores .card { background: var(--glass-receptor); }
+        #resistores .card { background: var(--glass-resistor); }
+        #circuitos .card { background: var(--glass-circuito); }
+        #interativo .card { background: var(--glass-interativo); }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-dark);
+        }
+
+        .card h3 {
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+
+        .btn-expand {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 15px 30px;
+            border: 2px solid;
+            border-radius: 50px;
+            background: transparent;
+            color: inherit;
+            font-family: var(--font-heading);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            text-decoration: none;
+        }
+
+        .btn-expand .material-icons {
+            margin-left: 10px;
+            transition: transform 0.4s ease;
+        }
+        
+        .btn-expand.active .material-icons {
+            transform: rotate(180deg);
+        }
+
+        /* Cores de destaque para os botões */
+        #geradores .btn-expand { border-color: var(--accent-gerador); color: var(--accent-gerador); }
+        #geradores .btn-expand:hover { background: var(--accent-gerador); color: var(--bg-gerador); }
+        #receptores .btn-expand { border-color: var(--accent-receptor); color: var(--accent-receptor); }
+        #receptores .btn-expand:hover { background: var(--accent-receptor); color: var(--bg-receptor); }
+        #resistores .btn-expand { border-color: var(--accent-resistor); color: var(--accent-resistor); }
+        #resistores .btn-expand:hover { background: var(--accent-resistor); color: var(--bg-resistor); }
+        #circuitos .btn-expand { border-color: var(--accent-circuito); color: var(--accent-circuito); }
+        #circuitos .btn-expand:hover { background: var(--accent-circuito); color: var(--bg-circuito); }
+
+        .expanded-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.8s ease-in-out, margin-top 0.8s ease-in-out;
+        }
+        
+        .expanded-content.expanded {
+            max-height: 5000px; /* Valor grande para permitir a expansão */
+            margin-top: 40px;
+        }
+
+        .detailed-section {
+            background: rgba(0,0,0,0.2);
+            border-radius: 16px;
+            padding: 40px;
+            margin-bottom: 30px;
+        }
+
+        .detailed-section h4 {
+            font-family: var(--font-heading);
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid;
+        }
+        
+        #geradores .detailed-section h4 { border-color: var(--accent-gerador); }
+        #receptores .detailed-section h4 { border-color: var(--accent-receptor); }
+        #resistores .detailed-section h4 { border-color: var(--accent-resistor); }
+        #circuitos .detailed-section h4 { border-color: var(--accent-circuito); }
+        
+        p, li {
+            font-size: 1.1rem;
+            max-width: 800px;
+        }
+        
+        ul, ol {
+            margin-left: 20px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+        }
+        
+        code {
+            background: rgba(0,0,0,0.3);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+
+        table {
+            width: 100%;
+            max-width: 800px;
+            border-collapse: collapse;
+            margin: 30px 0;
+            background: rgba(0,0,0,0.2);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        th {
+            font-family: var(--font-heading);
+            font-weight: 600;
+        }
+        #geradores th { background-color: var(--accent-gerador); color: var(--bg-gerador); }
+        #receptores th { background-color: var(--accent-receptor); color: var(--bg-receptor); }
+        #resistores th { background-color: var(--accent-resistor); color: var(--bg-resistor); }
+        
+        .tip-box {
+            padding: 20px;
+            border-left: 5px solid;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        #geradores .tip-box { border-color: var(--accent-gerador); background: var(--glass-gerador); }
+        #receptores .tip-box { border-color: var(--accent-receptor); background: var(--glass-receptor); }
+        #resistores .tip-box { border-color: var(--accent-resistor); background: var(--glass-resistor); }
+        #circuitos .tip-box { border-color: var(--accent-circuito); background: var(--glass-circuito); }
+
+        .tip-box strong {
+            display: block;
+            margin-bottom: 5px;
+            font-family: var(--font-heading);
+        }
+        
+        /* 4. COMPONENTES INTERATIVOS */
+        .interactive-tool {
+            background: var(--glass-interativo);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-family: var(--font-heading);
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 8px;
+            color: var(--text-interativo);
+            font-size: 1rem;
+        }
+
+        .result-box {
+            margin-top: 30px;
+            padding: 20px;
+            background: rgba(0,0,0,0.4);
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .result-box p {
+            font-size: 1.2rem;
+            color: rgba(255,255,255,0.7);
+            margin: 0;
+        }
+
+        .result-box span {
+            display: block;
+            font-size: 2.5rem;
+            font-family: var(--font-heading);
+            font-weight: 700;
+            color: var(--accent-interativo);
+            margin-top: 5px;
+        }
+        
+        /* 5. RODAPÉ */
+        footer {
+            padding: 20px;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #888;
+            background: #0a0a0a;
+        }
+
+        /* 6. RESPONSIVIDADE (MOBILE-FIRST APPROACH) */
+        @media (max-width: 1024px) {
+            #main-container {
+                flex-direction: column;
+            }
+
+            #nav-menu {
+                width: 100%;
+                height: auto;
+                position: fixed; /* Fixo no topo */
+                top: 0;
+                left: 0;
+                display: flex;
+                flex-direction: column;
+                border-right: none;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+                padding: 0;
+                transform: translateY(0); /* Estado inicial visível */
+                transition: transform 0.4s ease-in-out;
+            }
+            
+            #nav-menu.nav-hidden {
+                transform: translateY(-100%); /* Esconde o menu ao rolar para baixo */
+            }
+
+            #nav-menu .nav-header {
+                display: none; /* Oculta o header grande no mobile */
+            }
+
+            #nav-menu ul {
+                display: flex;
+                justify-content: space-around;
+                width: 100%;
+                padding: 0;
+            }
+
+            #nav-menu ul li {
+                flex: 1;
+            }
+
+            #nav-menu ul li a {
+                justify-content: center;
+                padding: 15px 5px;
+                text-align: center;
+                border-left: none;
+                border-bottom: 4px solid transparent;
+                font-size: 0.8rem; /* Ajuste de fonte para mais itens */
+            }
+            
+            #nav-menu ul li a .material-icons {
+                margin-right: 5px;
+                font-size: 1rem;
+            }
+            
+            #nav-menu ul li a.active {
+                border-left-color: transparent;
+                border-bottom-color: var(--color-accent);
+                background: rgba(0, 170, 255, 0.1);
+            }
+
+            #main-content {
+                margin-left: 0;
+                width: 100%;
+                padding-top: 60px; /* Espaço para o menu superior fixo */
+            }
+
+            section {
+                padding: 80px 20px;
+            }
+
+            .section-header h2 {
+                font-size: 2.5rem;
+            }
+
+            .section-header p {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="main-container">
+        <!-- NAVEGAÇÃO LATERAL / SUPERIOR -->
+        <nav id="nav-menu">
+            <div class="nav-header">
+                <h1>Guia Mestre</h1>
+                <p>Circuitos Elétricos</p>
+            </div>
+            <ul>
+                <li><a href="#introducao" class="active"><i class="material-icons">auto_awesome</i>Introdução</a></li>
+                <li><a href="#geradores"><i class="material-icons">battery_charging_full</i>Geradores</a></li>
+                <li><a href="#receptores"><i class="material-icons">lightbulb</i>Receptores</a></li>
+                <li><a href="#resistores"><i class="material-icons">electrical_services</i>Resistores</a></li>
+                <li><a href="#circuitos"><i class="material-icons">hub</i>Circuitos</a></li>
+                <li><a href="#interativo"><i class="material-icons">calculate</i>Ferramentas</a></li>
+            </ul>
+        </nav>
+
+        <!-- CONTEÚDO PRINCIPAL -->
+        <main id="main-content">
+
+            <!-- SEÇÃO 1: INTRODUÇÃO -->
+            <section id="introducao">
+                <div class="section-header">
+                    <h2>O Universo Elétrico</h2>
+                    <p>Uma introdução aos conceitos fundamentais que governam o fluxo de energia e o funcionamento de todos os dispositivos eletrônicos que nos cercam.</p>
+                </div>
+                <div class="content">
+                    <p>Um <strong>circuito elétrico</strong> é um caminho fechado através do qual a corrente elétrica pode fluir. É a espinha dorsal de toda a tecnologia moderna. Para que ele exista, são necessários três elementos essenciais:</p>
+                    <ol>
+                        <li>Um <strong>gerador</strong>: A fonte que "empurra" os elétrons, fornecendo a energia ao circuito (ex: uma pilha).</li>
+                        <li>Um <strong>condutor</strong>: O meio pelo qual os elétrons viajam (ex: fios de cobre).</li>
+                        <li>Um <strong>receptor ou resistor</strong>: Um componente que consome a energia elétrica, transformando-a em outra forma de energia (luz, calor, movimento) ou simplesmente oferecendo resistência à passagem da corrente.</li>
+                    </ol>
+                    <p>A relação fundamental que descreve o comportamento da corrente em componentes simples é a <strong>Primeira Lei de Ohm</strong>, expressa pela equação:</p>
+                    <p style="text-align: center; font-size: 1.5rem; margin: 20px 0;">$ U = R \cdot i $</p>
+                    <p>Onde $U$ é a diferença de potencial (tensão ou ddp) em Volts (V), $R$ é a resistência em Ohms ($\Omega$), e $i$ é a corrente em Ampères (A). Esta página aprofundará os papéis dos geradores, receptores, resistores e a crucial noção de potência, culminando na análise de circuitos complexos.</p>
+                </div>
+            </section>
+
+            <!-- SEÇÃO 2: GERADORES ELÉTRICOS -->
+            <section id="geradores">
+                <div class="section-header">
+                    <h2>Geradores Elétricos</h2>
+                    <p>As fontes de poder. Dispositivos que convertem diversas formas de energia em energia elétrica, impulsionando o fluxo de corrente.</p>
+                </div>
+                <div class="content-grid">
+                    <div class="card">
+                        <h3>Força Eletromotriz ($\varepsilon$)</h3>
+                        <p>A energia total por unidade de carga que o gerador fornece. É a "tensão máxima" teórica que ele pode gerar, medida em Volts (V).</p>
+                    </div>
+                    <div class="card">
+                        <h3>Resistência Interna (r)</h3>
+                        <p>Todo gerador real possui uma resistência interna que "consome" parte da energia gerada, dissipando-a como calor. É uma imperfeição inerente.</p>
+                    </div>
+                    <div class="card">
+                        <h3>Equação do Gerador</h3>
+                        <p>A tensão útil ($U$) nos terminais de um gerador é a força eletromotriz ($\varepsilon$) menos a queda de tensão na resistência interna ($r \cdot i$).</p>
+                    </div>
+                </div>
+                <button class="btn-expand" data-target="geradores-expand">
+                    Explorar Guia Completo
+                    <i class="material-icons">expand_more</i>
+                </button>
+                <div id="geradores-expand" class="expanded-content">
+                    <!-- CONTEÚDO DETALHADO -->
+                    <div class="detailed-section">
+                        <h4>A Lógica Central: Transformação de Energia</h4>
+                        <p>A função primária de um gerador não é "criar" elétrons, mas sim fornecer a energia para movê-los. Ele atua como uma bomba de elétrons, pegando-os em um potencial mais baixo e "elevando-os" a um potencial mais alto. Essa energia pode vir de reações químicas (pilhas, baterias), energia mecânica (hidrelétricas, dínamos), energia solar (células fotovoltaicas), etc.</p>
+                        <p>A <strong>Força Eletromotriz (f.e.m. ou $\varepsilon$)</strong> é a medida dessa energia fornecida por unidade de carga. Um gerador com $\varepsilon = 9V$ fornece 9 Joules de energia para cada Coulomb de carga que o atravessa.</p>
+                        <p>No entanto, o próprio material do gerador oferece uma resistência à passagem da corrente, a <strong>resistência interna ($r$)</strong>. Parte da energia fornecida pela f.e.m. é imediatamente perdida na forma de calor dentro do próprio gerador. A tensão que efetivamente chega ao circuito externo ($U$) é, portanto, sempre menor que a f.e.m. quando o circuito está em funcionamento.</p>
+                        <p>Isso nos leva à <strong>Equação do Gerador</strong>:</p>
+                        <p style="text-align: center; font-size: 1.5rem; margin: 20px 0;">$ U = \varepsilon - r \cdot i $</p>
+                    </div>
+
+                    <div class="detailed-section">
+                        <h4>Potência Elétrica no Gerador</h4>
+                        <p>A análise de potência revela como a energia é distribuída:</p>
+                        <ul>
+                            <li><strong>Potência Total Gerada ($P_T$):</strong> É a potência total que a f.e.m. produz. $P_T = \varepsilon \cdot i$.</li>
+                            <li><strong>Potência Útil ($P_U$):</strong> É a potência efetivamente entregue ao circuito externo. $P_U = U \cdot i$.</li>
+                            <li><strong>Potência Dissipada ($P_D$):</strong> É a potência perdida como calor na resistência interna. $P_D = r \cdot i^2$.</li>
+                        </ul>
+                        <p>Pela conservação de energia, temos: $P_T = P_U + P_D$. O <strong>rendimento ($\eta$)</strong> do gerador é a razão entre a potência útil e a total: $\eta = P_U / P_T = U / \varepsilon$.</p>
+                    </div>
+
+                    <div class="detailed-section">
+                        <h4>Raciocínio Sequencial: Analisando um Gerador</h4>
+                        <p><strong>Problema:</strong> Uma bateria de carro tem f.e.m. de 12V e resistência interna de 0.05$\Omega$. Ela é usada para ligar um farol que puxa uma corrente de 4A. Qual a tensão nos terminais, a potência útil e o rendimento?</p>
+                        <ol>
+                            <li><strong>Dados:</strong> $\varepsilon = 12V$, $r = 0.05\Omega$, $i = 4A$.</li>
+                            <li><strong>Tensão Útil (U):</strong> $U = 12 - (0.05 \cdot 4) = 11.8V$.</li>
+                            <li><strong>Potência Útil ($P_U$):</strong> $P_U = U \cdot i = 11.8V \cdot 4A = 47.2W$.</li>
+                            <li><strong>Potência Total ($P_T$):</strong> $P_T = \varepsilon \cdot i = 12V \cdot 4A = 48W$.</li>
+                            <li><strong>Rendimento ($\eta$):</strong> $\eta = P_U / P_T = 47.2 / 48 \approx 0.983$ ou 98.3%.</li>
+                        </ol>
+                    </div>
+                    
+                    <div class="tip-box">
+                        <strong>Dica de Mestre: Corrente de Curto-Circuito ($i_{cc}$)</strong>
+                        <p>A corrente máxima que um gerador pode fornecer ocorre em um curto-circuito ($U=0$). Nesse caso, $i_{cc} = \varepsilon / r$. É uma corrente perigosamente alta que pode danificar o gerador.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SEÇÃO 3: RECEPTORES ELÉTRICOS -->
+            <section id="receptores">
+                <div class="section-header">
+                    <h2>Receptores Elétricos</h2>
+                    <p>Os consumidores de energia. Dispositivos que convertem energia elétrica em outras formas de energia útil (luz, movimento, som) ou a armazenam.</p>
+                </div>
+                <div class="content-grid">
+                    <div class="card">
+                        <h3>Força Contraeletromotriz ($\varepsilon'$)</h3>
+                        <p>A energia por unidade de carga que é convertida em uma forma não-térmica. É a "tensão mínima" necessária para o receptor funcionar.</p>
+                    </div>
+                    <div class="card">
+                        <h3>Resistência Interna (r')</h3>
+                        <p>Similar ao gerador, o receptor também possui uma resistência interna que dissipa parte da energia recebida como calor (Efeito Joule).</p>
+                    </div>
+                    <div class="card">
+                        <h3>Equação do Receptor</h3>
+                        <p>A tensão ($U$) necessária para alimentar um receptor é a soma da f.c.e.m ($\varepsilon'$) com a queda de tensão na sua resistência interna ($r' \cdot i$).</p>
+                    </div>
+                </div>
+                <button class="btn-expand" data-target="receptores-expand">
+                    Aprofundar o Estudo
+                    <i class="material-icons">expand_more</i>
+                </button>
+                <div id="receptores-expand" class="expanded-content">
+                    <!-- CONTEÚDO DETALHADO -->
+                    <div class="detailed-section">
+                        <h4>A Lógica Central: Consumo e Transformação</h4>
+                        <p>Se um gerador "empurra" a corrente, um receptor "resiste" a esse empurrão para realizar um trabalho. Ele consome a energia elétrica fornecida pelo circuito. A parte mais importante dessa energia é transformada em trabalho útil (ex: girar o eixo de um motor). A energia por unidade de carga usada para esse trabalho é a <strong>Força Contraeletromotriz (f.c.e.m. ou $\varepsilon'$)</strong>.</p>
+                        <p>Assim como no gerador, o receptor não é perfeito. Parte da energia elétrica que ele recebe é inevitavelmente perdida como calor devido à sua <strong>resistência interna ($r'$)</strong>. Portanto, a tensão total ($U$) que o circuito precisa fornecer ao receptor deve ser suficiente para superar tanto a f.c.e.m. quanto a perda interna.</p>
+                        <p>Isso nos leva à <strong>Equação do Receptor</strong>:</p>
+                        <p style="text-align: center; font-size: 1.5rem; margin: 20px 0;">$ U = \varepsilon' + r' \cdot i $</p>
+                    </div>
+
+                    <div class="detailed-section">
+                        <h4>Potência Elétrica no Receptor</h4>
+                        <p>A análise de potência revela para onde vai a energia consumida:</p>
+                        <ul>
+                            <li><strong>Potência Total Consumida ($P_T$):</strong> É a potência total que o receptor retira do circuito. $P_T = U \cdot i$.</li>
+                            <li><strong>Potência Útil ($P_U$):</strong> É a potência efetivamente convertida em trabalho (movimento, som, etc.). $P_U = \varepsilon' \cdot i$.</li>
+                            <li><strong>Potência Dissipada ($P_D$):</strong> É a potência perdida como calor na resistência interna. $P_D = r' \cdot i^2$.</li>
+                        </ul>
+                        <p>Pela conservação de energia, temos: $P_T = P_U + P_D$. O <strong>rendimento ($\eta$)</strong> do receptor é a razão entre a potência útil e a total: $\eta = P_U / P_T = \varepsilon' / U$.</p>
+                    </div>
+
+                    <div class="detailed-section">
+                        <h4>Aplicações Práticas e Exemplos</h4>
+                        <ul>
+                            <li><strong>Motores Elétricos:</strong> O exemplo clássico. Convertem energia elétrica em energia mecânica de rotação. A f.c.e.m. depende da velocidade de rotação do motor.</li>
+                            <li><strong>Bateria sendo carregada:</strong> Quando você carrega seu celular, a bateria atua como um receptor, convertendo energia elétrica em energia química para armazenamento.</li>
+                            <li><strong>Eletrólise:</strong> Processo que usa corrente elétrica para forçar uma reação química não espontânea, como a separação de hidrogênio e oxigênio da água.</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- SEÇÃO 4: RESISTORES E POTÊNCIA -->
+            <section id="resistores">
+                <div class="section-header">
+                    <h2>Resistores e Potência</h2>
+                    <p>Os elementos de controle e dissipação. Entenda como os resistores moldam os circuitos e como a potência define o consumo de energia.</p>
+                </div>
+                <div class="content-grid">
+                    <div class="card">
+                        <h3>Resistores Ôhmicos</h3>
+                        <p>Componentes cuja principal função é oferecer uma oposição (resistência) à passagem de corrente, seguindo a Lei de Ohm ($U = R \cdot i$).</p>
+                    </div>
+                    <div class="card">
+                        <h3>Potência Elétrica (P)</h3>
+                        <p>A taxa na qual a energia elétrica é transferida ou convertida. Medida em Watts (W), define o "brilho" de uma lâmpada ou o "calor" de um chuveiro.</p>
+                    </div>
+                    <div class="card">
+                        <h3>Efeito Joule</h3>
+                        <p>A conversão de energia elétrica em energia térmica (calor) quando a corrente passa por um resistor. A potência dissipada é dada por $P = R \cdot i^2$.</p>
+                    </div>
+                </div>
+                <button class="btn-expand" data-target="resistores-expand">
+                    Dominar a Dissipação
+                    <i class="material-icons">expand_more</i>
+                </button>
+                <div id="resistores-expand" class="expanded-content">
+                    <div class="detailed-section">
+                        <h4>A Lógica Central: Resistência e Energia</h4>
+                        <p>Um <strong>resistor</strong> é um dispositivo passivo de dois terminais. Sua função não é "útil" no mesmo sentido de um motor, mas é fundamental para o design de circuitos. Ele é usado para: limitar a corrente, ajustar níveis de sinal, dividir tensões, entre outras funções de controle.</p>
+                        <p>A <strong>Potência Elétrica ($P$)</strong> é a grandeza que mede a rapidez com que a energia é consumida ou gerada. Um aparelho de 100W consome 100 Joules de energia por segundo.</p>
+                        <p>Combinando a Lei de Ohm ($U=R \cdot i$) com a definição básica de potência ($P=U \cdot i$), obtemos as três equações fundamentais para a potência em um resistor:</p>
+                        <p style="text-align: center; font-size: 1.5rem; margin: 20px 0;">$ P = U \cdot i \quad | \quad P = R \cdot i^2 \quad | \quad P = \frac{U^2}{R} $</p>
+                    </div>
+                    
+                    <div class="detailed-section">
+                        <h4>Raciocínio Sequencial: Calculando Potência</h4>
+                        <p><strong>Problema:</strong> Um chuveiro elétrico tem uma resistência de 10$\Omega$ e é ligado em uma tomada de 220V. Qual a corrente que o atravessa e qual a sua potência?</p>
+                        <ol>
+                            <li><strong>Identifique os dados:</strong> $R = 10\Omega$, $U = 220V$.</li>
+                            <li><strong>Calcule a Corrente (i):</strong> Usando a Lei de Ohm, $i = U / R = 220V / 10\Omega = 22A$.</li>
+                            <li><strong>Calcule a Potência (P):</strong> Podemos usar qualquer uma das três fórmulas.
+                                <ul>
+                                    <li>Usando $P = U \cdot i$: $P = 220V \cdot 22A = 4840W$.</li>
+                                    <li>Usando $P = U^2 / R$: $P = (220V)^2 / 10\Omega = 48400 / 10 = 4840W$.</li>
+                                </ul>
+                            </li>
+                            <li><strong>Conclusão:</strong> O chuveiro consome 4840 Watts de potência, uma corrente alta de 22 Ampères, o que exige uma fiação adequada para evitar superaquecimento.</li>
+                        </ol>
+                    </div>
+
+                    <div class="detailed-section">
+                        <h4>Tabela de Potência: Eletrodomésticos Comuns</h4>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Aparelho</th>
+                                    <th>Potência Média (Watts)</th>
+                                    <th>Principal Conversão de Energia</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Chuveiro Elétrico</td>
+                                    <td>3000 - 7000 W</td>
+                                    <td>Calor (Efeito Joule)</td>
+                                </tr>
+                                <tr>
+                                    <td>Lâmpada LED</td>
+                                    <td>5 - 15 W</td>
+                                    <td>Luz</td>
+                                </tr>
+                                 <tr>
+                                    <td>Lâmpada Incandescente (antiga)</td>
+                                    <td>60 - 100 W</td>
+                                    <td>Calor (95%) e Luz (5%)</td>
+                                </tr>
+                                <tr>
+                                    <td>Ar Condicionado</td>
+                                    <td>1000 - 2500 W</td>
+                                    <td>Trabalho (motor) e Troca de Calor</td>
+                                </tr>
+                                <tr>
+                                    <td>Carregador de Celular</td>
+                                    <td>5 - 25 W</td>
+                                    <td>Energia Química (carregando bateria)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="tip-box">
+                        <strong>Dica de Mestre: Energia vs. Potência</strong>
+                        <p>Não confunda os dois! <strong>Potência</strong> (em Watts) é a taxa de consumo. <strong>Energia</strong> (em quilowatt-hora, kWh) é a potência multiplicada pelo tempo de uso. É a energia que você paga na sua conta de luz. Para calcular, use: $E = P(kW) \cdot \Delta t(h)$.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SEÇÃO 5: CIRCUITOS ELÉTRICOS -->
+            <section id="circuitos">
+                <div class="section-header">
+                    <h2>Análise de Circuitos</h2>
+                    <p>A união de geradores, receptores e resistores. As leis que nos permitem decifrar o comportamento de redes elétricas complexas.</p>
+                </div>
+                 <div class="content-grid">
+                    <div class="card">
+                        <h3>Lei de Pouillet</h3>
+                        <p>Para circuitos de malha única, a corrente é a razão entre a f.e.m. líquida e a resistência total do circuito.</p>
+                    </div>
+                    <div class="card">
+                        <h3>Leis de Kirchhoff</h3>
+                        <p>A Lei dos Nós (corrente) e a Lei das Malhas (tensão) são as ferramentas universais para a análise de qualquer circuito complexo.</p>
+                    </div>
+                    <div class="card">
+                        <h3>Associação de Componentes</h3>
+                        <p>Geradores e resistores podem ser associados em série ou paralelo para obter valores equivalentes, simplificando a análise.</p>
+                    </div>
+                </div>
+                <button class="btn-expand" data-target="circuitos-expand">
+                    Desvendar as Leis
+                    <i class="material-icons">expand_more</i>
+                </button>
+                <div id="circuitos-expand" class="expanded-content">
+                    <div class="detailed-section">
+                        <h4>Lei de Pouillet: A Via Rápida para Circuitos Simples</h4>
+                        <p>Para um circuito com uma única malha contendo geradores, receptores e resistores, a corrente total ($i$) é dada por uma fórmula elegante:</p>
+                        <p style="text-align: center; font-size: 1.5rem; margin: 20px 0;">$ i = \frac{\sum \varepsilon - \sum \varepsilon'}{\sum R_{ext} + \sum r + \sum r'} $</p>
+                        <p>Em palavras: a corrente é a força eletromotriz líquida (total dos geradores menos total dos receptores) dividida pela resistência total absoluta do circuito.</p>
+                    </div>
+
+                    <div class="detailed-section">
+                        <h4>Leis de Kirchhoff: A Ferramenta Universal</h4>
+                        <p>Quando um circuito tem múltiplos ramos ("nós") e malhas, a Lei de Pouillet não se aplica. Precisamos das duas leis de Gustav Kirchhoff.</p>
+                        
+                        <h5>1ª Lei de Kirchhoff (Lei dos Nós - LKC)</h5>
+                        <p><strong>Princípio:</strong> Conservação da carga elétrica. A soma das correntes que chegam a um nó é igual à soma das correntes que saem desse nó. $ \sum i_{chega} = \sum i_{sai} $</p>
+
+                        <h5>2ª Lei de Kirchhoff (Lei das Malhas - LKT)</h5>
+                        <p><strong>Princípio:</strong> Conservação da energia. Percorrendo qualquer malha (caminho fechado), a soma algébrica das variações de potencial (tensões) é igual a zero. $ \sum \Delta V = 0 $</p>
+                    </div>
+                    
+                    <div class="detailed-section">
+                        <h4>Raciocínio Sequencial: Aplicando as Leis de Kirchhoff</h4>
+                        <p><strong>Problema:</strong> Resolver um circuito com duas malhas e três ramos.</p>
+                        <ol>
+                            <li><strong>Atribua Correntes:</strong> Escolha um sentido arbitrário para as correntes em cada ramo (ex: $i_1, i_2, i_3$).</li>
+                            <li><strong>Aplique a Lei dos Nós (LKC):</strong> Escolha um nó e escreva a equação. Ex: $i_1 = i_2 + i_3$.</li>
+                            <li><strong>Aplique a Lei das Malhas (LKT):</strong> Percorra cada malha, somando as tensões (ganhos em geradores, quedas em resistores e receptores). Isso gerará uma equação para cada malha.</li>
+                            <li><strong>Resolva o Sistema de Equações:</strong> Resolva o sistema de equações lineares para encontrar os valores de $i_1, i_2, i_3$.</li>
+                        </ol>
+                    </div>
+
+                    <div class="tip-box">
+                        <strong>Dica de Mestre: Ponte de Wheatstone</strong>
+                        <p>Um arranjo específico de quatro resistores. Se a ponte estiver em equilíbrio ($R_1 \cdot R_3 = R_2 \cdot R_4$), a corrente no galvanômetro central é nula. Útil para medir resistências desconhecidas com precisão.</p>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- SEÇÃO 6: FERRAMENTAS INTERATIVAS -->
+            <section id="interativo">
+                <div class="section-header">
+                    <h2>Ferramentas de Análise</h2>
+                    <p>Solidifique seu conhecimento com ferramentas interativas. Calcule e visualize os conceitos aprendidos.</p>
+                </div>
+                
+                <div class="interactive-tool">
+                    <h4>Calculadora de Potência e Lei de Ohm</h4>
+                    <p>Insira dois valores quaisquer (Tensão, Corrente ou Resistência) para descobrir o terceiro e a Potência dissipada.</p>
+                    <form id="ohm-power-calculator" style="margin-top: 30px;">
+                        <div class="content-grid">
+                            <div class="form-group">
+                                <label for="calc-voltage">Tensão (U) [Volts]</label>
+                                <input type="number" id="calc-voltage" step="any" placeholder="Deixe em branco para calcular">
+                            </div>
+                            <div class="form-group">
+                                <label for="calc-current">Corrente (i) [Amps]</label>
+                                <input type="number" id="calc-current" step="any" placeholder="Deixe em branco para calcular">
+                            </div>
+                            <div class="form-group">
+                                <label for="calc-resistance">Resistência (R) [Ohms]</label>
+                                <input type="number" id="calc-resistance" step="any" placeholder="Deixe em branco para calcular">
+                            </div>
+                        </div>
+                        <div class="result-box">
+                            <p>Potência Elétrica (P)</p>
+                            <span id="power-result">- W -</span>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="interactive-tool">
+                    <h4>Calculadora da Lei de Pouillet</h4>
+                    <p>Insira os valores para um circuito de malha única e calcule a corrente resultante instantaneamente.</p>
+                    <form id="pouillet-calculator" style="margin-top: 30px;">
+                        <div class="content-grid">
+                            <div class="form-group">
+                                <label for="fem-total">Soma das F.E.M. ($\sum \varepsilon$) [Volts]</label>
+                                <input type="number" id="fem-total" step="0.1" placeholder="Ex: 12" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="fcem-total">Soma das F.C.E.M. ($\sum \varepsilon'$) [Volts]</label>
+                                <input type="number" id="fcem-total" step="0.1" placeholder="Ex: 3" value="0" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="res-total">Resistência Total ($\sum R_{eq}$) [Ohms]</label>
+                                <input type="number" id="res-total" step="0.1" placeholder="Ex: 6" required>
+                            </div>
+                        </div>
+                        <div class="result-box">
+                            <p>Corrente do Circuito (i)</p>
+                            <span id="current-result">- A -</span>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <!-- RODAPÉ -->
+            <footer>
+                <p>Página educacional desenvolvida como uma ferramenta de aprendizado. Design e conteúdo por L2.</p>
+            </footer>
+
+        </main>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        
+        // --- LÓGICA DE EXPANSÃO DE CONTEÚDO ---
+        const expandButtons = document.querySelectorAll('.btn-expand');
+        expandButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const targetId = button.dataset.target;
+                const content = document.getElementById(targetId);
+                
+                button.classList.toggle('active');
+                content.classList.toggle('expanded');
+            });
+        });
+
+        // --- LÓGICA DE NAVEGAÇÃO ATIVA COM INTERSECTION OBSERVER ---
+        const sections = document.querySelectorAll('section');
+        const navLinks = document.querySelectorAll('#nav-menu ul li a');
+
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.5
+        };
+
+        const sectionObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const targetId = entry.target.getAttribute('id');
+                    navLinks.forEach(link => {
+                        link.classList.remove('active');
+                        if (link.getAttribute('href') === `#${targetId}`) {
+                            link.classList.add('active');
+                        }
+                    });
+                }
+            });
+        }, observerOptions);
+
+        sections.forEach(section => {
+            sectionObserver.observe(section);
+        });
+        
+        // --- LÓGICA DE MENU DINÂMICO NO MOBILE ---
+        const navMenu = document.getElementById('nav-menu');
+        let lastScrollY = window.scrollY;
+
+        window.addEventListener('scroll', () => {
+            if (window.innerWidth <= 1024) {
+                if (lastScrollY < window.scrollY && window.scrollY > 100) {
+                    navMenu.classList.add('nav-hidden');
+                } else {
+                    navMenu.classList.remove('nav-hidden');
+                }
+                lastScrollY = window.scrollY;
+            }
+        });
+
+        // --- LÓGICA DA CALCULADORA DA LEI DE POUILLET ---
+        const pouilletForm = document.getElementById('pouillet-calculator');
+        const femInput = document.getElementById('fem-total');
+        const fcemInput = document.getElementById('fcem-total');
+        const resTotalInput = document.getElementById('res-total');
+        const currentResultDisplay = document.getElementById('current-result');
+
+        function calculatePouilletCurrent() {
+            const fem = parseFloat(femInput.value) || 0;
+            const fcem = parseFloat(fcemInput.value) || 0;
+            const res = parseFloat(resTotalInput.value) || 0;
+
+            if (res <= 0) {
+                currentResultDisplay.textContent = 'Resistência deve ser > 0';
+                return;
+            }
+            
+            if (fem < fcem) {
+                currentResultDisplay.textContent = '$\sum \varepsilon \ge \sum \varepsilon\'$';
+                MathJax.typeset();
+                return;
+            }
+
+            const current = (fem - fcem) / res;
+            currentResultDisplay.textContent = `${current.toFixed(3)} A`;
+        }
+
+        pouilletForm.addEventListener('input', calculatePouilletCurrent);
+        pouilletForm.addEventListener('submit', (e) => e.preventDefault());
+
+        // --- LÓGICA DA CALCULADORA DE POTÊNCIA E LEI DE OHM ---
+        const ohmPowerForm = document.getElementById('ohm-power-calculator');
+        const voltageInput = document.getElementById('calc-voltage');
+        const currentInput = document.getElementById('calc-current');
+        const resistanceInput = document.getElementById('calc-resistance');
+        const powerResultDisplay = document.getElementById('power-result');
+
+        function calculateOhmPower() {
+            const U = parseFloat(voltageInput.value);
+            const I = parseFloat(currentInput.value);
+            const R = parseFloat(resistanceInput.value);
+
+            let filledCount = [U, I, R].filter(v => !isNaN(v)).length;
+            if (filledCount !== 2) {
+                powerResultDisplay.textContent = '- W -';
+                return;
+            }
+
+            let newU = U, newI = I, newR = R, P = NaN;
+
+            if (isNaN(R)) { // Calcula R
+                if (I === 0) { powerResultDisplay.textContent = 'Erro: Div/0'; return; }
+                newR = U / I;
+                resistanceInput.value = newR.toFixed(3);
+            } else if (isNaN(I)) { // Calcula I
+                if (R === 0) { powerResultDisplay.textContent = 'Erro: Div/0'; return; }
+                newI = U / R;
+                currentInput.value = newI.toFixed(3);
+            } else if (isNaN(U)) { // Calcula U
+                newU = I * R;
+                voltageInput.value = newU.toFixed(3);
+            }
+
+            P = newU * newI;
+            powerResultDisplay.textContent = `${P.toFixed(3)} W`;
+        }
+        
+        ohmPowerForm.addEventListener('input', calculateOhmPower);
+        ohmPowerForm.addEventListener('submit', (e) => e.preventDefault());
+    });
+    </script>
+
+</body>
+</html>

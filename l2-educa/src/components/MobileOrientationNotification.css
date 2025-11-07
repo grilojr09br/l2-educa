@@ -1,0 +1,406 @@
+/* Mobile Orientation Notification - Acid Liquid Glass Design */
+.mobile-orientation-notification {
+  position: fixed;
+  top: 95px;
+  left: 0;
+  right: 0;
+  z-index: 10000;
+  width: 92%;
+  max-width: 480px;
+  margin: 0 auto;
+  animation: slideDown 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), 
+             slideUpAndShrink 0.6s ease-in-out 5.4s;
+  animation-fill-mode: forwards;
+}
+
+/* Acid Glass Container - High transparency with distortion */
+.notification-glass-container {
+  position: relative;
+  background: rgba(20, 20, 35, 0.35); /* Slightly more opaque for better visibility */
+  backdrop-filter: blur(24px) saturate(200%) contrast(120%);
+  -webkit-backdrop-filter: blur(24px) saturate(200%) contrast(120%);
+  border-radius: 18px;
+  padding: 16px 20px;
+  overflow: hidden;
+  will-change: transform, opacity, max-height;
+  transition: max-height 0.3s ease-out;
+  
+  /* Enhanced acid glass border effect with glow */
+  border: 1.5px solid rgba(168, 85, 247, 0.3);
+  box-shadow: 
+    0 8px 32px rgba(99, 102, 241, 0.4),
+    0 0 0 1px rgba(168, 85, 247, 0.2) inset,
+    0 20px 60px rgba(0, 0, 0, 0.6),
+    0 0 40px rgba(168, 85, 247, 0.2);
+}
+
+/* Animated circles for acid liquid effect */
+.glass-circle {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(40px);
+  opacity: 0.6;
+  animation: float 8s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.glass-circle.circle-1 {
+  width: 120px;
+  height: 120px;
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.8), transparent);
+  top: -40px;
+  left: -30px;
+  animation-delay: 0s;
+}
+
+.glass-circle.circle-2 {
+  width: 100px;
+  height: 100px;
+  background: radial-gradient(circle, rgba(168, 85, 247, 0.9), transparent);
+  top: -30px;
+  right: 0px;
+  animation-delay: 1s;
+}
+
+.glass-circle.circle-3 {
+  width: 110px;
+  height: 110px;
+  background: radial-gradient(circle, rgba(217, 70, 239, 0.8), transparent);
+  bottom: -40px;
+  left: 35%;
+  animation-delay: 2s;
+}
+
+.glass-circle.circle-4 {
+  width: 90px;
+  height: 90px;
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.7), transparent);
+  bottom: -30px;
+  right: -20px;
+  animation-delay: 1.5s;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  33% {
+    transform: translate(10px, -10px) scale(1.1);
+  }
+  66% {
+    transform: translate(-10px, 10px) scale(0.9);
+  }
+}
+
+/* Content island - opaque for legibility (Acid Glass Layer 3) */
+.notification-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  /* High contrast opaque island */
+  background: linear-gradient(
+    135deg,
+    rgba(30, 30, 45, 0.95) 0%,
+    rgba(20, 20, 35, 0.98) 100%
+  );
+  padding: 12px 16px;
+  border-radius: 12px;
+  border: 1.5px solid rgba(168, 85, 247, 0.4);
+  box-shadow: 
+    0 4px 20px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* Animated rotation icon */
+.rotation-icon-wrapper {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.3), rgba(168, 85, 247, 0.3));
+  border-radius: 50%;
+  border: 2px solid rgba(168, 85, 247, 0.5);
+  box-shadow: 
+    0 0 20px rgba(168, 85, 247, 0.4),
+    inset 0 1px 2px rgba(255, 255, 255, 0.2);
+}
+
+.rotation-icon {
+  width: 32px;
+  height: 32px;
+  color: #fff;
+  animation: rotatePhone 2s ease-in-out infinite;
+}
+
+.phone-outline {
+  transform-origin: center;
+  animation: phoneRotate 2s ease-in-out infinite;
+}
+
+.rotation-arrow {
+  opacity: 0.8;
+  animation: arrowPulse 2s ease-in-out infinite;
+}
+
+.rotation-curve {
+  stroke-dasharray: 20;
+  stroke-dashoffset: 20;
+  animation: drawCurve 2s ease-in-out infinite;
+}
+
+@keyframes rotatePhone {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(-15deg);
+  }
+  50% {
+    transform: rotate(90deg);
+  }
+  75% {
+    transform: rotate(75deg);
+  }
+}
+
+@keyframes phoneRotate {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(90deg);
+  }
+}
+
+@keyframes arrowPulse {
+  0%, 100% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes drawCurve {
+  0% {
+    stroke-dashoffset: 20;
+    opacity: 0.3;
+  }
+  50% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  100% {
+    stroke-dashoffset: -20;
+    opacity: 0.3;
+  }
+}
+
+/* Text content */
+.notification-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.notification-title {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  text-shadow: 
+    0 0 10px rgba(168, 85, 247, 0.5),
+    0 2px 8px rgba(0, 0, 0, 0.8),
+    0 0 20px rgba(168, 85, 247, 0.3);
+  background: linear-gradient(135deg, #fff 0%, #e0d0ff 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.5));
+}
+
+.notification-message {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.4;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.95);
+  text-shadow: 
+    0 1px 3px rgba(0, 0, 0, 0.8),
+    0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+/* Entry and exit animations */
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-40px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Exit animation - slides up and shrinks behind menu */
+@keyframes slideUpAndShrink {
+  0% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    max-height: 200px;
+  }
+  30% {
+    opacity: 0.8;
+    transform: translateY(-10px) scale(0.98);
+  }
+  60% {
+    opacity: 0.5;
+    transform: translateY(-50px) scale(0.85);
+    max-height: 100px;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-100px) scale(0.7);
+    max-height: 0;
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .mobile-orientation-notification {
+    width: 95%;
+    top: 85px;
+  }
+  
+  .notification-glass-container {
+    padding: 14px 16px;
+  }
+  
+  .notification-content {
+    gap: 12px;
+    padding: 10px 14px;
+  }
+  
+  .rotation-icon-wrapper {
+    width: 42px;
+    height: 42px;
+  }
+  
+  .rotation-icon {
+    width: 28px;
+    height: 28px;
+  }
+  
+  .notification-title {
+    font-size: 14px;
+  }
+  
+  .notification-message {
+    font-size: 12px;
+  }
+  
+  .glass-circle {
+    filter: blur(30px);
+  }
+  
+  @keyframes slideUpAndShrink {
+    0% {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      max-height: 200px;
+    }
+    30% {
+      opacity: 0.8;
+      transform: translateY(-8px) scale(0.98);
+    }
+    60% {
+      opacity: 0.5;
+      transform: translateY(-45px) scale(0.85);
+      max-height: 80px;
+    }
+    100% {
+      opacity: 0;
+      transform: translateY(-90px) scale(0.7);
+      max-height: 0;
+    }
+  }
+}
+
+/* Extra small screens */
+@media (max-width: 380px) {
+  .mobile-orientation-notification {
+    width: 96%;
+    top: 80px;
+  }
+  
+  .notification-glass-container {
+    padding: 12px 14px;
+  }
+  
+  .notification-content {
+    gap: 10px;
+    padding: 8px 12px;
+  }
+  
+  .rotation-icon-wrapper {
+    width: 38px;
+    height: 38px;
+  }
+  
+  .rotation-icon {
+    width: 24px;
+    height: 24px;
+  }
+  
+  .notification-title {
+    font-size: 13px;
+  }
+  
+  .notification-message {
+    font-size: 11px;
+  }
+  
+  @keyframes slideUpAndShrink {
+    0% {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      max-height: 180px;
+    }
+    30% {
+      opacity: 0.8;
+      transform: translateY(-6px) scale(0.98);
+    }
+    60% {
+      opacity: 0.5;
+      transform: translateY(-40px) scale(0.85);
+      max-height: 70px;
+    }
+    100% {
+      opacity: 0;
+      transform: translateY(-80px) scale(0.7);
+      max-height: 0;
+    }
+  }
+  
+  /* Optimize for very small screens - reduce blur and circles */
+  .glass-circle {
+    filter: blur(30px); /* Reduced from 40px for better performance */
+  }
+  
+  /* Hide circles 3 and 4 on very small screens to reduce GPU load */
+  .glass-circle.circle-3,
+  .glass-circle.circle-4 {
+    display: none;
+  }
+}
+

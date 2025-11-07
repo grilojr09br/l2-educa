@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="no-js">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>História do Brasil: Dos Povos Originários à Crise do Açúcar</title>
+    
+    <!-- Google Fonts: Poppins para texto e Source Code Pro para código -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
+
+    <!-- Google Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <!-- Habilita modo js (fallback iOS/WhatsApp) -->
+    <script>(function(d){var c=d.documentElement;c.className=c.className.replace('no-js','js');})(document);</script>
+
+    <style>
+        /* 1. RESET E CONFIGURAÇÕES GLOBAIS (V8) */
+        :root {
+            --primary-color: #E0E7FF;
+            --secondary-color: #C7D2FE;
+            --accent-color: #818CF8;
+            --text-color: #F9FAFB;
+            --bg-color: #111827;
+            --card-bg: rgba(31, 41, 55, 0.25);
+            --border-color: rgba(129, 140, 248, 0.2);
+            --font-main: 'Poppins', sans-serif;
+            --font-code: 'Source Code Pro', monospace;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: var(--font-main);
+            line-height: 1.8;
+            overflow-x: hidden;
+        }
+
+        /* 2. ESTÉTICA "AURORA LÍQUIDA" APRIMORADA (V8) */
+        .aurora-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .aurora-shape {
+            position: absolute;
+            border-radius: 50%;
+            filter: url(#liquid-glass) blur(160px);
+            opacity: 0.6;
+            mix-blend-mode: screen;
+        }
+
+        .shape1 { width: 500px; height: 500px; background: #3B82F6; top: -150px; left: -150px; animation: move-aurora 25s infinite alternate ease-in-out; }
+        .shape2 { width: 420px; height: 420px; background: #8B5CF6; bottom: -120px; right: -120px; animation: move-aurora 30s infinite alternate-reverse ease-in-out; }
+        .shape3 { width: 360px; height: 360px; background: #10B981; top: 50%; left: 50%; transform: translate(-50%, -50%); animation: move-aurora 22s infinite ease-in-out; }
+        .shape4 { width: 600px; height: 600px; background: #F59E0B; top: 20%; left: -220px; animation: move-aurora 28s infinite alternate ease-in-out; opacity: 0.35; }
+        .shape5 { width: 460px; height: 460px; background: #EF4444; bottom: 8%; right: 8%; animation: move-aurora 32s infinite alternate-reverse ease-in-out; opacity: 0.3; }
+
+        @keyframes move-aurora {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(100px, 50px) scale(1.2); }
+            100% { transform: translate(-50px, -100px) scale(1); }
+        }
+
+        /* Efeito de grão/realce sutil no plano de fundo (suave) */
+        body::before {
+            content: "";
+            position: fixed; inset: 0;
+            pointer-events: none;
+            background:
+              radial-gradient(1200px 500px at 10% -10%, rgba(255, 255, 255, 0.06), transparent 40%),
+              radial-gradient(1200px 500px at 110% 110%, rgba(129, 140, 248, 0.05), transparent 40%);
+            mix-blend-mode: soft-light;
+            opacity: 0.6;
+            z-index: -1;
+        }
+
+        /* 3. TELA DE CARREGAMENTO (PRELÚDIO) */
+        html.no-js .loading-overlay { display: none !important; }
+        .loading-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: var(--bg-color);
+            display: none; flex-direction: column; justify-content: center; align-items: center;
+            z-index: 1000; transition: opacity 0.8s ease-out;
+        }
+        .loading-logo { font-size: clamp(2rem, 8vw, 4rem); font-weight: 700; color: var(--primary-color); margin-bottom: 2rem; }
+        .loading-logo span { opacity: 0; animation: letter-fade-in 0.5s forwards; }
+        @keyframes letter-fade-in { to { opacity: 1; } }
+        .progress-bar-container { width: 250px; height: 4px; background-color: rgba(255, 255, 255, 0.1); border-radius: 2px; overflow: hidden; }
+        .progress-bar { width: 0; height: 100%; background: linear-gradient(90deg, var(--secondary-color), var(--accent-color)); border-radius: 2px; animation: fill-progress 2s ease-out forwards; }
+        @keyframes fill-progress { to { width: 100%; } }
+        .loading-overlay.hidden { opacity: 0; pointer-events: none; }
+
+        /* 4. NAVEGAÇÃO DINÂMICA (V8) */
+        .main-nav {
+            position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+            background: var(--card-bg);
+            backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--border-color); border-radius: 50px;
+            padding: 0.5rem; z-index: 500; display: flex;
+            justify-content: center; align-items: center;
+            overflow-x: auto; white-space: nowrap;
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        .main-nav ul { list-style: none; display: flex; align-items: center; gap: 0.25rem; flex-wrap: nowrap; }
+        .main-nav a { display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem; color: var(--primary-color); text-decoration: none; border-radius: 30px; transition: background-color 0.3s ease, color 0.3s ease; position: relative; overflow: hidden; }
+        .main-nav .nav-text { font-weight: 500; font-size: 0.9rem; white-space: nowrap; max-width: 0; opacity: 0; transition: max-width 0.4s ease-out, opacity 0.2s ease-out; }
+        .main-nav a:hover, .main-nav a.active { background-color: var(--primary-color); color: var(--bg-color); }
+        
+        @media (min-width: 1024px) {
+            .main-nav:hover .nav-text { max-width: 150px; opacity: 1; margin-left: 0.25rem; }
+            .main-nav:hover a { padding: 0.75rem 1rem; }
+        }
+        @media (max-width: 1023px) {
+            .main-nav { display: none; }
+            .main-nav.nav-visible { display: none; }
+            .main-nav .nav-text { display: none; }
+        }
+
+        /* 5. LAYOUT E CONTEÚDO */
+        main { opacity: 1; transition: opacity 0.8s ease-in; }
+        html.js main { opacity: 0; }
+        html.js main.loaded { opacity: 1; }
+        .topic-section { min-height: 100vh; width: 100%; padding: 120px 5% 60px; display: flex; flex-direction: column; justify-content: center; align-items: center; position: relative; }
+        .section-container { max-width: 960px; width: 100%; margin: 0 auto; }
+        .glass-card { background: linear-gradient(180deg, rgba(31,41,55,0.45), rgba(31,41,55,0.25)); border: 1px solid rgba(129,140,248,0.25); border-radius: 16px; box-shadow: 0 10px 40px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.05); backdrop-filter: blur(14px) saturate(1.15); -webkit-backdrop-filter: blur(14px) saturate(1.15); padding: 2rem; position: relative; overflow: hidden; }
+        .glass-card::before { content: ""; position: absolute; inset: 0; background: radial-gradient(600px 200px at -10% -20%, rgba(255,255,255,0.12), transparent 45%), radial-gradient(400px 150px at 110% 120%, rgba(129,140,248,0.17), transparent 45%); pointer-events: none; mix-blend-mode: overlay; }
+        
+        h1, h2, h3 { font-weight: 600; letter-spacing: -0.5px; margin-bottom: 1rem; text-shadow: 0 0 15px rgba(0,0,0,0.3); }
+        .section-title { font-size: clamp(2.5rem, 6vw, 4rem); text-align: center; color: var(--primary-color); line-height: 1.1; }
+        .section-intro { font-size: clamp(1rem, 2.5vw, 1.25rem); max-width: 750px; text-align: center; margin: 1rem auto 3rem; color: var(--secondary-color); font-weight: 300; }
+        .subsection-title { font-size: clamp(1.8rem, 4vw, 2.5rem); color: var(--primary-color); margin-top: 3rem; margin-bottom: 1.5rem; border-left: 4px solid var(--accent-color); padding-left: 1rem; }
+        p { margin-bottom: 1.5rem; font-size: clamp(1rem, 2vw, 1.1rem); text-align: justify; }
+        strong { color: var(--secondary-color); font-weight: 600; }
+        blockquote {
+            background: var(--card-bg); border-left: 4px solid var(--accent-color);
+            margin: 2rem 0; padding: 1.5rem; border-radius: 0 8px 8px 0;
+            font-style: italic; color: var(--secondary-color);
+        }
+        blockquote footer { font-style: normal; text-align: right; margin-top: 1rem; font-size: 0.9rem; color: var(--primary-color); }
+
+        /* Elementos de apoio visual/conteúdo */
+        .info-grid { display: grid; grid-template-columns: 1fr; gap: 1rem; }
+        @media (min-width: 768px) { .info-grid { grid-template-columns: repeat(2, 1fr); } }
+        .pill { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.35rem 0.75rem; background: rgba(129,140,248,0.12); color: var(--primary-color); border: 1px solid rgba(129,140,248,0.25); border-radius: 999px; font-size: 0.85rem; margin: 0.25rem 0.35rem 0.25rem 0; }
+        .note { background: rgba(16,185,129,0.12); border-left: 4px solid #10B981; padding: 1rem; border-radius: 8px; color: #D1FAE5; }
+        .warn { background: rgba(239,68,68,0.12); border-left: 4px solid #EF4444; padding: 1rem; border-radius: 8px; color: #FECACA; }
+
+        /* Linha do tempo */
+        .timeline { position: relative; padding-left: 1.25rem; margin: 2rem 0; }
+        .timeline::before { content: ""; position: absolute; left: 0.4rem; top: 0; bottom: 0; width: 2px; background: linear-gradient(180deg, rgba(129,140,248,0.4), rgba(129,140,248,0.1)); }
+        .timeline-item { position: relative; margin: 1rem 0 1.5rem; }
+        .timeline-item::before { content: ""; position: absolute; left: -0.15rem; top: 0.35rem; width: 10px; height: 10px; background: var(--accent-color); border-radius: 50%; box-shadow: 0 0 12px rgba(129,140,248,0.8); }
+        .timeline-year { display: inline-block; font-weight: 600; color: var(--primary-color); margin-bottom: 0.25rem; }
+
+        /* Acessibilidade: reduzir movimento */
+        @media (prefers-reduced-motion: reduce) {
+            .aurora-shape, .loading-logo span, .progress-bar, .main-nav a, .reveal { animation: none !important; transition: none !important; }
+        }
+
+        /* 6. ANIMAÇÕES E RODAPÉ */
+        .reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.8s ease-out, transform 0.8s ease-out; }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+        html.no-js .reveal { opacity: 1; transform: none; }
+        footer { text-align: center; padding: 2rem; font-size: 0.9rem; color: var(--secondary-color); background-color: rgba(0,0,0,0.2); }
+
+        /* === MENU MOBILE (BOTTOM SHEET) === */
+        .mobile-menu { position: fixed; left: 0; right: 0; bottom: 0; z-index: 700; pointer-events: none; display: none; }
+        .mobile-menu__overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.35); backdrop-filter: blur(2px); opacity: 0; transition: opacity 0.25s ease; pointer-events: none; }
+        .mobile-menu__sheet { position: fixed; left: 0; right: 0; bottom: 0; background: var(--card-bg); border-top: 1px solid var(--border-color); border-radius: 18px 18px 0 0; box-shadow: 0 -10px 30px rgba(0,0,0,0.45); transform: translateY(100%); transition: transform 0.35s ease; max-height: 70vh; overflow-y: auto; backdrop-filter: blur(16px) saturate(1.1); -webkit-backdrop-filter: blur(16px) saturate(1.1); pointer-events: auto; }
+        .mobile-menu__handle { position: fixed; bottom: 14px; left: 50%; transform: translateX(-50%); background: linear-gradient(180deg, rgba(31,41,55,0.7), rgba(31,41,55,0.45)); color: var(--primary-color); border: 1px solid var(--border-color); border-radius: 999px; padding: 0.35rem 0.9rem; display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; box-shadow: 0 6px 18px rgba(0,0,0,0.4); pointer-events: auto; }
+        .mobile-menu__handle-dot { width: 28px; height: 4px; background: rgba(255,255,255,0.4); border-radius: 999px; display: inline-block; margin-right: 0.35rem; }
+        .mobile-nav { padding: 1rem 1rem 1.25rem; }
+        .mobile-nav ul { list-style: none; margin: 0; padding: 0; }
+        .mobile-nav li { opacity: 0; transform: translateY(8px); transition: opacity 0.25s ease, transform 0.25s ease; }
+        .mobile-nav a { display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 0.9rem; margin: 0.25rem 0; border-radius: 12px; color: var(--primary-color); text-decoration: none; background: rgba(129,140,248,0.08); border: 1px solid rgba(129,140,248,0.2); }
+        .mobile-nav a .material-icons { font-size: 20px; }
+        .mobile-nav a.active { background: var(--primary-color); color: var(--bg-color); }
+        .mobile-menu.open { pointer-events: auto; }
+        .mobile-menu.open .mobile-menu__sheet { transform: translateY(0%); }
+        .mobile-menu.open .mobile-menu__overlay { opacity: 1; pointer-events: auto; }
+        .mobile-menu.open .mobile-nav li { opacity: 1; transform: translateY(0); }
+        .mobile-menu.open .mobile-nav li:nth-child(1) { transition-delay: 0.05s; }
+        .mobile-menu.open .mobile-nav li:nth-child(2) { transition-delay: 0.08s; }
+        .mobile-menu.open .mobile-nav li:nth-child(3) { transition-delay: 0.11s; }
+        .mobile-menu.open .mobile-nav li:nth-child(4) { transition-delay: 0.14s; }
+        .mobile-menu.open .mobile-nav li:nth-child(5) { transition-delay: 0.17s; }
+        .mobile-menu.open .mobile-nav li:nth-child(6) { transition-delay: 0.20s; }
+        .mobile-menu.open .mobile-nav li:nth-child(7) { transition-delay: 0.23s; }
+        .mobile-menu.open .mobile-nav li:nth-child(8) { transition-delay: 0.26s; }
+        .mobile-menu.open .mobile-nav li:nth-child(9) { transition-delay: 0.29s; }
+        .mobile-menu.open .mobile-nav li:nth-child(10) { transition-delay: 0.32s; }
+        .mobile-menu.open .mobile-nav li:nth-child(11) { transition-delay: 0.35s; }
+        .mobile-menu.open .mobile-nav li:nth-child(12) { transition-delay: 0.38s; }
+
+        @media (max-width: 1023px) {
+            .mobile-menu { display: block; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="aurora-background">
+        <div class="aurora-shape shape1"></div>
+        <div class="aurora-shape shape2"></div>
+        <div class="aurora-shape shape3"></div>
+        <div class="aurora-shape shape4"></div>
+        <div class="aurora-shape shape5"></div>
+    </div>
+
+    <!-- Filtro SVG para distorção sutil "liquid glass" -->
+    <svg width="0" height="0" style="position:absolute">
+        <filter id="liquid-glass">
+            <feTurbulence type="fractalNoise" baseFrequency="0.003 0.003" numOctaves="2" seed="8" result="noise" />
+            <feDisplacementMap in="SourceGraphic" in2="noise" scale="20" xChannelSelector="R" yChannelSelector="G" />
+        </filter>
+    </svg>
+
+    <div class="loading-overlay">
+        <div class="loading-logo">
+            <span>L</span><span>2</span><span> </span><span>E</span><span>D</span><span>U</span><span>C</span><span>A</span>
+        </div>
+        <div class="progress-bar-container"><div class="progress-bar"></div></div>
+    </div>
+
+    <nav class="main-nav" aria-label="Navegação principal">
+        <ul>
+            <li><a href="#brasil-pre-colonial" class="nav-link"><i class="material-icons" aria-hidden="true">forest</i><span class="nav-text">Pré-Colonial</span></a></li>
+            <li><a href="#chegada-portuguesa" class="nav-link"><i class="material-icons" aria-hidden="true">sailing</i><span class="nav-text">Chegada</span></a></li>
+            <li><a href="#estrutura-colonial" class="nav-link"><i class="material-icons" aria-hidden="true">account_balance</i><span class="nav-text">Estrutura</span></a></li>
+            <li><a href="#jesuitas-aldeamentos" class="nav-link"><i class="material-icons" aria-hidden="true">school</i><span class="nav-text">Jesuítas</span></a></li>
+            <li><a href="#trabalho-escravidao" class="nav-link"><i class="material-icons" aria-hidden="true">work</i><span class="nav-text">Trabalho</span></a></li>
+            <li><a href="#ciclo-acucar" class="nav-link"><i class="material-icons" aria-hidden="true">agriculture</i><span class="nav-text">Açúcar</span></a></li>
+            <li><a href="#invasoes-estrangeiras" class="nav-link"><i class="material-icons" aria-hidden="true">flag</i><span class="nav-text">Invasões</span></a></li>
+            <li><a href="#economia-atlantica" class="nav-link"><i class="material-icons" aria-hidden="true">sync_alt</i><span class="nav-text">Atlântico</span></a></li>
+            <li><a href="#sociedade-colonial" class="nav-link"><i class="material-icons" aria-hidden="true">groups</i><span class="nav-text">Sociedade</span></a></li>
+            <li><a href="#cultura-barroco" class="nav-link"><i class="material-icons" aria-hidden="true">museum</i><span class="nav-text">Cultura</span></a></li>
+            <li><a href="#novos-ciclos" class="nav-link"><i class="material-icons" aria-hidden="true">emoji_events</i><span class="nav-text">Ouro</span></a></li>
+            <li><a href="#glossario-timeline" class="nav-link"><i class="material-icons" aria-hidden="true">book</i><span class="nav-text">Guia</span></a></li>
+        </ul>
+    </nav>
+    
+    <main id="main-content">
+
+        <!-- SEÇÃO 1: BRASIL PRÉ-COLONIAL -->
+        <section id="brasil-pre-colonial" class="topic-section">
+            <div class="section-container glass-card">
+                <h1 class="section-title reveal">O Brasil Antes do Brasil</h1>
+                <p class="section-intro reveal" style="transition-delay: 0.2s;">
+                    Antes de 1500, o vasto território que viria a ser o Brasil era um mosaico pulsante de culturas, línguas e povos. Milhares de anos de história humana se desdobraram aqui, em uma complexa teia de sociedades que interagiam profundamente com a terra que habitavam. Vamos mergulhar no mundo dos Tupinambás, um dos grupos mais proeminentes que os europeus encontraram.
+                </p>
+
+                <div class="reveal" style="transition-delay: 0.4s;">
+                    <h2 class="subsection-title">Os Tupinambás: Sociedade e Cotidiano</h2>
+                    <p>Os Tupinambás, pertencentes ao tronco linguístico Tupi, dominavam grande parte da costa atlântica. Sua sociedade não era organizada em um estado centralizado, mas em aldeias independentes que podiam abrigar de centenas a milhares de pessoas. Essas aldeias eram frequentemente cercadas por paliçadas para defesa, e as moradias consistiam em grandes malocas coletivas, onde viviam várias famílias aparentadas.</p>
+                    <p>A vida era regida por um profundo senso de comunidade. A terra não era uma propriedade privada, mas de uso coletivo, cultivada através da coivara, uma técnica agrícola itinerante. Mandioca, milho, feijão e amendoim formavam a base de sua alimentação, complementada pela caça, pesca e coleta de frutos. A divisão do trabalho era clara: homens eram responsáveis pela guerra, caça e derrubada da mata, enquanto as mulheres cuidavam da agricultura, da preparação dos alimentos e da educação das crianças.</p>
+                </div>
+
+                <div class="reveal">
+                    <h2 class="subsection-title">Cosmologia e Guerra</h2>
+                    <p>A espiritualidade Tupinambá permeava todos os aspectos da vida. Seus pajés eram figuras centrais, mediadores entre o mundo dos vivos e o mundo dos espíritos, responsáveis por curas e rituais. Eles acreditavam em um universo povoado por diversas entidades e heróis mitológicos que moldaram o mundo. Não havia um deus único e supremo, mas uma rica cosmologia que explicava a origem de tudo.</p>
+                    <p>A guerra era uma instituição social fundamental, mas seu propósito era distinto do conceito europeu de conquista territorial ou econômica. Era uma atividade ritual, motivada principalmente pela vingança de injúrias passadas e pela captura de inimigos. O destino do prisioneiro era o ritual antropofágico, um ato complexo e carregado de simbolismo. Longe de ser um ato de barbárie por fome, era uma forma de honrar o inimigo corajoso e absorver sua força e bravura, em um ciclo de reciprocidade e equilíbrio cósmico.</p>
+                    <blockquote>
+                        <p>"Não o comemos por ódio, nem por fome, mas sim por grande amor e para que seu valor e coragem entrem em nós."</p>
+                        <footer>— Atribuído a um chefe Tupinambá, explicando o ritual.</footer>
+                    </blockquote>
+                </div>
+            </div>
+        </section>
+        
+        <!-- SEÇÃO 2: CHEGADA PORTUGUESA E ADMINISTRAÇÃO -->
+        <section id="chegada-portuguesa" class="topic-section">
+            <div class="section-container glass-card">
+                <h1 class="section-title reveal">O Encontro de Dois Mundos</h1>
+                <p class="section-intro reveal" style="transition-delay: 0.2s;">
+                    Em 1500, a chegada da esquadra de Pedro Álvares Cabral marcou o início de uma transformação irreversível. O contato inicial, embora aparentemente pacífico, foi o prelúdio de um longo e muitas vezes violento processo de colonização que reconfiguraria para sempre as terras e os povos desta região.
+                </p>
+
+                <div class="reveal" style="transition-delay: 0.4s;">
+                    <h2 class="subsection-title">Escambo, Feitorias e Pau-Brasil</h2>
+                    <p>Nos primeiros trinta anos, o interesse de Portugal na "Terra de Vera Cruz" foi predominantemente econômico e extrativista. A Coroa, focada no lucrativo comércio de especiarias com as Índias, não estabeleceu um projeto de povoamento imediato. A principal riqueza encontrada foi o pau-brasil, uma árvore cuja madeira avermelhada era valiosa na Europa para a tinturaria de tecidos de luxo.</p>
+                    <p>A extração era feita através do <strong>escambo</strong>: os portugueses trocavam com os indígenas objetos de pouco valor para eles — como espelhos, facas, machados e tecidos — pelo trabalho de corte e transporte das toras de pau-brasil. Para armazenar a madeira e defender a costa de corsários, principalmente franceses, foram criadas as <strong>feitorias</strong>, postos comerciais fortificados ao longo do litoral. Este foi o chamado "período pré-colonial".</p>
+                </div>
+
+                <div class="reveal">
+                    <h2 class="subsection-title">Administração e a Confederação dos Tamoios</h2>
+                    <p>Com a ameaça crescente de invasões e a necessidade de ocupar efetivamente a terra, Portugal implementou em 1534 o sistema de Capitanias Hereditárias e, em 1549, o Governo-Geral. Este avanço colonizador gerou conflitos cada vez mais intensos. A escravização de indígenas para os trabalhos nas lavouras incipientes e a invasão de seus territórios provocaram forte resistência.</p>
+                    <p>A <strong>Confederação dos Tamoios</strong> (1554-1567) foi uma das mais notáveis revoltas indígenas. Liderados por chefes como Cunhambebe, os Tupinambás da região entre o litoral de São Paulo e o Rio de Janeiro se uniram em uma poderosa aliança militar. Eles se aliaram aos franceses, que haviam estabelecido uma colônia na Baía de Guanabara (a França Antártica), para lutar contra os portugueses e seus aliados indígenas, os Tupiniquins. A guerra foi brutal e longa, terminando com a vitória luso-tupiniquim, a expulsão dos franceses e um massacre que dizimou grande parte da população Tamoio.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEÇÃO 3: CICLO DO AÇÚCAR -->
+        <section id="ciclo-acucar" class="topic-section">
+            <div class="section-container glass-card">
+                <h1 class="section-title reveal">A Era do Ouro Branco</h1>
+                <p class="section-intro reveal" style="transition-delay: 0.2s;">
+                    A partir de meados do século XVI, a produção de açúcar tornou-se a espinha dorsal da economia colonial brasileira. O "ouro branco", um produto de altíssimo valor na Europa, moldou a paisagem, a sociedade e a demografia da colônia, estabelecendo um modelo de exploração que deixaria marcas profundas e duradouras.
+                </p>
+
+                <div class="reveal" style="transition-delay: 0.4s;">
+                    <h2 class="subsection-title">O Engenho: Coração da Colônia</h2>
+                    <p>O engenho de açúcar era muito mais do que uma simples fazenda; era uma complexa unidade de produção agroindustrial. Ele se baseava no tripé: <strong>latifúndio</strong> (grandes extensões de terra), <strong>monocultura</strong> (cultivo exclusivo da cana-de-açúcar) e <strong>mão de obra escravizada</strong>. O engenho incluía não apenas os canaviais, mas também a "casa-grande" (residência do senhor de engenho), a senzala (alojamento dos escravizados) e as instalações de moagem e purificação, como a moenda, as fornalhas e a casa de purgar.</p>
+                </div>
+
+                <div class="reveal">
+                    <h2 class="subsection-title">A Força de Trabalho e a Resistência Africana</h2>
+                    <p>Inicialmente, os portugueses tentaram utilizar a mão de obra indígena, mas a resistência, as doenças e a oposição jesuítica dificultaram essa prática. A solução encontrada foi o tráfico transatlântico de africanos escravizados. Milhões de homens, mulheres e crianças foram sequestrados de diversas partes da África e trazidos à força para o Brasil para trabalhar em condições desumanas nos canaviais e engenhos.</p>
+                    <p>Apesar da brutalidade do sistema, a resistência era constante e multifacetada. Ia desde a sabotagem no trabalho e a preservação de práticas culturais e religiosas (sincretismo) até as revoltas e, principalmente, as fugas. Os fugitivos se organizavam em <strong>quilombos</strong>, comunidades autônomas que se tornaram símbolos da luta por liberdade. O Quilombo dos Palmares, liderado por figuras como Ganga Zumba e Zumbi, foi o maior e mais duradouro, resistindo por quase um século.</p>
+                </div>
+                
+                <div class="reveal">
+                    <h2 class="subsection-title">A Sociedade Açucareira</h2>
+                    <p>A sociedade que se formou em torno dos engenhos era profundamente hierarquizada, patriarcal e ruralizada. No topo estava a aristocracia rural, os <strong>senhores de engenho</strong>, que detinham o poder econômico, político e social. Abaixo deles, havia uma camada intermediária de homens livres, como capatazes, padres, artesãos e pequenos comerciantes. Na base da pirâmide, constituindo a vasta maioria da população, estavam os africanos escravizados, considerados meras propriedades e submetidos a uma vida de trabalho exaustivo e violência.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEÇÃO 4: INVASÕES E CRISE -->
+        <section id="invasoes-estrangeiras" class="topic-section">
+            <div class="section-container glass-card">
+                <h1 class="section-title reveal">Disputas pelo Atlântico Sul</h1>
+                <p class="section-intro reveal" style="transition-delay: 0.2s;">
+                    A riqueza gerada pelo açúcar brasileiro não passou despercebida por outras potências europeias. Excluídas pelo Tratado de Tordesilhas, nações como França e Holanda desafiaram o domínio ibérico, resultando em invasões, guerras e em uma reconfiguração geopolítica que abalaria as estruturas da colônia.
+                </p>
+
+                <div class="reveal" style="transition-delay: 0.4s;">
+                    <h2 class="subsection-title">União Ibérica e Invasões Holandesas</h2>
+                    <p>Em 1580, o rei de Portugal morreu sem deixar herdeiros diretos, levando o rei Filipe II da Espanha a assumir o trono português. Este período, conhecido como <strong>União Ibérica</strong> (1580-1640), unificou as duas coroas. Uma consequência direta foi que os inimigos da Espanha, como a Holanda (que lutava por sua independência), tornaram-se também inimigos de Portugal. Os holandeses, que antes eram os principais financiadores e distribuidores do açúcar brasileiro na Europa, foram proibidos de aportar em portos luso-espanhóis.</p>
+                    <p>Em resposta, a recém-criada Companhia Holandesa das Índias Ocidentais (WIC) organizou uma invasão ao Nordeste brasileiro, o coração da produção de açúcar. Após uma tentativa frustrada em Salvador (1624), eles conseguiram conquistar Olinda e Recife em 1630, estabelecendo a colônia da "Nova Holanda".</p>
+                </div>
+
+                <div class="reveal">
+                    <h2 class="subsection-title">O Brasil Holandês e a Insurreição Pernambucana</h2>
+                    <p>O período de maior florescimento da Nova Holanda ocorreu sob a administração do conde <strong>Maurício de Nassau</strong> (1637-1644). Ele pacificou a região, concedeu empréstimos para senhores de engenho reconstruírem suas propriedades, garantiu certa tolerância religiosa e promoveu uma notável modernização urbana e cultural em Recife, trazendo consigo artistas e cientistas.</p>
+                    <p>Contudo, após a partida de Nassau, a WIC aumentou a pressão sobre os senhores de engenho para o pagamento das dívidas. O descontentamento cresceu e, aproveitando que Portugal já havia restaurado sua independência da Espanha em 1640, os colonos luso-brasileiros iniciaram a <strong>Insurreição Pernambucana</strong> (1645-1654). Liderada por figuras de diferentes origens sociais, como André Vidal de Negreiros (branco), João Fernandes Vieira (branco), Henrique Dias (negro) e Filipe Camarão (indígena), a longa guerra culminou na expulsão definitiva dos holandeses.</p>
+                </div>
+
+                <div class="reveal">
+                    <h2 class="subsection-title">A Crise do Açúcar</h2>
+                    <p>A expulsão dos holandeses teve um preço alto. Ao deixarem o Brasil, eles levaram consigo as técnicas de produção de açúcar e as implementaram em suas colônias nas Antilhas (Caribe). O açúcar antilhano, de alta qualidade e mais próximo do mercado europeu, passou a concorrer diretamente com o brasileiro. Essa nova concorrência, somada ao desgaste da guerra e à queda dos preços internacionais, mergulhou a economia açucareira do Brasil em uma longa crise no final do século XVII, abrindo caminho para a ascensão de um novo ciclo econômico: o do ouro, nas Minas Gerais.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEÇÃO 5: ESTRUTURA DO PODER COLONIAL -->
+        <section id="estrutura-colonial" class="topic-section">
+            <div class="section-container glass-card">
+                <h1 class="section-title reveal">Poderes da Colônia: Terra, Leis e Autoridade</h1>
+                <p class="section-intro reveal" style="transition-delay: 0.2s;">
+                    A ocupação efetiva do território exigiu a criação de instrumentos políticos e jurídicos. Entre concessões de terra, cargos, tribunais e câmaras locais, formou-se um complexo arranjo que articulava a Coroa, elites coloniais, clero e populações locais.
+                </p>
+
+                <div class="reveal" style="transition-delay: 0.4s;">
+                    <h2 class="subsection-title">Capitanias, Sesmarias e Governo-Geral</h2>
+                    <p>Em <strong>1534</strong>, a Coroa instituiu as <strong>Capitanias Hereditárias</strong>, doando grandes faixas de terra a donatários com poderes administrativos, judiciais e militares. O sistema tinha baixo custo para Portugal, mas enfrentou dificuldades: vastidão territorial, ataques indígenas e corsários, e recursos escassos. Para coordenar os esforços, em <strong>1549</strong> criou-se o <strong>Governo-Geral</strong>, com sede em Salvador, chefiado por <strong>Tomé de Sousa</strong>. A ele cabiam defesa, justiça, arrecadação e fomento econômico.</p>
+                    <div class="info-grid">
+                        <div class="note">
+                            <strong>Sesmarías:</strong> concessões de lotes de terra (sesmarias) estimulavam cultivo e povoamento. A posse estava condicionada ao cultivo produtivo.
+                        </div>
+                        <div class="note">
+                            <strong>Defesa:</strong> fortalezas, milícias e alianças com grupos indígenas aliados foram vitais para proteger portos e engenhos.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="reveal">
+                    <h2 class="subsection-title">Câmaras, Justiça e a Igreja</h2>
+                    <p>As <strong>Câmaras Municipais</strong> eram o centro da política local, dominadas por homens bons (proprietários e letrados). Julgavam questões civis, regulavam mercados, obras e tributos. A <strong>justiça régia</strong> era exercida por ouvidores e, em última instância, pelos tribunais metropolitanos. A <strong>Igreja Católica</strong> tinha papel político, social e econômico: administrava paróquias, cobrava dízimos, controlava moral e organizava festas e irmandades.</p>
+                    <p class="warn">Conflitos eram frequentes entre colonos, autoridades régias e religiosos, especialmente envolvendo trabalho indígena, tributos e terras.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEÇÃO 6: JESUÍTAS E ALDEAMENTOS -->
+        <section id="jesuitas-aldeamentos" class="topic-section">
+            <div class="section-container glass-card">
+                <h1 class="section-title reveal">Jesuítas, Catequese e as Línguas da Terra</h1>
+                <p class="section-intro reveal" style="transition-delay: 0.2s;">
+                    A Companhia de Jesus chegou ao Brasil em 1549 e foi decisiva na organização de aldeamentos, na educação e na mediação (nem sempre pacífica) entre colonos e povos indígenas.
+                </p>
+
+                <div class="reveal" style="transition-delay: 0.4s;">
+                    <h2 class="subsection-title">Aldeamentos e Educação</h2>
+                    <p>Os <strong>aldeamentos</strong> concentravam populações indígenas para catequese, ensino de agricultura, artes e ofícios, e para proteção formal contra escravização. Figuras como <strong>Manuel da Nóbrega</strong> e <strong>José de Anchieta</strong> fundaram colégios (como o de São Vicente e Salvador) e produziram gramáticas e catecismos em <strong>línguas gerais</strong> (derivadas do tupi), fundamentais para a comunicação no século XVI.</p>
+                </div>
+
+                <div class="reveal">
+                    <h2 class="subsection-title">Conflitos com os Colonos</h2>
+                    <p>Os jesuítas defendiam que a escravização indígena era ilícita fora de casos de <em>guerra justa</em>. Colonos, por sua vez, dependiam de mão de obra e pressionavam pela captura de indígenas. Essa tensão marcou todo o período, alimentando rebeliões e disputas jurídicas.</p>
+                    <blockquote>
+                        <p>Entre a cruz e o açúcar, formou-se um campo de forças em que a fé, a economia e a política se chocavam cotidianamente.</p>
+                        <footer>— Interpretação historiográfica</footer>
+                    </blockquote>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEÇÃO 7: TRABALHO E ESCRAVIDÃO -->
+        <section id="trabalho-escravidao" class="topic-section">
+            <div class="section-container glass-card">
+                <h1 class="section-title reveal">Trabalho, Tráfico Atlântico e Resistências</h1>
+                <p class="section-intro reveal" style="transition-delay: 0.2s;">
+                    Do trabalho indígena ao tráfico de africanos escravizados, a força de trabalho na colônia foi moldada por coerção, violência e resistências permanentes.
+                </p>
+
+                <div class="reveal" style="transition-delay: 0.4s;">
+                    <h2 class="subsection-title">Do Apresamento Indígena ao Tráfico Atlântico</h2>
+                    <p>No século XVI, colonos recorreram ao <strong>apresamento indígena</strong> e ao <strong>escambo</strong> para obter trabalho. As doenças, a fuga, a resistência e a oposição jesuítica limitaram essa exploração. A partir de então, consolidou-se o <strong>tráfico transatlântico</strong> de africanos: rotas ligavam portos como <em>Luanda, Benguela, Costa da Mina e Angola</em> a <em>Salvador</em> e <em>Recife</em>. A <em>travessia do Atlântico</em> (passagem do meio) era marcada por superlotação, fome, doenças e altíssima mortalidade.</p>
+                </div>
+
+                <div class="reveal">
+                    <h2 class="subsection-title">Quilombos e Outras Formas de Resistência</h2>
+                    <p>A resistência escravizada manifestou-se de múltiplas formas: <strong>fugas</strong> e formação de <strong>quilombos</strong> (como <em>Palmares</em>), <strong>sabotagens</strong>, preservação de <strong>culturas e religiosidades</strong>, negociação de tempos e espaços e, em certas conjunturas, <strong>rebeliões</strong> abertas. Essas práticas desafiaram continuamente a organização senhorial.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEÇÃO 8: ECONOMIA ATLÂNTICA -->
+        <section id="economia-atlantica" class="topic-section">
+            <div class="section-container glass-card">
+                <h1 class="section-title reveal">Redes do Atlântico: Crédito, Comércio e Fronteiras Internas</h1>
+                <p class="section-intro reveal" style="transition-delay: 0.2s;">
+                    O açúcar integrava o Brasil a circuitos financeiros internacionais. Ao mesmo tempo, atividades complementares deram suporte à produção e à sobrevivência em regiões fora do litoral açucareiro.
+                </p>
+
+                <div class="reveal" style="transition-delay: 0.4s;">
+                    <h2 class="subsection-title">Crédito, Refino e Distribuição</h2>
+                    <p>O <strong>refino</strong> e a <strong>distribuição</strong> do açúcar dependiam de capitais e redes mercantis europeias, especialmente holandesas. Mesmo antes das invasões, banqueiros e comerciantes financiavam engenhos, fretes e seguros. Após a expulsão, parte dessa expertise migraria para o <strong>Caribe</strong>, intensificando a concorrência.</p>
+                </div>
+
+                <div class="reveal">
+                    <h2 class="subsection-title">Pecuária, Sertões e Amazônia</h2>
+                    <p>Nas áreas interiores, expandiram-se a <strong>pecuária</strong> (suprindo <em>charque</em> e tração para engenhos), o comércio com <strong>sertões</strong> e, ao norte, as chamadas <strong>"drogas do sertão"</strong> na Amazônia (especiarias e produtos nativos). Esses circuitos sustentaram populações distantes do litoral, conectando vilas, missões e fronteiras.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEÇÃO 9: SOCIEDADE COLONIAL -->
+        <section id="sociedade-colonial" class="topic-section">
+            <div class="section-container glass-card">
+                <h1 class="section-title reveal">Casa-Grande, Senzala e a Vida Cotidiana</h1>
+                <p class="section-intro reveal" style="transition-delay: 0.2s;">
+                    A sociedade açucareira formou uma hierarquia rígida e profundamente desigual, mas também dinâmica, marcada por mobilidades limitadas, miscigenações e múltiplas identidades.
+                </p>
+
+                <div class="reveal" style="transition-delay: 0.4s;">
+                    <h2 class="subsection-title">Hierarquias e Gênero</h2>
+                    <p>No topo, os <strong>senhores de engenho</strong> controlavam terras, crédito e cargos. Abaixo, <strong>homens livres</strong> pobres (lavradores, artesãos, soldados, agregados) compunham uma camada intermediária. A base era formada por <strong>escravizados</strong>. <strong>Mulheres</strong> — livres, forras ou escravizadas — sustentavam a vida produtiva e doméstica, enfrentando controle patriarcal e violência, mas também tecendo redes de suporte (irmandades, comadres, vizinhanças).</p>
+                </div>
+
+                <div class="reveal">
+                    <h2 class="subsection-title">Cidades, Festas e Irmandades</h2>
+                    <p>Vilas e cidades como <em>Salvador</em> e <em>Olinda/Recife</em> eram centros administrativos, comerciais e religiosos. <strong>Festas</strong> e <strong>procissões</strong> organizadas por <strong>irmandades</strong> (inclusive de <em>homens pretos</em>) articulavam solidariedades, devoções e disputas por prestígio.</p>
+                    <p>
+                        <span class="pill">Casa-grande</span>
+                        <span class="pill">Senzala</span>
+                        <span class="pill">Irmandades</span>
+                        <span class="pill">Mestiçagens</span>
+                        <span class="pill">Patriarcado</span>
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEÇÃO 10: CULTURA E BARROCO -->
+        <section id="cultura-barroco" class="topic-section">
+            <div class="section-container glass-card">
+                <h1 class="section-title reveal">Cultura, Línguas e o Barroco Luso-Brasileiro</h1>
+                <p class="section-intro reveal" style="transition-delay: 0.2s;">
+                    Entre cruzes e atabaques, língua geral e português, sermões e cantos, formou-se um universo cultural híbrido, base da identidade colonial.
+                </p>
+
+                <div class="reveal" style="transition-delay: 0.4s;">
+                    <h2 class="subsection-title">Religiosidades e Sincretismos</h2>
+                    <p>O <strong>catolicismo</strong> moldou calendários, espaços e normas. Ao lado dele, tradições africanas e indígenas sobreviveram e se transformaram, produzindo <strong>sincretismos</strong> visíveis em festas, irmandades e práticas devocionais. Sermões de figuras como <strong>Antônio Vieira</strong> ilustram debates morais e políticos do século XVII.</p>
+                </div>
+
+                <div class="reveal">
+                    <h2 class="subsection-title">Artes e Letras</h2>
+                    <p>O <strong>Barroco</strong> luso-brasileiro floresceu sobretudo no fim do século XVII e XVIII, mas suas raízes estão nas experiências urbanas e religiosas do período açucareiro. Igrejas, esculturas, música e poesia faziam parte da vida cotidiana, mesmo fora dos grandes centros.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEÇÃO 11: NOVOS CICLOS ECONÔMICOS -->
+        <section id="novos-ciclos" class="topic-section">
+            <div class="section-container glass-card">
+                <h1 class="section-title reveal">Da Crise do Açúcar ao Caminho do Ouro</h1>
+                <p class="section-intro reveal" style="transition-delay: 0.2s;">
+                    A concorrência antilhana e a reorganização das redes atlânticas no século XVII abalaram o domínio do açúcar, preparando a transição para novos polos de riqueza.
+                </p>
+
+                <div class="reveal" style="transition-delay: 0.4s;">
+                    <h2 class="subsection-title">Concorrência Caribenha e Reconfigurações</h2>
+                    <p>Após a expulsão holandesa, técnicas e capitais reforçaram a produção de açúcar nas <strong>Antilhas</strong>. A proximidade com a Europa e ganhos de escala pressionaram preços e lucros no Brasil, gerando inadimplências, endividamentos e reorganizações internas.</p>
+                </div>
+
+                <div class="reveal">
+                    <h2 class="subsection-title">Interiorização e Ouro</h2>
+                    <p>No final do século XVII, a interiorização de frentes de exploração favoreceu a descoberta de <strong>ouro</strong> nas <strong>Minas Gerais</strong>. Embora esse ciclo pertença ao século XVIII, sua gestação se explica pelas crises, deslocamentos e experiências acumuladas no período açucareiro.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEÇÃO 12: GLOSSÁRIO E LINHA DO TEMPO -->
+        <section id="glossario-timeline" class="topic-section">
+            <div class="section-container glass-card">
+                <h1 class="section-title reveal">Guia Rápido: Glossário e Linha do Tempo</h1>
+                <p class="section-intro reveal" style="transition-delay: 0.2s;">
+                    Conceitos essenciais e marcos cronológicos para revisar o período com segurança.
+                </p>
+
+                <div class="reveal" style="transition-delay: 0.4s;">
+                    <h2 class="subsection-title">Glossário</h2>
+                    <div class="info-grid">
+                        <div class="note"><strong>Escambo:</strong> troca de bens entre europeus e indígenas sem uso de moeda.</div>
+                        <div class="note"><strong>Feitoria:</strong> posto comercial fortificado no litoral para armazenar e defender produtos.</div>
+                        <div class="note"><strong>Capitanias Hereditárias:</strong> doações de terras a donatários com poderes sobre vastas áreas.</div>
+                        <div class="note"><strong>Sesmaria:</strong> concessão de terras condicionada ao cultivo produtivo.</div>
+                        <div class="note"><strong>Latifúndio:</strong> grande propriedade fundiária, base do engenho.</div>
+                        <div class="note"><strong>Monocultura:</strong> cultivo predominante de um único produto (cana-de-açúcar).</div>
+                        <div class="note"><strong>Quilombo:</strong> comunidade de fugitivos da escravidão e seus descendentes.</div>
+                        <div class="note"><strong>União Ibérica:</strong> união das coroas de Portugal e Espanha (1580-1640).</div>
+                        <div class="note"><strong>WIC:</strong> Companhia Holandesa das Índias Ocidentais, envolvida em comércio e invasões.</div>
+                    </div>
+                </div>
+
+                <div class="reveal">
+                    <h2 class="subsection-title">Linha do Tempo</h2>
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-year">1500</div>
+                            <p>Chegada da frota de Pedro Álvares Cabral.</p>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-year">1534</div>
+                            <p>Criação das Capitanias Hereditárias.</p>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-year">1549</div>
+                            <p>Instalação do Governo-Geral em Salvador; chegada dos jesuítas.</p>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-year">1554–1567</div>
+                            <p>Confederação dos Tamoios e conflitos no Sudeste.</p>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-year">1555–1567</div>
+                            <p>França Antártica na Baía de Guanabara e expulsão posterior.</p>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-year">1580–1640</div>
+                            <p>União Ibérica: inimigos da Espanha tornam-se inimigos de Portugal.</p>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-year">1612–1615</div>
+                            <p>França Equinocial no Maranhão.</p>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-year">1624–1625</div>
+                            <p>Ocupação holandesa temporária de Salvador.</p>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-year">1630–1654</div>
+                            <p>Domínio holandês em Pernambuco; período Nassau (1637–1644) e Insurreição Pernambucana.</p>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-year">Fins do séc. XVII</div>
+                            <p>Crise do açúcar e crescimento das frentes de exploração interioranas; caminho do ouro.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+    
+    <footer>
+        <p>Página educacional desenvolvida como uma ferramenta de aprendizado. Design e conteúdo por L2.</p>
+    </footer>
+
+    <!-- MENU MOBILE: Bottom Sheet -->
+    <div class="mobile-menu" aria-hidden="true">
+        <div class="mobile-menu__overlay"></div>
+        <button class="mobile-menu__handle" aria-label="Abrir menu">
+            <span class="mobile-menu__handle-dot" aria-hidden="true"></span>
+            Menu
+        </button>
+        <div class="mobile-menu__sheet" role="dialog" aria-modal="true" aria-label="Menu de navegação">
+            <nav class="mobile-nav" aria-label="Navegação mobile">
+                <ul>
+                    <li><a href="#brasil-pre-colonial" class="nav-link"><i class="material-icons" aria-hidden="true">forest</i>Pré-Colonial</a></li>
+                    <li><a href="#chegada-portuguesa" class="nav-link"><i class="material-icons" aria-hidden="true">sailing</i>Chegada</a></li>
+                    <li><a href="#estrutura-colonial" class="nav-link"><i class="material-icons" aria-hidden="true">account_balance</i>Estrutura do Poder</a></li>
+                    <li><a href="#jesuitas-aldeamentos" class="nav-link"><i class="material-icons" aria-hidden="true">school</i>Jesuítas e Aldeamentos</a></li>
+                    <li><a href="#trabalho-escravidao" class="nav-link"><i class="material-icons" aria-hidden="true">work</i>Trabalho e Escravidão</a></li>
+                    <li><a href="#ciclo-acucar" class="nav-link"><i class="material-icons" aria-hidden="true">agriculture</i>Ciclo do Açúcar</a></li>
+                    <li><a href="#invasoes-estrangeiras" class="nav-link"><i class="material-icons" aria-hidden="true">flag</i>Invasões</a></li>
+                    <li><a href="#economia-atlantica" class="nav-link"><i class="material-icons" aria-hidden="true">sync_alt</i>Economia Atlântica</a></li>
+                    <li><a href="#sociedade-colonial" class="nav-link"><i class="material-icons" aria-hidden="true">groups</i>Sociedade</a></li>
+                    <li><a href="#cultura-barroco" class="nav-link"><i class="material-icons" aria-hidden="true">museum</i>Cultura/Barroco</a></li>
+                    <li><a href="#novos-ciclos" class="nav-link"><i class="material-icons" aria-hidden="true">emoji_events</i>Transição ao Ouro</a></li>
+                    <li><a href="#glossario-timeline" class="nav-link"><i class="material-icons" aria-hidden="true">book</i>Glossário + Linha do Tempo</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // --- LÓGICA DE CARREGAMENTO ---
+        var loadingOverlay = document.querySelector('.loading-overlay');
+        var mainContent = document.getElementById('main-content');
+        var logoLetters = document.querySelectorAll('.loading-logo span');
+        for (var i = 0; i < logoLetters.length; i++) {
+            logoLetters[i].style.animationDelay = (i * 0.1) + 's';
+        }
+        function hideOverlay(){
+            if (!loadingOverlay) return;
+            loadingOverlay.classList.add('hidden');
+            if (mainContent) mainContent.classList.add('loaded');
+            var removed = false;
+            var cleanup = function(){
+                if (removed) return; removed = true;
+                if (loadingOverlay && loadingOverlay.parentNode) loadingOverlay.parentNode.removeChild(loadingOverlay);
+            };
+            loadingOverlay.addEventListener('transitionend', cleanup, { once: true });
+            setTimeout(cleanup, 1200);
+        }
+        if (loadingOverlay) {
+            loadingOverlay.style.display = 'flex';
+            setTimeout(hideOverlay, 2500);
+        }
+
+        // --- LÓGICA DE NAVEGAÇÃO DINÂMICA (V8) ---
+        const nav = document.querySelector('.main-nav');
+        const navLinks = document.querySelectorAll('.nav-link');
+        const sections = document.querySelectorAll('.topic-section');
+        let lastScrollY = window.scrollY || window.pageYOffset || 0;
+
+        window.addEventListener('scroll', () => {
+            if (window.innerWidth <= 1023) {
+                if (lastScrollY < window.scrollY) {
+                    nav.classList.remove('nav-visible');
+                } else {
+                    nav.classList.add('nav-visible');
+                }
+                lastScrollY = window.scrollY;
+            }
+        }, { passive: true });
+
+        const navObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const id = entry.target.getAttribute('id');
+                    navLinks.forEach(link => {
+                        link.classList.remove('active');
+                        if (link.getAttribute('href') === `#${id}`) {
+                            link.classList.add('active');
+                        }
+                    });
+                }
+            });
+        }, { root: null, rootMargin: '0px', threshold: 0.4 });
+
+        sections.forEach(section => navObserver.observe(section));
+
+        // --- ANIMAÇÃO DE SCROLL-REVEAL ---
+        const revealElements = document.querySelectorAll('.reveal');
+        const revealObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { root: null, rootMargin: '0px 0px -100px 0px', threshold: 0.1 });
+
+        revealElements.forEach(el => revealObserver.observe(el));
+
+            // --- Suporte: scroll suave para links de navegação em navegadores antigos ---
+            navLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    const targetId = link.getAttribute('href');
+                    if (targetId && targetId.startsWith('#')) {
+                        e.preventDefault();
+                        const target = document.querySelector(targetId);
+                        // Se o clique for no menu mobile, feche antes de rolar
+                        if (link.closest('.mobile-nav')) {
+                            closeMobileMenu();
+                        }
+                        if (target) {
+                            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                            history.pushState(null, '', targetId);
+                        }
+                    }
+                });
+            });
+
+            // --- Acessibilidade: pular para conteúdo com tecla (g) ---
+            document.addEventListener('keydown', (e) => {
+                if (e.key.toLowerCase() === 'g') {
+                    const first = document.querySelector('.topic-section');
+                    if (first) first.focus({ preventScroll: false });
+                }
+            });
+
+        // === MENU MOBILE (BOTTOM SHEET) ===
+        const mobileMenu = document.querySelector('.mobile-menu');
+        const mobileHandle = document.querySelector('.mobile-menu__handle');
+        const mobileOverlay = document.querySelector('.mobile-menu__overlay');
+        const mobileSheet = document.querySelector('.mobile-menu__sheet');
+
+        function openMobileMenu() {
+            mobileMenu.classList.add('open');
+            mobileMenu.setAttribute('aria-hidden', 'false');
+            // Limpa estilos inline que possam ter sido aplicados por gestos
+            mobileSheet.style.transition = '';
+            mobileSheet.style.transform = '';
+            mobileOverlay.style.opacity = '';
+            document.body.style.overscrollBehavior = 'contain';
+        }
+        function closeMobileMenu() {
+            mobileMenu.classList.remove('open');
+            mobileMenu.setAttribute('aria-hidden', 'true');
+            // Garante retorno ao estado base removendo estilos inline
+            mobileSheet.style.transition = '';
+            mobileSheet.style.transform = '';
+            mobileOverlay.style.opacity = '';
+            document.body.style.overscrollBehavior = '';
+        }
+
+        // Abrir no toque do handle
+        mobileHandle.addEventListener('click', () => {
+            if (!mobileMenu.classList.contains('open')) openMobileMenu(); else closeMobileMenu();
+        });
+        // Fechar ao tocar na overlay
+        mobileOverlay.addEventListener('click', closeMobileMenu);
+        // Fechar com tecla ESC
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && mobileMenu.classList.contains('open')) {
+                closeMobileMenu();
+            }
+        });
+
+        // Gestos de arrastar para abrir/fechar
+        let startY = 0;
+        let currentY = 0;
+        let isDragging = false;
+        const dragThreshold = 40; // px
+
+        function onTouchStart(e) {
+            if (window.innerWidth > 1023) return;
+            isDragging = true;
+            startY = e.touches ? e.touches[0].clientY : e.clientY;
+            currentY = startY;
+            mobileSheet.style.transition = 'none';
+        }
+        function onTouchMove(e) {
+            if (!isDragging) return;
+            currentY = e.touches ? e.touches[0].clientY : e.clientY;
+            const delta = currentY - startY;
+            if (mobileMenu.classList.contains('open')) {
+                const translate = Math.max(0, delta);
+                mobileSheet.style.transform = `translateY(${translate}px)`;
+                mobileOverlay.style.opacity = String(Math.max(0, 1 - translate / 300));
+            } else {
+                const translate = Math.max(0, 100 - Math.max(0, (startY - currentY)));
+                // Ao arrastar para cima, traduz de 100% até 0
+                const progress = Math.min(1, Math.max(0, (startY - currentY) / 200));
+                mobileSheet.style.transform = `translateY(${(1 - progress) * 100}%)`;
+                mobileOverlay.style.opacity = String(progress);
+            }
+        }
+        function onTouchEnd() {
+            if (!isDragging) return;
+            isDragging = false;
+            mobileSheet.style.transition = '';
+            const moved = currentY - startY;
+            if (mobileMenu.classList.contains('open')) {
+                if (moved > dragThreshold) closeMobileMenu(); else openMobileMenu();
+            } else {
+                if (moved < -dragThreshold) openMobileMenu(); else closeMobileMenu();
+            }
+        }
+
+        // Listeners no handle e na sheet para melhorar UX
+        [mobileHandle, mobileSheet].forEach(el => {
+            el.addEventListener('touchstart', onTouchStart, { passive: true });
+            el.addEventListener('touchmove', onTouchMove, { passive: true });
+            el.addEventListener('touchend', onTouchEnd);
+            el.addEventListener('mousedown', onTouchStart);
+            el.addEventListener('mousemove', (e) => { if (isDragging) onTouchMove(e); });
+            el.addEventListener('mouseup', onTouchEnd);
+            el.addEventListener('mouseleave', () => { if (isDragging) onTouchEnd(); });
+        });
+
+        // Fechar o menu após clicar em um item
+        document.querySelectorAll('.mobile-nav .nav-link').forEach(link => {
+            link.addEventListener('click', () => closeMobileMenu());
+        });
+    });
+    </script>
+</body>
+</html>

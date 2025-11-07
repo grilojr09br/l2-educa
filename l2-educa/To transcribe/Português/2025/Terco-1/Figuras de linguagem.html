@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guia Completo de Figuras de Linguagem</title>
+    
+    <!-- Google Fonts: Inter para texto e Playfair Display para títulos -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <!-- Google Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <style>
+        /* CSS Reset e Configurações Globais */
+        :root {
+            --ease-out-quart: cubic-bezier(0.165, 0.84, 0.44, 1);
+            --transition-duration: 0.5s;
+            
+            /* Paleta de Cores Sofisticada */
+            --fundamentos-color: #6366f1; /* Indigo */
+            --palavras-color: #ec4899; /* Pink */
+            --pensamento-color: #10b981; /* Emerald */
+            --sintaxe-color: #8b5cf6; /* Violet */
+            --som-color: #0ea5e9; /* Sky */
+            --analise-color: #f97316; /* Orange */
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.8;
+            color: #e2e8f0; /* Cinza claro para texto */
+            overflow-x: hidden;
+            background: #0f172a; /* Azul noturno escuro */
+            position: relative;
+        }
+
+        /* Fundo de Gradiente Animado */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: radial-gradient(circle at 10% 20%, rgba(139, 92, 246, 0.2), transparent 40%),
+                        radial-gradient(circle at 80% 90%, rgba(236, 72, 153, 0.2), transparent 40%),
+                        radial-gradient(circle at 50% 50%, rgba(14, 165, 233, 0.2), transparent 40%);
+            animation: moveGradient 20s ease-in-out infinite;
+        }
+        
+        @keyframes moveGradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Estrutura Principal e Header */
+        .main-header {
+            color: white;
+            padding: 8rem 2rem;
+            text-align: center;
+            min-height: 60vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .main-header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(3rem, 10vw, 6rem);
+            margin-bottom: 1rem;
+            text-shadow: 0 0 20px rgba(0,0,0,0.5);
+            letter-spacing: 1.5px;
+        }
+
+        .main-header p {
+            font-size: clamp(1.1rem, 4vw, 1.4rem);
+            max-width: 800px;
+            margin: 0 auto;
+            opacity: 0.8;
+            font-weight: 400;
+        }
+
+        /* Estilo das Seções com Glassmorphism */
+        .content-section {
+            padding: 2.5rem;
+            margin: 0 auto 3rem auto;
+            background: rgba(17, 24, 39, 0.6); /* Fundo de vidro escuro */
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            max-width: 1100px;
+            position: relative;
+            z-index: 2;
+            opacity: 0; /* Para animação de scroll */
+            transform: translateY(30px); /* Para animação de scroll */
+            transition: opacity 0.8s var(--ease-out-quart), transform 0.8s var(--ease-out-quart);
+        }
+        
+        .content-section.in-view {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+            padding-bottom: 1.5rem;
+            position: relative;
+        }
+        
+        /* Linha decorativa no header da seção */
+        .section-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: var(--section-color);
+            border-radius: 2px;
+            transition: width 0.5s var(--ease-out-quart);
+        }
+
+        .content-section:hover .section-header::after {
+            width: 150px;
+        }
+        
+        .section-header h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2.2rem, 7vw, 3.5rem);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            color: #fff;
+        }
+
+        .section-header p {
+            max-width: 700px;
+            margin: 0.5rem auto 0;
+            color: #9ca3af;
+        }
+        
+        .section-header .material-icons {
+            font-size: inherit;
+            color: var(--section-color);
+            transition: transform 0.5s var(--ease-out-quart);
+        }
+        
+        .content-section:hover .section-header .material-icons {
+            transform: rotate(-10deg) scale(1.1);
+        }
+
+        /* Cores dos Headers das Seções */
+        #fundamentos { --section-color: var(--fundamentos-color); }
+        #palavras { --section-color: var(--palavras-color); }
+        #pensamento { --section-color: var(--pensamento-color); }
+        #sintaxe { --section-color: var(--sintaxe-color); }
+        #som { --section-color: var(--som-color); }
+        #analise { --section-color: var(--analise-color); }
+
+        /* Botão de Aprofundar */
+        .expand-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            width: 100%;
+            padding: 1.25rem;
+            margin-top: 2rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: white;
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all var(--transition-duration) var(--ease-out-quart);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .expand-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--section-color), transparent);
+            opacity: 0;
+            transform: translateX(-100%);
+            transition: all var(--transition-duration) var(--ease-out-quart);
+            z-index: 1;
+        }
+        
+        .expand-button:hover::before {
+            opacity: 0.3;
+            transform: translateX(0);
+        }
+        
+        .expand-button span {
+            z-index: 2;
+        }
+        
+        .expand-button .material-icons {
+            transition: transform var(--transition-duration) var(--ease-out-quart);
+            z-index: 2;
+        }
+
+        .is-expanded .expand-button .material-icons {
+            transform: rotate(180deg);
+        }
+
+        /* Conteúdo Expandido */
+        .expandable-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.8s var(--ease-out-quart), opacity 0.6s var(--ease-out-quart) 0.2s;
+            opacity: 0;
+        }
+
+        .is-expanded .expandable-content {
+            max-height: 15000px;
+            opacity: 1;
+        }
+
+        .content-wrapper {
+            padding-top: 3rem;
+        }
+
+        .content-wrapper h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            margin-top: 2rem;
+            border-left: 3px solid var(--section-color);
+            padding-left: 1.5rem;
+            color: #f1f5f9;
+        }
+        
+        .content-wrapper p, .content-wrapper li {
+            margin-bottom: 1rem;
+            color: #cbd5e1;
+        }
+        
+        .content-wrapper strong {
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .content-wrapper ul {
+            list-style: none;
+        }
+
+        .content-wrapper li::before {
+            content: "◆";
+            color: var(--section-color);
+            font-weight: bold;
+            display: inline-block; 
+            width: 1.5em;
+            margin-left: -1.5em;
+        }
+        
+        .example-box {
+            background: rgba(17, 24, 39, 0.5);
+            border-left: 4px solid var(--section-color);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 0 12px 12px 0;
+            font-style: italic;
+        }
+        
+        .example-box p { margin: 0; }
+
+        .example-box .author {
+            text-align: right;
+            font-style: normal;
+            font-weight: 500;
+            margin-top: 0.75rem;
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+        
+        /* Tabelas */
+        .styled-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+            font-size: 0.9em;
+            border-radius: 12px;
+            overflow: hidden;
+            background: rgba(30, 41, 59, 0.7);
+        }
+
+        .styled-table thead tr {
+            background-color: rgba(0,0,0,0.3);
+            color: #ffffff;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        .styled-table th, .styled-table td {
+            padding: 15px 20px;
+        }
+
+        .styled-table tbody tr {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .styled-table tbody tr:last-of-type {
+            border-bottom: none;
+        }
+        
+        /* Seção de Exercícios */
+        .exercise-item {
+            background: rgba(17, 24, 39, 0.5);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .exercise-item .quote {
+            font-style: italic;
+            border-left: 3px solid var(--section-color);
+            padding-left: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .answer-btn {
+            padding: 0.75rem 1.5rem;
+            border: 1px solid var(--section-color);
+            background-color: transparent;
+            color: var(--section-color);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
+            font-weight: 500;
+        }
+
+        .answer-btn:hover {
+            background-color: var(--section-color);
+            color: #0f172a;
+        }
+
+        .answer-feedback {
+            display: none;
+            margin-top: 1rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--section-color);
+            border-radius: 8px;
+        }
+        
+        /* Footer */
+        .main-footer {
+            text-align: center;
+            padding: 3rem 1rem;
+            margin-top: 4rem;
+            background-color: transparent;
+            color: #94a3b8;
+            font-size: 0.9rem;
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            body::before { display: none; } /* Simplifica fundo em mobile para performance */
+            .content-section {
+                padding: 2rem 1rem;
+                border-radius: 16px;
+            }
+            .main-header {
+                padding: 5rem 1rem;
+                min-height: 50vh;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="main-header">
+        <h1>Figuras de Linguagem</h1>
+        <p>A Arquitetura da Expressão. Desvende os segredos da linguagem figurada e enriqueça sua interpretação e produção de textos.</p>
+    </header>
+
+    <main>
+        <!-- SEÇÃO 1: FUNDAMENTOS -->
+        <section id="fundamentos" class="content-section">
+            <div class="section-header">
+                <h2><span class="material-icons">foundation</span>Fundamentos</h2>
+                <p>O alicerce conceitual. O que são figuras de linguagem e por que são a alma da comunicação expressiva?</p>
+            </div>
+            <p>Figuras de linguagem são estratégias expressivas que transcendem o uso literal das palavras (denotação) para injetar profundidade, emoção e vivacidade na comunicação (conotação). Elas são o DNA da criatividade linguística, permitindo a construção de novos universos de sentido.</p>
+            
+            <button class="expand-button">
+                <span>Aprofundar nos Fundamentos</span>
+                <span class="material-icons">expand_more</span>
+            </button>
+
+            <div class="expandable-content">
+                <div class="content-wrapper">
+                    <h3>A Lógica Central: Denotação vs. Conotação</h3>
+                    <p>Dominar a dualidade do significado é essencial:</p>
+                    <ul>
+                        <li><strong>Denotação:</strong> O valor primário, objetivo e dicionarizado de uma palavra. "Coração" denota o órgão muscular que bombeia sangue.</li>
+                        <li><strong>Conotação:</strong> O universo de significados secundários, subjetivos e culturais que uma palavra evoca. "Coração" conota amor, coragem, centro emocional.</li>
+                    </ul>
+                    <p>As figuras de linguagem são mestras do campo <strong>conotativo</strong>, transformando a informação em arte, a descrição em persuasão.</p>
+
+                    <h3>Categorias das Figuras de Linguagem</h3>
+                    <p>A taxonomia clássica organiza estas ferramentas em quatro famílias:</p>
+                    <table class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>Categoria</th>
+                                <th>Foco Principal</th>
+                                <th>Exemplos Comuns</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Figuras de Palavras (Tropos)</strong></td>
+                                <td>Substituição de um termo por outro com base em uma relação de sentido.</td>
+                                <td>Metáfora, Comparação, Metonímia, Catacrese, Sinestesia.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Figuras de Pensamento</strong></td>
+                                <td>Combinação e confronto de ideias e conceitos.</td>
+                                <td>Hipérbole, Eufemismo, Ironia, Antítese, Paradoxo, Personificação.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Figuras de Sintaxe (Construção)</strong></td>
+                                <td>Manipulação da estrutura gramatical da oração.</td>
+                                <td>Elipse, Zeugma, Pleonasmo, Anáfora, Polissíndeto, Hipérbato.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Figuras de Som (Harmonia)</strong></td>
+                                <td>Exploração da materialidade sonora das palavras.</td>
+                                <td>Aliteração, Assonância, Onomatopeia, Paranomásia.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEÇÃO 2: FIGURAS DE PALAVRAS -->
+        <section id="palavras" class="content-section">
+            <div class="section-header">
+                <h2><span class="material-icons">palette</span>Figuras de Palavras</h2>
+                <p>A alquimia da substituição, onde palavras transmutam seus significados.</p>
+            </div>
+            <p>Também chamadas de Tropos, estas figuras operam pela troca de termos, criando uma transferência de significado que redesenha a percepção da realidade.</p>
+
+            <button class="expand-button">
+                <span>Explorar Figuras de Palavras</span>
+                <span class="material-icons">expand_more</span>
+            </button>
+
+            <div class="expandable-content">
+                <div class="content-wrapper">
+                    <h3>Metáfora vs. Comparação</h3>
+                    <p>A distinção reside na explicitude da analogia:</p>
+                    <ul>
+                        <li><strong>Comparação (Símile):</strong> Uma ponte explícita entre dois termos, sustentada por um conectivo (como, tal qual, feito).</li>
+                        <li><strong>Metáfora:</strong> Uma fusão conceitual. Declara uma identidade implícita, colapsando dois mundos em um só, sem a mediação de conectivos.</li>
+                    </ul>
+                    <div class="example-box">
+                        <p>"A vida vem em ondas, <strong>como</strong> um mar." (Comparação)</p>
+                        <p class="author">Lulu Santos</p>
+                    </div>
+                    <div class="example-box">
+                        <p>"Minha vida <strong>é</strong> um palco iluminado." (Metáfora)</p>
+                         <p class="author">Rita Lee</p>
+                    </div>
+
+                    <h3>Metonímia</h3>
+                    <p>A substituição lógica de termos por contiguidade. As relações mais comuns são:</p>
+                    <ul>
+                        <li><strong>O autor pela obra:</strong> "Devorei <strong>Clarice Lispector</strong> em uma semana."</li>
+                        <li><strong>O continente pelo conteúdo:</strong> "Bebi duas <strong>taças</strong> de vinho."</li>
+                        <li><strong>A parte pelo todo (Sinédoque):</strong> "Milhares de <strong>cabeças</strong> compareceram ao evento."</li>
+                        <li><strong>A marca pelo produto:</strong> "Preciso de um <strong>Band-Aid</strong>."</li>
+                    </ul>
+
+                    <h3>Catacrese</h3>
+                    <p>Uma "metáfora fossilizada", tão integrada à língua que perdeu seu caráter figurado original. É a nomeação por analogia na ausência de um termo próprio.</p>
+                     <div class="example-box">
+                        <p>"O <strong>braço da cadeira</strong>."</p>
+                        <p>"A <strong>cabeça do alfinete</strong>."</p>
+                    </div>
+                    
+                    <h3>Sinestesia</h3>
+                    <p>A fusão intersensorial. Uma figura que orquestra uma sinfonia de percepções, cruzando canais como visão, olfato, paladar, audição e tato.</p>
+                    <div class="example-box">
+                        <p>"E um <strong>grito de repente / agudo e quente</strong>, rasga o ar." (Audição + Tato)</p>
+                        <p class="author">Cecília Meireles</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEÇÃO 3: FIGURAS DE PENSAMENTO -->
+        <section id="pensamento" class="content-section">
+            <div class="section-header">
+                 <h2><span class="material-icons">psychology</span>Figuras de Pensamento</h2>
+                <p>O jogo de ideias que desafia a lógica e intensifica a emoção.</p>
+            </div>
+            <p>Estas figuras não se concentram em palavras isoladas, mas no campo das ideias e dos conceitos. Elas organizam o pensamento de forma não convencional para criar efeitos de humor, drama, suavidade ou ênfase.</p>
+
+            <button class="expand-button">
+                <span>Analisar Figuras de Pensamento</span>
+                <span class="material-icons">expand_more</span>
+            </button>
+            
+            <div class="expandable-content">
+                <div class="content-wrapper">
+                    <h3>Ironia</h3>
+                    <p>Consiste em afirmar o contrário do que se quer dizer, geralmente com intenção crítica ou satírica. O contexto e a entonação (na fala) são fundamentais para percebê-la.</p>
+                    <div class="example-box">
+                        <p>"Que pessoa <strong>inteligente</strong>, entrou na porta errada."</p>
+                    </div>
+
+                    <h3>Hipérbole</h3>
+                    <p>É o exagero intencional para conferir expressividade e ênfase a uma ideia.</p>
+                    <div class="example-box">
+                        <p>"<strong>Estou morrendo de sede!</strong>"</p>
+                        <p>"Chorou um <strong>rio de lágrimas</strong>."</p>
+                    </div>
+                    
+                    <h3>Eufemismo</h3>
+                    <p>É o uso de palavras ou expressões mais suaves para atenuar uma ideia considerada desagradável, chocante ou polêmica.</p>
+                    <div class="example-box">
+                        <p>"Ele <strong>partiu desta para uma melhor</strong>." (em vez de 'morreu')</p>
+                        <p>"O político foi acusado de <strong>apropriação indébita</strong>." (em vez de 'roubo')</p>
+                    </div>
+
+                    <h3>Antítese vs. Paradoxo</h3>
+                    <p>Outra dupla que causa confusão. Ambas trabalham com oposição, mas de formas diferentes.</p>
+                    <ul>
+                        <li><strong>Antítese:</strong> Aproximação de palavras ou ideias de sentidos opostos. A oposição é clara e direta.</li>
+                        <li><strong>Paradoxo:</strong> Fusão de duas ideias aparentemente contraditórias em uma única sentença, que, à primeira vista, parece ilógica, mas carrega uma verdade mais profunda.</li>
+                    </ul>
+                    <div class="example-box">
+                        <p>"Toda <strong>guerra</strong> finaliza por onde devia ter começado: a <strong>paz</strong>." (Antítese)</p>
+                        <p class="author">Machado de Assis</p>
+                    </div>
+                     <div class="example-box">
+                        <p>"Amor é ferida que dói e não se sente; / É um contentamento descontente." (Paradoxo)</p>
+                        <p class="author">Luís de Camões</p>
+                    </div>
+                    
+                    <h3>Personificação (ou Prosopopeia)</h3>
+                    <p>Consiste em atribuir características, ações ou sentimentos humanos a seres inanimados ou irracionais.</p>
+                    <div class="example-box">
+                        <p>"O <strong>vento beija</strong> meus cabelos, as <strong>ondas lambem</strong> minhas pernas..."</p>
+                         <p class="author">Lulu Santos</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEÇÃO 4: FIGURAS DE SINTAXE -->
+        <section id="sintaxe" class="content-section">
+            <div class="section-header">
+                <h2><span class="material-icons">architecture</span>Figuras de Sintaxe</h2>
+                <p>A desconstrução da ordem canônica para fins expressivos.</p>
+            </div>
+            <p>Também conhecidas como Figuras de Construção, elas mexem com a ordem e a presença dos termos na oração, quebrando a estrutura "sujeito-verbo-complemento" para fins expressivos.</p>
+            
+            <button class="expand-button">
+                <span>Estudar Figuras de Sintaxe</span>
+                <span class="material-icons">expand_more</span>
+            </button>
+            
+            <div class="expandable-content">
+                <div class="content-wrapper">
+                    <h3>Elipse e Zeugma</h3>
+                    <p>Ambas são omissões de termos, mas com uma diferença sutil:</p>
+                    <ul>
+                        <li><strong>Elipse:</strong> Omissão de um termo que pode ser facilmente subentendido pelo contexto.</li>
+                        <li><strong>Zeugma:</strong> Omissão de um termo que JÁ APARECEU antes na frase. É um tipo de elipse.</li>
+                    </ul>
+                     <div class="example-box">
+                        <p>"Na sala, apenas quatro ou cinco convidados." (Omissão do verbo 'havia' - Elipse)</p>
+                        <p>"Ele prefere cinema; eu, teatro." (Omissão do verbo 'prefiro' que apareceu antes como 'prefere' - Zeugma)</p>
+                    </div>
+
+                    <h3>Pleonasmo</h3>
+                    <p>É uma redundância, uma repetição de uma ideia já expressa. Pode ser:</p>
+                     <ul>
+                        <li><strong>Vicioso:</strong> Considerado um erro gramatical, pois não adiciona expressividade. Ex: "subir para cima", "entrar para dentro".</li>
+                        <li><strong>Literário:</strong> Usado intencionalmente para reforçar uma ideia.</li>
+                    </ul>
+                    <div class="example-box">
+                        <p>"E rir meu riso e derramar meu pranto." (Pleonasmo Literário)</p>
+                        <p class="author">Vinicius de Moraes</p>
+                    </div>
+
+                    <h3>Anáfora</h3>
+                    <p>Consiste na repetição de uma mesma palavra ou expressão no início de versos ou frases seguidas, criando um efeito de reforço e ritmo.</p>
+                    <div class="example-box">
+                        <p>"<strong>Quando</strong> não tinha nada eu quis<br><strong>Quando</strong> tudo era ausência esperei<br><strong>Quando</strong> tive frio tremi<br><strong>Quando</strong> tive coragem, liguei..."</p>
+                         <p class="author">Chico César</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEÇÃO 5: FIGURAS DE SOM -->
+        <section id="som" class="content-section">
+            <div class="section-header">
+                <h2><span class="material-icons">graphic_eq</span>Figuras de Som</h2>
+                <p>A musicalidade das palavras em ação, explorando a sonoridade para criar sentido.</p>
+            </div>
+            <p>Também chamadas de Figuras de Harmonia, focam nos aspectos fônicos da linguagem, usando repetições e imitações de sons para gerar expressividade.</p>
+
+            <button class="expand-button">
+                <span>Ouvir as Figuras de Som</span>
+                <span class="material-icons">expand_more</span>
+            </button>
+            
+            <div class="expandable-content">
+                <div class="content-wrapper">
+                     <h3>Aliteração e Assonância</h3>
+                     <p>A dupla que comanda a musicalidade dos versos:</p>
+                    <ul>
+                        <li><strong>Aliteração:</strong> Repetição de sons consonantais.</li>
+                        <li><strong>Assonância:</strong> Repetição de sons vocálicos.</li>
+                    </ul>
+                    <div class="example-box">
+                        <p>"O <strong>r</strong>ato <strong>r</strong>oeu a <strong>r</strong>oupa do <strong>r</strong>ei de <strong>R</strong>oma." (Aliteração do som /r/)</p>
+                    </div>
+                    <div class="example-box">
+                        <p>"Minh'<strong>a</strong>lm<strong>a</strong> de sonh<strong>a</strong>r-t<strong>a</strong> <strong>a</strong>nd<strong>a</strong> perdid<strong>a</strong>." (Assonância do som /a/)</p>
+                        <p class="author">Mário de Sá-Carneiro</p>
+                    </div>
+                    
+                    <h3>Onomatopeia</h3>
+                    <p>É a criação de uma palavra para imitar um som ou ruído. É a figura de som mais conhecida.</p>
+                    <div class="example-box">
+                        <p>O <strong>tique-taque</strong> do relógio não parava.</p>
+                        <p>Ouvi o <strong>boom</strong> da explosão.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEÇÃO 6: ANÁLISE PRÁTICA -->
+        <section id="analise" class="content-section">
+            <div class="section-header">
+                <h2><span class="material-icons">quiz</span>Análise Prática e Exercícios</h2>
+                <p>Como tudo isso aparece em provas e como conectar esse conhecimento.</p>
+            </div>
+            <p>Saber a definição é o primeiro passo. O verdadeiro domínio vem com a prática de identificar as figuras em textos e, principalmente, entender o EFEITO que elas causam.</p>
+
+            <button class="expand-button">
+                <span>Aprofundar na Análise</span>
+                <span class="material-icons">expand_more</span>
+            </button>
+            
+            <div class="expandable-content">
+                <div class="content-wrapper">
+                    <h3>Como é Cobrado em Provas (ENEM e Vestibulares)?</h3>
+                    <p>Raramente uma questão pedirá apenas para "nomear a figura". O mais comum é que a questão exija que você relacione a figura a um efeito de sentido no texto. Fique atento a enunciados como:</p>
+                    <ul>
+                        <li>"A metáfora presente no segundo parágrafo serve para..."</li>
+                        <li>"A repetição da palavra 'não' (anáfora) no poema tem o efeito de..."</li>
+                        <li>"Ao usar a hipérbole 'morri de rir', o autor pretende..."</li>
+                    </ul>
+                    <h4>Dica de Ouro: Pense no "Porquê"</h4>
+                    <p>Ao encontrar uma figura, não pare na identificação. Pergunte-se: <strong>Por que o autor usou este recurso e não uma linguagem literal?</strong> A resposta a essa pergunta geralmente é a alternativa correta.</p>
+                    <ul>
+                        <li>Ele quis <strong>criticar</strong>? (Ironia)</li>
+                        <li>Ele quis <strong>enfatizar</strong> uma ideia? (Hipérbole, Pleonasmo, Anáfora)</li>
+                        <li>Ele quis <strong>suavizar</strong> uma notícia ruim? (Eufemismo)</li>
+                        <li>Ele quis criar uma <strong>imagem sensorial</strong> vívida? (Sinestesia, Metáfora)</li>
+                    </ul>
+
+                    <h3>Ligações com Outros Temas</h3>
+                    <ul>
+                        <li><strong>Interpretação de Texto:</strong> É a ligação mais importante. Figuras de linguagem são a chave para desvendar as camadas mais profundas de um texto.</li>
+                        <li><strong>Escolas Literárias:</strong> Cada escola tem suas figuras preferidas. O <strong>Barroco</strong> ama antíteses e paradoxos. O <strong>Romantismo</strong> adora hipérboles e personificações. O <strong>Simbolismo</strong> é mestre em sinestesias e assonâncias.</li>
+                        <li><strong>Publicidade e Marketing:</strong> Anúncios usam figuras de linguagem o tempo todo para persuadir o consumidor, criando slogans memoráveis e associações positivas.</li>
+                    </ul>
+                    
+                    <h3>Exercícios Interativos</h3>
+                    <p>Teste seus conhecimentos. Leia os trechos e tente identificar a principal figura de linguagem. Depois, clique para ver a resposta.</p>
+
+                    <div class="exercise-item">
+                        <p class="quote">"As cidades vinham surgindo na ponte dos nomes." - Guimarães Rosa</p>
+                        <button class="answer-btn">Revelar Resposta</button>
+                        <div class="answer-feedback">
+                            <p><strong>Resposta: Metonímia.</strong> O autor troca "placas com nomes" por "ponte dos nomes", uma substituição de grande valor poético.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="exercise-item">
+                        <p class="quote">"Rios te correrão dos olhos, se chorares!" - Olavo Bilac</p>
+                        <button class="answer-btn">Revelar Resposta</button>
+                        <div class="answer-feedback">
+                            <p><strong>Resposta: Hipérbole.</strong> O exagero na quantidade de lágrimas ("rios") serve para intensificar a ideia de um choro profundo.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="main-footer">
+        <p>Página educacional desenvolvida como uma ferramenta de aprendizado. Design e conteúdo por L2.</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Script para funcionalidade de expandir/recolher
+            const expandButtons = document.querySelectorAll('.expand-button');
+            expandButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const section = button.closest('.content-section');
+                    section.classList.toggle('is-expanded');
+                });
+            });
+            
+            // Script para os botões de resposta dos exercícios
+            const answerButtons = document.querySelectorAll('.answer-btn');
+            answerButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const feedback = button.nextElementSibling;
+                    const isVisible = feedback.style.display === 'block';
+                    feedback.style.display = isVisible ? 'none' : 'block';
+                    button.textContent = isVisible ? 'Revelar Resposta' : 'Ocultar Resposta';
+                });
+            });
+
+            // Script para animar seções no scroll (Intersection Observer)
+            const sections = document.querySelectorAll('.content-section');
+            const observer = new IntersectionObserver(entries => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('in-view');
+                    }
+                });
+            }, {
+                threshold: 0.1 
+            });
+
+            sections.forEach(section => {
+                observer.observe(section);
+            });
+        });
+    </script>
+
+</body>
+</html>

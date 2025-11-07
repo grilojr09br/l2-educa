@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alquimia do Saber: Renascimento e Maquiavel</title>
+    
+    <!-- Google Fonts: Inter para o corpo, Cormorant Garamond para títulos -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Google Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <style>
+        /* --- Variáveis do Sistema de Design "Aurora Líquida" --- */
+        :root {
+            --color-bg: #0a0a10;
+            --color-text-primary: #e0e0e0;
+            --color-text-secondary: #a0a0c0;
+            --color-accent: #8a4fff;
+            --color-glow: rgba(138, 79, 255, 0.7);
+            --color-glow-border: rgba(138, 79, 255, 0.5);
+
+            --font-body: 'Inter', sans-serif;
+            --font-heading: 'Cormorant Garamond', serif;
+
+            --glass-bg: rgba(15, 15, 25, 0.4);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --glass-blur: 15px;
+
+            --transition-fast: 0.3s ease-out;
+            --transition-medium: 0.5s ease-out;
+            --transition-slow: 0.8s ease-out;
+            --transition-loading: 1.5s ease-in-out;
+        }
+
+        /* --- Reset e Estilos Base --- */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--color-bg);
+            color: var(--color-text-primary);
+            font-family: var(--font-body);
+            line-height: 1.7;
+            overflow-x: hidden;
+            position: relative;
+            opacity: 0; /* Começa invisível para a transição do loader */
+            transition: opacity var(--transition-slow);
+        }
+
+        body.loaded {
+            opacity: 1;
+        }
+        
+        /* --- Tela de Carregamento Aprimorada --- */
+        #loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: var(--color-bg);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity var(--transition-loading);
+        }
+
+        #loader.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .loader-content {
+            font-family: var(--font-heading);
+            font-size: clamp(2rem, 8vw, 3.5rem);
+            color: var(--color-text-primary);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .loader-text span {
+            display: inline-block;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeIn-up 0.8s forwards;
+        }
+
+        .loader-text span:nth-child(1) { animation-delay: 0.1s; }
+        .loader-text span:nth-child(2) { animation-delay: 0.2s; }
+        .loader-text span:nth-child(3) { animation-delay: 0.3s; }
+        .loader-text span:nth-child(4) { animation-delay: 0.4s; }
+        .loader-text span:nth-child(5) { animation-delay: 0.5s; }
+        .loader-text span:nth-child(6) { animation-delay: 0.6s; }
+        .loader-text span:nth-child(7) { animation-delay: 0.7s; }
+
+        @keyframes fadeIn-up {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .loader-line {
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--color-accent), transparent);
+            margin-top: 1rem;
+            animation: expand-line 1s forwards;
+            animation-delay: 1s;
+        }
+
+        @keyframes expand-line {
+            to {
+                width: 100%;
+            }
+        }
+
+
+        /* --- Fundo de Aurora Líquida --- */
+        .aurora-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .aurora-shape {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.4;
+        }
+
+        .shape1 {
+            width: 500px; height: 500px; background: #5a189a; top: -10%; left: -10%;
+            animation: move-aurora 25s infinite alternate ease-in-out;
+        }
+        .shape2 {
+            width: 450px; height: 450px; background: #3c096c; bottom: -15%; right: -15%;
+            animation: move-aurora 30s infinite alternate-reverse ease-in-out;
+        }
+        .shape3 {
+            width: 400px; height: 400px; background: #10002b; top: 20%; right: 15%;
+            animation: move-aurora 20s infinite alternate ease-in-out;
+        }
+        .shape4 {
+            width: 300px; height: 300px; background: #7b2cbf; bottom: 25%; left: 10%;
+            animation: move-aurora 35s infinite alternate-reverse ease-in-out;
+        }
+
+        @keyframes move-aurora {
+            from { transform: translate(0, 0) rotate(0deg); opacity: 0.3; }
+            to { transform: translate(100px, 150px) rotate(180deg); opacity: 0.5; }
+        }
+
+        /* --- Estrutura de Layout --- */
+        .page-container {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 2rem;
+            padding: 2rem;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        main { min-width: 0; }
+
+        /* --- Navegação --- */
+        .main-nav {
+            position: sticky; top: 2rem; height: calc(100vh - 4rem); padding: 2rem;
+            background: var(--glass-bg); border: 1px solid var(--glass-border);
+            border-radius: 16px; backdrop-filter: blur(var(--glass-blur));
+            -webkit-backdrop-filter: blur(var(--glass-blur));
+            display: flex; flex-direction: column;
+        }
+        .nav-header { font-family: var(--font-heading); font-size: 1.8rem; margin-bottom: 0.5rem; }
+        .nav-subheader { font-size: 0.9rem; color: var(--color-text-secondary); margin-bottom: 2.5rem; }
+        .nav-list { list-style: none; }
+        .nav-item { margin-bottom: 1rem; }
+        .nav-link {
+            color: var(--color-text-secondary); text-decoration: none; font-size: 1rem;
+            font-weight: 500; padding: 0.75rem 1rem; border-radius: 8px;
+            display: flex; align-items: center; position: relative;
+            transition: all var(--transition-fast);
+        }
+        .nav-link .material-icons { margin-right: 0.75rem; font-size: 1.2rem; }
+        .nav-link:hover { color: var(--color-text-primary); background: rgba(255, 255, 255, 0.05); }
+        .nav-link.active {
+            color: #fff; background: var(--color-accent);
+            box-shadow: 0 4px 20px rgba(138, 79, 255, 0.4);
+        }
+        
+        /* --- Menu Mobile --- */
+        .mobile-nav {
+            display: none; position: fixed; top: 0; left: 0; width: 100%;
+            background: var(--glass-bg); backdrop-filter: blur(var(--glass-blur));
+            -webkit-backdrop-filter: blur(var(--glass-blur));
+            z-index: 100; padding: 1rem; transition: transform var(--transition-medium);
+        }
+        .mobile-nav.hidden { transform: translateY(-100%); }
+        .mobile-nav-list { display: flex; justify-content: space-around; list-style: none; }
+        .mobile-nav-link {
+            color: var(--color-text-secondary); text-decoration: none; font-size: 0.8rem;
+            font-weight: 600; display: flex; flex-direction: column;
+            align-items: center; transition: color var(--transition-fast);
+        }
+        .mobile-nav-link.active { color: var(--color-accent); }
+        .mobile-nav-link .material-icons { margin-bottom: 0.25rem; }
+
+        /* --- Componentes de Conteúdo --- */
+        .content-section {
+            margin-bottom: 4rem; padding: 3rem; background: var(--glass-bg);
+            border: 1px solid var(--glass-border); border-radius: 20px;
+            backdrop-filter: blur(var(--glass-blur)); -webkit-backdrop-filter: blur(var(--glass-blur));
+        }
+        h1, h2, h3, h4 {
+            font-family: var(--font-heading); color: var(--color-text-primary);
+            letter-spacing: 1px; text-shadow: 0 0 10px rgba(0,0,0,0.3);
+        }
+        h1 { font-size: clamp(2.5rem, 5vw, 3.5rem); margin-bottom: 0.5rem; }
+        h2 {
+            font-size: clamp(2rem, 4vw, 2.8rem); margin-bottom: 2rem;
+            border-left: 4px solid var(--color-accent); padding-left: 1rem;
+        }
+        h3 {
+            font-size: clamp(1.5rem, 3vw, 1.8rem); margin-top: 2.5rem;
+            margin-bottom: 1rem; color: var(--color-text-secondary);
+        }
+        p, li {
+            font-size: clamp(1rem, 2.5vw, 1.1rem); color: var(--color-text-secondary);
+            margin-bottom: 1rem; max-width: 75ch;
+        }
+        strong { color: var(--color-text-primary); font-weight: 500; }
+        .intro-text {
+            font-size: clamp(1.1rem, 3vw, 1.3rem); color: var(--color-text-primary);
+            max-width: 65ch; margin-bottom: 2rem;
+        }
+        
+        .card-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem; margin-top: 2rem;
+        }
+        
+        .card {
+            background: rgba(25, 25, 40, 0.5); border: 1px solid var(--glass-border);
+            border-radius: 16px; padding: 1.5rem; position: relative;
+            overflow: hidden; transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+        }
+        
+        .card::before {
+            content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(300px circle at var(--mx) var(--my), var(--color-glow), transparent 80%);
+            opacity: 0; transition: opacity var(--transition-medium);
+            z-index: 0; pointer-events: none;
+        }
+        
+        .card:hover::before, .card.touch-active::before { opacity: 1; }
+        .card-content { position: relative; z-index: 1; }
+        
+        .card:hover, .card.touch-active {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3), 0 0 20px var(--color-glow-border);
+        }
+        
+        .card h4 { color: var(--color-accent); margin-top: 0; margin-bottom: 0.5rem; }
+
+        .btn-expand {
+            background-color: var(--color-accent); color: #fff; border: none;
+            border-radius: 8px; padding: 0.75rem 1.5rem; font-family: var(--font-body);
+            font-weight: 600; cursor: pointer; display: inline-flex;
+            align-items: center; margin-top: 2rem; transition: all var(--transition-fast);
+            position: relative; overflow: hidden;
+        }
+        .btn-expand:hover {
+            background-color: #9d6bff;
+            box-shadow: 0 5px 20px rgba(138, 79, 255, 0.4);
+            transform: translateY(-2px);
+        }
+        .btn-expand .material-icons { margin-left: 0.5rem; transition: transform var(--transition-medium); }
+        .btn-expand.active .material-icons { transform: rotate(180deg); }
+        
+        .ripple {
+            position: absolute; border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.7);
+            transform: scale(0); animation: ripple-effect 0.6s linear;
+        }
+        @keyframes ripple-effect { to { transform: scale(4); opacity: 0; } }
+
+        .expand-content {
+            max-height: 0; overflow: hidden;
+            transition: max-height var(--transition-slow), margin-top var(--transition-slow);
+        }
+        .expand-content.expanded { max-height: 5000px; margin-top: 2rem; }
+        
+        .revealable {
+            opacity: 0; transform: translateY(30px);
+            transition: opacity var(--transition-slow), transform var(--transition-slow);
+        }
+        .revealable.is-visible { opacity: 1; transform: translateY(0); }
+        .card-grid .revealable { transition-delay: calc(0.1s * var(--i)); }
+        
+        /* --- Tabela Responsiva Aprimorada --- */
+        .table-container {
+            position: relative;
+            margin-top: 1.5rem;
+        }
+
+        .styled-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: clamp(0.9rem, 2vw, 1rem);
+        }
+        .styled-table th, .styled-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--glass-border);
+            overflow-wrap: break-word;
+        }
+        .styled-table th {
+            font-family: var(--font-heading);
+            font-size: 1.2rem;
+            color: var(--color-accent);
+        }
+        
+        .rotate-device-prompt {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(10, 10, 16, 0.7);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            border-radius: 8px;
+            color: var(--color-text-primary);
+            display: none; /* Oculto por padrão */
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            z-index: 2;
+        }
+        .rotate-device-prompt .material-icons {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            animation: rotate-anim 2s infinite ease-in-out;
+        }
+
+        @keyframes rotate-anim {
+            0% { transform: rotate(0deg); }
+            50% { transform: rotate(-90deg); }
+            100% { transform: rotate(-90deg); }
+        }
+        
+        .styled-list { list-style: none; padding-left: 1rem; }
+        .styled-list li { position: relative; padding-left: 1.5rem; margin-bottom: 0.75rem; }
+        .styled-list li::before {
+            content: '✧'; position: absolute; left: 0;
+            color: var(--color-accent); font-weight: bold;
+        }
+
+        footer {
+            text-align: center; padding: 2rem;
+            color: var(--color-text-secondary); font-size: 0.8rem; margin-top: 2rem;
+        }
+
+        /* --- Responsividade --- */
+        @media (max-width: 1024px) {
+            .page-container { grid-template-columns: 1fr; padding: 1rem; }
+            .main-nav { display: none; }
+            .mobile-nav { display: block; }
+            body { padding-top: 70px; }
+            .content-section { padding: 1.5rem; }
+            p, li { max-width: 100%; }
+        }
+
+        /* Ativa o prompt de rotação em telas pequenas e em modo retrato */
+        @media (max-width: 767px) and (orientation: portrait) {
+            .table-container .rotate-device-prompt {
+                display: flex;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Tela de Carregamento -->
+    <div id="loader">
+        <div class="loader-content">
+            <div class="loader-text">
+                <span>L</span><span>2</span><span> </span><span>E</span><span>D</span><span>U</span><span>C</span><span>A</span>
+            </div>
+            <div class="loader-line"></div>
+        </div>
+    </div>
+
+    <div class="aurora-background">
+        <div class="aurora-shape shape1"></div>
+        <div class="aurora-shape shape2"></div>
+        <div class="aurora-shape shape3"></div>
+        <div class="aurora-shape shape4"></div>
+    </div>
+
+    <!-- Menu Mobile -->
+    <nav class="mobile-nav">
+        <ul class="mobile-nav-list">
+            <li><a href="#intro" class="mobile-nav-link active"><span class="material-icons">api</span>Início</a></li>
+            <li><a href="#renascimento" class="mobile-nav-link"><span class="material-icons">palette</span>Renascimento</a></li>
+            <li><a href="#maquiavel" class="mobile-nav-link"><span class="material-icons">gavel</span>Maquiavel</a></li>
+        </ul>
+    </nav>
+
+    <div class="page-container">
+        <!-- Navegação Lateral (Desktop) -->
+        <nav class="main-nav">
+            <div class="nav-header">Alquimia do Saber</div>
+            <p class="nav-subheader">Uma jornada pelo pensamento moderno.</p>
+            <ul class="nav-list">
+                <li class="nav-item"><a href="#intro" class="nav-link active"><span class="material-icons">api</span>Visão Geral</a></li>
+                <li class="nav-item"><a href="#renascimento" class="nav-link"><span class="material-icons">palette</span>Renascimento</a></li>
+                <li class="nav-item"><a href="#maquiavel" class="nav-link"><span class="material-icons">gavel</span>Maquiavel</a></li>
+            </ul>
+        </nav>
+
+        <main>
+            <!-- Seção de Introdução -->
+            <section id="intro" class="content-section revealable">
+                <h1>A Transmutação do Pensamento</h1>
+                <p class="intro-text">Esta página é um artefato digital, uma fusão de código e pedagogia projetada para transmutar conceitos complexos em experiências luminosas. Exploraremos a aurora do pensamento moderno: o Renascimento, que redefiniu a arte e a ciência, e as ideias de Maquiavel, que despiram a política de sua roupagem moral para revelar sua mecânica crua.</p>
+            </section>
+
+            <!-- Seção Renascimento -->
+            <section id="renascimento" class="content-section revealable">
+                <h2>Renascimento: O Despertar do Gigante</h2>
+                <p>O Renascimento foi mais que um movimento artístico; foi uma revolução copernicana da consciência humana. A humanidade, antes voltada para o divino e o pós-vida, virou o telescópio para si mesma, redescobrindo o potencial do indivíduo e a beleza do mundo natural.</p>
+                
+                <div class="card-grid">
+                    <div class="card revealable" style="--i: 1;">
+                        <div class="card-content">
+                            <h4>Humanismo</h4>
+                            <p>A valorização do ser humano e de suas capacidades intelectuais, artísticas e morais, em contraste com o teocentrismo medieval.</p>
+                        </div>
+                    </div>
+                    <div class="card revealable" style="--i: 2;">
+                        <div class="card-content">
+                            <h4>Antropocentrismo</h4>
+                            <p>O homem como centro do universo e medida de todas as coisas. A busca pelo conhecimento e pela glória terrena se torna legítima.</p>
+                        </div>
+                    </div>
+                    <div class="card revealable" style="--i: 3;">
+                        <div class="card-content">
+                            <h4>Racionalismo</h4>
+                            <p>A razão como principal instrumento para alcançar o conhecimento verdadeiro, impulsionando a investigação científica e filosófica.</p>
+                        </div>
+                    </div>
+                    <div class="card revealable" style="--i: 4;">
+                        <div class="card-content">
+                            <h4>Classicismo</h4>
+                            <p>A retomada e reinterpretação dos valores estéticos e filosóficos da antiguidade greco-romana, buscando harmonia, proporção e realismo.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="btn-expand">
+                    Aprofundar Análise
+                    <span class="material-icons">expand_more</span>
+                </button>
+
+                <div class="expand-content">
+                    <h3>Lógica Central: A Mudança de Paradigma</h3>
+                    <p>A transição fundamental do Renascimento foi do <strong>Teocentrismo</strong> (Deus como centro de tudo) para o <strong>Antropocentrismo</strong> (o Homem como centro). Isso não significou o abandono da religião, mas uma mudança de foco. A vida terrena passou a ser valorizada, e o indivíduo ganhou autonomia para explorar o mundo através da razão e da experiência. O conhecimento deixou de ser monopólio da Igreja e passou a ser buscado em fontes clássicas e na observação direta da natureza.</p>
+
+                    <h3>Aplicações Práticas e Manifestações</h3>
+                    <ul class="styled-list">
+                        <li><strong>Nas Artes:</strong> Artistas como Leonardo da Vinci e Michelangelo aplicaram estudos de anatomia para retratar o corpo humano com um realismo sem precedentes (ex: <em>Davi</em>). A invenção da perspectiva linear por Brunelleschi permitiu a criação de profundidade e espaço tridimensional na pintura.</li>
+                        <li><strong>Na Ciência:</strong> O Racionalismo e a observação direta desafiaram dogmas antigos. Copérnico propôs o modelo heliocêntrico, Galileu usou o telescópio para confirmar novas teorias astronômicas, e Vesalius revolucionou a anatomia com a dissecação de corpos humanos.</li>
+                        <li><strong>Na Política:</strong> O pensamento humanista influenciou a ideia de que o governante deveria ser virtuoso e educado, não apenas um guerreiro. A ascensão dos mecenas (ricos patronos das artes e ciências) demonstrou o poder e prestígio associados ao conhecimento.</li>
+                    </ul>
+                    
+                    <h3>Tabela Comparativa: Mentalidade Medieval vs. Renascentista</h3>
+                    <div class="table-container">
+                        <div class="rotate-device-prompt">
+                            <span class="material-icons">screen_rotation</span>
+                            <p>Vire o dispositivo para visualizar a tabela</p>
+                        </div>
+                        <table class="styled-table">
+                            <thead>
+                                <tr>
+                                    <th>Aspecto</th>
+                                    <th>Pensamento Medieval</th>
+                                    <th>Pensamento Renascentista</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Foco Principal</td>
+                                    <td>Deus, vida eterna (Teocentrismo)</td>
+                                    <td>Homem, vida terrena (Antropocentrismo)</td>
+                                </tr>
+                                <tr>
+                                    <td>Fonte do Saber</td>
+                                    <td>Bíblia, tradição, autoridade da Igreja</td>
+                                    <td>Razão, observação, textos clássicos</td>
+                                </tr>
+                                <tr>
+                                    <td>Valor Humano</td>
+                                    <td>Marcado pelo pecado original, dependente da graça divina</td>
+                                    <td>Dotado de razão, criatividade e potencial ilimitado</td>
+                                </tr>
+                                <tr>
+                                    <td>Ideal de Vida</td>
+                                    <td>Ascetismo, contemplação, negação do mundo</td>
+                                    <td>Ação, conhecimento, fama, realização pessoal</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Seção Maquiavel -->
+            <section id="maquiavel" class="content-section revealable">
+                <h2>Maquiavel: A Anatomia do Poder</h2>
+                <p>Nicolau Maquiavel, com sua obra-prima <em>O Príncipe</em>, realizou na política o que seus contemporâneos fizeram na arte e na ciência: removeu as camadas de idealismo para observar a realidade nua e crua. Ele fundou o pensamento político moderno ao separar a prática do poder da moralidade religiosa e da ética tradicional.</p>
+
+                <div class="card-grid">
+                    <div class="card revealable" style="--i: 1;">
+                        <div class="card-content">
+                            <h4>Realismo Político</h4>
+                            <p>Análise da política como ela "é", não como "deveria ser". Foco na eficácia e na manutenção do poder acima de ideais abstratos.</p>
+                        </div>
+                    </div>
+                    <div class="card revealable" style="--i: 2;">
+                        <div class="card-content">
+                            <h4>Virtù e Fortuna</h4>
+                            <p>A tensão central na política. <em>Virtù</em> é a capacidade do governante de agir, adaptar-se e impor sua vontade. <em>Fortuna</em> são as circunstâncias, a sorte ou o acaso.</p>
+                        </div>
+                    </div>
+                    <div class="card revealable" style="--i: 3;">
+                        <div class="card-content">
+                            <h4>A Natureza Humana</h4>
+                            <p>Maquiavel parte de uma visão pessimista: os homens são ingratos, volúveis e egoístas. O governante deve agir com base nessa realidade.</p>
+                        </div>
+                    </div>
+                     <div class="card revealable" style="--i: 4;">
+                        <div class="card-content">
+                            <h4>Autonomia da Política</h4>
+                            <p>A política possui suas próprias regras e lógica (a "razão de Estado"), que podem e devem se sobrepor à moralidade convencional para garantir a estabilidade.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="btn-expand">
+                    Aprofundar Análise
+                    <span class="material-icons">expand_more</span>
+                </button>
+
+                <div class="expand-content">
+                    <h3>Lógica Central: A Separação entre Ética e Política</h3>
+                    <p>O gesto revolucionário de Maquiavel foi argumentar que a ética do governante não é a mesma ética do cidadão comum. Para o cidadão, mentir ou trair é um vício. Para o príncipe, se mentir ou trair for necessário para <strong>salvar o Estado</strong>, isso se torna uma virtude política. O objetivo final não é a salvação da alma do governante, mas a segurança e a glória do Estado. É a lógica por trás da famosa (e mal interpretada) ideia de que "os fins justificam os meios". Maquiavel nunca usou essa frase, mas seu pensamento sugere que os <strong>resultados</strong> para o Estado são o critério final para julgar as ações de um líder.</p>
+                    
+                    <h3>Raciocínio Sequencial: Como o Príncipe deve agir?</h3>
+                    <ol class="styled-list">
+                        <li><strong>Observar a Realidade (Verità Effettuale):</strong> O príncipe deve basear suas decisões nos fatos, não em utopias. Ele deve entender a natureza humana e as relações de poder como elas são.</li>
+                        <li><strong>Dominar a Arte da Aparência:</strong> É mais importante <em>parecer</em> piedoso, fiel e humano do que <em>ser</em>. O povo julga pelas aparências e pelos resultados. Manter uma boa reputação é uma ferramenta de poder.</li>
+                        <li><strong>Ser Amado ou Temido?:</strong> Maquiavel conclui que "é muito mais seguro ser temido do que amado". O amor é volúvel, mas o medo de punição é constante. O ideal é ser ambos, mas, se for preciso escolher, o temor garante mais controle. O príncipe deve, contudo, evitar ser odiado, o que poderia levar a revoltas.</li>
+                        <li><strong>Equilibrar Virtù e Fortuna:</strong> O príncipe de <em>virtù</em> não é um espectador passivo. Ele age com audácia para moldar as circunstâncias (Fortuna) a seu favor. Maquiavel usa a metáfora de que a Fortuna é como um rio selvagem: um homem prudente constrói diques e barreiras durante a calmaria para se proteger quando a enchente vier.</li>
+                    </ol>
+                    
+                    <h3>Dicas para a Leitura de "O Príncipe"</h3>
+                    <p>Para evitar os clichês sobre o "maquiavelismo", lembre-se:</p>
+                    <ul class="styled-list">
+                        <li><strong>Contexto Histórico:</strong> Maquiavel escrevia em uma Itália fragmentada, vulnerável a invasões estrangeiras. Seu desejo era ver um líder forte capaz de unificar e defender a nação. A obra é um manual para a ação em tempos de crise.</li>
+                        <li><strong>Não é um Livro de Tirania:</strong> O objetivo final do uso da força ou da astúcia não é o prazer sádico do tirano, mas a criação de um Estado estável e seguro para todos. A crueldade "bem usada" é aquela que se aplica de uma só vez para garantir a ordem e depois cessa.</li>
+                        <li><strong>É Descritivo, não Prescritivo para a Moral Pessoal:</strong> Maquiavel não está dizendo como você deve viver sua vida pessoal. Ele está descrevendo o que, em sua observação, funciona para conquistar e manter o poder político.</li>
+                    </ul>
+                </div>
+            </section>
+
+            <footer>
+                <p class="revealable">Página educacional desenvolvida como uma ferramenta de aprendizado. Design e conteúdo por L2.</p>
+            </footer>
+        </main>
+    </div>
+
+    <script>
+        // Usar window.onload para garantir que todos os recursos (fontes, etc.) foram carregados
+        window.onload = () => {
+            const loader = document.getElementById('loader');
+            const body = document.body;
+
+            // Transição suave para revelar a página
+            setTimeout(() => {
+                loader.classList.add('hidden');
+                body.classList.add('loaded');
+            }, 2000); // Aumenta o tempo para a animação do loader completar
+            
+            // Remove o loader do DOM após a transição para não interferir
+            setTimeout(() => {
+                if (loader) loader.style.display = 'none';
+            }, 3500); // Deve ser maior que o tempo de revelação
+
+            // O resto do seu script que depende do DOM
+            initializePage();
+        };
+
+        function initializePage() {
+            // --- Lógica para o Efeito de Ondulação (Ripple) ---
+            function createRipple(event) {
+                const button = event.currentTarget;
+                const circle = document.createElement("span");
+                const diameter = Math.max(button.clientWidth, button.clientHeight);
+                const radius = diameter / 2;
+
+                circle.style.width = circle.style.height = `${diameter}px`;
+                circle.style.left = `${event.clientX - (button.getBoundingClientRect().left + radius)}px`;
+                circle.style.top = `${event.clientY - (button.getBoundingClientRect().top + radius)}px`;
+                circle.classList.add("ripple");
+
+                const ripple = button.getElementsByClassName("ripple")[0];
+                if (ripple) {
+                    ripple.remove();
+                }
+                button.appendChild(circle);
+            }
+            
+            const buttons = document.querySelectorAll('.btn-expand');
+            buttons.forEach(button => {
+                button.addEventListener('click', createRipple);
+            });
+
+            // --- Lógica para Expansão de Conteúdo ---
+            const expandButtons = document.querySelectorAll('.btn-expand');
+            expandButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const content = button.nextElementSibling;
+                    button.classList.toggle('active');
+                    content.classList.toggle('expanded');
+                });
+            });
+
+            // --- Lógica para o Brilho Líquido (Mouse e Toque) ---
+            const interactiveCards = document.querySelectorAll('.card');
+
+            // Para Desktop (Mouse)
+            interactiveCards.forEach(card => {
+                card.addEventListener('mousemove', (e) => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    card.style.setProperty('--mx', `${x}px`);
+                    card.style.setProperty('--my', `${y}px`);
+                });
+            });
+
+            // Para Mobile (Toque)
+            let lastTouchedCard = null;
+
+            document.addEventListener('touchmove', (e) => {
+                const touch = e.touches[0];
+                if (!touch) return;
+
+                const elementUnderTouch = document.elementFromPoint(touch.clientX, touch.clientY);
+                const currentCard = elementUnderTouch ? elementUnderTouch.closest('.card') : null;
+                
+                if (lastTouchedCard && lastTouchedCard !== currentCard) {
+                    lastTouchedCard.classList.remove('touch-active');
+                }
+
+                if (currentCard) {
+                    const rect = currentCard.getBoundingClientRect();
+                    const x = touch.clientX - rect.left;
+                    const y = touch.clientY - rect.top;
+                    currentCard.style.setProperty('--mx', `${x}px`);
+                    currentCard.style.setProperty('--my', `${y}px`);
+                    currentCard.classList.add('touch-active');
+                }
+                
+                lastTouchedCard = currentCard;
+            }, { passive: true });
+
+            const endTouch = () => {
+                if (lastTouchedCard) {
+                    lastTouchedCard.classList.remove('touch-active');
+                    lastTouchedCard = null;
+                }
+            };
+            document.addEventListener('touchend', endTouch);
+            document.addEventListener('touchcancel', endTouch);
+
+
+            // --- Lógica para Animação de Revelação ao Rolar ---
+            const revealables = document.querySelectorAll('.revealable');
+            const revealObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.1
+            });
+            
+            revealables.forEach(el => revealObserver.observe(el));
+            
+            // --- Lógica para Navegação Ativa com IntersectionObserver ---
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('.nav-link, .mobile-nav-link');
+            
+            const navObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const id = entry.target.getAttribute('id');
+                        navLinks.forEach(link => {
+                            link.classList.remove('active');
+                            if (link.getAttribute('href') === `#${id}`) {
+                                link.classList.add('active');
+                            }
+                        });
+                    }
+                });
+            }, {
+                root: null,
+                rootMargin: '-50% 0px -50% 0px',
+                threshold: 0
+            });
+            
+            sections.forEach(section => navObserver.observe(section));
+
+            // --- Lógica para Ocultar/Mostrar Menu Mobile ao Rolar ---
+            const mobileNav = document.querySelector('.mobile-nav');
+            let lastScrollY = window.scrollY;
+
+            window.addEventListener('scroll', () => {
+                if (window.innerWidth <= 1024) {
+                    if (lastScrollY < window.scrollY && window.scrollY > 100) {
+                        mobileNav.classList.add('hidden');
+                    } else {
+                        mobileNav.classList.remove('hidden');
+                    }
+                    lastScrollY = window.scrollY;
+                }
+            });
+        }
+    </script>
+</body>
+</html>

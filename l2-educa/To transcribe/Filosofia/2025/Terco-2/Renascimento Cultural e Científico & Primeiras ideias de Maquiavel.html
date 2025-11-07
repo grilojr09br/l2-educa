@@ -1,0 +1,1155 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Renascimento & Maquiavel — Página Educacional (v2.1)</title>
+
+  <!-- Tipografia & Ícones -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+  <!-- Chart.js (via CDN) -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+
+  <style>
+    /* =========================
+       SISTEMA DE DESIGN — AURORA LÍQUIDA
+       ========================= */
+    :root{
+      /* Cores base */
+      --bg: #0b0e14;
+      --text: #e9edf1;
+      --muted: #9aa4af;
+      --card: rgba(255,255,255,0.06);
+      --stroke: rgba(255,255,255,0.12);
+      --accent: #7ddcff;
+      --accent-2: #bda6ff;
+      --accent-3: #ffb8ec;
+      --success: #00d68f;
+      --warn: #ffb020;
+      --danger: #ff4d4f;
+
+      /* Espaçamento fluido */
+      --space-1: clamp(6px, 0.6vw, 10px);
+      --space-2: clamp(10px, 1.0vw, 16px);
+      --space-3: clamp(16px, 1.6vw, 24px);
+      --space-4: clamp(22px, 2.2vw, 34px);
+      --space-5: clamp(28px, 3.0vw, 48px);
+      --radius: 16px;
+
+      /* Tipografia fluida */
+      --fs-12: clamp(12px, 0.9vw, 13px);
+      --fs-14: clamp(13px, 1.0vw, 15px);
+      --fs-16: clamp(14px, 1.2vw, 18px);
+      --fs-18: clamp(16px, 1.4vw, 20px);
+      --fs-22: clamp(18px, 2.0vw, 28px);
+      --fs-28: clamp(24px, 2.6vw, 36px);
+      --fs-40: clamp(28px, 4.0vw, 56px);
+
+      /* Sombra suave para glass */
+      --elev-1: 0 4px 20px rgba(0,0,0,0.35);
+      --elev-2: 0 8px 40px rgba(0,0,0,0.45);
+
+      /* Durações */
+      --t-fast: .25s;
+      --t-med: .45s;
+      --t-slow: .8s;
+      --ease: cubic-bezier(.2,.8,.2,1);
+
+      /* Nave lateral */
+      --sidebar-w: 280px;
+    }
+
+    *{ box-sizing: border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji","Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif;
+      color: var(--text);
+      background: var(--bg);
+      overflow-x: hidden;
+    }
+
+    /* AURORA LÍQUIDA — camadas animadas sutis ao fundo */
+    .aurora{
+      position: fixed;
+      inset: -20vh -20vw;
+      z-index: -2;
+      pointer-events: none;
+      filter: saturate(120%);
+    }
+    .blob{
+      position: absolute;
+      width: 48vw;
+      height: 48vw;
+      max-width: 900px;
+      max-height: 900px;
+      background:
+        radial-gradient(35% 35% at 50% 50%, rgba(255,255,255,0.12), transparent 60%),
+        conic-gradient(from 0deg at 50% 50%, var(--accent), var(--accent-2), var(--accent-3), var(--accent));
+      opacity: .35;
+      filter: blur(110px);
+      border-radius: 50%;
+      animation: floatXY 18s var(--ease) infinite alternate, spin 120s linear infinite;
+      mix-blend-mode: screen;
+    }
+    .blob.b1{ top: -10vh; left: -10vw; }
+    .blob.b2{ bottom: -15vh; right: -15vw; animation-duration: 22s, 140s; }
+    .blob.b3{ top: 40vh; left: 30vw; animation-duration: 26s, 160s; opacity:.25; }
+
+    @keyframes floatXY{
+      to{ transform: translate3d(6vw, -4vh, 0) scale(1.04); }
+    }
+    @keyframes spin{
+      to{ transform: rotate(1turn); }
+    }
+
+    /* LAYOUT PRINCIPAL — CSS GRID */
+    .layout{
+      display: grid;
+      grid-template-columns: var(--sidebar-w) 1fr;
+      min-height: 100vh;
+      gap: var(--space-3);
+    }
+
+    /* SIDEBAR (desktop) */
+    aside.sidebar{
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      padding: var(--space-3);
+      border-right: 1px solid var(--stroke);
+      background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+      backdrop-filter: blur(12px);
+    }
+    .brand{
+      display: flex; align-items: center; gap: var(--space-2);
+      margin-bottom: var(--space-3);
+      padding: var(--space-2);
+      border-radius: 12px;
+      background: var(--card);
+      box-shadow: var(--elev-1);
+    }
+    .brand .material-icons{ font-size: 28px; }
+    .brand h1{
+      margin:0;
+      font: 800 var(--fs-18)/1.2 Inter, sans-serif;
+      letter-spacing: 0.3px;
+    }
+    nav[role="navigation"] ul{
+      list-style: none; margin:0; padding:0;
+      display: grid; gap: 6px;
+    }
+    nav[role="navigation"] a{
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      color: var(--text);
+      text-decoration: none;
+      background: transparent;
+      border: 1px solid transparent;
+      transition: background var(--t-fast) var(--ease), border var(--t-fast) var(--ease), transform var(--t-fast) var(--ease);
+    }
+    nav[role="navigation"] a .material-icons{ font-size: 20px; }
+    nav[role="navigation"] a:hover{
+      background: var(--card);
+      border-color: var(--stroke);
+      transform: translateY(-1px);
+    }
+    nav[role="navigation"] a.active{
+      background: linear-gradient(180deg, rgba(125,220,255,0.15), rgba(189,166,255,0.12));
+      border-color: rgba(125,220,255,0.35);
+      box-shadow: inset 0 0 0 1px rgba(125,220,255,0.2);
+    }
+
+    /* HEADER (mobile) com menu que esconde/mostra ao rolar */
+    header.topbar{
+      display: none;
+      position: sticky; top: 0; z-index: 20;
+      background: rgba(12,14,22,0.7);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--stroke);
+      transition: transform var(--t-med) var(--ease);
+    }
+    header.topbar.hide{ transform: translateY(-100%); }
+    .topbar-inner{
+      display: flex; align-items: center; gap: var(--space-2);
+      padding: var(--space-2) var(--space-3);
+      overflow: hidden;
+    }
+    .topbar-title{
+      display:flex; align-items:center; gap:10px; font-weight:700;
+    }
+    .topbar-nav{
+      margin-left:auto;
+      display:flex; gap: 4px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .topbar-nav::-webkit-scrollbar{ display:none; }
+    .topbar-nav a{
+      white-space: nowrap;
+      font-size: var(--fs-12);
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      color: var(--text); text-decoration: none;
+      background: rgba(255,255,255,0.04);
+    }
+    .topbar-nav a.active{
+      border-color: rgba(125,220,255,0.35);
+      background: rgba(125,220,255,0.14);
+    }
+
+    /* MAIN */
+    main{
+      padding: var(--space-3) var(--space-4) var(--space-5);
+    }
+    section{
+      position: relative;
+      padding: var(--space-4);
+      border: 1px solid var(--stroke);
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03));
+      backdrop-filter: blur(6px);
+      box-shadow: var(--elev-1);
+      margin-bottom: var(--space-4);
+      overflow: clip;
+    }
+    section .section-title{
+      font-family: "Playfair Display", serif;
+      font-size: var(--fs-40);
+      letter-spacing: .3px;
+      margin: 0 0 var(--space-2) 0;
+    }
+    section .section-subtitle{
+      margin: 0 0 var(--space-3);
+      font-size: var(--fs-16);
+      color: var(--muted);
+    }
+
+    /* CARDS + GRADE FLEXÍVEL */
+    .cards{
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: var(--space-3);
+    }
+    .card{
+      grid-column: span 6;
+      background: var(--card);
+      border: 1px solid var(--stroke);
+      border-radius: 14px;
+      padding: var(--space-3);
+      box-shadow: var(--elev-1);
+      transition: transform var(--t-med) var(--ease), box-shadow var(--t-med) var(--ease);
+      position: relative;
+      overflow: hidden;
+    }
+    .card:hover{ transform: translateY(-3px); box-shadow: var(--elev-2); }
+    .card h3{
+      display:flex; align-items:center; gap: 8px;
+      margin: 0 0 8px 0;
+      font-size: var(--fs-22);
+      letter-spacing: .2px;
+      font-weight: 700;
+    }
+    .card p{ margin: 0 0 var(--space-2) 0; font-size: var(--fs-16); color: var(--text); }
+    .eyebrow{
+      display:inline-flex; align-items:center; gap:6px;
+      font-size: var(--fs-12); text-transform: uppercase; letter-spacing: .8px;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    /* BOTÕES + Liquid Glow + Ripple */
+    .btn{
+      --pad-y: 10px; --pad-x: 14px;
+      display:inline-flex; align-items:center; gap: 8px;
+      padding: var(--pad-y) var(--pad-x);
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.18);
+      background: rgba(255,255,255,0.06);
+      color: var(--text);
+      font-weight: 600; font-size: var(--fs-14);
+      text-decoration: none; cursor: pointer;
+      position: relative; overflow: hidden;
+      transition: transform var(--t-fast) var(--ease), box-shadow var(--t-fast) var(--ease), border var(--t-fast) var(--ease), background var(--t-fast) var(--ease);
+    }
+    .btn:hover{ transform: translateY(-1px); background: rgba(255,255,255,0.09); }
+    .btn .material-icons{ font-size: 18px; }
+
+    /* Liquid Glow: segue o cursor (em elementos interativos) */
+    .liquid-glow::before{
+      content:"";
+      position:absolute; inset:-2px;
+      background: radial-gradient(250px 250px at var(--mx,50%) var(--my,50%), rgba(255,255,255,0.25), transparent 45%);
+      opacity: 0; transition: opacity var(--t-fast) var(--ease);
+      pointer-events: none;
+    }
+    .liquid-glow:hover::before{ opacity: 1; }
+
+    /* Ripple no clique */
+    .ripple{
+      position:absolute; border-radius:50%;
+      transform: translate(-50%,-50%) scale(0);
+      background: currentColor; opacity:.25;
+      pointer-events: none;
+      animation: ripple var(--t-med) var(--ease) forwards;
+    }
+    @keyframes ripple{ to{ transform: translate(-50%,-50%) scale(12); opacity: 0; } }
+
+    /* EXPANSOR "Aprofundar" */
+    .expander{
+      display:flex; gap: 8px; align-items:center;
+      margin-top: 10px;
+    }
+    .expandable{
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height var(--t-slow) var(--ease), opacity var(--t-med) var(--ease);
+      opacity: 0;
+    }
+    .expandable.open{ opacity: 1; max-height: 2500px; }
+    .btn-toggle[aria-expanded="true"] .chev{ transform: rotate(180deg); }
+    .chev{ transition: transform var(--t-fast) var(--ease); }
+
+    /* SCROLL REVEAL + STAGGER */
+    .reveal{ opacity: 0; transform: translateY(26px); transition: opacity .6s var(--ease), transform .6s var(--ease); }
+    .is-visible{ opacity: 1; transform: none; }
+    .reveal[style*="--delay"]{ transition-delay: var(--delay, 0ms); }
+
+    /* TABELA */
+    table{
+      width: 100%;
+      border-collapse: collapse;
+      margin: var(--space-3) 0;
+      font-size: var(--fs-14);
+    }
+    th, td{
+      padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--stroke);
+    }
+    thead th{
+      font-weight: 700; font-size: var(--fs-14);
+      background: rgba(255,255,255,0.06);
+    }
+    tbody tr:hover{ background: rgba(255,255,255,0.04); }
+
+    /* TIMELINE simples (rolagem horizontal) */
+    .timeline{
+      display: grid; gap: 10px; grid-auto-flow: column;
+      overflow-x:auto; padding-bottom: 6px;
+      scrollbar-width: thin;
+    }
+    .time-card{
+      min-width: 240px;
+      border: 1px solid var(--stroke); border-radius: 12px;
+      background: var(--card); padding: 12px;
+    }
+    .time-year{ font-weight: 800; font-size: var(--fs-22); }
+
+    /* FOOTER */
+    footer{
+      margin-top: var(--space-4);
+      padding: var(--space-3);
+      color: var(--muted);
+      text-align: center;
+      border-top: 1px solid var(--stroke);
+      background: rgba(255,255,255,0.03);
+      backdrop-filter: blur(6px);
+      border-radius: 14px;
+    }
+
+    /* RESPONSIVIDADE */
+    @media (max-width: 980px){
+      .layout{ grid-template-columns: 1fr; }
+      aside.sidebar{ display:none; }
+      header.topbar{ display:block; }
+      .card{ grid-column: span 12; }
+      section{ padding: var(--space-3); }
+    }
+
+    /* ACESSIBILIDADE — reduz animações */
+    @media (prefers-reduced-motion: reduce){
+      .blob, .liquid-glow::before{ animation: none !important; transition: none !important; }
+      .reveal{ transition: none !important; }
+      header.topbar{ transition: none !important; }
+    }
+
+    /* LINK p/ pular conteudo (accessibility) */
+    .skip-link{
+      position:absolute; left:-999px; top:auto; width:1px; height:1px; overflow:hidden;
+    }
+    .skip-link:focus{
+      position: fixed; left: 16px; top: 16px; width:auto; height:auto; padding:8px 12px;
+      z-index: 9999; background: #000; color:#fff; border-radius: 8px;
+    }
+  </style>
+</head>
+
+<body>
+  <a href="#conteudo" class="skip-link">Ir direto ao conteúdo</a>
+
+  <!-- Aurora Líquida -->
+  <div class="aurora" aria-hidden="true">
+    <div class="blob b1"></div>
+    <div class="blob b2"></div>
+    <div class="blob b3"></div>
+  </div>
+
+  <!-- HEADER (Mobile) -->
+  <header class="topbar" role="banner">
+    <div class="topbar-inner">
+      <div class="topbar-title">
+        <span class="material-icons" aria-hidden="true">auto_awesome</span>
+        <strong>Renascimento &amp; Maquiavel</strong>
+      </div>
+      <nav class="topbar-nav" aria-label="Seções (mobile)">
+        <a href="#intro">Início</a>
+        <a href="#renascimento">Renascimento</a>
+        <a href="#motores">Motores</a>
+        <a href="#impactos">Impactos</a>
+        <a href="#maquiavel">Maquiavel</a>
+        <a href="#simulador">Simulador</a>
+        <a href="#leituras">Leituras</a>
+        <a href="#faq">FAQ</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="layout">
+    <!-- SIDEBAR (Desktop) -->
+    <aside class="sidebar">
+      <div class="brand liquid-glow">
+        <span class="material-icons" aria-hidden="true">auto_awesome</span>
+        <div>
+          <h1>Guia Mestre</h1>
+          <div style="font-size: var(--fs-12); color: var(--muted)">Filosofia & Política</div>
+        </div>
+      </div>
+      <nav role="navigation" aria-label="Seções (desktop)">
+        <ul>
+          <li><a href="#intro"><span class="material-icons">home</span> Início</a></li>
+          <li><a href="#renascimento"><span class="material-icons">flare</span> Renascimento</a></li>
+          <li><a href="#motores"><span class="material-icons">hub</span> Motores Intelectuais</a></li>
+          <li><a href="#impactos"><span class="material-icons">monitoring</span> Impactos & Comparativos</a></li>
+          <li><a href="#maquiavel"><span class="material-icons">gavel</span> Maquiavel (noções iniciais)</a></li>
+          <li><a href="#simulador"><span class="material-icons">psychology</span> Simulador do Príncipe</a></li>
+          <li><a href="#leituras"><span class="material-icons">menu_book</span> Leituras & Fontes</a></li>
+          <li><a href="#faq"><span class="material-icons">help</span> FAQ</a></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- MAIN -->
+    <main id="conteudo">
+
+      <!-- INTRO -->
+      <section id="intro" class="reveal" style="--delay:0ms">
+        <h2 class="section-title">Renascimento Cultural e Científico & Primeiras ideias de Maquiavel</h2>
+        <p class="section-subtitle">
+          Um mapa mestre, alto nível → profundidade. Zero enrolação. Interatividade para fixação. 
+        </p>
+
+        <div class="cards">
+          <div class="card liquid-glow reveal" style="--delay:60ms">
+            <span class="eyebrow"><span class="material-icons" aria-hidden="true">bolt</span> Fundamentos</span>
+            <h3>O que foi o Renascimento?</h3>
+            <p>
+              Reconfiguração cultural (séculos XIV–XVI) que reposiciona o humano no centro:
+              <em>studia humanitatis</em>, filologia, arte como conhecimento e nova confiança na experiência.
+            </p>
+            <div class="expander">
+              <button class="btn btn-toggle liquid-glow" aria-expanded="false">
+                <span class="material-icons chev" aria-hidden="true">expand_more</span> Aprofundar
+              </button>
+            </div>
+            <div class="expandable">
+              <ul>
+                <li><strong>Humanismo:</strong> renovação dos estudos de gramática, retórica, história, poesia e filosofia moral.</li>
+                <li><strong>“Ad fontes”:</strong> retorno aos textos originais greco-latinos; crítica histórica e filológica.</li>
+                <li><strong>Urbanidade cívica:</strong> repúblicas italianas e mecenato moldam uma cultura de prestígio e inovação.</li>
+                <li><strong>Arte-saber:</strong> perspectiva, anatomia e matemática transformam atelier em laboratório.</li>
+              </ul>
+              <p class="muted" style="color:var(--muted)">
+                Nota: “Renascimento” não apaga a Idade Média; amplia e tensiona seus legados.
+              </p>
+            </div>
+          </div>
+
+          <div class="card liquid-glow reveal" style="--delay:120ms">
+            <span class="eyebrow"><span class="material-icons" aria-hidden="true">psychology</span> Personagem</span>
+            <h3>Quem é Maquiavel?</h3>
+            <p>
+              Diplomata florentino (1469–1527). Em <em>O Príncipe</em>, descreve a política como técnica de fundação e manutenção do poder.
+            </p>
+            <div class="expander">
+              <button class="btn btn-toggle liquid-glow" aria-expanded="false">
+                <span class="material-icons chev" aria-hidden="true">expand_more</span> Aprofundar
+              </button>
+            </div>
+            <div class="expandable">
+              <ul>
+                <li><strong>Contexto:</strong> instabilidade das cidades-Estado italianas (guerras, papado, França/Espanha).</li>
+                <li><strong>Obras centrais:</strong> <em>O Príncipe</em>, <em>Discursos sobre a primeira década de Tito Lívio</em>, <em>A Arte da Guerra</em>.</li>
+                <li><strong>Chaves:</strong> <em>virtù</em> (agência estratégica), <em>fortuna</em> (contingência), armas próprias, opinião pública, instituições.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- RENASCIMENTO -->
+      <section id="renascimento" class="reveal" style="--delay:0ms">
+        <h2 class="section-title">Renascimento: visão clara em cartões</h2>
+        <p class="section-subtitle">Pontos-chave (clique em <strong>Aprofundar</strong> para lógica, exemplos e dicas).</p>
+
+        <div class="cards">
+          <!-- Humanismo -->
+          <div class="card liquid-glow reveal" style="--delay:40ms">
+            <span class="eyebrow"><span class="material-icons">record_voice_over</span> Humanismo</span>
+            <h3>Centralidade do humano e das letras</h3>
+            <p>Educação moral e cívica via autores clássicos; elo entre eloquência e ação pública.</p>
+            <div class="expander">
+              <button class="btn btn-toggle liquid-glow" aria-expanded="false"><span class="material-icons chev">expand_more</span> Aprofundar</button>
+            </div>
+            <div class="expandable">
+              <ul>
+                <li><strong>Studia humanitatis:</strong> gramática, retórica, poesia, história, filosofia moral.</li>
+                <li><strong>Prática:</strong> cartas, discursos, biografias exemplares; formação do cidadão.</li>
+                <li><strong>Figuras:</strong> Petrarca, Lorenzo Valla (crítica filológica), Pico della Mirandola, Erasmo.</li>
+              </ul>
+              <p><strong>Dica de estudo:</strong> compare um trecho medieval com uma carta humanista; observe a mudança de voz e o apelo à experiência.</p>
+            </div>
+          </div>
+
+          <!-- Filologia -->
+          <div class="card liquid-glow reveal" style="--delay:80ms">
+            <span class="eyebrow"><span class="material-icons">history_edu</span> Filologia</span>
+            <h3>“Ad fontes”: voltar às fontes</h3>
+            <p>Crítica textual, comparação de manuscritos e sentido histórico para restaurar significados.</p>
+            <div class="expander">
+              <button class="btn btn-toggle liquid-glow" aria-expanded="false"><span class="material-icons chev">expand_more</span> Aprofundar</button>
+            </div>
+            <div class="expandable">
+              <ul>
+                <li><strong>Método:</strong> vocabulário, variantes, contexto, autoria; nasce um “laboratório” do texto.</li>
+                <li><strong>Impacto:</strong> revisão de tradições, depuração de falsificações; base do ceticismo produtivo.</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Mecenato -->
+          <div class="card liquid-glow reveal" style="--delay:120ms">
+            <span class="eyebrow"><span class="material-icons">account_balance</span> Mecenato</span>
+            <h3>Cidades, patronos e competição</h3>
+            <p>Famílias, corporações e instituições financiam arte e saber; prestígio vira motor de inovação.</p>
+            <div class="expander">
+              <button class="btn btn-toggle liquid-glow" aria-expanded="false"><span class="material-icons chev">expand_more</span> Aprofundar</button>
+            </div>
+            <div class="expandable">
+              <ul>
+                <li><strong>Florença, Veneza, Roma:</strong> encomendas públicas e privadas, academias, bibliotecas.</li>
+                <li><strong>Economia simbólica:</strong> capital cultural converte-se em autoridade e poder cívico.</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Imprensa -->
+          <div class="card liquid-glow reveal" style="--delay:160ms">
+            <span class="eyebrow"><span class="material-icons">print</span> Imprensa</span>
+            <h3>Multiplicar, padronizar, acelerar</h3>
+            <p>Impressão amplia circulação de ideias, padroniza textos e encurta feedback intelectual.</p>
+            <div class="expander">
+              <button class="btn btn-toggle liquid-glow" aria-expanded="false"><span class="material-icons chev">expand_more</span> Aprofundar</button>
+            </div>
+            <div class="expandable">
+              <ul>
+                <li><strong>Rede de oficinas:</strong> autores, editores e leitores articulam uma esfera letrada mais ampla.</li>
+                <li><strong>Efeito:</strong> disputas públicas de interpretação ganham escala (religião, ciência, política).</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Ciência/Arte -->
+          <div class="card liquid-glow reveal" style="--delay:200ms">
+            <span class="eyebrow"><span class="material-icons">science</span> Arte & Ciência</span>
+            <h3>Atelier-laboratório</h3>
+            <p>Perspectiva, geometria e anatomia aproximam arte do experimento. “Ver” torna-se método.</p>
+            <div class="expander">
+              <button class="btn btn-toggle liquid-glow" aria-expanded="false"><span class="material-icons chev">expand_more</span> Aprofundar</button>
+            </div>
+            <div class="expandable">
+              <ul>
+                <li><strong>Instrumentos:</strong> câmaras escuras, malhas de perspectiva, dissecações, cadernos técnicos.</li>
+                <li><strong>Resultados:</strong> naturalismo, controle do espaço pictórico, correlatos científicos (astronomia, anatomia).</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Mundo plural -->
+          <div class="card liquid-glow reveal" style="--delay:240ms">
+            <span class="eyebrow"><span class="material-icons">self_improvement</span> Visão</span>
+            <h3>Pluralidade e tensão</h3>
+            <p>Neoplatonismo, aristotelismo, hermetismo e ceticismo convivem. Renascimento é laboratório de sínteses.</p>
+            <div class="expander">
+              <button class="btn btn-toggle liquid-glow" aria-expanded="false"><span class="material-icons chev">expand_more</span> Aprofundar</button>
+            </div>
+            <div class="expandable">
+              <ul>
+                <li><strong>Neoplatonismo:</strong> escala do ser, dignidade humana, magia natural.</li>
+                <li><strong>Ceticismo:</strong> prudência, probabilidade, retórica; a verdade como algo disputável no tempo.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- MOTORES INTELECTUAIS -->
+      <section id="motores" class="reveal" style="--delay:0ms">
+        <h2 class="section-title">Motores Intelectuais do Renascimento</h2>
+        <p class="section-subtitle">De onde vem a energia filosófica que reconfigura a cultura?</p>
+
+        <div class="cards">
+          <div class="card liquid-glow reveal" style="--delay:40ms">
+            <span class="eyebrow"><span class="material-icons">emoji_objects</span> Neoplatonismo</span>
+            <h3>Firenze, Ficino & Pico</h3>
+            <p>Hierarquia do ser, dignidade humana, eros intelectual, magia natural como leitura da natureza.</p>
+            <div class="expander">
+              <button class="btn btn-toggle liquid-glow" aria-expanded="false"><span class="material-icons chev">expand_more</span>Aprofundar</button>
+            </div>
+            <div class="expandable">
+              <ul>
+                <li><strong>Antropologia:</strong> humano no “centro móvel” entre o terreno e o espiritual.</li>
+                <li><strong>Prática:</strong> comentários a Platão/Plotino; traduções, sínteses com cristianismo.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="card liquid-glow reveal" style="--delay:80ms">
+            <span class="eyebrow"><span class="material-icons">menu_book</span> Aristotelismos</span>
+            <h3>Pávia, Pádua & debates</h3>
+            <p>Leituras naturalistas, debates sobre a alma, causalidade e autonomia da filosofia natural.</p>
+            <div class="expander">
+              <button class="btn btn-toggle liquid-glow" aria-expanded="false"><span class="material-icons chev">expand_more</span>Aprofundar</button>
+            </div>
+            <div class="expandable">
+              <ul>
+                <li><strong>Pomponazzi & cia.:</strong> tensões com teologia; fronteiras do demonstrável.</li>
+                <li><strong>Método:</strong> comentário, observação, experimento incipiente.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="card liquid-glow reveal" style="--delay:120ms">
+            <span class="eyebrow"><span class="material-icons">travel_explore</span> Hermetismo</span>
+            <h3>Textos herméticos & magia natural</h3>
+            <p>Leitura simbólica da natureza e poderes ocultos — influência sobre arte, medicina e alquimia.</p>
+            <div class="expander">
+              <button class="btn btn-toggle liquid-glow" aria-expanded="false"><span class="material-icons chev">expand_more</span>Aprofundar</button>
+            </div>
+            <div class="expandable">
+              <ul>
+                <li><strong>Impacto:</strong> metáforas de energia/forças; cosmologias imaginativas.</li>
+                <li><strong>Limite:</strong> crítica posterior com reforço do experimento controlado.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="card liquid-glow reveal" style="--delay:160ms">
+            <span class="eyebrow"><span class="material-icons">record_voice_over</span> Retórica & Ceticismo</span>
+            <h3>Prudência em mundo incerto</h3>
+            <p>Convencer, pesar probabilidades, decidir sob risco — nasce um ethos prático da razão.</p>
+            <div class="expander">
+              <button class="btn btn-toggle liquid-glow" aria-expanded="false"><span class="material-icons chev">expand_more</span>Aprofundar</button>
+            </div>
+            <div class="expandable">
+              <ul>
+                <li><strong>Virtudes intelectuais:</strong> prudência, phronesis, senso histórico.</li>
+                <li><strong>Consequência:</strong> política e ciência como artes de navegar contingência.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- IMPACTOS & CHART -->
+      <section id="impactos" class="reveal" style="--delay:0ms">
+        <h2 class="section-title">Impactos Científicos e Artísticos</h2>
+        <p class="section-subtitle">Comparativos claros + visualização interativa.</p>
+
+        <div class="cards">
+          <div class="card liquid-glow reveal" style="--delay:40ms">
+            <span class="eyebrow"><span class="material-icons">monitoring</span> Radar comparativo</span>
+            <h3>Idade Média × Renascimento</h3>
+            <p>Seletor de 6 dimensões: humanismo, empirismo, secularização, técnica, circulação, crítica.</p>
+            <canvas id="renasChart" aria-label="Radar comparativo de características" role="img" height="240"></canvas>
+            <p style="color:var(--muted); font-size: var(--fs-12); margin-top:8px">Interprete tendências, não “vencedores”. Há continuidades e hibridizações.</p>
+          </div>
+
+          <div class="card liquid-glow reveal" style="--delay:80ms">
+            <span class="eyebrow"><span class="material-icons">format_list_bulleted</span> Comparativo</span>
+            <h3>Tabela de mudanças estruturais</h3>
+            <table>
+              <thead>
+                <tr><th>Eixo</th><th>Ênfase medieval</th><th>Ênfase renascentista</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>Autoridade</td><td>Tradição, comentários</td><td>Fontes originais, crítica</td></tr>
+                <tr><td>Método</td><td>Silogismo, teologia</td><td>Filologia, observação, matemática aplicada</td></tr>
+                <tr><td>Imagem do humano</td><td>Criação em queda, salvação</td><td>Dignidade e agência no mundo</td></tr>
+                <tr><td>Arte</td><td>Simbolismo hierático</td><td>Perspectiva, naturalismo, técnica</td></tr>
+                <tr><td>Circulação</td><td>Monástica, manuscritos</td><td>Imprensa, redes urbanas</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="card liquid-glow reveal" style="--delay:120ms">
+            <span class="eyebrow"><span class="material-icons">timeline</span> Linha do tempo</span>
+            <h3>Eventos‑chave (rolagem horizontal)</h3>
+            <div class="timeline" aria-label="Linha do tempo do Renascimento">
+              <div class="time-card"><div class="time-year">1348</div><div>Peste Negra: reconfiguração demográfica, social e espiritual.</div></div>
+              <div class="time-card"><div class="time-year">c. 1400</div><div>Humanistas italianos consolidam <em>studia humanitatis</em>.</div></div>
+              <div class="time-card"><div class="time-year">1450s</div><div>Imprensa move a circulação textual para outra escala.</div></div>
+              <div class="time-card"><div class="time-year">1470s–90s</div><div>Academias, traduções neoplatônicas, mecenato mediceu.</div></div>
+              <div class="time-card"><div class="time-year">1513</div><div>Maquiavel redige <em>O Príncipe</em> (contexto bélico italiano).</div></div>
+              <div class="time-card"><div class="time-year">1543</div><div>Publicações sobre astronomia/anatomia marcam viragem técnica.</div></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- MAQUIAVEL -->
+      <section id="maquiavel" class="reveal" style="--delay:0ms">
+        <h2 class="section-title">Maquiavel: primeiras ideias e noções iniciais</h2>
+        <p class="section-subtitle">Política como técnica de fundação, estabilização e liberdade cívica.</p>
+
+        <div class="cards">
+          <div class="card liquid-glow reveal" style="--delay:40ms">
+            <span class="eyebrow"><span class="material-icons">construction</span> Método</span>
+            <h3>Autonomia da política</h3>
+            <p>Julgar pela eficácia e estabilidade, não por intenções piedosas.</p>
+            <div class="expander">
+              <button class="btn btn-toggle liquid-glow" aria-expanded="false"><span class="material-icons chev">expand_more</span>Aprofundar</button>
+            </div>
+            <div class="expandable">
+              <ul>
+                <li><strong>Critério:</strong> conservar o Estado, fundar novas ordens, garantir segurança cívica.</li>
+                <li><strong>Consequência:</strong> separar virtudes privadas de virtudes políticas; a “crueldade bem usada”.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="card liquid-glow reveal" style="--delay:80ms">
+            <span class="eyebrow"><span class="material-icons">change_circle</span> Agência</span>
+            <h3><em>Virtù</em> × <em>Fortuna</em></h3>
+            <p>A arte de curvar a contingência: antecipar, improvisar, decidir com firmeza.</p>
+            <div class="expander">
+              <button class="btn btn-toggle liquid-glow" aria-expanded="false"><span class="material-icons chev">expand_more</span>Aprofundar</button>
+            </div>
+            <div class="expandable">
+              <ul>
+                <li><strong><em>Virtù</em>:</strong> energia estratégica, julgamento, coragem prudente.</li>
+                <li><strong><em>Fortuna</em>:</strong> o que escapa ao controle; pede preparação institucional.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="card liquid-glow reveal" style="--delay:120ms">
+            <span class="eyebrow"><span class="material-icons">priority_high</span> Ordem</span>
+            <h3>Temido ou amado?</h3>
+            <p>O ideal é ambos; quando impossível, é “mais seguro ser temido” — sem ódio.</p>
+            <div class="expander">
+              <button class="btn btn-toggle liquid-glow" aria-expanded="false"><span class="material-icons chev">expand_more</span>Aprofundar</button>
+            </div>
+            <div class="expandable">
+              <ul>
+                <li><strong>Regra:</strong> punir rápido e com critério; benefícios, aos poucos e visíveis.</li>
+                <li><strong>Objetivo:</strong> segurança pública, previsibilidade, desincentivo ao faccionismo.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="card liquid-glow reveal" style="--delay:160ms">
+            <span class="eyebrow"><span class="material-icons">shield</span> Defesa</span>
+            <h3>Armas próprias > mercenários</h3>
+            <p>Dependência militar externa fragiliza o Estado; capacidade própria gera autonomia.</p>
+            <div class="expander">
+              <button class="btn btn-toggle liquid-glow" aria-expanded="false"><span class="material-icons chev">expand_more</span>Aprofundar</button>
+            </div>
+            <div class="expandable">
+              <ul>
+                <li><strong>Milícia cidadã:</strong> coesão política; disciplina como tecnologia institucional.</li>
+                <li><strong>Diplomacia:</strong> alianças táticas, sem subordinação estrutural.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="card liquid-glow reveal" style="--delay:200ms">
+            <span class="eyebrow"><span class="material-icons">visibility</span> Opinião</span>
+            <h3>Aparência, narrativa, fama</h3>
+            <p>Reputação é capital político: símbolos, cerimônias e comunicação disciplinam expectativas.</p>
+            <div class="expander">
+              <button class="btn btn-toggle liquid-glow" aria-expanded="false"><span class="material-icons chev">expand_more</span>Aprofundar</button>
+            </div>
+            <div class="expandable">
+              <ul>
+                <li><strong>Verossimilhança:</strong> parecer virtuoso sustenta cooperação; mentira cínica erosiona longo prazo.</li>
+                <li><strong>Teatro do poder:</strong> ritos, justiça visível, cumprimento de promessas possíveis.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="card liquid-glow reveal" style="--delay:240ms">
+            <span class="eyebrow"><span class="material-icons">balance</span> Instituições</span>
+            <h3>Repúblicas, leis e conflitos</h3>
+            <p>Nos <em>Discursos</em>, liberdade cívica nasce de conflitos regulados e leis fortes.</p>
+            <div class="expander">
+              <button class="btn btn-toggle liquid-glow" aria-expanded="false"><span class="material-icons chev">expand_more</span>Aprofundar</button>
+            </div>
+            <div class="expandable">
+              <ul>
+                <li><strong>Conflito produtivo:</strong> plebe × grandes como motor de freios e contrapesos.</li>
+                <li><strong>Fundação:</strong> “novas ordens” exigem legislador com <em>virtù</em> e momento oportuno.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SIMULADOR DO PRÍNCIPE -->
+      <section id="simulador" class="reveal" style="--delay:0ms">
+        <h2 class="section-title">Simulador do Príncipe (interativo)</h2>
+        <p class="section-subtitle">Aplique os princípios: ajuste cenários e veja a estratégia recomendada.</p>
+
+        <div class="cards">
+          <div class="card liquid-glow reveal" style="--delay:40ms">
+            <span class="eyebrow"><span class="material-icons">tune</span> Parâmetros</span>
+            <h3>Cenário político</h3>
+            <div class="grid" style="display:grid; grid-template-columns: repeat(12,1fr); gap: var(--space-2);">
+              <!-- Sliders -->
+              <div style="grid-column: span 6;">
+                <label for="s-interna" style="display:flex; justify-content:space-between; font-size:var(--fs-14);">
+                  Ameaça interna <span id="v-interna">50</span>
+                </label>
+                <input id="s-interna" type="range" min="0" max="100" value="50" />
+              </div>
+              <div style="grid-column: span 6;">
+                <label for="s-externa" style="display:flex; justify-content:space-between; font-size:var(--fs-14);">
+                  Ameaça externa <span id="v-externa">50</span>
+                </label>
+                <input id="s-externa" type="range" min="0" max="100" value="50" />
+              </div>
+
+              <div style="grid-column: span 6;">
+                <label for="s-apoio" style="display:flex; justify-content:space-between; font-size:var(--fs-14);">
+                  Apoio popular <span id="v-apoio">50</span>
+                </label>
+                <input id="s-apoio" type="range" min="0" max="100" value="50" />
+              </div>
+              <div style="grid-column: span 6;">
+                <label for="s-tesouro" style="display:flex; justify-content:space-between; font-size:var(--fs-14);">
+                  Tesouro/recursos <span id="v-tesouro">50</span>
+                </label>
+                <input id="s-tesouro" type="range" min="0" max="100" value="50" />
+              </div>
+
+              <div style="grid-column: span 12;">
+                <label for="s-legit" style="display:flex; justify-content:space-between; font-size:var(--fs-14);">
+                  Legitimidade (dinástica/eleitoral) <span id="v-legit">50</span>
+                </label>
+                <input id="s-legit" type="range" min="0" max="100" value="50" />
+              </div>
+            </div>
+
+            <div class="expander" style="margin-top: var(--space-3); display:flex; gap: var(--space-2); flex-wrap:wrap;">
+              <button id="btn-recomendar" class="btn liquid-glow" data-ripple>
+                <span class="material-icons">play_arrow</span> Recomendar estratégia
+              </button>
+              <button id="btn-reset" class="btn liquid-glow" data-ripple>
+                <span class="material-icons">restart_alt</span> Resetar
+              </button>
+            </div>
+          </div>
+
+          <div class="card liquid-glow reveal" style="--delay:80ms">
+            <span class="eyebrow"><span class="material-icons">insights</span> Resultado</span>
+            <h3>Intensidades táticas (0–100)</h3>
+            <canvas id="principeChart" aria-label="Radar de táticas políticas" role="img" height="220"></canvas>
+            <div id="recomendacoes" style="margin-top: var(--space-2); font-size: var(--fs-16);"></div>
+            <p style="color:var(--muted); font-size: var(--fs-12); margin-top:8px">
+              Heurística didática inspirada em Maquiavel. Use como mapa, não como manual automático.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- LEITURAS -->
+      <section id="leituras" class="reveal" style="--delay:0ms">
+        <h2 class="section-title">Leituras & Fontes</h2>
+        <p class="section-subtitle">Pontos de partida sólidos (edições podem variar).</p>
+        <div class="cards">
+          <div class="card liquid-glow reveal" style="--delay:40ms">
+            <h3>Primárias</h3>
+            <ul>
+              <li>Nicolau Maquiavel — <em>O Príncipe</em>; <em>Discursos</em>; <em>A Arte da Guerra</em>.</li>
+              <li>Giovanni Pico della Mirandola — <em>Discurso sobre a dignidade do homem</em>.</li>
+              <li>Lorenzo Valla — Críticas filológicas (e.g., à <em>Doação de Constantino</em>).</li>
+              <li>Erasmo de Rotterdam — <em>Elogio da Loucura</em> e escritos pedagógicos.</li>
+            </ul>
+          </div>
+          <div class="card liquid-glow reveal" style="--delay:80ms">
+            <h3>Secundárias & contexto</h3>
+            <ul>
+              <li>Histórias do Renascimento (arte, ciência, sociedade) com foco em Itália, 1400–1600.</li>
+              <li>Estudos sobre humanismo cívico, neoplatonismo florentino e retórica renascentista.</li>
+              <li>Comentários contemporâneos sobre Maquiavel (príncipe × república; virtù × fortuna).</li>
+            </ul>
+            <p style="color:var(--muted); font-size: var(--fs-12);">Sugestão: compare interpretações de épocas diferentes para perceber mudanças de ênfase.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- FAQ -->
+      <section id="faq" class="reveal" style="--delay:0ms">
+        <h2 class="section-title">FAQ rápido</h2>
+        <div class="cards">
+          <div class="card liquid-glow reveal" style="--delay:40ms">
+            <h3>O Renascimento “quebra” com a Idade Média?</h3>
+            <p>Melhor pensar em <strong>recombinações</strong> e aceleração seletiva, não ruptura total. Há continuidades.</p>
+          </div>
+          <div class="card liquid-glow reveal" style="--delay:80ms">
+            <h3>Maquiavel incentiva imoralidade?</h3>
+            <p>Ele descreve a <strong>lógica do poder</strong> e os efeitos das ações. O crivo é a <em>ordem durável</em>, não a pureza de intenções.</p>
+          </div>
+        </div>
+      </section>
+
+      <footer>
+        Página educacional desenvolvida como uma ferramenta de aprendizado. Design e conteúdo por L2.
+      </footer>
+    </main>
+  </div>
+
+  <script>
+    // ===============================
+    // UTIL: clamp numérico
+    // ===============================
+    const clamp = (v, min=0, max=100) => Math.max(min, Math.min(max, v));
+
+    // ===============================
+    // NAV ATIVA por IntersectionObserver
+    // ===============================
+    const sections = [...document.querySelectorAll('main section[id]')];
+    const navLinks = [...document.querySelectorAll('nav[role="navigation"] a, .topbar-nav a')];
+
+    const setActive = (id) => {
+      navLinks.forEach(a => {
+        const isActive = a.getAttribute('href') === `#${id}`;
+        a.classList.toggle('active', isActive);
+        if(isActive) a.setAttribute('aria-current','page'); else a.removeAttribute('aria-current');
+      });
+    };
+
+    const obsNav = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if(entry.isIntersecting){
+          setActive(entry.target.id);
+        }
+      });
+    }, { rootMargin: "-20% 0px -70% 0px", threshold: 0.1 });
+
+    sections.forEach(sec => obsNav.observe(sec));
+
+    // ===============================
+    // SCROLL REVEAL + STAGGER
+    // ===============================
+    const revealEls = [...document.querySelectorAll('.reveal, .card.reveal')];
+    const obsReveal = new IntersectionObserver((entries, ob) => {
+      entries.forEach((entry) => {
+        if(entry.isIntersecting){
+          const el = entry.target;
+          el.classList.add('is-visible');
+          ob.unobserve(el);
+        }
+      });
+    }, { threshold: 0.15 });
+    revealEls.forEach((el, i) => {
+      el.style.setProperty('--delay', (i*40)+'ms');
+      obsReveal.observe(el);
+    });
+
+    // ===============================
+    // LIQUID GLOW — segue o cursor
+    // ===============================
+    const glowTargets = document.querySelectorAll('.liquid-glow');
+    glowTargets.forEach(el => {
+      el.addEventListener('mousemove', (e) => {
+        const rect = el.getBoundingClientRect();
+        const mx = ((e.clientX - rect.left)/rect.width)*100 + '%';
+        const my = ((e.clientY - rect.top)/rect.height)*100 + '%';
+        el.style.setProperty('--mx', mx);
+        el.style.setProperty('--my', my);
+      }, {passive:true});
+    });
+
+    // ===============================
+    // RIPPLE — feedback no clique (delegado)
+    // ===============================
+    document.addEventListener('click', (e) => {
+      const target = e.target.closest('.btn, [data-ripple]');
+      if(!target) return;
+      const rect = target.getBoundingClientRect();
+      const x = e.clientX - rect.left; const y = e.clientY - rect.top;
+      const rip = document.createElement('span');
+      rip.className='ripple';
+      const d = Math.max(rect.width, rect.height);
+      rip.style.width = rip.style.height = d+'px';
+      rip.style.left = x+'px'; rip.style.top = y+'px';
+      target.appendChild(rip);
+      rip.addEventListener('animationend', () => rip.remove());
+    });
+
+    // ===============================
+    // EXPANDER — “Aprofundar”
+    // ===============================
+    document.querySelectorAll('.btn-toggle').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const content = btn.closest('.card').querySelector('.expandable');
+        const isOpen = content.classList.toggle('open');
+        btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      });
+    });
+
+    // ===============================
+    // TOPBAR MOBILE — esconder ao rolar para baixo
+    // ===============================
+    const topbar = document.querySelector('header.topbar');
+    let lastY = window.scrollY;
+    window.addEventListener('scroll', () => {
+      const y = window.scrollY;
+      if(y > lastY && y > 64) topbar.classList.add('hide');
+      else topbar.classList.remove('hide');
+      lastY = y;
+    }, {passive:true});
+
+    // ===============================
+    // CHART — Radar comparativo Renascimento
+    // ===============================
+    const ctxR = document.getElementById('renasChart');
+    if(ctxR){
+      const dataR = {
+        labels: ['Humanismo', 'Empirismo', 'Secularização', 'Técnica/Ofício', 'Circulação', 'Crítica textual'],
+        datasets: [
+          {
+            label: 'Ênfase medieval (aprox.)',
+            data: [45, 35, 25, 40, 30, 40],
+            borderWidth: 2,
+            fill: true
+          },
+          {
+            label: 'Ênfase renascentista (aprox.)',
+            data: [80, 60, 45, 75, 80, 85],
+            borderWidth: 2,
+            fill: true
+          }
+        ]
+      };
+      new Chart(ctxR, { type: 'radar', data: dataR, options: {
+        responsive: true,
+        scales: { r: { beginAtZero: true, suggestedMax: 100, pointLabels: { font: { size: 12 } } } },
+        plugins: { legend: { position: 'bottom' } }
+      }});
+    }
+
+    // ===============================
+    // SIMULADOR DO PRÍNCIPE — Modelo heurístico
+    // ===============================
+    const sliders = {
+      interna: document.getElementById('s-interna'),
+      externa: document.getElementById('s-externa'),
+      apoio:   document.getElementById('s-apoio'),
+      tesouro: document.getElementById('s-tesouro'),
+      legit:   document.getElementById('s-legit'),
+    };
+    const labels = {
+      interna: document.getElementById('v-interna'),
+      externa: document.getElementById('v-externa'),
+      apoio:   document.getElementById('v-apoio'),
+      tesouro: document.getElementById('v-tesouro'),
+      legit:   document.getElementById('v-legit'),
+    };
+    Object.keys(sliders).forEach(k => {
+      sliders[k].addEventListener('input', () => labels[k].textContent = sliders[k].value);
+    });
+
+    const recDiv = document.getElementById('recomendacoes');
+    const btnRec = document.getElementById('btn-recomendar');
+    const btnReset = document.getElementById('btn-reset');
+
+    let chartP = null;
+    const ctxP = document.getElementById('principeChart');
+
+    function recomendar(){
+      const AI = +sliders.interna.value;   // ameaça interna
+      const AE = +sliders.externa.value;   // ameaça externa
+      const AP = +sliders.apoio.value;     // apoio popular
+      const TE = +sliders.tesouro.value;   // tesouro
+      const LE = +sliders.legit.value;     // legitimidade
+
+      // Heurística inspirada em Maquiavel
+      const severidade   = clamp(0.5*AI + 0.3*(100-AP) + 0.2*(100-LE) + 0.1*AE);
+      const generosidade = clamp(0.7*TE + 0.3*AP - 0.4*AI - 0.2*AE);
+      const aliancas     = clamp(0.7*AE + 0.2*(100-LE) + 0.1*(100-TE));
+      const autonomiaMil = clamp(0.5*AI + 0.5*AE + 0.2*(100-TE*0.6)); // reforça foco em armas próprias
+      const propaganda   = clamp(0.6*(100-AP) + 0.4*(100-LE));
+      const reformas     = clamp(0.5*AI + 0.4*(100-LE) + 0.3*(100-AP));
+
+      const labelsP = ['Severidade', 'Generosidade', 'Alianças', 'Autonomia militar', 'Propaganda', 'Reformas'];
+      const values  = [severidade, generosidade, aliancas, autonomiaMil, propaganda, reformas];
+
+      // Render chart
+      if(chartP) chartP.destroy();
+      chartP = new Chart(ctxP, { type: 'radar', data: {
+        labels: labelsP,
+        datasets: [{ label: 'Intensidade recomendada', data: values, borderWidth: 2, fill: true }]
+      }, options: {
+        responsive: true,
+        scales: { r: { beginAtZero: true, suggestedMax: 100 } },
+        plugins: { legend: { display: false } }
+      }});
+
+      // Recomendações textuais
+      const badge = (v) => v>=70 ? 'ALTA' : v>=40 ? 'MÉDIA' : 'BAIXA';
+      const bullet = (name, v, hint) => `<li><strong>${name}:</strong> ${Math.round(v)} (${badge(v)}) — ${hint}</li>`;
+      recDiv.innerHTML = `
+        <ul>
+          ${bullet('Severidade',   severidade,   'use cedo, com critério e publicidade justa; evite ódio.')}
+          ${bullet('Generosidade', generosidade, 'pratique quando houver caixa; evite impostos repentinos.')}
+          ${bullet('Alianças',     aliancas,     'prefira alianças táticas, sem dependência estratégica.')}
+          ${bullet('Autonomia militar', autonomiaMil, 'invista em milícias próprias, disciplina e comando.')}
+          ${bullet('Propaganda',   propaganda,   'administre reputação: ritos públicos, promessas possíveis.')}
+          ${bullet('Reformas',     reformas,     'institua leis e tribunais que reduzam facções e arbitrariedade.')}
+        </ul>
+      `;
+    }
+
+    if(btnRec) btnRec.addEventListener('click', recomendar);
+    if(btnReset) btnReset.addEventListener('click', () => {
+      Object.values(sliders).forEach(s => s.value = 50);
+      Object.keys(labels).forEach(k => labels[k].textContent = '50');
+      recDiv.innerHTML = '';
+      if(chartP) chartP.destroy();
+    });
+
+    // Inicializa gráficos padrão
+    recomendar();
+
+    // ===============================
+    // Foco primeiro conteúdo
+    // ===============================
+    document.getElementById('intro').setAttribute('tabindex','-1');
+
+  </script>
+</body>
+</html>

@@ -1,0 +1,27 @@
+/* Inline Formula Container */
+.inline-formula-container {
+  display: inline;
+  line-height: inherit;
+  word-spacing: 0.15em;
+}
+
+.math-part {
+  display: inline;
+  margin: 0 0.1em;
+}
+
+.text-part {
+  display: inline;
+}
+
+.inline-formula-container mjx-container {
+  display: inline !important;
+  margin: 0 0.15em;
+  vertical-align: middle;
+}
+
+.inline-formula-container mjx-container[jax="CHTML"][display="false"] {
+  display: inline !important;
+  vertical-align: middle;
+}
+

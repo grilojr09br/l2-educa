@@ -1,0 +1,32 @@
+# Old distribution folder (if using)
+distributions/
+
+# Dependencies
+node_modules/
+
+# Environment files
+.env
+.env.local
+.env.production
+
+# Build artifacts
+*.log
+*.zip
+temp_*/
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Cache
+.cache/
+.temp/
+

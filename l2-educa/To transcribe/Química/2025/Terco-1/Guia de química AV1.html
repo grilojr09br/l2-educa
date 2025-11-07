@@ -1,0 +1,1029 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Química: Guia Definitivo</title>
+    
+    <!-- Google Fonts: Poppins for headings, Lato for body -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    
+    <!-- Google Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    
+    <!-- MathJax for rendering formulas -->
+    <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      },
+      svg: {
+        fontCache: 'global'
+      }
+    };
+    </script>
+    <script type="text/javascript" id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
+    </script>
+
+    <!-- Chart.js for interactive graphs -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- SMILES Drawer for 2D Chemical Structures -->
+    <script src="https://unpkg.com/smiles-drawer@2.0.1/dist/smiles-drawer.min.js"></script>
+
+    <style>
+        :root {
+            /* General Theme */
+            --font-heading: 'Poppins', sans-serif;
+            --font-body: 'Lato', sans-serif;
+            --transition-main: all 0.3s ease-in-out;
+
+            /* Radioactivity Theme */
+            --radio-bg: #0f0c29;
+            --radio-text: #e0e0e0;
+            --radio-primary: #00c6ff;
+            --radio-secondary: #0072ff;
+            --radio-glow: 0 0 15px rgba(0, 198, 255, 0.7);
+
+            /* Stoichiometry Theme */
+            --esto-bg: #f4f7f6;
+            --esto-text: #333;
+            --esto-primary: #d4af37; /* Gold */
+            --esto-secondary: #001f3f; /* Navy */
+            --esto-card-shadow: 0 8px 32px 0 rgba(0, 31, 63, 0.1);
+
+            /* Organic Theme */
+            --orga-bg: #f0f7f4;
+            --orga-text: #2d3a3a;
+            --orga-primary: #28a745; /* Green */
+            --orga-secondary: #5d4037; /* Brown */
+            
+            /* Glassmorphism Base */
+            --glass-blur: 15px;
+        }
+
+        /* Reset and General Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-body);
+            line-height: 1.7;
+            color: var(--esto-text);
+            background-color: var(--esto-bg);
+            overflow-x: hidden;
+        }
+
+        /* Header and Navigation */
+        .main-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 40px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(var(--glass-blur));
+            -webkit-backdrop-filter: blur(var(--glass-blur));
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 1000;
+            transition: var(--transition-main);
+        }
+
+        .main-header.scrolled {
+            background: rgba(255, 255, 255, 0.5);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .logo {
+            font-family: var(--font-heading);
+            font-weight: 700;
+            font-size: 1.5em;
+            color: var(--esto-secondary);
+            text-decoration: none;
+        }
+
+        .main-nav a {
+            font-family: var(--font-heading);
+            font-weight: 400;
+            color: var(--esto-secondary);
+            text-decoration: none;
+            margin: 0 15px;
+            padding-bottom: 5px;
+            position: relative;
+            transition: var(--transition-main);
+        }
+
+        .main-nav a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--esto-primary);
+            transition: var(--transition-main);
+        }
+
+        .main-nav a:hover {
+            color: var(--esto-primary);
+        }
+
+        .main-nav a:hover::after {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            min-height: 50vh;
+            padding: 0 40px;
+            margin-top: 70px; /* Header height */
+            background: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%);
+        }
+        .hero-content h1 {
+            font-family: var(--font-heading);
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: #fff;
+            text-shadow: 2px 2px 10px rgba(0,0,0,0.2);
+        }
+        .hero-content p {
+            font-size: 1.2rem;
+            color: #fff;
+            max-width: 800px;
+            margin: 10px auto 0;
+            font-weight: 300;
+        }
+        
+        /* Section Styling */
+        .content-section {
+            padding: 80px 40px;
+        }
+
+        .section-title {
+            font-family: var(--font-heading);
+            font-size: 2.8rem;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 60px;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 4px;
+            margin: 15px auto 0;
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        /* Glassmorphism Card Style */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(var(--glass-blur));
+            -webkit-backdrop-filter: blur(var(--glass-blur));
+            border-radius: 20px;
+            padding: 30px;
+            transition: var(--transition-main);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+        }
+
+        .card-icon {
+            font-size: 3rem !important;
+            margin-bottom: 15px;
+            display: block;
+        }
+        
+        .card-title {
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        
+        .card-content {
+            font-size: 1rem;
+            font-weight: 300;
+            flex-grow: 1;
+        }
+
+        /* Expandable Section */
+        .expand-button-container {
+            text-align: center;
+            margin: 60px 0 0;
+        }
+        .expand-button {
+            font-family: var(--font-heading);
+            font-size: 1.1rem;
+            padding: 12px 30px;
+            border-radius: 50px;
+            border: 2px solid;
+            background-color: transparent;
+            cursor: pointer;
+            transition: var(--transition-main);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .expand-button .material-icons {
+             transition: transform 0.3s ease;
+        }
+        .expand-button.active .material-icons {
+            transform: rotate(180deg);
+        }
+
+        .expanded-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 1.5s ease-in-out;
+            background: rgba(255,255,255, 0.3);
+            backdrop-filter: blur(var(--glass-blur));
+            -webkit-backdrop-filter: blur(var(--glass-blur));
+            border-radius: 20px;
+            margin-top: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+        }
+        .expanded-content.show {
+            max-height: 50000px; /* Extremely large value for all content */
+        }
+        .expanded-inner {
+            padding: 40px;
+        }
+        .expanded-inner h3 {
+            font-family: var(--font-heading);
+            font-size: 2.2rem;
+            font-weight: 600;
+            margin-bottom: 30px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid;
+        }
+         .expanded-inner h4 {
+            font-family: var(--font-heading);
+            font-size: 1.7rem;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            color: var(--text);
+         }
+         .expanded-inner h5 {
+            font-family: var(--font-heading);
+            font-size: 1.3rem;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            color: var(--text);
+         }
+        .expanded-inner p, .expanded-inner li {
+            margin-bottom: 15px;
+            font-size: 1.05rem;
+        }
+        .expanded-inner ul {
+            list-style-position: inside;
+            padding-left: 10px;
+        }
+        .expanded-inner .grid-container {
+            display: grid;
+            gap: 40px;
+            align-items: flex-start;
+        }
+        .grid-2-col {
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        }
+
+        .expanded-inner table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            font-size: 0.95rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .expanded-inner th, .expanded-inner td {
+            padding: 14px;
+            border: 1px solid rgba(0,0,0,0.1);
+            text-align: left;
+            vertical-align: middle;
+        }
+        .expanded-inner th {
+            font-family: var(--font-heading);
+            font-weight: 600;
+        }
+        .code-block {
+            background-color: rgba(0,0,0,0.05);
+            padding: 15px;
+            border-radius: 8px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            margin: 20px 0;
+            border: 1px solid rgba(0,0,0,0.1);
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 40vh;
+            width: 100%;
+        }
+
+        /* --- Theme-specific styles --- */
+
+        /* Radioactivity */
+        #radioatividade { background: linear-gradient(to right, #0f0c29, #302b63, #24243e); color: var(--radio-text); }
+        #radioatividade .section-title, #radioatividade .expanded-inner h3, #radioatividade .expanded-inner h4, #radioatividade .expanded-inner h5 { color: #fff; }
+        #radioatividade .section-title::after { background-color: var(--radio-primary); }
+        #radioatividade .expanded-inner h3 { border-color: var(--radio-primary); }
+        #radioatividade .expanded-inner h4 { color: var(--radio-primary); }
+        #radioatividade .glass-card { background: rgba(0, 198, 255, 0.05); border-color: rgba(0, 198, 255, 0.2); }
+        #radioatividade .glass-card:hover { border-color: rgba(0, 198, 255, 0.5); box-shadow: var(--radio-glow); }
+        #radioatividade .card-icon, #radioatividade .card-title { color: var(--radio-primary); }
+        #radioatividade .expand-button { color: var(--radio-primary); border-color: var(--radio-primary); }
+        #radioatividade .expand-button:hover { background: var(--radio-primary); color: #fff; }
+        #radioatividade .expanded-content { background: rgba(0, 198, 255, 0.1); color: var(--radio-text); border-color: rgba(0, 198, 255, 0.2); }
+        #radioatividade .expanded-inner th, #radioatividade .expanded-inner td { border-color: rgba(255, 255, 255, 0.2); }
+        #radioatividade .expanded-inner th { background-color: rgba(0, 198, 255, 0.1); }
+        #radioatividade .code-block { background-color: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.2); }
+
+        /* Stoichiometry */
+        #estequiometria { background-color: var(--esto-bg); }
+        #estequiometria .section-title, #estequiometria .expanded-inner h3, #estequiometria .expanded-inner h4, #estequiometria .expanded-inner h5 { color: var(--esto-secondary); }
+        #estequiometria .section-title::after { background-color: var(--esto-primary); }
+        #estequiometria .expanded-inner h3 { border-color: var(--esto-primary); }
+        #estequiometria .expanded-inner h4 { color: var(--esto-primary); }
+        #estequiometria .glass-card { background: rgba(255, 255, 255, 0.6); border-color: rgba(0, 31, 63, 0.1); box-shadow: var(--esto-card-shadow); }
+        #estequiometria .glass-card:hover { box-shadow: 0 12px 40px 0 rgba(0, 31, 63, 0.2); }
+        #estequiometria .card-icon { color: var(--esto-secondary); }
+        #estequiometria .card-title { color: var(--esto-primary); }
+        #estequiometria .card-content { color: var(--esto-secondary); }
+        #estequiometria .expand-button { color: var(--esto-secondary); border-color: var(--esto-secondary); }
+        #estequiometria .expand-button:hover { background: var(--esto-secondary); color: var(--esto-primary); }
+        #estequiometria .expanded-inner th { background-color: rgba(0, 31, 63, 0.1); }
+        #estequiometria .calculator input { width: 100px; padding: 5px; margin: 0 5px; border: 1px solid #ccc; border-radius: 5px;}
+        #estequiometria .calculator button { padding: 5px 10px; border-radius: 5px; border: none; background: var(--esto-secondary); color: white; cursor: pointer;}
+        #estequiometria #calc-result { margin-top: 15px; font-weight: bold; }
+        
+        /* Organic Chemistry */
+        #funcoes-organicas { background-color: var(--orga-bg); }
+        #funcoes-organicas .section-title, #funcoes-organicas .expanded-inner h3, #funcoes-organicas .expanded-inner h4, #funcoes-organicas .expanded-inner h5 { color: var(--orga-secondary); }
+        #funcoes-organicas .section-title::after { background-color: var(--orga-primary); }
+        #funcoes-organicas .expanded-inner h3 { border-color: var(--orga-primary); }
+        #funcoes-organicas .expanded-inner h4 { color: var(--orga-primary); }
+        #funcoes-organicas .glass-card { background: rgba(255, 255, 255, 0.7); border-color: rgba(40, 167, 69, 0.2); }
+        #funcoes-organicas .glass-card:hover { border-color: rgba(40, 167, 69, 0.5); box-shadow: 0 8px 32px 0 rgba(40, 167, 69, 0.15); }
+        #funcoes-organicas .card-icon { color: var(--orga-primary); }
+        #funcoes-organicas .card-title { color: var(--orga-secondary); }
+        #funcoes-organicas .card-content { color: var(--orga-text); }
+        #funcoes-organicas .expand-button { color: var(--orga-primary); border-color: var(--orga-primary); }
+        #funcoes-organicas .expand-button:hover { background: var(--orga-primary); color: #fff; }
+        #funcoes-organicas .expanded-content { background: rgba(40, 167, 69, 0.05); border-color: rgba(40, 167, 69, 0.2); }
+        #funcoes-organicas .expanded-inner th { background-color: rgba(40, 167, 69, 0.1); }
+        .structure-canvas {
+            width: 100%;
+            max-width: 350px;
+            height: auto;
+            min-height: 150px;
+            background: #fff;
+            border-radius: 10px;
+            margin: 5px auto;
+            border: 1px solid #ddd;
+        }
+
+        /* Footer */
+        .main-footer { text-align: center; padding: 30px 40px; background-color: #333; color: #ccc; font-size: 0.9rem; }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .main-header { flex-direction: column; padding: 10px 20px; }
+            .main-nav { margin-top: 10px; }
+            .main-nav a { margin: 0 8px; }
+            .hero { margin-top: 100px; }
+            .hero-content h1 { font-size: 2.5rem; }
+            .content-section { padding: 60px 20px; }
+            .section-title { font-size: 2.2rem; }
+            .card-grid { grid-template-columns: 1fr; }
+            .expanded-inner { padding: 20px; }
+            .grid-2-col { grid-template-columns: 1fr; }
+            .chart-container { height: 50vh; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header & Navigation -->
+    <header class="main-header" id="main-header">
+        <a href="#" class="logo">Química Definitiva</a>
+        <nav class="main-nav">
+            <a href="#radioatividade">Radioatividade</a>
+            <a href="#estequiometria">Estequiometria</a>
+            <a href="#funcoes-organicas">Química Orgânica</a>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-content">
+                <h1>O Guia Definitivo da Química</h1>
+                <p>Uma imersão completa e interativa nos pilares da matéria: da energia do átomo à arquitetura molecular e à matemática das reações.</p>
+            </div>
+        </section>
+
+        <!-- #################### RADIOACTIVITY SECTION #################### -->
+        <section id="radioatividade" class="content-section">
+            <h2 class="section-title">Radioatividade</h2>
+            <div class="card-grid">
+                 <div class="glass-card"><i class="material-icons card-icon">flare</i><h3 class="card-title">O que é?</h3><div class="card-content">Fenômeno de emissão de energia por núcleos instáveis para atingir a estabilidade.</div></div>
+                 <div class="glass-card"><i class="material-icons card-icon">settings_ethernet</i><h3 class="card-title">Emissões</h3><div class="card-content">Partículas <b>Alfa ($\alpha$)</b> e <b>Beta ($\beta$)</b>, e radiação <b>Gama ($\gamma$)</b>, com diferentes poderes de penetração.</div></div>
+                 <div class="glass-card"><i class="material-icons card-icon">hourglass_half</i><h3 class="card-title">Meia-Vida</h3><div class="card-content">Tempo para metade de uma amostra radioativa decair. Essencial para datação.</div></div>
+                 <div class="glass-card"><i class="material-icons card-icon">bolt</i><h3 class="card-title">Energia Nuclear</h3><div class="card-content"><b>Fissão:</b> Quebra de núcleo pesado (usinas).<br><b>Fusão:</b> União de núcleos leves (estrelas).</div></div>
+            </div>
+
+            <div class="expand-button-container">
+                <button class="expand-button" data-target="#radio-expanded">
+                    Aprofundar <i class="material-icons">expand_more</i>
+                </button>
+            </div>
+            
+            <div class="expanded-content" id="radio-expanded">
+                <div class="expanded-inner">
+                    <h3>Aprofundando em Radioatividade: A Força do Núcleo</h3>
+                    <p>A radioatividade, descoberta por Henri Becquerel e estudada a fundo por Marie e Pierre Curie, descreve a jornada de um núcleo atômico instável em busca de estabilidade. Essa instabilidade geralmente é causada por um desequilíbrio na razão entre nêutrons e prótons, ou simplesmente por um tamanho excessivo (número atômico > 83), onde a repulsão elétrica entre os prótons supera a força nuclear forte que os mantém unidos.</p>
+                    
+                    <h4>Tipos de Decaimento Nuclear</h4>
+                    <p>Além das emissões Alfa, Beta e Gama, existem outros processos de decaimento importantes:</p>
+                    <ul>
+                        <li><b>Emissão de Pósitron (Decaimento Beta-positivo, $\beta^+$):</b> Ocorre em núcleos com excesso de prótons. Um próton se converte em um nêutron, emitindo um pósitron (a antipartícula do elétron, $^0_{+1}e$). O número de massa (A) não muda, mas o número atômico (Z) diminui em 1.</li>
+                        <li><b>Captura Eletrônica:</b> Também ocorre em núcleos com excesso de prótons. O núcleo "captura" um elétron de uma camada interna (geralmente a camada K). Esse elétron se combina com um próton para formar um nêutron. O efeito líquido é o mesmo da emissão de pósitron: A fica constante, Z diminui em 1.</li>
+                    </ul>
+
+                    <h4>Leis da Radioatividade (Soddy e Fajans)</h4>
+                    <ul>
+                        <li><b>1ª Lei (Emissão Alfa):</b> Quando um núcleo emite uma partícula alfa ($^4_2\alpha$), seu número atômico (Z) diminui em 2 unidades e seu número de massa (A) diminui em 4 unidades.
+                        <div class="code-block">Exemplo: Uranio-238 decai para Tório-234<br> $_{92}^{238}U \rightarrow _{90}^{234}Th + _2^4\alpha$</div>
+                        </li>
+                        <li><b>2ª Lei (Emissão Beta):</b> Quando um núcleo emite uma partícula beta ($^0_{-1}\beta$), seu número atômico (Z) aumenta em 1 unidade e seu número de massa (A) permanece o mesmo.
+                        <div class="code-block">Exemplo: Carbono-14 decai para Nitrogênio-14<br> $_{6}^{14}C \rightarrow _{7}^{14}N + _{-1}^0\beta$</div>
+                        </li>
+                         <li><b>Emissão Gama ($\gamma$):</b> A emissão gama não altera nem A nem Z. É apenas a liberação de excesso de energia de um núcleo que já sofreu decaimento, mas ainda está em um estado excitado (indicado por um asterisco *).
+                         <div class="code-block">Exemplo: Tecnécio-99m (metaestável) decai para Tecnécio-99<br> $_{43}^{99m}Tc \rightarrow _{43}^{99}Tc + \gamma$</div>
+                         </li>
+                    </ul>
+
+                    <div class="grid-container grid-2-col">
+                        <div class="grid-child">
+                            <h4>Poder de Penetração e Danos Biológicos</h4>
+                            <p>As radiações interagem com a matéria de formas distintas:</p>
+                            <ul>
+                                <li><b>Alfa ($\alpha$):</b> Baixíssimo poder de penetração, alto poder ionizante. É barrada por uma folha de papel ou pela camada de células mortas da pele. Perigosa apenas se ingerida ou inalada, pois pode causar danos severos a curta distância nos tecidos internos.</li>
+                                <li><b>Beta ($\beta$):</b> Poder de penetração médio, poder ionizante menor que o da alfa. Atravessa o papel, mas é barrada por uma placa de metal fina (alumínio) ou alguns centímetros de tecido humano. Pode causar queimaduras na pele.</li>
+                                <li><b>Gama ($\gamma$) e Raios-X:</b> Altíssimo poder de penetração, baixo poder ionizante. Exige barreiras densas (chumbo, concreto) para ser atenuada. Atravessa o corpo humano facilmente, podendo causar danos ao DNA e aumentar o risco de câncer.</li>
+                            </ul>
+                        </div>
+                        <div class="grid-child">
+                            <h3>Simulador Gráfico de Meia-Vida</h3>
+                            <p>O gráfico ilustra o decaimento exponencial de uma amostra. Para o Carbono-14, a cada 5730 anos, a quantidade presente cai pela metade.</p>
+                            <div class="chart-container">
+                                <canvas id="halfLifeChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <h4>Aplicações, Acidentes e Dicas</h4>
+                    <ul>
+                       <li><b>Dica ("Macete"):</b> Para calcular a massa restante ($m_f$) após um tempo $t$, use a fórmula $m_f = m_i / 2^x$, onde $m_i$ é a massa inicial e $x$ é o número de meias-vidas, calculado como $x = t / T_{1/2}$.</li>
+                       <li><b>Datação por Radioisótopos:</b> Além do Carbono-14 (para matéria orgânica de até ~50.000 anos), usa-se o sistema Urânio-Chumbo para datar rochas com bilhões de anos.</li>
+                       <li><b>Aplicações Industriais:</b> Medidores de espessura de chapas metálicas usam fontes radioativas. A irradiação de alimentos (com Cobalto-60) aumenta seu tempo de prateleira ao eliminar micro-organismos.</li>
+                       <li><b>Acidentes Nucleares:</b> Eventos como <b>Chernobyl (1986)</b>, <b>Goiânia (1987)</b> e <b>Fukushima (2011)</b> servem como alertas severos sobre os perigos da radiação e a necessidade de protocolos de segurança extremamente rigorosos.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- #################### STOICHIOMETRY SECTION #################### -->
+        <section id="estequiometria" class="content-section">
+            <h2 class="section-title">Estequiometria</h2>
+             <div class="card-grid">
+                <div class="glass-card"><i class="material-icons card-icon">balance</i><h3 class="card-title">O que é?</h3><div class="card-content">O cálculo das quantidades de reagentes e produtos em reações químicas, baseado nas Leis Ponderais.</div></div>
+                <div class="glass-card"><i class="material-icons card-icon">mediation</i><h3 class="card-title">A Chave: Mol</h3><div class="card-content">O mol ($6,02 \times 10^{23}$ entidades) é a ponte que conecta o mundo microscópico (átomos) ao macroscópico (gramas).</div></div>
+                <div class="glass-card"><i class="material-icons card-icon">percent</i><h3 class="card-title">Casos Especiais</h3><div class="card-content">Cálculos envolvendo <b>reagente limitante</b>, <b>pureza</b> dos reagentes e <b>rendimento</b> da reação.</div></div>
+                <div class="glass-card"><i class="material-icons card-icon">science</i><h3 class="card-title">Gases e Soluções</h3><div class="card-content">Relações de volume para gases (CNTP, Clapeyron) e cálculos com concentração de soluções (molaridade).</div></div>
+            </div>
+            
+             <div class="expand-button-container">
+                <button class="expand-button" data-target="#esto-expanded">
+                    Aprofundar <i class="material-icons">expand_more</i>
+                </button>
+            </div>
+
+            <div class="expanded-content" id="esto-expanded">
+                <div class="expanded-inner">
+                     <h3>Aprofundando em Estequiometria: A Matemática da Química</h3>
+                     <p>Estequiometria é a "receita de bolo" da química. A equação balanceada nos dá a proporção exata (em mols) para que os ingredientes (reagentes) se transformem no bolo (produtos) sem sobras ou faltas ideais. O segredo é sempre converter os dados do problema para mols, usar a proporção da equação e depois converter de volta para a unidade pedida (gramas, litros, etc.).</p>
+                     
+                     <h4>Roteiro Infalível para Cálculos Estequiométricos</h4>
+                     <ol>
+                         <li><b>Escrever a Equação Química:</b> Representar a reação.</li>
+                         <li><b>Balancear a Equação:</b> Ajustar os coeficientes para obedecer à Lei de Lavoisier. <b>Este é o passo mais crucial.</b> O método das tentativas é o mais comum, mas para reações de oxirredução, o balanceamento por redox é mais eficiente.</li>
+                         <li><b>Montar a Regra de Três:</b>
+                            <ul>
+                                <li><b>1ª Linha (Linha Teórica/Molar):</b> Escreva a proporção molar dada pelos coeficientes. Ex: $1 \text{ mol de } N_2 : 3 \text{ mols de } H_2 : 2 \text{ mols de } NH_3$.</li>
+                                <li><b>2ª Linha (Linha de Dados):</b> Converta a proporção molar para as unidades do problema (massa, volume, etc.). Ex: $28g \text{ de } N_2 : 6g \text{ de } H_2 : 34g \text{ de } NH_3$.</li>
+                                <li><b>3ª Linha (Linha do Problema):</b> Use os dados fornecidos no enunciado e a incógnita (x).</li>
+                            </ul>
+                         </li>
+                     </ol>
+
+                    <h4>Calculadora Interativa: Síntese de Amônia</h4>
+                    <p>Use a calculadora abaixo para ver o conceito de reagente limitante em ação na reação $N_2 + 3 H_2 \rightarrow 2 NH_3$. Insira as massas dos reagentes e veja o resultado.</p>
+                    <div class="calculator">
+                        Massa de $N_2$ (g): <input type="number" id="mass-n2" placeholder="28">
+                        Massa de $H_2$ (g): <input type="number" id="mass-h2" placeholder="9">
+                        <button id="calculate-sto">Calcular</button>
+                        <div id="calc-result"></div>
+                    </div>
+                     
+                    <h4>Casos Complexos: Pureza, Rendimento e Reações Consecutivas</h4>
+                     <ul>
+                         <li><b>Pureza (%P):</b> Se um reagente tem 80% de pureza, significa que a cada 100g da amostra, apenas 80g são do reagente que de fato reage. O cálculo inicial de massa deve considerar apenas a parte pura. <b>Dica:</b> Aplique a pureza na massa do reagente antes de iniciar a regra de três.</li>
+                         <li><b>Rendimento (%R):</b> Reações reais quase nunca têm 100% de rendimento devido a perdas no processo ou reações paralelas. Se uma reação tem 90% de rendimento, a massa de produto obtida será 90% da massa que você calculou teoricamente. <b>Dica:</b> Calcule a massa teórica do produto (para 100%) e só no final aplique a porcentagem de rendimento.</li>
+                         <li><b>Reações Consecutivas:</b> Quando o produto de uma reação é o reagente da próxima. O segredo é calcular a quantidade de produto da primeira reação e usá-la como quantidade inicial para a segunda, e assim por diante.</li>
+                     </ul>
+
+                     <h4>Exemplo Completo:</h4>
+                     <p><b>Problema:</b> Qual a massa de óxido de cálcio (CaO) produzida a partir da decomposição de 250g de calcário (CaCO$_3$) com 80% de pureza, sabendo que a reação teve 90% de rendimento? (MM: CaCO$_3$=100, CaO=56)</p>
+                     <ol>
+                         <li><b>Equação:</b> $CaCO_3 \rightarrow CaO + CO_2$ (já balanceada)</li>
+                         <li><b>Massa Pura:</b> Primeiro, encontramos a massa que realmente reage. $m_{pura} = 250g \times (80/100) = 200g$ de $CaCO_3$ puro.</li>
+                         <li><b>Regra de Três (Cálculo do Rendimento Teórico):</b>
+                            <div class="code-block">Relação teórica: 100g de CaCO$_3$  -----  56g de CaO<br>Dados do problema: 200g de CaCO$_3$  -----  x</div>
+                            $x = (200 \times 56) / 100 = 112g$ de CaO. (Este seria o resultado com 100% de pureza e 100% de rendimento).
+                         </li>
+                         <li><b>Aplicar Rendimento Real:</b> A massa real obtida será 90% do valor teórico. $m_{real} = 112g \times (90/100) = \mathbf{100,8g \text{ de } CaO}$.</li>
+                     </ol>
+                </div>
+            </div>
+        </section>
+
+        <!-- #################### ORGANIC CHEMISTRY SECTION #################### -->
+        <section id="funcoes-organicas" class="content-section">
+            <h2 class="section-title">Guia Definitivo de Química Orgânica</h2>
+            
+            <div class="expand-button-container">
+                 <button class="expand-button" data-target="#orga-expanded">
+                    Explorar Guia Completo <i class="material-icons">expand_more</i>
+                </button>
+            </div>
+            
+            <div class="expanded-content" id="orga-expanded">
+                 <div class="expanded-inner">
+                     <h3>A Arquitetura da Vida: Um Mergulho na Química Orgânica</h3>
+                     <p>A química orgânica é o estudo dos compostos de carbono. O átomo de carbono é único por sua capacidade de formar quatro ligações covalentes estáveis (tetravalência), de se ligar a outros átomos de carbono em longas e complexas cadeias (concatenação), e de formar ligações múltiplas (duplas e triplas). Essa versatilidade cria a impressionante diversidade de moléculas que formam a base da vida e de inúmeros materiais sintéticos.</p>
+                    
+                     <h4>Nomenclatura para Iniciantes: O Básico</h4>
+                     <p>Para nomear qualquer composto orgânico simples, a lógica fundamental da IUPAC é combinar três partes, como um quebra-cabeça:</p>
+                     <div class="code-block" style="text-align: center; font-size: 1.2em;">
+                        <b>PREFIXO</b> (nº de Carbonos) + <b>INFIXO</b> (Tipo de Ligações) + <b>SUFIXO</b> (Função Orgânica)
+                     </div>
+                     <div class="grid-container grid-2-col">
+                        <div class="grid-child">
+                            <h5>Passo 1: Contar os Carbonos (Prefixo)</h5>
+                            <p>O prefixo indica o número de átomos de carbono na cadeia principal.</p>
+                             <table>
+                                <thead><tr><th>Nº de C</th><th>Prefixo</th></tr></thead>
+                                <tbody>
+                                    <tr><td>1</td><td>MET</td></tr>
+                                    <tr><td>2</td><td>ET</td></tr>
+                                    <tr><td>3</td><td>PROP</td></tr>
+                                    <tr><td>4</td><td>BUT</td></tr>
+                                    <tr><td>5</td><td>PENT</td></tr>
+                                     <tr><td>6</td><td>HEX</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                         <div class="grid-child">
+                            <h5>Passo 2: Observar as Ligações (Infixo)</h5>
+                            <p>O infixo informa sobre os tipos de ligações entre os átomos de carbono.</p>
+                            <table>
+                                <thead><tr><th>Tipo de Ligação</th><th>Infixo</th></tr></thead>
+                                <tbody>
+                                    <tr><td>Apenas Simples (C-C)</td><td>AN</td></tr>
+                                    <tr><td>Uma Dupla (C=C)</td><td>EN</td></tr>
+                                    <tr><td>Uma Tripla (C≡C)</td><td>IN</td></tr>
+                                    <tr><td>Duas Duplas</td><td>DIEN</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                     </div>
+                     <h5>Passo 3: Identificar a Função (Sufixo)</h5>
+                     <p>O sufixo é determinado pela função orgânica principal. Para o composto mais simples, um hidrocarboneto sem nenhuma função especial, o sufixo é <b>-O</b>.</p>
+                     
+                     <h5>Exemplo Prático: Nomeando o "2-metilbutano"</h5>
+                     <p>Vamos analisar a estrutura abaixo e construir seu nome passo a passo.</p>
+                     <canvas class="structure-canvas" id="exemplo-basico" data-smiles="CCC(C)C"></canvas>
+                     <ol>
+                        <li><b>Achar a cadeia principal:</b> A maior sequência de carbonos é de 4 átomos. Portanto, o prefixo é <b>BUT</b>.</li>
+                        <li><b>Analisar as ligações:</b> Todas as ligações entre carbonos são simples. O infixo é <b>AN</b>.</li>
+                        <li><b>Identificar o grupo funcional:</b> É um hidrocarboneto simples. O sufixo é <b>-O</b>. Até agora, temos "BUTANO".</li>
+                        <li><b>Identificar e nomear ramificações:</b> Há um grupo de 1 carbono (-CH$_3$) fora da cadeia principal. Seu nome é <b>metil</b>.</li>
+                        <li><b>Numerar a cadeia e localizar a ramificação:</b> Começamos a numerar da extremidade mais próxima da ramificação. Neste caso, da direita para a esquerda, o grupo metil está no carbono 2.</li>
+                        <li><b>Montar o nome final:</b> Juntamos tudo: <b>2-metilbutano</b>.</li>
+                     </ol>
+                     
+                     <hr style="margin: 40px 0; border: 1px solid rgba(0,0,0,0.1);">
+
+                     <h3>Nomenclatura Avançada e Prioridade de Funções</h3>
+                     <p>Quando uma molécula possui múltiplos grupos funcionais, a IUPAC estabelece uma ordem de prioridade para decidir qual grupo dará o nome principal (sufixo) e quais serão tratados como substituintes (prefixos).</p>
+                    
+                    <h4>Tabela de Prioridade de Funções</h4>
+                     <table>
+                         <thead><tr><th>Prioridade</th><th>Função</th><th>Sufixo (Principal)</th><th>Prefixo (Secundária)</th></tr></thead>
+                         <tbody>
+                            <tr><td>1</td><td>Ácido Carboxílico</td><td>-oico</td><td>carboxi-</td></tr>
+                            <tr><td>2</td><td>Anidrido de Ácido</td><td>-oico (anidrido ...oico)</td><td>-</td></tr>
+                            <tr><td>3</td><td>Éster</td><td>-oato de ...ila</td><td>alcoxicarbonil-</td></tr>
+                            <tr><td>4</td><td>Haleto de Acila</td><td>-oíla (haleto de ...oíla)</td><td>halocarbonil-</td></tr>
+                            <tr><td>5</td><td>Amida</td><td>-amida</td><td>carbamoil-</td></tr>
+                            <tr><td>6</td><td>Nitrila</td><td>-nitrila</td><td>ciano-</td></tr>
+                            <tr><td>7</td><td>Aldeído</td><td>-al</td><td>formil- ou oxo-</td></tr>
+                            <tr><td>8</td><td>Cetona</td><td>-ona</td><td>oxo-</td></tr>
+                            <tr><td>9</td><td>Álcool</td><td>-ol</td><td>hidroxi-</td></tr>
+                            <tr><td>10</td><td>Fenol</td><td>-ol</td><td>hidroxi-</td></tr>
+                            <tr><td>11</td><td>Amina</td><td>-amina</td><td>amino-</td></tr>
+                            <tr><td>12</td><td>Éter</td><td>(prefixo)-oxi-(prefixo)</td><td>-oxi-</td></tr>
+                            <tr><td>13</td><td>Alcenos/Alcinos</td><td>-en / -in</td><td>-</td></tr>
+                            <tr><td>14</td><td>Alcanos</td><td>-o</td><td>-</td></tr>
+                            <tr><td>15</td><td>Haletos/Nitro</td><td>(nenhum)</td><td>halo- / nitro-</td></tr>
+                         </tbody>
+                     </table>
+                     
+                    <h4>Como Montar a Molécula a partir do Nome:</h4>
+                    <p><b>Exemplo: Ácido 4-hidroxi-3-metil-pentanoico</b></p>
+                    <ol>
+                        <li><b>Identifique a função e a cadeia principal:</b> "Ácido ...-oico" -> Ácido Carboxílico (COOH) é a função #1. "PENT" -> 5 carbonos na cadeia principal. Desenhe: C-C-C-C-C. O COOH estará no carbono 1.</li>
+                        <li><b>Adicione os grupos secundários e ramificações:</b> "4-hidroxi" -> grupo -OH (álcool como secundário) no carbono 4. "3-metil" -> grupo -CH$_3$ no carbono 3.</li>
+                        <li><b>Complete com hidrogênios:</b> Preencha as ligações restantes de cada carbono com hidrogênios até que cada um faça 4 ligações.</li>
+                    </ol>
+                    <canvas class="structure-canvas" id="exemplo-nome" data-smiles="CC(C)C(O)C(=O)O"></canvas>
+
+                    <hr style="margin: 40px 0; border: 1px solid rgba(0,0,0,0.1);">
+
+                    <h3>Catálogo de Funções Orgânicas</h3>
+                    <p>Aqui está uma lista detalhada das principais funções orgânicas, suas características e exemplos visuais.</p>
+                    <table>
+                        <thead><tr><th>Função</th><th>Grupo Funcional</th><th>Sufixo IUPAC</th><th>Exemplo (Nome e Estrutura)</th></tr></thead>
+                        <tbody>
+                            <tr><td><b>Hidrocarboneto (Alcano)</b></td><td>C-C (só simples)</td><td>-o</td><td><b>Propano:</b> <canvas class="structure-canvas" data-smiles="CCC"></canvas></td></tr>
+                            <tr><td><b>Hidrocarboneto (Alceno)</b></td><td>C=C</td><td>-eno</td><td><b>Propeno:</b> <canvas class="structure-canvas" data-smiles="C=CC"></canvas></td></tr>
+                            <tr><td><b>Hidrocarboneto (Alcino)</b></td><td>C≡C</td><td>-ino</td><td><b>Propino:</b> <canvas class="structure-canvas" data-smiles="C#CC"></canvas></td></tr>
+                            <tr><td><b>Hidrocarboneto (Aromático)</b></td><td>Anel Benzênico</td><td>(benzeno)</td><td><b>Benzeno:</b> <canvas class="structure-canvas" data-smiles="c1ccccc1"></canvas></td></tr>
+                            <tr><td><b>Álcool</b></td><td>R-OH</td><td>-ol</td><td><b>Etanol:</b> <canvas class="structure-canvas" data-smiles="CCO"></canvas></td></tr>
+                            <tr><td><b>Fenol</b></td><td>Ar-OH (OH em anel arom.)</td><td>-ol</td><td><b>Fenol:</b> <canvas class="structure-canvas" data-smiles="c1ccc(O)cc1"></canvas></td></tr>
+                            <tr><td><b>Enol</b></td><td>C=C-OH</td><td>-enol</td><td><b>Propen-2-ol:</b> <canvas class="structure-canvas" data-smiles="C=C(O)C"></canvas></td></tr>
+                            <tr><td><b>Éter</b></td><td>R-O-R'</td><td>-oxi-</td><td><b>Etoxietano:</b> <canvas class="structure-canvas" data-smiles="CCOCC"></canvas></td></tr>
+                            <tr><td><b>Aldeído</b></td><td>R-CHO</td><td>-al</td><td><b>Etanal:</b> <canvas class="structure-canvas" data-smiles="CC=O"></canvas></td></tr>
+                            <tr><td><b>Cetona</b></td><td>R-CO-R'</td><td>-ona</td><td><b>Propanona (Acetona):</b> <canvas class="structure-canvas" data-smiles="CC(=O)C"></canvas></td></tr>
+                            <tr><td><b>Ácido Carboxílico</b></td><td>R-COOH</td><td>-oico</td><td><b>Ácido Etanoico (Ác. Acético):</b> <canvas class="structure-canvas" data-smiles="CC(=O)O"></canvas></td></tr>
+                            <tr><td><b>Éster</b></td><td>R-COO-R'</td><td>-oato de ...ila</td><td><b>Acetato de Etila:</b> <canvas class="structure-canvas" data-smiles="CC(=O)OCC"></canvas></td></tr>
+                            <tr><td><b>Sal Orgânico</b></td><td>R-COO⁻ M⁺</td><td>-oato de [cátion]</td><td><b>Acetato de Sódio:</b> <canvas class="structure-canvas" data-smiles="CC(=O)[O-].[Na+]"></canvas></td></tr>
+                            <tr><td><b>Anidrido de Ácido</b></td><td>(RCO)₂O</td><td>Anidrido ...oico</td><td><b>Anidrido Acético:</b> <canvas class="structure-canvas" data-smiles="CC(=O)OC(=O)C"></canvas></td></tr>
+                            <tr><td><b>Amina</b></td><td>R-NR'R''</td><td>-amina</td><td><b>Etilamina:</b> <canvas class="structure-canvas" data-smiles="CCN"></canvas></td></tr>
+                            <tr><td><b>Amida</b></td><td>R-CONH-R'</td><td>-amida</td><td><b>Etanamida:</b> <canvas class="structure-canvas" data-smiles="CC(=O)N"></canvas></td></tr>
+                            <tr><td><b>Nitrila</b></td><td>R-C≡N</td><td>-nitrila</td><td><b>Etanonitrila:</b> <canvas class="structure-canvas" data-smiles="CC#N"></canvas></td></tr>
+                            <tr><td><b>Isonitrila</b></td><td>R-N≡C</td><td>... isocianeto</td><td><b>Isocianeto de etila:</b> <canvas class="structure-canvas" data-smiles="CC[N+]#[C-]"></canvas></td></tr>
+                            <tr><td><b>Nitrocomposto</b></td><td>R-NO₂</td><td>nitro- (prefixo)</td><td><b>Nitroetano:</b> <canvas class="structure-canvas" data-smiles="CCN(=O)=O"></canvas></td></tr>
+                            <tr><td><b>Haleto Orgânico</b></td><td>R-X</td><td>halo- (prefixo)</td><td><b>Cloroetano:</b> <canvas class="structure-canvas" data-smiles="CCCl"></canvas></td></tr>
+                            <tr><td><b>Haleto de Acila</b></td><td>R-COX</td><td>Haleto de ...oíla</td><td><b>Cloreto de Etanoíla:</b> <canvas class="structure-canvas" data-smiles="CC(=O)Cl"></canvas></td></tr>
+                            <tr><td><b>Tiocomposto (Tiol)</b></td><td>R-SH</td><td>-tiol</td><td><b>Etanotiol:</b> <canvas class="structure-canvas" data-smiles="CCS"></canvas></td></tr>
+                            <tr><td><b>Organometálico</b></td><td>R-Metal</td><td>(varia)</td><td><b>Reagente de Grignard:</b> <canvas class="structure-canvas" data-smiles="CC[Mg]Br"></canvas></td></tr>
+                        </tbody>
+                    </table>
+
+                    <hr style="margin: 40px 0; border: 1px solid rgba(0,0,0,0.1);">
+
+                    <h3>Isomeria: Moléculas com a Mesma Identidade, mas Personalidades Diferentes</h3>
+                    <p>Isômeros são compostos que possuem a mesma fórmula molecular, mas diferentes arranjos de átomos, o que lhes confere propriedades físicas e químicas distintas. Existem dois grandes grupos:</p>
+                    
+                    <h4>Isomeria Plana (Constitucional)</h4>
+                    <p>Os isômeros diferem na conectividade dos átomos (a forma como estão ligados). Pode ser:</p>
+                    <ul>
+                        <li><b>De Função:</b> Mesma fórmula, funções diferentes. Ex: $C_2H_6O$ pode ser Álcool (Etanol) ou Éter (Metoximetano).</li>
+                        <li><b>De Cadeia:</b> Mesma função, cadeias principais diferentes. Ex: $C_4H_{10}$ pode ser Butano (cadeia normal) ou Metilpropano (ramificada).</li>
+                        <li><b>De Posição:</b> Mesma função, mesma cadeia, mas a posição do grupo funcional/insaturação/ramificação muda. Ex: $C_4H_8$ pode ser But-1-eno ou But-2-eno.</li>
+                        <li><b>De Compensação (Metameria):</b> Específica para funções com heteroátomo (éter, amina sec., etc.). O heteroátomo muda de posição na cadeia. Ex: $C_4H_{10}O$ pode ser Etoxietano ($CH_3CH_2-O-CH_2CH_3$) ou Metoxipropano ($CH_3-O-CH_2CH_2CH_3$).</li>
+                        <li><b>Tautomeria:</b> Um caso especial de isomeria de função onde os isômeros coexistem em equilíbrio químico dinâmico. O mais comum é o equilíbrio <b>aldo-enólico</b> ou <b>ceto-enólico</b>.</li>
+                    </ul>
+
+                    <h4>Isomeria Espacial (Estereoisomeria)</h4>
+                    <p>Os isômeros têm a mesma conectividade, mas o arranjo dos átomos no espaço é diferente.</p>
+                    <ul>
+                        <li><b>Geométrica (Cis-Trans ou E/Z):</b> Ocorre devido à rotação restrita em torno de uma ligação (geralmente C=C ou em anéis).
+                            <ul>
+                                <li><b>Condição:</b> Cada carbono da dupla ligação deve estar ligado a dois grupos diferentes.</li>
+                                <li><b>Nomenclatura E/Z:</b> Usa-se a regra de prioridade de Cahn-Ingold-Prelog. <b>Z (Zusammen - juntos):</b> grupos de maior prioridade do mesmo lado do plano. <b>E (Entgegen - opostos):</b> grupos de maior prioridade em lados opostos.</li>
+                            </ul>
+                            <b>Exemplo (But-2-eno):</b> Cis (Z) e Trans (E) <br>
+                            <canvas class="structure-canvas" data-smiles="C/C=C/C"></canvas>
+                            <canvas class="structure-canvas" data-smiles="C/C=C\C"></canvas>
+                        </li>
+                        <li><b>Óptica:</b> Ocorre em moléculas <b>quirais</b>, que são assimétricas. A principal causa de quiralidade é a presença de um <b>carbono quiral</b> (ou assimétrico), que está ligado a quatro grupos diferentes.
+                            <ul>
+                                <li><b>Propriedade:</b> Isômeros ópticos (enantiômeros) são imagens especulares um do outro não sobreponíveis e têm a capacidade de desviar o plano da luz polarizada.</li>
+                                <li><b>Nomenclatura R/S:</b> Sistema de Cahn-Ingold-Prelog. Determine a prioridade dos 4 ligantes. Olhe a molécula com o grupo de menor prioridade para trás. Se a sequência dos outros 3 (1-2-3) for no sentido <b>horário</b>, a configuração é <b>R (Rectus)</b>. Se for no sentido <b>anti-horário</b>, é <b>S (Sinister)</b>.</li>
+                            </ul>
+                        </li>
+                    </ul>
+                    
+                    <hr style="margin: 40px 0; border: 1px solid rgba(0,0,0,0.1);">
+
+                    <h3>Principais Reações Orgânicas: O Coração da Transformação</h3>
+                    <p>As reações orgânicas são os processos que transformam uma molécula em outra. Elas podem ser classificadas em grandes grupos, baseados na mudança estrutural que ocorre.</p>
+                    
+                    <h4>1. Reações de Adição</h4>
+                    <p>Ocorrem em compostos insaturados (com ligações $\pi$), onde a ligação $\pi$ é quebrada e novos átomos são adicionados à molécula.</p>
+                    <h5>Adição a Alcenos</h5>
+                    <ul>
+                        <li><b>Hidrogenação Catalítica:</b> Adição de H$_2$ na presença de um catalisador metálico (Ni, Pt, Pd), transformando um alceno em um alcano.</li>
+                        <li><b>Halogenação:</b> Adição de halogênios (Cl$_2$, Br$_2$). A cor vermelha do bromo desaparece, servindo como teste para insaturações.</li>
+                        <li><b>Adição de Halogenidretos (HX):</b> Segue a <b>Regra de Markovnikov</b>: "O hidrogênio do HX se adiciona ao carbono da dupla que já tem mais hidrogênios". Isso ocorre porque o mecanismo passa pela formação do carbocátion mais estável (terciário > secundário > primário).</li>
+                        <li><b>Hidratação (Adição de Água):</b> Ocorre em meio ácido (H$^+$) e também segue a Regra de Markovnikov, formando um álcool.</li>
+                    </ul>
+
+                    <h5>Adição a Alcinos</h5>
+                    <p>Semelhante aos alcenos, mas pode ocorrer em duas etapas, consumindo 1 ou 2 mols do reagente para quebrar uma ou as duas ligações $\pi$.</p>
+
+                    <h4>2. Reações de Substituição</h4>
+                    <p>Um átomo ou grupo de átomos na molécula é substituído por outro.</p>
+                    <h5>Substituição em Alcanos (Via Radical Livre)</h5>
+                    <p>Ocorre na presença de luz UV ou calor. É uma reação em cadeia com 3 etapas: iniciação (formação de radicais), propagação (radicais reagem e formam novos radicais) e terminação (radicais se encontram). Produz uma mistura de produtos.</p>
+                    
+                    <h5>Substituição Eletrofílica Aromática (SEAr)</h5>
+                    <p>Reação característica de anéis aromáticos. Um eletrófilo (E$^+$) ataca o anel rico em elétrons.</p>
+                    <ul>
+                        <li><b>Halogenação:</b> Adição de X$_2$ com um ácido de Lewis (FeX$_3$).</li>
+                        <li><b>Nitração:</b> Reação com HNO$_3$ e H$_2$SO$_4$ (ácido sulfúrico atua como catalisador). Adiciona o grupo -NO$_2$.</li>
+                        <li><b>Sulfonação:</b> Reação com H$_2$SO$_4$ fumegante. Adiciona o grupo -SO$_3$H.</li>
+                        <li><b>Alquilação de Friedel-Crafts:</b> Adição de um haleto de alquila (R-X) com AlCl$_3$. Adiciona um grupo alquila (-R).</li>
+                        <li><b>Acilação de Friedel-Crafts:</b> Adição de um haleto de acila (RCO-X) com AlCl$_3$. Adiciona um grupo acila (-COR).</li>
+                    </ul>
+                    <h5>Orientação no Anel Benzênico (Grupos Dirigentes)</h5>
+                    <p>Um grupo já presente no anel determina onde o próximo substituinte irá entrar.</p>
+                    <ul>
+                        <li><b>Grupos Ativadores (Orto-Para Dirigentes):</b> Doam densidade eletrônica para o anel, tornando-o mais reativo. Ex: -OH, -NH$_2$, -OR, -R (alquila).</li>
+                        <li><b>Grupos Desativadores (Meta Dirigentes):</b> Retiram densidade eletrônica do anel. Ex: -NO$_2$, -CN, -SO$_3$H, -COOH, -CHO, -COR.</li>
+                        <li><b>Halogênios:</b> São um caso especial. São desativadores, mas orientam para as posições orto e para.</li>
+                    </ul>
+                    
+                    <h4>3. Reações de Eliminação</h4>
+                    <p>O oposto da adição. Dois átomos ou grupos são removidos de carbonos adjacentes, formando uma ligação $\pi$.</p>
+                    <ul>
+                        <li><b>Desidratação de Álcoois:</b> Eliminação de água em meio ácido e com calor. Pode ser intramolecular (forma alceno) ou intermolecular (forma éter, em temperaturas mais baixas).</li>
+                        <li><b>Regra de Zaitsev (ou Saytzeff):</b> Na eliminação, o hidrogênio é preferencialmente removido do carbono adjacente àquele que perde o grupo de saída que for <b>menos hidrogenado</b>. Isso leva à formação do alceno mais substituído (e mais estável) como produto principal.</li>
+                    </ul>
+                    
+                    <h4>4. Reações de Oxidação e Redução</h4>
+                    <ul>
+                        <li><b>Oxidação de Álcoois:</b>
+                            <ul>
+                                <li><b>Álcool Primário:</b> Oxidação branda $\rightarrow$ Aldeído. Oxidação energética $\rightarrow$ Ácido Carboxílico.</li>
+                                <li><b>Álcool Secundário:</b> Oxidação $\rightarrow$ Cetona.</li>
+                                <li><b>Álcool Terciário:</b> Não se oxida sem quebrar a cadeia carbônica.</li>
+                            </ul>
+                        </li>
+                        <li><b>Ozonólise de Alcenos:</b> Quebra da dupla ligação pelo ozônio (O$_3$), seguida de hidrólise. Forma aldeídos e/ou cetonas, dependendo da estrutura do alceno. É uma ferramenta poderosa para determinar a posição da dupla ligação.</li>
+                    </ul>
+
+                    <hr style="margin: 40px 0; border: 1px solid rgba(0,0,0,0.1);">
+
+                    <h3>Análise Espectroscópica: A "Impressão Digital" das Moléculas</h3>
+                    <p>A química orgânica moderna não depende apenas de reações em tubos de ensaio. A identificação de compostos é feita por métodos físicos que analisam a interação da matéria com a radiação eletromagnética.</p>
+                    
+                    <h4>Espectroscopia de Infravermelho (IV)</h4>
+                    <p>Mede a absorção de radiação infravermelha pelas moléculas, que causa a vibração das ligações químicas (estiramento, deformação). Cada tipo de ligação vibra em uma frequência característica. É excelente para identificar a presença de <b>grupos funcionais</b>.</p>
+                     <table>
+                         <thead><tr><th>Grupo Funcional</th><th>Ligação</th><th>Frequência (cm⁻¹)</th><th>Aparência da Banda</th></tr></thead>
+                         <tbody>
+                            <tr><td>Álcool/Fenol</td><td>O-H</td><td>3200-3600</td><td>Banda larga e forte</td></tr>
+                            <tr><td>Ácido Carboxílico</td><td>O-H</td><td>2500-3300</td><td>Banda extremamente larga</td></tr>
+                            <tr><td>Amina</td><td>N-H</td><td>3300-3500</td><td>Média, 1 pico (NH), 2 picos (NH₂)</td></tr>
+                            <tr><td>Alcano</td><td>C-H ($sp^3$)</td><td>2850-3000</td><td>Forte</td></tr>
+                            <tr><td>Alceno</td><td>C-H ($sp^2$)</td><td>3000-3100</td><td>Média</td></tr>
+                            <tr><td>Carbonila (C=O)</td><td>C=O</td><td><b>1680-1750</b></td><td><b>Banda muito forte e aguda (diagnóstica)</b></td></tr>
+                            <tr><td>Nitrila</td><td>C≡N</td><td>2220-2260</td><td>Média</td></tr>
+                         </tbody>
+                     </table>
+                     
+                     <h4>Ressonância Magnética Nuclear (RMN)</h4>
+                     <p>É a técnica mais poderosa para determinar a estrutura completa de uma molécula. Ela analisa os núcleos de certos átomos (principalmente ¹H e ¹³C) quando colocados em um campo magnético forte.</p>
+                     <ul>
+                        <li><b>RMN de ¹H (Próton):</b> Fornece 3 informações cruciais:
+                            <ol>
+                                <li><b>Deslocamento Químico ($\delta$):</b> A posição do sinal no espectro indica o ambiente químico do hidrogênio. Prótons blindados (ricos em elétrons) aparecem em campo alto (baixo $\delta$), desblindados em campo baixo (alto $\delta$).</li>
+                                <li><b>Integração:</b> A área sob o pico é proporcional ao número de hidrogênios que geram aquele sinal.</li>
+                                <li><b>Multiplicidade (Desdobramento):</b> O sinal é desdobrado em múltiplos picos pelos hidrogênios vizinhos (em carbonos adjacentes). A <b>Regra n+1</b> diz que um sinal será desdobrado em (n+1) picos, onde 'n' é o número de hidrogênios vizinhos equivalentes. (Ex: singleto, dupleto, tripleto, quarteto).</li>
+                            </ol>
+                        </li>
+                     </ul>
+
+                 </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <p>Página educacional desenvolvida como uma ferramenta de aprendizado moderna. Design e conteúdo por L2.</p>
+    </footer>
+
+    <script>
+        // --- SCRIPT PARA HEADER SCROLL ---
+        window.addEventListener('scroll', function() {
+            const header = document.getElementById('main-header');
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        // --- SCRIPT PARA BOTÕES DE EXPANSÃO ---
+        document.querySelectorAll('.expand-button').forEach(button => {
+            button.addEventListener('click', () => {
+                const targetId = button.dataset.target;
+                const targetContent = document.querySelector(targetId);
+                
+                button.classList.toggle('active');
+                targetContent.classList.toggle('show');
+
+                const buttonText = button.firstChild;
+                if (button.classList.contains('active')) {
+                    if (targetId === '#orga-expanded') {
+                        buttonText.nodeValue = 'Recolher Guia ';
+                    } else {
+                        buttonText.nodeValue = 'Recolher ';
+                    }
+                } else {
+                     if (targetId === '#orga-expanded') {
+                        buttonText.nodeValue = 'Explorar Guia Completo ';
+                    } else {
+                        buttonText.nodeValue = 'Aprofundar ';
+                    }
+                }
+            });
+        });
+
+        // --- SCRIPT PARA GRÁFICO DE MEIA-VIDA (CHART.JS) ---
+        (function createHalfLifeChart() {
+            const chartEl = document.getElementById('halfLifeChart');
+            if(!chartEl) return;
+            const ctx = chartEl.getContext('2d');
+            const initialAmount = 100;
+            const halfLife = 5730;
+            const timePoints = 5;
+            const labels = [];
+            const data = [];
+            for (let i = 0; i <= timePoints; i++) {
+                const t = i * halfLife;
+                labels.push(`${i} T½ (${(t/1000).toFixed(1)}k anos)`);
+                data.push((initialAmount * Math.pow(0.5, i)).toFixed(2));
+            }
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: '% de Material Remanescente',
+                        data: data,
+                        borderColor: 'rgba(0, 198, 255, 1)',
+                        backgroundColor: 'rgba(0, 198, 255, 0.2)',
+                        fill: true,
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { labels: { color: 'white', font: { family: "'Lato', sans-serif" } } },
+                        title: { display: false }
+                    },
+                    scales: {
+                        x: { ticks: { color: 'white', font: { family: "'Lato', sans-serif" } }, grid: { color: 'rgba(255,255,255,0.1)' } },
+                        y: { ticks: { color: 'white', font: { family: "'Lato', sans-serif" } }, grid: { color: 'rgba(255,255,255,0.1)' }, min: 0, max: 100, title: { display: true, text: 'Quantidade (%)', color: 'white', font: { family: "'Poppins', sans-serif" }} }
+                    }
+                }
+            });
+        })();
+        
+        // --- SCRIPT PARA CALCULADORA DE ESTEQUIOMETRIA ---
+        (function stoichCalculator() {
+            const button = document.getElementById('calculate-sto');
+            if(!button) return;
+            button.addEventListener('click', () => {
+                const massN2 = parseFloat(document.getElementById('mass-n2').value) || 0;
+                const massH2 = parseFloat(document.getElementById('mass-h2').value) || 0;
+                const resultDiv = document.getElementById('calc-result');
+
+                if (massN2 <= 0 || massH2 <= 0) {
+                    resultDiv.innerHTML = `<span style="color: #c0392b;">Por favor, insira valores válidos para as massas.</span>`;
+                    return;
+                }
+
+                // Massas molares: N2 = 28.02 g/mol, H2 = 2.02 g/mol, NH3 = 17.03 g/mol
+                const molesN2 = massN2 / 28.02;
+                const molesH2 = massH2 / 2.02;
+
+                const molesH2Needed = molesN2 * 3;
+                let limitingReagent, massNH3, excessReagent, excessMass;
+
+                if (molesH2 < molesH2Needed) {
+                    limitingReagent = "Hidrogênio (H₂)";
+                    excessReagent = "Nitrogênio (N₂)";
+                    const molesNH3 = (molesH2 / 3) * 2;
+                    massNH3 = molesNH3 * 17.03;
+                    const molesN2Reacted = molesH2 / 3;
+                    excessMass = (molesN2 - molesN2Reacted) * 28.02;
+                } else {
+                    limitingReagent = "Nitrogênio (N₂)";
+                    excessReagent = "Hidrogênio (H₂)";
+                    const molesNH3 = molesN2 * 2;
+                    massNH3 = molesNH3 * 17.03;
+                    excessMass = (molesH2 - molesH2Needed) * 2.02;
+                }
+                
+                resultDiv.innerHTML = `Reagente Limitante: <b>${limitingReagent}</b>.<br>
+                                     Massa de Amônia (NH₃) formada: <b>${massNH3.toFixed(2)}g</b>.<br>
+                                     Reagente em Excesso: <b>${excessReagent}</b>.<br>
+                                     Massa em excesso: <b>${excessMass.toFixed(2)}g</b>.`;
+            });
+        })();
+
+        // --- SCRIPT PARA DESENHAR ESTRUTURAS QUÍMICAS (SMILES-DRAWER) ---
+        (function drawChemicalStructures() {
+            let options = {
+                width: 300, 
+                height: 150,
+                themes: {
+                    light: {
+                        C: '#2D3A3A', O: '#d63031', N: '#0984e3',
+                        Cl: '#00b894', Br: '#a29bfe', I: '#6c5ce7', F: '#00cec9',
+                        S: '#fdcb6e', P: '#fd79a8', Mg: '#2d3a3a',
+                        '[O-]': '#d63031', '[N+]': '#0984e3', '[C-]': '#2D3A3A'
+                    }
+                }
+            };
+            
+            let smilesDrawer = new SmilesDrawer.Drawer(options);
+
+            document.querySelectorAll('.structure-canvas').forEach(canvas => {
+                const smiles = canvas.dataset.smiles;
+                if(smiles) {
+                    SmilesDrawer.parse(smiles, function(tree) {
+                        smilesDrawer.draw(tree, canvas, 'light', false);
+                    }, function(err) {
+                        console.error("Erro ao desenhar SMILES:", smiles, err);
+                        const ctx = canvas.getContext('2d');
+                        ctx.clearRect(0, 0, canvas.width, canvas.height);
+                        ctx.font = '14px Arial';
+                        ctx.fillStyle = 'red';
+                        ctx.textAlign = 'center';
+                        ctx.fillText('Erro ao carregar estrutura.', canvas.width / 2, canvas.height / 2);
+                    });
+                }
+            });
+        })();
+
+    </script>
+
+</body>
+</html>

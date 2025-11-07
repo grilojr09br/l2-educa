@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guia Mestre de Gramática: Da Semântica à Sintaxe</title>
+    
+    <!-- Imports: Fontes e Ícones -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&family=Cormorant+Garamond:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <style>
+        /* ------------------- */
+        /* RESET E VARIÁVEIS   */
+        /* ------------------- */
+        :root {
+            --font-body: 'Inter', sans-serif;
+            --font-headings: 'Cormorant Garamond', serif;
+
+            /* Paleta Geral */
+            --color-light: #f8f9fa;
+            --color-dark: #121212;
+            --color-gray: #adb5bd;
+            --color-accent: #007bff;
+
+            /* Tema 1: Semântica */
+            --bg-semantica: #1a1a1d;
+            --text-semantica: #e5e5e5;
+            --accent-semantica: #c3073f;
+            --card-bg-semantica: rgba(255, 255, 255, 0.05);
+
+            /* Tema 2: Significação */
+            --bg-significacao: #f4f1de;
+            --text-significacao: #3d405b;
+            --accent-significacao: #e07a5f;
+            --card-bg-significacao: rgba(255, 255, 255, 0.6);
+
+            /* Tema 3: Coordenação */
+            --bg-coordenacao: #0d1b2a;
+            --text-coordenacao: #e0e1dd;
+            --accent-coordenacao: #415a77;
+            --card-bg-coordenacao: rgba(255, 255, 255, 0.07);
+
+            /* Tema 4: Subordinação */
+            --bg-subordinacao: #22223b;
+            --text-subordinacao: #f2e9e4;
+            --accent-subordinacao: #9a8c98;
+            --card-bg-subordinacao: rgba(255, 255, 255, 0.08);
+
+            --nav-width: 280px;
+            --nav-height-mobile: 60px;
+            --shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+            --transition-smooth: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--color-dark);
+            color: var(--color-light);
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        main {
+            padding-left: var(--nav-width);
+            width: 100%;
+        }
+
+        section {
+            min-height: 100vh;
+            padding: 60px 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: var(--font-headings);
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 1rem;
+        }
+        
+        h1 { font-size: 4rem; }
+        h2 { font-size: 3rem; }
+        h3 { font-size: 2rem; }
+        h4 { font-size: 1.5rem; }
+        p { margin-bottom: 1.5rem; max-width: 75ch; }
+        a { color: inherit; text-decoration: none; }
+        ul, ol { padding-left: 20px; margin-bottom: 1.5rem; }
+
+        /* ------------------- */
+        /* NAVEGAÇÃO           */
+        /* ------------------- */
+        .main-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: var(--nav-width);
+            height: 100vh;
+            background: rgba(18, 18, 18, 0.85);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 40px 20px;
+            z-index: 1000;
+            transition: var(--transition-smooth);
+        }
+
+        .main-nav .nav-title {
+            font-family: var(--font-headings);
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 40px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .main-nav ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .main-nav li a {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: var(--transition-smooth);
+            position: relative;
+        }
+
+        .main-nav li a .material-icons {
+            margin-right: 15px;
+            opacity: 0.7;
+            transition: var(--transition-smooth);
+        }
+
+        .main-nav li a:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--color-light);
+        }
+
+        .main-nav li a.active {
+            color: var(--color-light);
+            font-weight: 700;
+            background: var(--color-accent);
+        }
+
+        .main-nav li a.active .material-icons {
+            opacity: 1;
+        }
+
+        /* ------------------- */
+        /* COMPONENTES GERAIS  */
+        /* ------------------- */
+        .btn-expand {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-family: var(--font-body);
+            font-size: 1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            border: none;
+            transition: var(--transition-smooth);
+            margin-top: 20px;
+        }
+
+        .btn-expand .material-icons {
+            margin-left: 10px;
+            transition: transform 0.4s ease;
+        }
+
+        .btn-expand.expanded .material-icons {
+            transform: rotate(180deg);
+        }
+
+        .expandable-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.8s ease-in-out;
+            margin-top: 30px;
+            border-left: 3px solid;
+            padding-left: 30px;
+        }
+
+        .expandable-content.expanded {
+            max-height: 10000px; /* Valor alto para permitir expansão */
+        }
+        
+        .glass-card {
+            padding: 30px;
+            border-radius: 16px;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+        }
+        
+        /* NOVO COMPONENTE: DIRETO AO PONTO */
+        .direct-explanation {
+            border-left: 4px solid;
+            padding: 25px;
+            margin: 40px 0;
+            border-radius: 8px;
+        }
+        .direct-explanation h3 {
+            display: flex;
+            align-items: center;
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+        }
+        .direct-explanation h3 .material-icons {
+            font-size: 2.2rem;
+            margin-right: 15px;
+        }
+        .direct-explanation p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 10px;
+        }
+        .direct-explanation strong {
+            font-weight: 700;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+            background: rgba(0,0,0,0.2);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        th {
+            font-family: var(--font-headings);
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .tip-card {
+            padding: 20px;
+            border-left: 4px solid;
+            margin: 2rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .tip-card h4 {
+            display: flex;
+            align-items: center;
+        }
+        .tip-card .material-icons {
+            margin-right: 10px;
+        }
+
+        /* ------------------- */
+        /* TEMAS DAS SEÇÕES    */
+        /* ------------------- */
+        #semantica {
+            background-color: var(--bg-semantica);
+            color: var(--text-semantica);
+        }
+        #semantica .btn-expand { background-color: var(--accent-semantica); color: var(--text-semantica); }
+        #semantica .expandable-content { border-color: var(--accent-semantica); }
+        #semantica .glass-card { background: var(--card-bg-semantica); }
+        #semantica .direct-explanation { border-color: var(--accent-semantica); background-color: var(--card-bg-semantica); }
+        #semantica .direct-explanation strong { color: var(--accent-semantica); }
+        #semantica th { background-color: var(--accent-semantica); color: var(--text-semantica); }
+        #semantica .tip-card { background-color: var(--card-bg-semantica); border-color: var(--accent-semantica); }
+
+        #significacao {
+            background-color: var(--bg-significacao);
+            color: var(--text-significacao);
+        }
+        #significacao .btn-expand { background-color: var(--accent-significacao); color: var(--bg-significacao); }
+        #significacao .expandable-content { border-color: var(--accent-significacao); }
+        #significacao .glass-card { background: var(--card-bg-significacao); border-color: rgba(0,0,0,0.1); }
+        #significacao .direct-explanation { border-color: var(--accent-significacao); background-color: var(--card-bg-significacao); }
+        #significacao .direct-explanation strong { color: var(--accent-significacao); }
+        #significacao th { background-color: var(--accent-significacao); color: var(--bg-significacao); }
+        #significacao table { background: rgba(0,0,0,0.03); }
+        #significacao td, #significacao th { border-color: rgba(0,0,0,0.1); }
+        #significacao .tip-card { background-color: var(--card-bg-significacao); border-color: var(--accent-significacao); }
+
+        #coordenacao {
+            background-color: var(--bg-coordenacao);
+            color: var(--text-coordenacao);
+        }
+        #coordenacao .btn-expand { background-color: var(--accent-coordenacao); color: var(--text-coordenacao); }
+        #coordenacao .expandable-content { border-color: var(--accent-coordenacao); }
+        #coordenacao .glass-card { background: var(--card-bg-coordenacao); }
+        #coordenacao .direct-explanation { border-color: var(--accent-coordenacao); background-color: var(--card-bg-coordenacao); }
+        #coordenacao .direct-explanation strong { color: var(--accent-coordenacao); }
+        #coordenacao th { background-color: var(--accent-coordenacao); color: var(--text-coordenacao); }
+        #coordenacao .tip-card { background-color: var(--card-bg-coordenacao); border-color: var(--accent-coordenacao); }
+        
+        #subordinacao {
+            background-color: var(--bg-subordinacao);
+            color: var(--text-subordinacao);
+        }
+        #subordinacao .btn-expand { background-color: var(--accent-subordinacao); color: var(--bg-subordinacao); }
+        #subordinacao .expandable-content { border-color: var(--accent-subordinacao); }
+        #subordinacao .glass-card { background: var(--card-bg-subordinacao); }
+        #subordinacao .direct-explanation { border-color: var(--accent-subordinacao); background-color: var(--card-bg-subordinacao); }
+        #subordinacao .direct-explanation strong { color: var(--accent-subordinacao); }
+        #subordinacao th { background-color: var(--accent-subordinacao); color: var(--bg-subordinacao); }
+        #subordinacao .tip-card { background-color: var(--card-bg-subordinacao); border-color: var(--accent-subordinacao); }
+        
+        /* ------------------- */
+        /* QUIZ INTERATIVO     */
+        /* ------------------- */
+        .quiz-container {
+            margin-top: 2rem;
+            padding: 2rem;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        #significacao .quiz-container { border-color: rgba(0,0,0,0.2); }
+        .quiz-question { font-size: 1.2rem; font-weight: 500; margin-bottom: 1.5rem; }
+        .quiz-options button {
+            display: block;
+            width: 100%;
+            text-align: left;
+            padding: 15px;
+            margin-bottom: 10px;
+            border: 1px solid;
+            border-radius: 8px;
+            background-color: transparent;
+            color: inherit;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+        }
+        #coordenacao .quiz-options button { border-color: var(--accent-coordenacao); }
+        #coordenacao .quiz-options button:hover { background-color: var(--accent-coordenacao); }
+        #subordinacao .quiz-options button { border-color: var(--accent-subordinacao); }
+        #subordinacao .quiz-options button:hover { background-color: var(--accent-subordinacao); color: var(--bg-subordinacao); }
+        
+        .quiz-feedback { margin-top: 1rem; font-weight: bold; }
+        .quiz-feedback.correct { color: #28a745; }
+        .quiz-feedback.incorrect { color: #dc3545; }
+
+
+        /* ------------------- */
+        /* RODAPÉ              */
+        /* ------------------- */
+        footer {
+            padding: 20px;
+            text-align: center;
+            font-size: 0.9rem;
+            color: var(--color-gray);
+            background-color: var(--color-dark);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* ------------------- */
+        /* RESPONSIVIDADE      */
+        /* ------------------- */
+        @media (max-width: 1024px) {
+            :root {
+                --nav-width: 0px; /* Esconde a sidebar */
+            }
+            main {
+                padding-left: 0;
+                padding-top: var(--nav-height-mobile);
+            }
+            section {
+                padding: 40px 20px;
+                min-height: auto;
+            }
+            h1 { font-size: 2.5rem; }
+            h2 { font-size: 2rem; }
+            h3 { font-size: 1.5rem; }
+
+            .main-nav {
+                width: 100%;
+                height: var(--nav-height-mobile);
+                bottom: auto;
+                top: 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 0 10px;
+                border-right: none;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            }
+            .main-nav.nav-hidden {
+                transform: translateY(-100%);
+            }
+            .main-nav .nav-title {
+                display: none;
+            }
+            .main-nav ul {
+                display: flex;
+                justify-content: space-around;
+                width: 100%;
+            }
+            .main-nav li a {
+                flex-direction: column;
+                padding: 5px;
+                font-size: 0.7rem;
+            }
+            .main-nav li a .material-icons {
+                margin-right: 0;
+                margin-bottom: 2px;
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAVEGAÇÃO PRINCIPAL (SIDEBAR/TOPBAR) -->
+    <nav class="main-nav">
+        <div class="nav-title">Guia Mestre</div>
+        <ul>
+            <li><a href="#semantica" class="nav-link active"><i class="material-icons">grain</i> Semântica</a></li>
+            <li><a href="#significacao" class="nav-link"><i class="material-icons">translate</i> Significação</a></li>
+            <li><a href="#coordenacao" class="nav-link"><i class="material-icons">link</i> Coordenação</a></li>
+            <li><a href="#subordinacao" class="nav-link"><i class="material-icons">device_hub</i> Subordinação</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <!-- SEÇÃO 1: CAMPO LEXICAL E CAMPO SEMÂNTICO -->
+        <section id="semantica">
+            <div class="section-content">
+                <h1>Campo Lexical & Semântico</h1>
+                <p>A arquitetura invisível das palavras. Entender como as palavras se agrupam por afinidade de mundo ou de sentido é o primeiro passo para dominar a interpretação e a produção de textos sofisticados.</p>
+                
+                <!-- NOVO BLOCO: DIRETO AO PONTO -->
+                <div class="direct-explanation">
+                    <h3><i class="material-icons">flash_on</i>Direto ao Ponto</h3>
+                    <p><strong>Campo Lexical é isso:</strong> um grupo de palavras sobre o <strong>mesmo assunto</strong> (ex: futebol, bola, gol, time).</p>
+                    <p><strong>...por isso:</strong> porque todas pertencem ao mesmo universo de coisas e ações no mundo real.</p>
+                    <p><strong>Campo Semântico é isso:</strong> os <strong>vários sentidos</strong> de uma <strong>única palavra</strong> (ex: a palavra 'ponto' pode ser final, de ônibus, no jogo).</p>
+                    <p><strong>...por isso:</strong> porque o contexto da frase muda o que a palavra significa.</p>
+                </div>
+
+                <button class="btn-expand" data-target="expand-semantica">
+                    Explorar Guia Completo
+                    <i class="material-icons">expand_more</i>
+                </button>
+
+                <div id="expand-semantica" class="expandable-content">
+                    <h2>Aprofundamento: A Teia de Relações</h2>
+                    
+                    <h3>A Lógica Central: Mundo vs. Sentido</h3>
+                    <p>A distinção é crucial. O <strong>Campo Lexical</strong> é extralinguístico, ou seja, ele agrupa palavras que pertencem a um mesmo domínio da experiência humana. Não importa a classe gramatical. Para "escola", teríamos: <em>aluno, professor, lousa, prova, diretor, aprender, estudar, recreio</em>.</p>
+                    <p>O <strong>Campo Semântico</strong>, por outro lado, é intralinguístico. Ele explora a polissemia, a capacidade de uma palavra ter múltiplos sentidos. A palavra "cabeça" pode significar a parte do corpo, a liderança de um grupo ("o cabeça do projeto"), o início de algo ("cabeça de chave") ou o juízo ("perder a cabeça").</p>
+
+                    <h3>Aplicações Práticas</h3>
+                    <ul>
+                        <li><strong>Escrita Criativa:</strong> Usar o campo lexical de um tema (ex: "mar") enriquece a descrição e cria uma atmosfera coesa (<em>ondas, areia, salgado, maresia, barco, horizonte...</em>).</li>
+                        <li><strong>Interpretação de Texto:</strong> Identificar o campo semântico de uma palavra-chave em um texto ajuda a desvendar a intenção do autor e as possíveis ambiguidades.</li>
+                        <li><strong>Publicidade:</strong> A publicidade explora campos semânticos para associar produtos a ideias positivas. Um carro pode ser associado à "liberdade", "potência", "aventura".</li>
+                    </ul>
+
+                    <h3>Tabela Comparativa</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Palavra-Base</th>
+                                <th>Exemplo de Campo Lexical</th>
+                                <th>Exemplo de Campo Semântico</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Medicina</strong></td>
+                                <td>Médico, hospital, cirurgia, remédio, paciente, diagnóstico, enfermeira.</td>
+                                <td>(A palavra "medicina") A ciência; o curso universitário; o remédio.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Música</strong></td>
+                                <td>Nota, instrumento, melodia, ritmo, show, cantor, partitura, harmonia.</td>
+                                <td>(A palavra "ponto") Sinal de pontuação; local físico; momento; nota em jogo; ponto de ônibus; ponto de vista.</td>
+                            </tr>
+                             <tr>
+                                <td><strong>Fogo</strong></td>
+                                <td>Chama, calor, incêndio, queimar, fumaça, bombeiro, faísca, cinzas.</td>
+                                <td>(A palavra "fogo") Combustão; grande entusiasmo ("pegar fogo"); disparo de arma; demissão ("estar no fogo").</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                    <div class="tip-card">
+                        <h4><i class="material-icons">lightbulb</i>Dica de Mestre</h4>
+                        <p>Para diferenciar, pergunte-se: "Estou listando <strong>palavras relacionadas a um TEMA</strong> ou <strong>sentidos diferentes de UMA palavra</strong>?". A primeira resposta indica Campo Lexical; a segunda, Campo Semântico.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEÇÃO 2: SIGNIFICAÇÃO DAS PALAVRAS -->
+        <section id="significacao">
+            <div class="section-content">
+                <h1>Significação das Palavras</h1>
+                <p>As palavras possuem camadas. Dominar a significação é entender a diferença entre o que é dito (denotação) e o que é sugerido (conotação), e navegar com precisão pelas sutilezas dos sinônimos, antônimos, parônimos e homônimos.</p>
+
+                <!-- NOVO BLOCO: DIRETO AO PONTO -->
+                <div class="direct-explanation">
+                    <h3><i class="material-icons">flash_on</i>Direto ao Ponto</h3>
+                    <p><strong>Denotação é isso:</strong> o sentido <strong>literal</strong>, de dicionário (ex: pedra = objeto mineral).</p>
+                    <p><strong>...por isso:</strong> porque é o significado objetivo, sem emoção ou segunda intenção.</p>
+                    <p><strong>Conotação é isso:</strong> o sentido <strong>figurado</strong>, a sugestão (ex: coração de pedra = pessoa fria).</p>
+                    <p><strong>...por isso:</strong> porque a palavra ganha um novo valor emocional ou cultural no contexto.</p>
+                </div>
+
+                <button class="btn-expand" data-target="expand-significacao">
+                    Explorar Guia Completo
+                    <i class="material-icons">expand_more</i>
+                </button>
+
+                <div id="expand-significacao" class="expandable-content">
+                    <h2>Aprofundamento: As Múltiplas Faces do Léxico</h2>
+
+                    <h3>Denotação vs. Conotação: O Dicionário e a Emoção</h3>
+                    <p><strong>Denotação:</strong> É o sentido literal, dicionarizado da palavra, objetivo e direto. Em "O leão escapou do zoológico", <em>leão</em> refere-se ao animal felino.</p>
+                    <p><strong>Conotação:</strong> É o sentido figurado, subjetivo, que evoca emoções, valores e associações culturais. Em "João é um leão na defesa do seu time", <em>leão</em> conota bravura, força, ferocidade.</p>
+                    <p>A literatura e a poesia são territórios férteis da conotação. "Aquele homem é uma <strong>raposa</strong>" (esperteza). "Seu coração é de <strong>gelo</strong>" (frieza).</p>
+
+                    <h3>Sinonímia e Antonímia: Proximidade e Oposição</h3>
+                    <p><strong>Sinônimos:</strong> Palavras com significados semelhantes. A sinonímia perfeita é rara. Geralmente, há nuances. <em>Casa, lar, residência, moradia</em> são sinônimos, mas "lar" tem uma conotação mais afetiva que "residência".</p>
+                    <p><strong>Antônimos:</strong> Palavras com significados opostos. <em>Bem/mal, claro/escuro, amor/ódio, forte/fraco.</em></p>
+
+                    <h3>Parônimos e Homônimos: As Armadilhas da Língua</h3>
+                    <p>Aqui reside a maior parte dos erros de ortografia e semântica. A atenção deve ser redobrada.</p>
+                    <ul>
+                        <li><strong>Parônimos:</strong> Palavras parecidas na grafia e na pronúncia, mas com significados diferentes.</li>
+                        <li><strong>Homônimos:</strong> Palavras com a mesma pronúncia (homófonos) ou mesma grafia (homógrafos), mas com significados diferentes.</li>
+                    </ul>
+
+                    <h4>Tabela de Parônimos Comuns</h4>
+                    <table>
+                        <thead>
+                            <tr><th>Parônimos</th><th>Significados</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td><strong>Eminente / Iminente</strong></td><td>Eminente = ilustre, elevado. Iminente = prestes a acontecer.</td></tr>
+                            <tr><td><strong>Descrição / Discrição</strong></td><td>Descrição = ato de descrever. Discrição = qualidade de ser discreto.</td></tr>
+                            <tr><td><strong>Tráfego / Tráfico</strong></td><td>Tráfego = trânsito. Tráfico = comércio ilegal.</td></tr>
+                            <tr><td><strong>Infligir / Infringir</strong></td><td>Infligir = aplicar (pena, castigo). Infringir = desobedecer, violar (lei).</td></tr>
+                            <tr><td><strong>Comprimento / Cumprimento</strong></td><td>Comprimento = extensão. Cumprimento = saudação, execução de tarefa.</td></tr>
+                        </tbody>
+                    </table>
+
+                    <h4>Tabela de Homônimos Comuns</h4>
+                    <table>
+                        <thead>
+                            <tr><th>Homônimos</th><th>Significados</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td><strong>Sessão / Seção / Cessão</strong></td><td>Sessão = intervalo de tempo (de cinema). Seção = parte, departamento. Cessão = ato de ceder.</td></tr>
+                            <tr><td><strong>Acento / Assento</strong></td><td>Acento = sinal gráfico. Assento = lugar para sentar.</td></tr>
+                            <tr><td><strong>Mau / Mal</strong></td><td>Mau (adjetivo, oposto de bom). Mal (advérbio, oposto de bem; ou substantivo).</td></tr>
+                            <tr><td><strong>Coser / Cozer</strong></td><td>Coser = costurar. Cozer = cozinhar.</td></tr>
+                        </tbody>
+                    </table>
+
+                    <div class="tip-card">
+                        <h4><i class="material-icons">lightbulb</i>Macete: Mau vs. Mal</h4>
+                        <p>Para nunca mais errar: troque por seus antônimos. Se couber <strong>BOM</strong>, use <strong>MAU</strong>. Se couber <strong>BEM</strong>, use <strong>MAL</strong>. Ex: "Ele é um homem <em>mau</em> (bom)." vs. "Ele se sente <em>mal</em> (bem)."</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEÇÃO 3: PERÍODO COMPOSTO POR COORDENAÇÃO -->
+        <section id="coordenacao">
+            <div class="section-content">
+                <h1>Período Composto por Coordenação</h1>
+                <p>A sintaxe da independência. As orações coordenadas se conectam como vagões de um trem: uma ao lado da outra, mantendo sua própria estrutura e sentido, unidas por uma conjunção que define a relação lógica entre elas.</p>
+                
+                <!-- NOVO BLOCO: DIRETO AO PONTO -->
+                <div class="direct-explanation">
+                    <h3><i class="material-icons">flash_on</i>Direto ao Ponto</h3>
+                    <p><strong>Oração Coordenada é isso:</strong> uma oração <strong>independente</strong> ligada a outra.</p>
+                    <p><strong>...por isso:</strong> porque ela tem sentido completo sozinha (em "Corri, mas cansei", a oração "Corri" já funciona).</p>
+                    <p><strong>...e por isso:</strong> a conjunção (mas, e, ou, logo) apenas define a <strong>relação lógica</strong> entre elas (oposição, soma, etc.), sem criar uma dependência de função sintática.</p>
+                </div>
+
+                <button class="btn-expand" data-target="expand-coordenacao">
+                    Explorar Guia Completo
+                    <i class="material-icons">expand_more</i>
+                </button>
+
+                <div id="expand-coordenacao" class="expandable-content">
+                    <h2>Aprofundamento: A Lógica das Orações Independentes</h2>
+                    <p>A característica fundamental do período composto por coordenação é que as orações são <strong>sintaticamente independentes</strong>. Isso significa que, se separadas, cada uma delas ainda faria sentido como uma frase completa (embora a ideia do período se perca).</p>
+                    <p>Ex: "Eu estudei muito <strong>e</strong> passei na prova." -> "Eu estudei muito." (sentido completo) + "Passei na prova." (sentido completo).</p>
+                    <p>As orações se classificam em <strong>Assindéticas</strong> (sem conjunção, separadas por vírgula) e <strong>Sindéticas</strong> (com conjunção). As sindéticas são o foco do nosso estudo e se dividem em 5 tipos.</p>
+
+                    <h3>Raciocínio Sequencial: Como Classificar</h3>
+                    <ol>
+                        <li><strong>Identifique os verbos:</strong> Cada verbo (ou locução verbal) representa uma oração.</li>
+                        <li><strong>Localize a conjunção:</strong> Encontre a palavra que conecta as orações.</li>
+                        <li><strong>Analise o valor semântico:</strong> Pergunte-se qual ideia a conjunção expressa. É adição? Oposição? Alternância? Conclusão? Explicação?</li>
+                    </ol>
+
+                    <h3>Tabela das Conjunções Coordenativas</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Tipo</th>
+                                <th>Ideia Central</th>
+                                <th>Principais Conjunções</th>
+                                <th>Exemplo</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Aditiva</strong></td>
+                                <td>Soma, acréscimo</td>
+                                <td>e, nem, mas também, como também</td>
+                                <td>Ele não apenas trabalha, <strong>mas também</strong> estuda.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Adversativa</strong></td>
+                                <td>Oposição, contraste</td>
+                                <td>mas, porém, contudo, todavia, entretanto</td>
+                                <td>A casa é antiga, <strong>porém</strong> bem conservada.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Alternativa</strong></td>
+                                <td>Escolha, exclusão</td>
+                                <td>ou, ou...ou, ora...ora, quer...quer</td>
+                                <td><strong>Ora</strong> chove, <strong>ora</strong> faz sol.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Conclusiva</strong></td>
+                                <td>Conclusão, dedução</td>
+                                <td>logo, portanto, por isso, pois (após o verbo)</td>
+                                <td>Penso, <strong>logo</strong> existo.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Explicativa</strong></td>
+                                <td>Justificativa, razão</td>
+                                <td>que, porque, pois (antes do verbo)</td>
+                                <td>Feche a janela, <strong>pois</strong> está ventando.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="tip-card">
+                        <h4><i class="material-icons">lightbulb</i>Dica de Mestre: A "Pegadinha" do 'E'</h4>
+                        <p>A conjunção "e" é majoritariamente aditiva, mas pode ter valor <strong>adversativo</strong> (= mas). Ex: "Ele estudou muito <strong>e</strong> não passou." (A ideia é de contraste, não de soma). A análise do contexto é soberana.</p>
+                    </div>
+
+                    <!-- QUIZ INTERATIVO -->
+                    <div class="quiz-container">
+                        <h3 id="quiz-coordenacao-title">Teste seu Conhecimento: Coordenação</h3>
+                        <div id="quiz-coordenacao">
+                            <!-- Perguntas serão injetadas pelo JS -->
+                        </div>
+                        <div id="feedback-coordenacao" class="quiz-feedback"></div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- SEÇÃO 4: PERÍODO COMPOSTO POR SUBORDINAÇÃO (SUBSTANTIVAS) -->
+        <section id="subordinacao">
+            <div class="section-content">
+                <h1>Período Composto por Subordinação</h1>
+                <h2>(Orações Subordinadas Substantivas)</h2>
+                <p>A sintaxe da dependência. Aqui, uma oração inteira se encaixa na outra, exercendo a função de um substantivo (sujeito, objeto, etc.). É a engenharia da frase complexa.</p>
+
+                <!-- NOVO BLOCO: DIRETO AO PONTO -->
+                <div class="direct-explanation">
+                    <h3><i class="material-icons">flash_on</i>Direto ao Ponto</h3>
+                    <p><strong>Oração Substantiva é isso:</strong> uma oração que funciona como um <strong>substantivo</strong> para a oração principal.</p>
+                    <p><strong>...por isso:</strong> porque você pode trocá-la inteira pela palavra <strong>"ISSO"</strong> (ex: "Eu quero <strong>que você venha</strong>" vira "Eu quero <strong>ISSO</strong>").</p>
+                    <p><strong>...e por isso:</strong> a função sintática que "ISSO" tem na frase (sujeito, objeto direto, etc.) é o nome que a oração recebe (Subjetiva, Objetiva Direta, etc.).</p>
+                </div>
+
+                <button class="btn-expand" data-target="expand-subordinacao">
+                    Explorar Guia Completo
+                    <i class="material-icons">expand_more</i>
+                </button>
+
+                <div id="expand-subordinacao" class="expandable-content">
+                    <h2>Aprofundamento: A Oração como Peça de Lego Sintática</h2>
+                    <p>Uma oração subordinada substantiva é uma oração que exerce a função sintática de um substantivo (sujeito, objeto direto, objeto indireto, complemento nominal, predicativo ou aposto) em relação à oração principal.</p>
+                    
+                    <h3>A Lógica Central: O Método da Substituição por "ISSO"</h3>
+                    <p>Esta é a chave-mestra para classificar 99% das orações substantivas. O método é simples:</p>
+                    <ol>
+                        <li>Substitua a oração inteira pela palavra <strong>ISSO</strong>.</li>
+                        <li>Releia a frase e analise qual a função sintática de "ISSO" na oração principal.</li>
+                        <li>A função de "ISSO" será a classificação da oração.</li>
+                    </ol>
+                    <p>Exemplo: "É fundamental <strong>que você estude</strong>." -> "É fundamental <strong>ISSO</strong>." -> "<strong>ISSO</strong> é fundamental." (ISSO é o sujeito). Logo, a oração é <strong>Subjetiva</strong>.</p>
+
+                    <h3>Tabela das Orações Subordinadas Substantivas</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Tipo</th>
+                                <th>Função de "ISSO"</th>
+                                <th>Exemplo e Análise</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Subjetiva</strong></td>
+                                <td>Sujeito</td>
+                                <td>É importante <strong>que todos participem</strong>. <br><em>(ISSO é importante)</em></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Objetiva Direta</strong></td>
+                                <td>Objeto Direto</td>
+                                <td>Eu quero <strong>que você venha</strong>. <br><em>(Eu quero ISSO)</em></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Objetiva Indireta</strong></td>
+                                <td>Objeto Indireto</td>
+                                <td>Lembre-se <strong>de que o prazo termina amanhã</strong>. <br><em>(Lembre-se dISSO)</em></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Completiva Nominal</strong></td>
+                                <td>Complemento Nominal</td>
+                                <td>Tenho certeza <strong>de que ele virá</strong>. <br><em>(Tenho certeza dISSO)</em></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Predicativa</strong></td>
+                                <td>Predicativo do Sujeito</td>
+                                <td>Meu desejo é <strong>que você seja feliz</strong>. <br><em>(Meu desejo é ISSO)</em></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Apositiva</strong></td>
+                                <td>Aposto</td>
+                                <td>Só peço uma coisa: <strong>que me deixem em paz</strong>. <br><em>(Só peço uma coisa: ISSO)</em></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="tip-card">
+                        <h4><i class="material-icons">lightbulb</i>Dica de Mestre: Objetiva Direta vs. Completiva Nominal</h4>
+                        <p>A confusão é comum. Ambas podem vir com preposição. O truque: se a palavra que pede o complemento for um <strong>verbo</strong>, a oração é Objetiva Indireta ("Lembre-se <strong>de que...</strong>"). Se for um <strong>substantivo abstrato, adjetivo ou advérbio</strong>, é Completiva Nominal ("Tenho certeza <strong>de que...</strong>").</p>
+                    </div>
+
+                    <!-- QUIZ INTERATIVO -->
+                    <div class="quiz-container">
+                        <h3 id="quiz-subordinacao-title">Teste seu Conhecimento: Substantivas</h3>
+                        <div id="quiz-subordinacao">
+                            <!-- Perguntas serão injetadas pelo JS -->
+                        </div>
+                        <div id="feedback-subordinacao" class="quiz-feedback"></div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>Página educacional desenvolvida como uma ferramenta de aprendizado. Design e conteúdo por L2.</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            // Lógica de navegação com Intersection Observer
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('.nav-link');
+
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.5 // 50% da seção visível
+            };
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        navLinks.forEach(link => {
+                            link.classList.remove('active');
+                            if (link.getAttribute('href').substring(1) === entry.target.id) {
+                                link.classList.add('active');
+                            }
+                        });
+                    }
+                });
+            }, observerOptions);
+
+            sections.forEach(section => {
+                observer.observe(section);
+            });
+
+            // Lógica de esconder/mostrar nav no mobile
+            const mainNav = document.querySelector('.main-nav');
+            let lastScrollTop = 0;
+
+            window.addEventListener('scroll', function() {
+                if (window.innerWidth <= 1024) {
+                    let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                    if (scrollTop > lastScrollTop) {
+                        // Scroll para baixo
+                        mainNav.classList.add('nav-hidden');
+                    } else {
+                        // Scroll para cima
+                        mainNav.classList.remove('nav-hidden');
+                    }
+                    lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+                }
+            });
+
+            // Lógica de expansão de conteúdo
+            const expandButtons = document.querySelectorAll('.btn-expand');
+            expandButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const targetId = button.getAttribute('data-target');
+                    const content = document.getElementById(targetId);
+                    
+                    button.classList.toggle('expanded');
+                    content.classList.toggle('expanded');
+                });
+            });
+
+
+            // Lógica dos Quizzes Interativos
+            const quizzes = {
+                coordenacao: {
+                    containerId: 'quiz-coordenacao',
+                    feedbackId: 'feedback-coordenacao',
+                    questions: [
+                        {
+                            question: "Em 'Estudei bastante, mas não entendi a matéria.', a oração destacada é:",
+                            options: ["Aditiva", "Adversativa", "Conclusiva", "Explicativa"],
+                            answer: "Adversativa"
+                        },
+                        {
+                            question: "Em 'Choveu muito, portanto as ruas alagaram.', a oração destacada é:",
+                            options: ["Alternativa", "Explicativa", "Conclusiva", "Adversativa"],
+                            answer: "Conclusiva"
+                        }
+                    ]
+                },
+                subordinacao: {
+                    containerId: 'quiz-subordinacao',
+                    feedbackId: 'feedback-subordinacao',
+                    questions: [
+                        {
+                            question: "Em 'É necessário que você se esforce mais.', a oração destacada é:",
+                            options: ["Objetiva Direta", "Subjetiva", "Completiva Nominal", "Predicativa"],
+                            answer: "Subjetiva"
+                        },
+                        {
+                            question: "Em 'Meu medo era que você não voltasse.', a oração destacada é:",
+                            options: ["Apositiva", "Objetiva Indireta", "Subjetiva", "Predicativa"],
+                            answer: "Predicativa"
+                        }
+                    ]
+                }
+            };
+
+            function createQuiz(quizKey) {
+                const quizData = quizzes[quizKey];
+                const container = document.getElementById(quizData.containerId);
+                const feedbackEl = document.getElementById(quizData.feedbackId);
+                let currentQuestionIndex = 0;
+
+                function renderQuestion() {
+                    container.innerHTML = '';
+                    const q = quizData.questions[currentQuestionIndex];
+                    
+                    const questionEl = document.createElement('div');
+                    questionEl.className = 'quiz-question';
+                    questionEl.textContent = q.question;
+                    container.appendChild(questionEl);
+
+                    const optionsEl = document.createElement('div');
+                    optionsEl.className = 'quiz-options';
+                    
+                    q.options.forEach(option => {
+                        const button = document.createElement('button');
+                        button.textContent = option;
+                        button.onclick = () => checkAnswer(option);
+                        optionsEl.appendChild(button);
+                    });
+                    container.appendChild(optionsEl);
+                    feedbackEl.textContent = '';
+                    feedbackEl.className = 'quiz-feedback';
+                }
+
+                function checkAnswer(selectedOption) {
+                    const q = quizData.questions[currentQuestionIndex];
+                    if (selectedOption === q.answer) {
+                        feedbackEl.textContent = 'Correto! Ótima análise.';
+                        feedbackEl.classList.add('correct');
+                    } else {
+                        feedbackEl.textContent = `Incorreto. A resposta certa é "${q.answer}".`;
+                        feedbackEl.classList.add('incorrect');
+                    }
+                    
+                    currentQuestionIndex = (currentQuestionIndex + 1) % quizData.questions.length;
+                    setTimeout(renderQuestion, 2000);
+                }
+                
+                renderQuestion();
+            }
+
+            createQuiz('coordenacao');
+            createQuiz('subordinacao');
+
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guia Mestre da Filosofia Helenística</title>
+    
+    <!-- Google Fonts: Inter para corpo e Playfair Display para títulos -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+
+    <!-- Google Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <style>
+        /* CSS Reset e Configurações Globais */
+        :root {
+            --font-title: 'Playfair Display', serif;
+            --font-body: 'Inter', sans-serif;
+            --color-text: #EAEAEA;
+            --color-text-muted: #BDBDBD;
+            --color-primary: #D4AF37; /* Dourado/Ouro para um tema clássico */
+            --color-bg-start: #2C3E50;
+            --color-bg-mid: #34495E;
+            --color-bg-end: #000000;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(212, 175, 55, 0.2);
+            --shadow-light: rgba(0, 0, 0, 0.2);
+            --spacing-unit: 10px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-body);
+            color: var(--color-text);
+            background: linear-gradient(-45deg, var(--color-bg-start), var(--color-bg-mid), var(--color-bg-end), #2C3E50);
+            background-size: 400% 400%;
+            animation: aurora-gradient 20s ease infinite;
+            line-height: 1.8;
+            overflow-x: hidden;
+        }
+        
+        /* Classe de controle para modo de visualização */
+        body.view-mode-active {
+            overflow: hidden; /* Previne scroll do body quando uma seção está "cheia" */
+        }
+
+
+        @keyframes aurora-gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Container Principal */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: calc(var(--spacing-unit) * 6);
+        }
+
+        /* Cabeçalho Fixo com Efeito Glassmorphism */
+        .main-header {
+            position: sticky;
+            top: 0;
+            z-index: 1000; /* Z-index alto para ficar sobre as seções */
+            padding: calc(var(--spacing-unit) * 2.5) calc(var(--spacing-unit) * 6);
+            background: rgba(15, 15, 25, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
+            text-align: center;
+            margin-bottom: calc(var(--spacing-unit) * 8);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .main-header h1 {
+            font-family: var(--font-title);
+            font-size: 3rem;
+            color: white;
+            text-shadow: 0 2px 15px var(--shadow-light);
+            transition: font-size 0.3s ease;
+        }
+        
+        /* Seção principal dos cards */
+        .topic-section {
+             margin-bottom: calc(var(--spacing-unit) * 8);
+             transition: opacity 0.5s ease;
+        }
+
+        /* Card de introdução do tópico */
+        .topic-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: calc(var(--spacing-unit) * 3);
+            padding: calc(var(--spacing-unit) * 5);
+            box-shadow: 0 8px 32px 0 var(--shadow-light);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+        
+        .card-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: calc(var(--spacing-unit) * 1.5);
+            margin-bottom: calc(var(--spacing-unit) * 2);
+        }
+        
+        .card-header .material-icons {
+            font-size: 3.5rem;
+            color: var(--color-primary);
+        }
+
+        .topic-card h2 {
+            font-family: var(--font-title);
+            font-size: 2.2rem;
+            color: #FFF;
+        }
+
+        .topic-card p {
+            color: var(--color-text-muted);
+            max-width: 600px;
+            margin-bottom: calc(var(--spacing-unit) * 3);
+        }
+
+        /* Botão de Aprofundamento / Recolher */
+        .aprofundar-btn, .recolher-btn {
+            background: var(--color-primary);
+            color: #111;
+            border: none;
+            border-radius: calc(var(--spacing-unit) * 1.5);
+            padding: calc(var(--spacing-unit) * 1.5) calc(var(--spacing-unit) * 4);
+            font-family: var(--font-body);
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-unit);
+            font-size: 1rem;
+        }
+
+        .aprofundar-btn:hover, .recolher-btn:hover {
+            background: #f0c340;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.2);
+        }
+        
+        .aprofundar-btn .material-icons, .recolher-btn .material-icons {
+             transition: transform 0.4s ease;
+        }
+        
+        .recolher-btn {
+            margin-top: calc(var(--spacing-unit) * 2);
+        }
+        
+        .recolher-btn .material-icons {
+            transform: rotate(180deg);
+        }
+
+
+        /* PAINEL DE APROFUNDAMENTO */
+        .aprofundar-panel {
+            display: none; /* Inicia oculto */
+            margin-top: calc(var(--spacing-unit) * 4);
+            animation: fadeInPanel 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+        }
+
+        @keyframes fadeInPanel {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ESTADOS DE TELA CHEIA */
+        .section-expanded {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 999;
+            padding: calc(var(--spacing-unit) * 6);
+            padding-top: 180px; /* Espaço para o header fixo */
+            margin-bottom: 0;
+        }
+
+        .section-expanded .topic-card {
+            display: none;
+        }
+        
+        .section-expanded .aprofundar-panel {
+            display: block;
+            margin: 0 auto; /* Centraliza o conteúdo */
+            max-width: 900px;
+            background: rgba(10, 10, 20, 0.5);
+            border: 1px solid var(--glass-border);
+            border-radius: calc(var(--spacing-unit) * 3);
+            padding: calc(var(--spacing-unit) * 6);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            box-shadow: 0 15px 50px rgba(0,0,0,0.3);
+        }
+        
+        body.view-mode-active .topic-section:not(.section-expanded) {
+            display: none;
+        }
+        body.view-mode-active .main-footer {
+            display: none;
+        }
+
+        .aprofundar-panel h3 {
+            font-family: var(--font-title);
+            font-size: 2.5rem;
+            color: var(--color-primary);
+            margin-bottom: calc(var(--spacing-unit) * 4);
+            border-bottom: 2px solid var(--color-primary);
+            padding-bottom: calc(var(--spacing-unit) * 2);
+            text-align: center;
+        }
+
+        .aprofundar-panel h4 {
+            font-family: var(--font-body);
+            font-weight: 700;
+            font-size: 1.6rem;
+            color: white;
+            margin-top: calc(var(--spacing-unit) * 5);
+            margin-bottom: calc(var(--spacing-unit) * 2);
+        }
+        
+        .aprofundar-panel p, .aprofundar-panel li {
+            font-size: 1.1rem;
+            color: var(--color-text);
+            margin-bottom: calc(var(--spacing-unit) * 2);
+            max-width: 80ch; /* Melhora a legibilidade */
+        }
+        
+        .aprofundar-panel .grid-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: calc(var(--spacing-unit) * 5);
+            align-items: start;
+        }
+        
+        .aprofundar-panel ul { list-style-type: none; padding-left: 0; }
+        
+        .aprofundar-panel ul li {
+            position: relative;
+            padding-left: calc(var(--spacing-unit) * 4);
+            margin-bottom: calc(var(--spacing-unit) * 1.5);
+        }
+
+        .aprofundar-panel ul li::before {
+            content: '🏛️'; /* Ícone temático */
+            position: absolute;
+            left: 0;
+            font-size: 1.2rem;
+        }
+
+        .example-box {
+            background: rgba(0,0,0,0.25);
+            border-left: 5px solid var(--color-primary);
+            padding: calc(var(--spacing-unit) * 2.5);
+            margin: calc(var(--spacing-unit) * 3) 0;
+            border-radius: 0 var(--spacing-unit) var(--spacing-unit) 0;
+        }
+        
+        .example-box p { margin: 0; font-style: italic; }
+
+        /* Rodapé */
+        .main-footer {
+            text-align: center;
+            padding: calc(var(--spacing-unit) * 6);
+            margin-top: calc(var(--spacing-unit) * 8);
+            border-top: 1px solid var(--glass-border);
+            color: var(--color-text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .container { padding: calc(var(--spacing-unit) * 3); }
+            .main-header { padding: calc(var(--spacing-unit) * 2) calc(var(--spacing-unit) * 3); margin-bottom: calc(var(--spacing-unit) * 6); }
+            .main-header h1 { font-size: 2.2rem; }
+            .section-expanded { padding: calc(var(--spacing-unit) * 3); padding-top: 160px;}
+            .aprofundar-panel { padding: calc(var(--spacing-unit) * 4); }
+            .aprofundar-panel h3 { font-size: 2rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="main-header">
+        <h1>Guia Mestre da Filosofia Helenística</h1>
+        <button class="recolher-btn" style="display: none;">Recolher <span class="material-icons">expand_less</span></button>
+    </header>
+
+    <main class="container">
+
+        <!-- Seção: Contexto Histórico -->
+        <section class="topic-section" id="contexto">
+            <div class="topic-card">
+                <div class="card-header">
+                    <span class="material-icons">public</span>
+                    <h2>Contexto Histórico: Helenismo</h2>
+                </div>
+                <p>O declínio da pólis grega e a ascensão de impérios criaram um novo mundo, exigindo uma filosofia focada na ética pessoal e na busca pela felicidade em uma era de cosmopolitismo e incerteza.</p>
+                <button class="aprofundar-btn" data-target="panel-contexto">Aprofundar <span class="material-icons">expand_more</span></button>
+            </div>
+            <div class="aprofundar-panel" id="panel-contexto">
+                <h3>O Mundo Pós-Alexandre</h3>
+                <p>O período Helenístico (323 a.C. - 30 a.C.) foi uma era de profundas transformações. A morte de Alexandre, o Grande, fragmentou seu vasto império e dissolveu a centralidade da pólis grega. Nesse cenário, a filosofia se voltou para o indivíduo, oferecendo guias para viver bem em um mundo maior e mais instável.</p>
+                
+                <h4>Cosmopolitismo: O Cidadão do Mundo</h4>
+                <p>Com a perda da identidade atrelada a uma única cidade-estado, surge a ideia de <strong>cosmopolitismo</strong> – o "cidadão do cosmos". Essa visão, abraçada por estoicos e cínicos, reflete uma lealdade a uma comunidade humana universal, unida por uma razão (Logos) compartilhada. A filosofia tornou-se um refúgio interior, um modo de encontrar estabilidade quando o mundo exterior se tornava imprevisível.</p>
+                
+                <h4>A Contribuição de Alexandre, O Grande</h4>
+                <ul>
+                    <li><strong>Hellenização e Fusão Cultural:</strong> Alexandre espalhou a cultura grega pelo Oriente, promovendo um intenso intercâmbio de ideias que enriqueceu a filosofia. Cidades como Alexandria tornaram-se caldeirões culturais.</li>
+                    <li><strong>Foco no Indivíduo:</strong> Ao desmantelar o antigo sistema de pólis, ele indiretamente forçou a filosofia a se concentrar em questões de ética pessoal: como alcançar a felicidade (<em>eudaimonia</em>) e a tranquilidade da alma (<em>ataraxia</em>) por conta própria.</li>
+                    <li><strong>Legado do Conhecimento:</strong> Aluno de Aristóteles, Alexandre valorizava o saber. A fundação de grandes centros de aprendizado, como a Biblioteca de Alexandria, foi um legado de sua visão que permitiu a preservação e o desenvolvimento do pensamento filosófico.</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Seção: Epicurismo -->
+        <section class="topic-section" id="epicurismo">
+            <div class="topic-card">
+                <div class="card-header">
+                    <span class="material-icons">spa</span>
+                    <h2>Epicurismo</h2>
+                </div>
+                <p>Frequentemente mal interpretado como busca por excessos, o Epicurismo é, na verdade, uma busca racional e moderada pela tranquilidade, definida como a ausência de dor e perturbação.</p>
+                <button class="aprofundar-btn" data-target="panel-epicurismo">Aprofundar <span class="material-icons">expand_more</span></button>
+            </div>
+            <div class="aprofundar-panel" id="panel-epicurismo">
+                <h3>A Busca Serena pelo Prazer</h3>
+                <p>Fundado por Epicuro de Samos, o Epicurismo é uma forma de hedonismo, mas um hedonismo <strong>racional e moderado</strong>. O objetivo não é a busca desenfreada por prazeres intensos, mas a conquista de um estado estável de prazer que consiste na ausência de dor física (<em>aponia</em>) e, mais importante, na ausência de perturbação mental (<em>ataraxia</em>).</p>
+                
+                <h4>Epicurismo vs. Hedonismo Vulgar</h4>
+                <p>A diferença crucial está na prudência. O hedonismo vulgar busca o prazer imediato sem medir as consequências. O epicurista usa a razão para calcular quais ações levarão a um estado de maior tranquilidade a longo prazo, muitas vezes renunciando a um prazer momentâneo para evitar uma dor futura maior.</p>
+                
+                <h4>A Hierarquia dos Desejos</h4>
+                <p>Para guiar essa busca, Epicuro classificou os desejos:</p>
+                <div class="grid-content">
+                    <div>
+                        <h4>1. Naturais e Necessários</h4>
+                        <p>Essenciais para a vida e a tranquilidade. São fáceis de satisfazer. A filosofia recomenda focar-se neles.</p>
+                        <div class="example-box"><p>Comer quando se tem fome, beber quando se tem sede, ter abrigo, repouso e, crucialmente, amizade.</p></div>
+                    </div>
+                    <div>
+                        <h4>2. Naturais e Não-Necessários</h4>
+                        <p>Variações supérfluas dos desejos naturais. Devem ser desfrutados com moderação para não criar dependência ou perturbação.</p>
+                        <div class="example-box"><p>Comer banquetes luxuosos, beber vinhos caros, prazeres sensuais intensos.</p></div>
+                    </div>
+                    <div>
+                        <h4>3. Não-Naturais e Não-Necessários</h4>
+                        <p>Impostos pela sociedade e por falsas crenças. São insaciáveis e a principal fonte de infelicidade. Devem ser completamente evitados.</p>
+                        <div class="example-box"><p>A busca por fama, poder político, riqueza ilimitada e honrarias.</p></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Seção: Cinismo -->
+        <section class="topic-section" id="cinismo">
+            <div class="topic-card">
+                <div class="card-header">
+                    <span class="material-icons">cottage</span>
+                    <h2>Cinismo</h2>
+                </div>
+                <p>Uma filosofia radical vivida como protesto. Os cínicos, como Diógenes, rejeitavam convenções sociais, buscando uma liberdade autêntica ao viver de acordo com a natureza, de forma simples e autossuficiente.</p>
+                <button class="aprofundar-btn" data-target="panel-cinismo">Aprofundar <span class="material-icons">expand_more</span></button>
+            </div>
+            <div class="aprofundar-panel" id="panel-cinismo">
+                <h3>A Vida como Protesto Filosófico</h3>
+                <p>O Cinismo, imortalizado por <strong>Diógenes de Sinope</strong>, não era apenas uma teoria, mas uma performance, uma crítica social encarnada. O nome deriva de <em>kynikos</em> ("semelhante a um cão"), refletindo a vida simples, despojada e sem vergonha que seus adeptos buscavam.</p>
+                
+                <h4>Princípios e Atitudes Cínicas</h4>
+                <ul>
+                    <li><strong>Viver de Acordo com a Natureza:</strong> Rejeição radical de leis, costumes e luxos, vistos como corrupções da vida simples e natural.</li>
+                    <li><strong>Virtude como Único Bem:</strong> Apenas a virtude é necessária para a felicidade. Riqueza, status e prazeres são indiferentes ou prejudiciais.</li>
+                    <li><strong>Autossuficiência (<em>Autarkeia</em>):</strong> Independência máxima de necessidades externas. O famoso "barril" de Diógenes é o símbolo dessa atitude.</li>
+                    <li><strong>Franqueza Radical (<em>Parrhesia</em>):</strong> Falar a verdade de forma direta e chocante para expor a hipocrisia social. Os atos públicos de Diógenes eram uma forma de <em>parrhesia</em> em ação.</li>
+                </ul>
+                
+                <h4>O Cinismo como Forma de Viver</h4>
+                <p>Viver como um cínico era buscar uma forma pura de liberdade, libertando-se das correntes invisíveis das expectativas sociais e do desejo por bens materiais. Era uma filosofia que desafiava a todos a questionar: "O que é realmente necessário para ser feliz?". Embora sua radicalidade seja de difícil aplicação, sua crítica ao materialismo e sua defesa da autenticidade continuam profundamente relevantes.</p>
+            </div>
+        </section>
+
+        <!-- Seção: Estoicismo -->
+        <section class="topic-section" id="estoicismo">
+            <div class="topic-card">
+                <div class="card-header">
+                    <span class="material-icons">account_balance</span>
+                    <h2>Estoicismo</h2>
+                </div>
+                <p>A arte de encontrar a serenidade através da virtude e da aceitação. O Estoicismo ensina a focar no que podemos controlar e a aceitar com equanimidade o que não podemos, vivendo em harmonia com a razão universal.</p>
+                <button class="aprofundar-btn" data-target="panel-estoicismo">Aprofundar <span class="material-icons">expand_more</span></button>
+            </div>
+            <div class="aprofundar-panel" id="panel-estoicismo">
+                <h3>A Fortaleza Interior</h3>
+                <p>O Estoicismo, popularizado por Sêneca, Epicteto e Marco Aurélio, oferece um guia prático para a resiliência emocional. Baseia-se na ideia de que o universo é governado por uma Razão divina (Logos), e nossa felicidade reside em viver de acordo com essa razão.</p>
+                
+                <h4>A Dicotomia do Controle: O Pilar da Prática Estoica</h4>
+                <p>A chave para a tranquilidade (<em>ataraxia</em>) é distinguir claramente:</p>
+                <ul>
+                    <li><strong>O que está sob nosso controle:</strong> Nossos pensamentos, julgamentos, desejos, aversões e ações. É aqui que devemos concentrar toda a nossa energia.</li>
+                    <li><strong>O que não está sob nosso controle:</strong> Nossa saúde, riqueza, reputação, as ações dos outros e os eventos do mundo. Devemos aceitá-los como são, sem perturbação.</li>
+                </ul>
+
+                <h4>Virtude: O Único Bem</h4>
+                <p>Para os estoicos, a virtude (sabedoria, justiça, coragem, temperança) é o único bem verdadeiro e é, por si só, suficiente para a felicidade. Bens externos são "indiferentes". A tranquilidade é um resultado natural de uma vida virtuosa, onde eliminamos as paixões (julgamentos falsos sobre o que é bom ou mau) e aceitamos o destino com serenidade, compreendendo nosso lugar na ordem do cosmos.</p>
+                <div class="example-box"><p>"Não se preocupe com os eventos; preocupe-se com seus julgamentos sobre os eventos." - Uma máxima estoica.</p></div>
+            </div>
+        </section>
+        
+        <!-- Seção: Ceticismo -->
+        <section class="topic-section" id="ceticismo">
+            <div class="topic-card">
+                <div class="card-header">
+                    <span class="material-icons">help_outline</span>
+                    <h2>Ceticismo</h2>
+                </div>
+                <p>Uma busca pela tranquilidade através da dúvida. O ceticismo pirrônico propõe a suspensão do juízo (epokhé) sobre questões incertas como caminho para libertar a mente da ansiedade de ter que encontrar a verdade absoluta.</p>
+                <button class="aprofundar-btn" data-target="panel-ceticismo">Aprofundar <span class="material-icons">expand_more</span></button>
+            </div>
+            <div class="aprofundar-panel" id="panel-ceticismo">
+                <h3>A Paz na Suspensão do Juízo</h3>
+                <p>O Ceticismo de Pirro de Élida é uma terapia para a "doença" do dogmatismo. O cético (do grego <em>skeptomai</em>, "examinar") é um investigador perpétuo que, ao analisar qualquer questão não-evidente, encontra argumentos opostos de igual força (<em>isosthenia</em>).</p>
+
+                <h4>Epokhé: A Suspensão do Juízo</h4>
+                <p>Diante da impossibilidade de se decidir racionalmente entre duas teses opostas, o cético adota a <strong><em>epokhé</em></strong>, a suspensão do juízo. Ele não afirma que o conhecimento é impossível (isso seria um dogma), mas simplesmente se abstém de afirmar qualquer verdade sobre a natureza real das coisas. Ele vive de acordo com as aparências, costumes e leis, mas sem acreditar que eles representam a verdade última.</p>
+                <div class="example-box"><p>Diante do mel, o cético não diz "o mel é doce", mas sim "o mel me parece doce". Ele descreve sua experiência sem fazer uma afirmação sobre a essência do mel.</p></div>
+
+                <h4>O Objetivo: Ataraxia</h4>
+                <p>A consequência inesperada e libertadora da <em>epokhé</em> é a <strong><em>ataraxia</em></strong>. Ao abandonar a ansiosa busca por uma certeza inatingível e o medo de estar errado, o cético encontra uma profunda paz de espírito. A tranquilidade não é buscada diretamente, mas surge "como uma sombra" que segue a suspensão do juízo, libertando o indivíduo da perturbação gerada pelas disputas dogmáticas.</p>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="main-footer">
+        <p>Página educacional desenvolvida como uma ferramenta de aprendizado. Design e conteúdo por L2.</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const mainHeader = document.querySelector('.main-header');
+            const headerTitle = mainHeader.querySelector('h1');
+            const originalTitle = headerTitle.textContent;
+            const recolherBtn = mainHeader.querySelector('.recolher-btn');
+            const aprofundarButtons = document.querySelectorAll('.aprofundar-btn');
+            const body = document.body;
+
+            const expandSection = (section) => {
+                const sectionTitle = section.querySelector('.topic-card h2').textContent;
+                
+                body.classList.add('view-mode-active');
+                section.classList.add('section-expanded');
+                
+                headerTitle.textContent = sectionTitle;
+                recolherBtn.style.display = 'inline-flex';
+                
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            };
+
+            const collapseSection = () => {
+                const expandedSection = document.querySelector('.section-expanded');
+                if (expandedSection) {
+                    expandedSection.classList.remove('section-expanded');
+                }
+                
+                body.classList.remove('view-mode-active');
+                headerTitle.textContent = originalTitle;
+                recolherBtn.style.display = 'none';
+            };
+
+            aprofundarButtons.forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const section = e.currentTarget.closest('.topic-section');
+                    expandSection(section);
+                });
+            });
+            
+            recolherBtn.addEventListener('click', collapseSection);
+        });
+    </script>
+
+</body>
+</html>

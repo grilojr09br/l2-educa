@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resolução - Trabalho Avaliativo de Física</title>
+    <!-- MathJax para renderização de fórmulas matemáticas -->
+    <script>
+        MathJax = {
+          tex: {
+            inlineMath: [['$', '$'], ['\\(', '\\)']],
+            displayMath: [['$$', '$$'], ['\\[', '\\]']],
+            tags: 'ams'
+          },
+          svg: {
+            fontCache: 'global'
+          }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        :root {
+            --primary-color: #005a9c;
+            --secondary-color: #007bff;
+            --accent-color: #ffc107;
+            --light-bg: #f8f9fa;
+            --dark-text: #343a40;
+            --light-text: #6c757d;
+            --border-color: #dee2e6;
+            --success-color: #28a745;
+            --warning-color: #fd7e14;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.7;
+            margin: 0;
+            background-color: #e9ecef;
+            color: var(--dark-text);
+        }
+
+        .main-container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 2.5rem 2rem;
+            text-align: center;
+            border-bottom: 5px solid var(--accent-color);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+            font-weight: 600;
+        }
+
+        .main-nav {
+            background-color: var(--secondary-color);
+            padding: 0.5rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .main-nav a {
+            color: white;
+            text-decoration: none;
+            padding: 0.75rem 1rem;
+            margin: 0.2rem;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .main-nav a:hover {
+            background-color: var(--primary-color);
+        }
+
+        .content-wrapper {
+            padding: 2rem 2.5rem;
+        }
+        
+        .intro-text {
+            background-color: var(--light-bg);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            text-align: center;
+            border: 1px solid var(--border-color);
+        }
+
+        /* Sumário */
+        .summary-box {
+            background-color: #f1f3f5;
+            border-left: 5px solid var(--secondary-color);
+            padding: 1.5rem 2rem;
+            margin-bottom: 3rem;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .summary-box h2 {
+            margin-top: 0;
+            color: var(--primary-color);
+            font-size: 1.8rem;
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 0.5rem;
+        }
+        
+        .summary-box ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .summary-box ul li {
+            margin-bottom: 0.8rem;
+        }
+
+        .summary-box ul li a {
+            text-decoration: none;
+            color: var(--secondary-color);
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+
+        .summary-box ul li a:hover {
+            color: var(--primary-color);
+            text-decoration: underline;
+        }
+
+        /* Seção da Questão */
+        .question-section {
+            margin-bottom: 4rem;
+            padding-top: 2rem;
+            border-top: 3px solid var(--primary-color);
+            scroll-margin-top: 80px;
+        }
+        
+        .question-section > h2 {
+            font-size: 2.2rem;
+            color: var(--primary-color);
+            margin-top: 0;
+        }
+
+        /* Blocos de Conteúdo */
+        .enunciado, .concepts-box, .solution-box {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+        
+        .enunciado {
+            background-color: #fff9db;
+            border-left: 5px solid var(--accent-color);
+        }
+
+        .concepts-box {
+            background-color: #e7f5ff;
+            border-left: 5px solid var(--secondary-color);
+        }
+        
+        .solution-box {
+            background-color: #e6f9f0;
+            border-left: 5px solid var(--success-color);
+        }
+
+        .enunciado h3, .concepts-box h3, .solution-box h3 {
+            margin-top: 0;
+            font-size: 1.5rem;
+            padding-bottom: 0.5rem;
+        }
+
+        .enunciado h3 { color: #b8860b; border-bottom: 2px solid #b8860b55; }
+        .concepts-box h3 { color: var(--primary-color); border-bottom: 2px solid #007bff55; }
+        .solution-box h3 { color: #198754; border-bottom: 2px solid #28a74555; }
+
+        .concept, .step {
+            margin-bottom: 1.5rem;
+        }
+        
+        .concept h4, .step h4 {
+            color: var(--dark-text);
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .concept-explanation {
+            background-color: rgba(255, 255, 255, 0.7);
+            padding: 1rem;
+            border-radius: 5px;
+            border: 1px dashed var(--light-text);
+        }
+
+        strong.keyword {
+            color: var(--secondary-color);
+            font-weight: 600;
+        }
+        
+        strong.highlight {
+            background-color: var(--warning-color);
+            color: white;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        
+        mjx-display {
+            margin: 1.5em 0 !important;
+            padding: 1em;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            border: 1px solid var(--border-color);
+            overflow-x: auto;
+        }
+
+        .img-placeholder {
+            background-color: #343a40;
+            color: #ccc;
+            text-align: center;
+            padding: 2rem;
+            border-radius: 5px;
+            margin: 1rem 0;
+            font-family: monospace;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 1.5rem;
+            background-color: var(--dark-text);
+            color: var(--light-bg);
+            font-size: 0.9em;
+        }
+        
+        @media (max-width: 768px) {
+            .content-wrapper {
+                padding: 1.5rem 1rem;
+            }
+            header h1 {
+                font-size: 2rem;
+            }
+            .question-section > h2 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="main-container">
+
+    <header>
+        <h1>Eletricidade na Prática: Resolvendo o Trabalho Avaliativo</h1>
+    </header>
+
+    <nav class="main-nav">
+        <a href="#q1">Questão 1</a>
+        <a href="#q2">Questão 2</a>
+        <a href="#q3">Questão 3</a>
+        <a href="#q4">Questão 4</a>
+        <a href="#q5">Questão 5</a>
+        <a href="#q6">Questão 6</a>
+        <a href="#q7">Questão 7</a>
+    </nav>
+    
+    <div class="content-wrapper">
+        <div class="intro-text">
+            <p>Bem-vindo ao seu guia de estudos prático! A melhor maneira de aprender física é aplicando os conceitos para resolver problemas reais. Neste documento, vamos dissecar cada uma das questões do trabalho avaliativo, explicando a teoria necessária em cada passo e mostrando como o raciocínio é construído.</p>
+            <p>Use o menu de navegação acima para pular para uma questão específica ou siga a ordem para uma revisão completa e sequencial dos tópicos.</p>
+        </div>
+
+        <div class="summary-box">
+            <h2>Sumário do Trabalho</h2>
+            <ul>
+                <li><a href="#q1">Questão 1 (Uerj): Resistividade e Hemólise</a></li>
+                <li><a href="#q2">Questão 2 (Unifesp): Associação de Resistores em um Modelo Humano</a></li>
+                <li><a href="#q3">Questão 3 (Ufpr): Circuito em Série com Gerador Ideal</a></li>
+                <li><a href="#q4">Questão 4 (Ufu): Potência, Resistência e Aquecimento</a></li>
+                <li><a href="#q5">Questão 5 (Fuvest): Análise de Painel Solar (Gráfico e Irradiância)</a></li>
+                <li><a href="#q6">Questão 6 (Fcmscsp): Potência e Energia em um Chuveiro Elétrico</a></li>
+                <li><a href="#q7">Questão 7 (Ufjf-pism 3): Análise Gráfica de Resistores e Circuitos</a></li>
+            </ul>
+        </div>
+        
+        <!-- ======================= QUESTÃO 1 ======================= -->
+        <section id="q1" class="question-section">
+            <h2>Questão 1 (Uerj): Resistividade e Hemólise</h2>
+            
+            <div class="enunciado">
+                <h3>Enunciado</h3>
+                <p>Em procedimentos clínicos, a resistividade elétrica do sangue pode ser medida pela intensidade da corrente elétrica i produzida por meio de uma diferença de potencial U, sendo esta aplicada ao longo de uma região de veia de comprimento L, como ilustra a imagem.</p>
+                <div class="img-placeholder">
+                    The image you are requesting does not exist or is no longer available.<br>imgur.com
+                </div>
+                <p>A hemólise, que consiste numa alteração dos glóbulos vermelhos, diminui o valor da resistividade elétrica média do sangue. Devido ao rompimento das hemácias, substâncias eletricamente carregadas são geradas na corrente sanguínea, provocando danos ao paciente. Sabendo que uma pessoa saudável possui resistividade elétrica média do sangue igual a 1,6 Ω·m, considere os seguintes dados do procedimento clínico de um paciente:</p>
+                <ul>
+                    <li>L = 2,0 × 10⁻³ m;</li>
+                    <li>S = 2,0 × 10⁻⁶ m²;</li>
+                    <li>U = 0,1 V;</li>
+                    <li>i = 1,0 × 10⁻⁴ A.</li>
+                </ul>
+                <p>Determine, em Ω·m, a resistividade elétrica do sangue desse paciente. Indique, também, se ele sofreu hemólise, justificando sua resposta.</p>
+            </div>
+
+            <div class="concepts-box">
+                <h3>Desvendando a Questão: Conceitos-Chave</h3>
+                <p>Para resolver este problema, precisamos conectar duas leis fundamentais da eletrodinâmica: a 1ª e a 2ª Lei de Ohm. Uma nos dá a relação entre tensão, corrente e resistência, e a outra relaciona a resistência com as características físicas do material.</p>
+
+                <div class="concept">
+                    <h4>Conceito 1: A 1ª Lei de Ohm</h4>
+                    <div class="concept-explanation">
+                        <p>A Primeira Lei de Ohm descreve a relação entre a <strong class="keyword">tensão (U)</strong>, a <strong class="keyword">corrente (I)</strong> e a <strong class="keyword">resistência (R)</strong> em um condutor. Ela nos diz que a resistência é a razão entre a tensão aplicada e a corrente que flui.</p>
+                        <p><strong>Analogia:</strong> Imagine uma mangueira. A <strong>tensão (U)</strong> é como a pressão da água na torneira que a empurra. A <strong>corrente (I)</strong> é o fluxo de água que sai da mangueira. A <strong>resistência (R)</strong> é como se você apertasse a mangueira, dificultando a passagem da água. Mais pressão (U) gera mais fluxo (I). Mais aperto (R) diminui o fluxo (I).</p>
+                        $$ R = \frac{U}{I} $$
+                        <ul>
+                            <li><strong>Resistência Elétrica (R)</strong>: Medida em <strong>Ohm (Ω)</strong>. É a "dificuldade" que o material oferece à passagem da corrente.</li>
+                            <li><strong>Tensão Elétrica (U)</strong>: Medida em <strong>Volt (V)</strong>. É o "empurrão" que move as cargas.</li>
+                            <li><strong>Intensidade da Corrente Elétrica (I)</strong>: Medida em <strong>Ampère (A)</strong>. É o fluxo de cargas por segundo.</li>
+                        </ul>
+                        <p><strong>Neste problema:</strong> temos os valores de U e i, então podemos usar esta fórmula para encontrar a resistência elétrica (R) do trecho de sangue analisado.</p>
+                    </div>
+                </div>
+
+                <div class="concept">
+                    <h4>Conceito 2: A 2ª Lei de Ohm e a Resistividade</h4>
+                    <div class="concept-explanation">
+                        <p>A Segunda Lei de Ohm nos mostra que a resistência de um condutor não depende apenas de U e I, mas também de suas características geométricas e do material de que é feito. Essa propriedade intrínseca do material é a <strong class="keyword">resistividade (ρ)</strong>.</p>
+                        <p><strong>Analogia:</strong> Voltando à mangueira, a dificuldade para a água passar não depende só da pressão. Depende também se a mangueira é <strong>longa (L)</strong> (mais difícil), se é <strong>grossa (S)</strong> (mais fácil), e do próprio material da mangueira (<strong>ρ</strong>) - se é lisa por dentro ou áspera.</p>
+                        $$ R = \rho \frac{L}{S} $$
+                        <ul>
+                            <li><strong>Resistividade Elétrica (ρ)</strong>: Medida em <strong>Ohm-metro (Ω·m)</strong>. É uma propriedade do material (cobre, sangue, borracha) que indica o quão bem ele resiste à corrente.</li>
+                            <li><strong>Comprimento (L)</strong>: Medido em <strong>Metro (m)</strong>.</li>
+                            <li><strong>Área da Seção Transversal (S)</strong>: A "grossura" do fio/veia. Medida em <strong>Metro quadrado (m²)</strong>.</li>
+                        </ul>
+                        <p><strong>Neste problema:</strong> o objetivo final é encontrar a resistividade (ρ). Já que o problema nos dá L e S, e podemos calcular R com a 1ª Lei, podemos rearranjar esta fórmula para isolar ρ.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="solution-box">
+                <h3>Resolução Passo a Passo</h3>
+                <div class="step">
+                    <h4>Passo 1: Calcular a Resistência Elétrica (R) do sangue.</h4>
+                    <p>Usamos a 1ª Lei de Ohm com os dados fornecidos: U = 0,1 V e i = 1,0 × 10⁻⁴ A.</p>
+                    $$ R = \frac{U}{i} = \frac{0,1 \text{ V}}{1,0 \times 10^{-4} \text{ A}} $$
+                    <p>Para facilitar o cálculo, vamos escrever 0,1 como 10⁻¹:</p>
+                    $$ R = \frac{10^{-1}}{10^{-4}} = 10^{-1 - (-4)} = 10^{-1+4} = 10^3 \, \Omega $$
+                    <p>Portanto, a resistência do trecho de veia é <strong class="highlight">R = 1000 Ω</strong>.</p>
+                </div>
+                <div class="step">
+                    <h4>Passo 2: Calcular a Resistividade Elétrica (ρ) do sangue.</h4>
+                    <p>Agora, usamos a 2ª Lei de Ohm. Primeiro, vamos rearranjá-la para isolar ρ:</p>
+                    $$ R = \rho \frac{L}{S} \implies \rho = R \frac{S}{L} $$
+                    <p>Substituímos os valores: R = 1000 Ω, L = 2,0 × 10⁻³ m e S = 2,0 × 10⁻⁶ m².</p>
+                    $$ \rho = 1000 \cdot \frac{2,0 \times 10^{-6}}{2,0 \times 10^{-3}} $$
+                    <p>Podemos cancelar o 2,0 e usar 1000 como 10³. A conta fica mais simples:</p>
+                    $$ \rho = 10^3 \cdot \frac{10^{-6}}{10^{-3}} = 10^3 \cdot 10^{-6 - (-3)} = 10^3 \cdot 10^{-3} $$
+                    $$ \rho = 10^{3-3} = 10^0 = 1 \, \Omega \cdot \text{m} $$
+                    <p>A resistividade do sangue do paciente é <strong class="highlight">ρ = 1,0 Ω·m</strong>.</p>
+                </div>
+                <div class="step">
+                    <h4>Passo 3: Indicar se o paciente sofreu hemólise.</h4>
+                    <p>O enunciado informa que a resistividade de uma pessoa saudável é 1,6 Ω·m e que a hemólise <strong class="keyword">diminui</strong> esse valor.</p>
+                    <p>Comparamos o valor calculado com o valor de referência: </p>
+                    $$ 1,0 \, \Omega \cdot \text{m} < 1,6 \, \Omega \cdot \text{m} $$
+                    <p><strong>Conclusão:</strong> Sim, o paciente sofreu hemólise, pois a resistividade elétrica de seu sangue (1,0 Ω·m) é menor que o valor de referência para uma pessoa saudável (1,6 Ω·m).</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ======================= QUESTÃO 2 ======================= -->
+        <section id="q2" class="question-section">
+            <h2>Questão 2 (Unifesp): Associação de Resistores em um Modelo Humano</h2>
+
+            <div class="enunciado">
+                <h3>Enunciado</h3>
+                <p>Em cursos relacionados à área da saúde, é comum a utilização de bonecos no estudo do comportamento eletrofisiológico do corpo humano. Considere que um desses bonecos seja feito de um material externo isolante e tenha, em seu interior, cinco cilindros constituídos de um mesmo material condutor representando os braços direito e esquerdo (BD e BE), o tórax (T) e as pernas direita e esquerda (PD e PE). (...) As características geométricas de cada cilindro estão indicadas na tabela.</p>
+                <div class="img-placeholder">
+                    [Tabela e Imagens das Figuras 1 e 2]
+                </div>
+                <p>Admita que a resistência elétrica de cada braço do boneco seja R<sub>B</sub> e que dois experimentos diferentes sejam realizados com esse boneco. Em cada experimento, é estabelecida uma mesma diferença de potencial U entre os pontos A e B, e uma corrente elétrica atravessa o boneco pelos caminhos indicados em destaque nas figuras 1 e 2.</p>
+                <p>Responda em função apenas de R<sub>B</sub> e de U:</p>
+                <p>a) Qual a resistência equivalente do boneco e a intensidade da corrente elétrica que o atravessa na montagem indicada na figura 1?<br>
+                b) Qual a resistência equivalente do boneco na montagem indicada na figura 2?</p>
+            </div>
+
+            <div class="concepts-box">
+                <h3>Desvendando a Questão: Conceitos-Chave</h3>
+                <p>Este problema complexo exige que combinemos nosso conhecimento da 2ª Lei de Ohm (para relacionar as resistências das diferentes partes do corpo) com as regras de <strong class="keyword">Associação de Resistores</strong> (série e paralelo) para encontrar a resistência total de cada configuração.</p>
+
+                <div class="concept">
+                    <h4>Conceito 1: Relação entre Resistências (2ª Lei de Ohm)</h4>
+                    <div class="concept-explanation">
+                        <p>Como vimos na questão anterior, a resistência depende da geometria: $R = \rho \frac{L}{S}$. Como todos os cilindros são feitos do <strong class="keyword">mesmo material</strong>, a resistividade $\rho$ é a mesma para todos. Podemos, então, encontrar a resistência do tórax ($R_T$) e das pernas ($R_P$) em função da resistência do braço ($R_B$), usando as proporções dadas na tabela.</p>
+                    </div>
+                </div>
+                <div class="concept">
+                    <h4>Conceito 2: Associação em Série</h4>
+                    <div class="concept-explanation">
+                        <p>Quando os resistores são conectados um após o outro, em um <strong class="keyword">único caminho</strong> para a corrente, eles estão em série. Imagine um caminho com vários pedágios em fila.</p>
+                        $$ R_{eq} = R_1 + R_2 + R_3 + \dots $$
+                        <ul>
+                            <li>A <strong class="keyword">Resistência Equivalente ($R_{eq}$)</strong> é a soma das resistências individuais. A resistência total do caminho aumenta.</li>
+                            <li>A <strong class="keyword">Corrente (I)</strong> é a mesma em todos os componentes.</li>
+                        </ul>
+                        <p><strong>Na Figura 1:</strong> A corrente passa pelo braço direito e depois pelo esquerdo. Claramente uma associação em série.</p>
+                    </div>
+                </div>
+                <div class="concept">
+                    <h4>Conceito 3: Associação em Paralelo</h4>
+                    <div class="concept-explanation">
+                        <p>Quando a corrente se <strong class="keyword">divide</strong> para passar por diferentes componentes e depois se reagrupa, eles estão em paralelo. Imagine um rio se dividindo em vários braços.</p>
+                        $$ \frac{1}{R_{eq}} = \frac{1}{R_1} + \frac{1}{R_2} + \frac{1}{R_3} + \dots $$
+                        <p>Para o caso especial de <strong class="keyword">dois resistores</strong>, a fórmula simplificada é muito útil: $R_{eq} = \frac{R_1 \cdot R_2}{R_1 + R_2}$</p>
+                        <ul>
+                            <li>A <strong class="keyword">Resistência Equivalente ($R_{eq}$)</strong> é sempre <strong>menor</strong> que a menor das resistências individuais. Abrir mais caminhos facilita a passagem da corrente.</li>
+                            <li>A <strong class="keyword">Tensão (U)</strong> é a mesma em todos os componentes.</li>
+                        </ul>
+                        <p><strong>Na Figura 2:</strong> A corrente, após passar pelo tórax, se divide entre as duas pernas. As pernas estão em paralelo.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="solution-box">
+                <h3>Resolução Passo a Passo</h3>
+                <div class="step">
+                    <h4>Passo 1: Expressar R<sub>T</sub> e R<sub>P</sub> em função de R<sub>B</sub>.</h4>
+                    <p>A resistência de um braço é $R_B = \rho \frac{L}{A}$. Vamos usar a 2ª Lei de Ohm e a tabela para as outras partes.</p>
+                    <p><strong>Para o Tórax (T):</strong> L<sub>T</sub> = 1,5L e S<sub>T</sub> = 9A.</p>
+                    $$ R_T = \rho \frac{L_T}{S_T} = \rho \frac{1,5L}{9A} = \frac{1,5}{9} \left( \rho \frac{L}{A} \right) = \frac{1}{6} R_B $$
+                    <p><strong>Para uma Perna (P):</strong> L<sub>P</sub> = 2L e S<sub>P</sub> = 4A.</p>
+                    $$ R_P = \rho \frac{L_P}{S_P} = \rho \frac{2L}{4A} = \frac{2}{4} \left( \rho \frac{L}{A} \right) = \frac{1}{2} R_B $$
+                </div>
+
+                <div class="step">
+                    <h4>a) Análise da Montagem na Figura 1</h4>
+                    <p><strong>Resistência Equivalente ($R_{eq1}$):</strong><br>
+                    Na Figura 1, o braço direito (BD) e o braço esquerdo (BE) estão em série. A resistência de cada braço é $R_B$.</p>
+                    $$ R_{eq1} = R_{BD} + R_{BE} = R_B + R_B $$
+                    <p><strong class="highlight">R<sub>eq1</sub> = 2R<sub>B</sub></strong></p>
+                    <p><strong>Intensidade da Corrente ($i_1$):</strong><br>
+                    Usando a 1ª Lei de Ohm ($U = R \cdot i$):</p>
+                    $$ i_1 = \frac{U}{R_{eq1}} $$
+                    <p><strong class="highlight">i<sub>1</sub> = U / (2R<sub>B</sub>)</strong></p>
+                </div>
+
+                <div class="step">
+                    <h4>b) Análise da Montagem na Figura 2</h4>
+                    <p><strong>Resistência Equivalente ($R_{eq2}$):</strong><br>
+                    Na Figura 2, o arranjo é misto: o braço direito (BD) está em série com o tórax (T), e este conjunto está em série com a associação em paralelo das duas pernas (PD e PE).</p>
+                    <p>Primeiro, calculamos a resistência equivalente das duas pernas em paralelo. Como são idênticas ($R_{PD} = R_{PE} = R_P$), podemos usar a regra $R_{eq} = R/n$ (ou o produto pela soma):</p>
+                    $$ R_{pernas} = \frac{R_P}{2} = \frac{\frac{1}{2}R_B}{2} = \frac{1}{4} R_B $$
+                    <p>Agora, somamos todas as partes que estão em série para encontrar a resistência equivalente total:</p>
+                    $$ R_{eq2} = R_{BD} + R_T + R_{pernas} $$
+                    $$ R_{eq2} = R_B + \frac{1}{6}R_B + \frac{1}{4}R_B $$
+                    <p>Para somar as frações, encontramos o mínimo múltiplo comum (MMC) de 6 e 4, que é 12:</p>
+                    $$ R_{eq2} = \left( \frac{12}{12} + \frac{2}{12} + \frac{3}{12} \right) R_B = \left( \frac{12+2+3}{12} \right) R_B $$
+                    <p><strong class="highlight">R<sub>eq2</sub> = (17/12)R<sub>B</sub></strong></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ======================= QUESTÃO 3 ======================= -->
+        <section id="q3" class="question-section">
+            <h2>Questão 3 (Ufpr): Circuito em Série com Gerador Ideal</h2>
+
+            <div class="enunciado">
+                <h3>Enunciado</h3>
+                <p>No circuito elétrico a seguir, o gerador é ideal e tem uma fem ε = 30 V, e pelo resistor de resistência R<sub>2</sub> passa uma corrente i = 1 A. Determine o valor da resistência R<sub>1</sub> sabendo que R<sub>2</sub> = 2R<sub>1</sub>.</p>
+                <div class="img-placeholder">
+                    [Imagem do circuito com gerador ε, R₁ e R₂ em série]
+                </div>
+            </div>
+
+            <div class="concepts-box">
+                <h3>Desvendando a Questão: Conceitos-Chave</h3>
+                <p>Este é um problema clássico de circuito em série. A chave é entender as duas propriedades principais da associação em série e como aplicar a Lei de Ohm ao circuito completo, considerando um gerador ideal.</p>
+                <div class="concept">
+                    <h4>Conceito 1: Propriedades do Circuito em Série</h4>
+                    <div class="concept-explanation">
+                        <p>Relembrando o que vimos na questão anterior:</p>
+                        <ol>
+                            <li><strong class="keyword">Corrente Constante:</strong> Em uma associação em série, a corrente elétrica que passa por <strong>todos</strong> os componentes é exatamente a mesma. Se a corrente em R<sub>2</sub> é 1 A, então a corrente em R<sub>1</sub> e a corrente total do circuito também são 1 A.</li>
+                            <li><strong class="keyword">Soma das Resistências:</strong> A resistência equivalente (total) do circuito é a simples soma das resistências individuais: $R_{eq} = R_1 + R_2$.</li>
+                        </ol>
+                    </div>
+                </div>
+                <div class="concept">
+                    <h4>Conceito 2: Lei de Ohm para um Circuito Completo (Gerador Ideal)</h4>
+                    <div class="concept-explanation">
+                        <p>Um gerador "ideal" é aquele que não tem resistência interna, ou seja, toda a sua força eletromotriz (fem, ε) é entregue ao circuito externo como tensão. A Lei de Ohm para o circuito completo, neste caso, é muito simples.</p>
+                        $$ \varepsilon = R_{eq} \cdot i_{total} $$
+                        <ul>
+                            <li><strong>$\varepsilon$ (épsilon)</strong>: <strong class="keyword">Força Eletromotriz (fem)</strong> do gerador. Para um gerador ideal, é a tensão total fornecida ao circuito. Medida em <strong>Volt (V)</strong>.</li>
+                            <li><strong>$R_{eq}$</strong>: <strong class="keyword">Resistência Equivalente</strong> de todo o circuito externo. Medida em <strong>Ohm (Ω)</strong>.</li>
+                            <li><strong>$i_{total}$</strong>: <strong class="keyword">Corrente Total</strong> que flui para fora do gerador. Medida em <strong>Ampère (A)</strong>.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="solution-box">
+                <h3>Resolução Passo a Passo</h3>
+                <div class="step">
+                    <h4>Passo 1: Analisar a corrente no circuito.</h4>
+                    <p>O circuito mostra os resistores R<sub>1</sub> e R<sub>2</sub> associados em série. Uma característica fundamental da associação em série é que a corrente é a mesma em todos os pontos. O problema afirma que a corrente em R<sub>2</sub> é i = 1 A. Portanto, a corrente em R<sub>1</sub> e a corrente total do circuito também são:</p>
+                    <p><strong class="highlight">i<sub>total</sub> = 1 A</strong></p>
+                </div>
+                <div class="step">
+                    <h4>Passo 2: Calcular a resistência equivalente (R<sub>eq</sub>) em função de R<sub>1</sub>.</h4>
+                    <p>Para uma associação em série, a resistência equivalente é a soma das resistências:</p>
+                    $$ R_{eq} = R_1 + R_2 $$
+                    <p>O problema nos dá a relação $R_2 = 2R_1$. Substituindo na equação acima:</p>
+                    $$ R_{eq} = R_1 + (2R_1) = 3R_1 $$
+                </div>
+                <div class="step">
+                    <h4>Passo 3: Aplicar a Lei de Ohm para o circuito completo.</h4>
+                    <p>Agora, usamos a fórmula $\varepsilon = R_{eq} \cdot i_{total}$ com os valores conhecidos: $\varepsilon = 30$ V e $i_{total} = 1$ A.</p>
+                    $$ 30 \text{ V} = (3R_1) \cdot 1 \text{ A} $$
+                    $$ 30 = 3R_1 $$
+                </div>
+                <div class="step">
+                    <h4>Passo 4: Determinar o valor de R<sub>1</sub>.</h4>
+                    <p>Resolvendo a simples equação para R<sub>1</sub>:</p>
+                    $$ R_1 = \frac{30}{3} $$
+                    <p><strong class="highlight">R<sub>1</sub> = 10 Ω</strong></p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Adicione as demais questões aqui, seguindo a mesma estrutura -->
+        
+        <!-- ======================= QUESTÃO 4 ======================= -->
+        <section id="q4" class="question-section">
+            <h2>Questão 4 (Ufu): Potência, Resistência e Aquecimento</h2>
+            <div class="enunciado">
+                <h3>Enunciado</h3>
+                <p>Uma pessoa dispõe de quatro fios metálicos de uma liga de níquel e cromo que tem resistividade elétrica 65 vezes maior do que a do cobre. Os fios têm comprimentos e diâmetros diferentes, conforme a tabela abaixo, e a pessoa quer usá-los como resistores para aquecer uma certa quantidade de água.</p>
+                <div class="img-placeholder">[Tabela com dados dos fios 1, 2, 3 e 4]</div>
+                <p>a) Considerando-se que todos os fios serão ligados à mesma voltagem, qual deles aquecerá mais rapidamente a água e por quê?</p>
+                <p>b) Considerando-se que o fio mais eficiente leva cerca de 10 minutos para aquecer a água, calcule quanto tempo cada um dos outros fios levará para promover o mesmo aquecimento.</p>
+            </div>
+            <div class="concepts-box">
+                <h3>Desvendando a Questão: Conceitos-Chave</h3>
+                <p>Este problema trata da relação entre as propriedades de um resistor (sua geometria), a potência que ele dissipa e o tempo que leva para realizar um trabalho (aquecer a água). Os conceitos centrais são a potência elétrica e como ela se relaciona com a resistência.</p>
+                <div class="concept">
+                    <h4>Conceito 1: Potência Elétrica</h4>
+                    <div class="concept-explanation">
+                        <p>"Aquecer mais rapidamente" significa dissipar energia na forma de calor a uma taxa maior, ou seja, ter <strong class="keyword">maior potência</strong>. A potência (P) de um resistor pode ser calculada de várias formas. Como o problema diz que todos os fios serão ligados à <strong class="keyword">mesma voltagem (U)</strong>, a fórmula mais conveniente é:</p>
+                        $$ P = \frac{U^2}{R} $$
+                        <p><strong>Análise:</strong> Como U é constante para todos os fios, esta fórmula nos mostra que a potência (P) é <strong class="keyword">inversamente proporcional</strong> à resistência (R). Isso significa que, para aquecer mais rapidamente (maior P), o fio precisa ter a <strong class="keyword">menor resistência (R)</strong>.</p>
+                    </div>
+                </div>
+                <div class="concept">
+                    <h4>Conceito 2: Fatores que Influenciam a Resistência (2ª Lei de Ohm)</h4>
+                    <div class="concept-explanation">
+                        <p>Já sabemos que $R = \rho \frac{L}{S}$. A área da seção transversal (S) de um fio circular com diâmetro (D) é $S = \pi \cdot (\text{raio})^2 = \pi \cdot (D/2)^2 = \frac{\pi D^2}{4}$. Substituindo na fórmula da resistência:</p>
+                        $$ R = \rho \frac{L}{\frac{\pi D^2}{4}} = \frac{4\rho}{\pi} \cdot \frac{L}{D^2} $$
+                        <p><strong>Análise:</strong> Como $\rho$ e $\pi$ são constantes para todos os fios, a resistência (R) é <strong class="keyword">diretamente proporcional ao fator L/D²</strong>. Para ter a menor resistência, precisamos encontrar o fio com o <strong class="keyword">menor valor de L/D²</strong>.</p>
+                    </div>
+                </div>
+                <div class="concept">
+                    <h4>Conceito 3: Relação entre Energia, Potência e Tempo</h4>
+                    <div class="concept-explanation">
+                        <p>A energia (E) consumida (ou dissipada como calor Q) é a potência (P) multiplicada pelo tempo ($\Delta t$): $E = P \cdot \Delta t$. Para aquecer a mesma quantidade de água ao mesmo estado, a energia necessária (Q) é a mesma para todos os fios. Então:</p>
+                        $$ Q = P \cdot \Delta t = \left( \frac{U^2}{R} \right) \Delta t $$
+                        <p>Como Q e U são constantes, podemos ver que R e $\Delta t$ são <strong class="keyword">diretamente proporcionais</strong>: $R \propto \Delta t$. Um fio com o dobro da resistência levará o dobro do tempo para aquecer a água.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="solution-box">
+                <h3>Resolução Passo a Passo</h3>
+                <div class="step">
+                    <h4>a) Qual fio aquecerá mais rapidamente?</h4>
+                    <p><strong>Raciocínio:</strong> Aquecerá mais rapidamente o fio que tiver a <strong class="keyword">maior potência (P)</strong>. Como $P=U^2/R$ e U é o mesmo para todos, o fio de maior potência será o de <strong class="keyword">menor resistência (R)</strong>. A resistência, por sua vez, é proporcional a $L/D^2$. Portanto, procuramos o fio com o menor valor de $L/D^2$.</p>
+                    <p>Vamos calcular o fator $L/D^2$ para cada fio (podemos manter L em cm e D em mm, pois queremos apenas a proporção):</p>
+                    <ul>
+                        <li><strong>Fio 1:</strong> L=10cm, D=1mm. $L/D^2 = 10/1^2 = 10$</li>
+                        <li><strong>Fio 2:</strong> L=10cm, D=2mm. $L/D^2 = 10/2^2 = 10/4 = 2,5$</li>
+                        <li><strong>Fio 3:</strong> L=20cm, D=2mm. $L/D^2 = 20/2^2 = 20/4 = 5$</li>
+                        <li><strong>Fio 4:</strong> L=20cm, D=1mm. $L/D^2 = 20/1^2 = 20$</li>
+                    </ul>
+                    <p><strong>Conclusão:</strong> O <strong class="highlight">Fio 2</strong> possui o menor valor de L/D² (2,5), portanto, tem a menor resistência. Consequentemente, ele dissipará a maior potência e aquecerá a água mais rapidamente.</p>
+                </div>
+                <div class="step">
+                    <h4>b) Tempo de aquecimento dos outros fios</h4>
+                    <p><strong>Raciocínio:</strong> O tempo de aquecimento ($\Delta t$) é diretamente proporcional à resistência (R), que por sua vez é proporcional ao fator $L/D^2$. Podemos escrever a relação:</p>
+                    $$ \frac{\Delta t_A}{\Delta t_B} = \frac{R_A}{R_B} = \frac{(L/D^2)_A}{(L/D^2)_B} $$
+                    <p>O fio mais eficiente (Fio 2) leva $\Delta t_2 = 10$ minutos. Vamos calcular o tempo para os outros.</p>
+                    <p><strong>Para o Fio 1:</strong></p>
+                    $$ \frac{\Delta t_1}{\Delta t_2} = \frac{(L/D^2)_1}{(L/D^2)_2} \implies \frac{\Delta t_1}{10} = \frac{10}{2,5} = 4 \implies \Delta t_1 = 4 \cdot 10 = \strong class="highlight">40 \text{ minutos} $$
+                    <p><strong>Para o Fio 3:</strong></p>
+                    $$ \frac{\Delta t_3}{\Delta t_2} = \frac{(L/D^2)_3}{(L/D^2)_2} \implies \frac{\Delta t_3}{10} = \frac{5}{2,5} = 2 \implies \Delta t_3 = 2 \cdot 10 = \strong class="highlight">20 \text{ minutos} $$
+                    <p><strong>Para o Fio 4:</strong></p>
+                    $$ \frac{\Delta t_4}{\Delta t_2} = \frac{(L/D^2)_4}{(L/D^2)_2} \implies \frac{\Delta t_4}{10} = \frac{20}{2,5} = 8 \implies \Delta t_4 = 8 \cdot 10 = \strong class="highlight">80 \text{ minutos} $$
+                </div>
+            </div>
+        </section>
+
+        <!-- ======================= QUESTÃO 5 ======================= -->
+        <section id="q5" class="question-section">
+            <h2>Questão 5 (Fuvest): Análise de Painel Solar (Gráfico e Irradiância)</h2>
+            <div class="enunciado">
+                <h3>Enunciado</h3>
+                <p>Painéis solares fotovoltaicos têm sido cada vez mais usados em instalações elétricas domésticas e industriais. Considere um painel solar conectado a um resistor variável de resistência R<sub>v</sub>. Ajustando-se o valor de R<sub>v</sub>, são medidas a corrente e a ddp entre os terminais do resistor e é obtida a curva mostrada na figura 1.</p>
+                <div class="img-placeholder">[Imagem do gráfico Corrente (A) vs ddp (V) e esquema do circuito]</div>
+                <p>a) Calcule a resistência R<sub>v</sub> quando a ddp é de 6V.</p>
+                <p>b) Em quais dos pontos marcados (1, 2 ou 3) a potência fornecida ao resistor é maior? Justifique sua resposta.</p>
+                <p>c) Um parâmetro importante para o funcionamento de painéis solares é a irradiância da luz solar (medida em W/m²), que corresponde ao fluxo de energia por unidade de área perpendicular à direção do fluxo. (...) Em um dado local e horário, a direção da luz solar (linhas vermelhas na figura 2) faz um ângulo de 30° com a direção perpendicular ao solo. A figura 2 mostra duas situações para um painel solar nessa localidade: (I) o painel está inclinado em 30° em relação ao solo e (II) o painel está paralelo ao solo.</p>
+                 <div class="img-placeholder">[Imagem da Figura 2 com situações I e II do painel solar]</div>
+                <p>Considerando que a irradiância é a mesma nas duas situações e que, na situação (I), a energia por unidade de tempo coletada no painel solar é P₁, calcule P₂, que é a energia por unidade de tempo coletada na situação (II).<br>
+                <strong>Note e adote:</strong> sen 60° ≈ 0,86; cos 60° = 1/2.</p>
+            </div>
+            <div class="concepts-box">
+                <h3>Desvendando a Questão: Conceitos-Chave</h3>
+                <p>Esta questão tem partes distintas. A primeira envolve a análise de um gráfico I vs U para um dispositivo não-ôhmico e o cálculo de potência. A segunda é um problema de física e geometria sobre como a orientação de uma superfície afeta a energia que ela capta.</p>
+                <div class="concept">
+                    <h4>Conceito 1: Leitura de Gráfico e Lei de Ohm (Item a)</h4>
+                    <div class="concept-explanation">
+                        <p>Mesmo que o dispositivo não seja ôhmico (a relação I vs U não é uma reta), a Lei de Ohm ($R = U/I$) ainda é válida para calcular a resistência em um <strong class="keyword">ponto específico</strong> de operação.</p>
+                    </div>
+                </div>
+                <div class="concept">
+                    <h4>Conceito 2: Potência Elétrica (Item b)</h4>
+                    <div class="concept-explanation">
+                        <p>A potência elétrica (P) é o produto da tensão (U) pela corrente (I). Para encontrar o ponto de maior potência no gráfico, devemos procurar o par de coordenadas (U, I) cujo produto seja máximo.</p>
+                        $$ P = U \cdot I $$
+                        <p>Este conceito é frequentemente chamado de "ponto de máxima transferência de potência".</p>
+                    </div>
+                </div>
+                <div class="concept">
+                    <h4>Conceito 3: Irradiância e Área Projetada (Item c)</h4>
+                    <div class="concept-explanation">
+                        <p>A potência (energia por tempo) que um painel solar coleta não depende apenas da intensidade da luz (irradiância), mas também de como ele está "virado" para o sol. A energia captada é máxima quando a luz incide perpendicularmente na superfície.</p>
+                        <p>A potência coletada ($P_{coletada}$) é proporcional à <strong class="keyword">área projetada (A<sub>proj</sub>)</strong>, que é a "sombra" que o painel faria em um plano perpendicular aos raios de luz.</p>
+                        $$ P_{coletada} = \text{Irradiância} \cdot A_{proj} $$
+                        <p>A área projetada é calculada com trigonometria:</p>
+                        $$ A_{proj} = A_{total} \cdot \cos(\theta) $$
+                        <p>Onde $\theta$ é o ângulo entre a <strong class="keyword">direção dos raios de luz</strong> e a <strong class="keyword">linha normal (perpendicular)</strong> à superfície do painel.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="solution-box">
+                <h3>Resolução Passo a Passo</h3>
+                <div class="step">
+                    <h4>a) Cálculo da resistência R<sub>v</sub> em U = 6 V</h4>
+                    <p>Observando o gráfico, quando a tensão (eixo x) é U = 6 V, a curva nos mostra que a corrente (eixo y) é I ≈ 9 A (é o ponto onde a curva começa a "cair" drasticamente).</p>
+                    <p>Aplicando a Lei de Ohm para este ponto específico:</p>
+                    $$ R_v = \frac{U}{I} = \frac{6 \text{ V}}{9 \text{ A}} = \frac{2}{3} \, \Omega $$
+                    <p><strong class="highlight">R<sub>v</sub> ≈ 0,67 Ω</strong></p>
+                </div>
+                <div class="step">
+                    <h4>b) Ponto de maior potência fornecida</h4>
+                    <p>Devemos calcular o produto $P = U \cdot I$ para cada um dos três pontos marcados:</p>
+                    <ul>
+                        <li><strong>Ponto 1:</strong> O ponto está no eixo Y. U ≈ 0 V, I = 9 A.
+                           <br>$P_1 = 0 \text{ V} \cdot 9 \text{ A} = 0 \text{ W}$.</li>
+                        <li><strong>Ponto 2:</strong> Lendo as coordenadas no gráfico, temos U = 16 V e I = 8 A.
+                           <br>$P_2 = 16 \text{ V} \cdot 8 \text{ A} = 128 \text{ W}$.</li>
+                        <li><strong>Ponto 3:</strong> O ponto está no eixo X. U = 21 V, I = 0 A.
+                           <br>$P_3 = 21 \text{ V} \cdot 0 \text{ A} = 0 \text{ W}$.</li>
+                    </ul>
+                    <p><strong>Conclusão:</strong> A potência fornecida ao resistor é maior no <strong class="highlight">Ponto 2</strong>, onde atinge o valor de 128 W.</p>
+                </div>
+                <div class="step">
+                    <h4>c) Cálculo da potência P₂ em função de P₁</h4>
+                    <p>Precisamos encontrar o ângulo $\theta$ (entre os raios e a normal do painel) para cada situação.</p>
+                    <p><strong>Dados:</strong> Os raios de luz fazem 30° com a vertical (perpendicular ao solo).</p>
+                    <p><strong>Situação (I):</strong> O painel está inclinado 30° em relação ao solo. A sua normal (perpendicular ao painel) faz, portanto, um ângulo de 60° com o solo (90°-30°) ou, mais diretamente, 30° com a vertical. Como os raios e a normal do painel estão ambos a 30° da vertical, se o painel estiver bem orientado, eles podem estar alinhados. Nesse caso, o ângulo entre eles é $\theta_1 = 0°$.</p>
+                    $$ P_1 = \text{Irradiância} \cdot A \cdot \cos(0^\circ) = \text{Irradiância} \cdot A $$
+                    <p><strong>Situação (II):</strong> O painel está paralelo ao solo (horizontal). Sua normal é, portanto, vertical. O ângulo entre os raios de luz (30° com a vertical) e a normal do painel (vertical) é $\theta_2 = 30°$.</p>
+                    $$ P_2 = \text{Irradiância} \cdot A \cdot \cos(30^\circ) $$
+                    <p><strong>Relação entre P₁ e P₂:</strong></p>
+                    $$ \frac{P_2}{P_1} = \frac{\text{Irradiância} \cdot A \cdot \cos(30^\circ)}{\text{Irradiância} \cdot A} = \cos(30^\circ) $$
+                    $$ P_2 = P_1 \cdot \cos(30^\circ) $$
+                    <p>Sabemos que $\cos(30^\circ) = \sin(60^\circ)$. O enunciado nos dá $\sin(60^\circ) \approx 0,86$. (Também sabemos que $\cos(30^\circ) = \sqrt{3}/2$).</p>
+                    <p><strong class="highlight">P₂ ≈ 0,86 P₁</strong></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ======================= QUESTÃO 6 ======================= -->
+        <section id="q6" class="question-section">
+            <h2>Questão 6 (Fcmscsp): Potência e Energia em um Chuveiro Elétrico</h2>
+            <div class="enunciado">
+                <h3>Enunciado</h3>
+                <p>Um chuveiro elétrico funciona sob diferença de potencial de 220 V e, nessa condição, é percorrido por uma corrente elétrica de intensidade 20 A.</p>
+                <p>a) Calcule o valor da resistência elétrica do chuveiro, em ohms, quando submetido à diferença de potencial de 220 V. Calcule a resistência equivalente, em ohms, de uma associação em paralelo de dois resistores cuja resistência individual seja igual à resistência do chuveiro quando submetido à diferença de potencial de 220 V.</p>
+                <p>b) Considerando que o calor específico da água seja igual a 4,2×10³ J/(kg·°C) e que todo calor gerado na resistência seja transferido para a água, calcule a massa de água, em quilogramas, que deve passar pelo chuveiro a cada segundo para que ela sofra um aumento de temperatura de 10 °C.</p>
+            </div>
+            <div class="concepts-box">
+                <h3>Desvendando a Questão: Conceitos-Chave</h3>
+                <p>Esta questão conecta o mundo da eletricidade com o da termologia. A parte (a) é uma aplicação direta da Lei de Ohm e das regras de associação em paralelo. A parte (b) exige que igualemos a energia elétrica dissipada (Potência x tempo) com a energia térmica absorvida pela água (calorimetria).</p>
+                <div class="concept">
+                    <h4>Conceito 1: Resistência e Associação em Paralelo (Item a)</h4>
+                     <div class="concept-explanation">
+                        <p>Como já vimos, podemos encontrar a resistência a partir de U e I usando a 1ª Lei de Ohm. Para a associação, a regra para '<strong class="keyword">n</strong>' resistores idênticos em paralelo é uma ótima simplificação:</p>
+                        $$ R_{eq} = \frac{R}{n} $$
+                        <p>Onde R é a resistência individual e n é o número de resistores. Para dois resistores iguais, $R_{eq} = R/2$.</p>
+                    </div>
+                </div>
+                 <div class="concept">
+                    <h4>Conceito 2: Efeito Joule - Transformando Eletricidade em Calor (Item b)</h4>
+                     <div class="concept-explanation">
+                        <p>O aquecimento em um resistor é chamado de Efeito Joule. A energia elétrica é convertida em energia térmica (calor). A taxa com que essa conversão ocorre é a <strong class="keyword">potência elétrica (P)</strong>.</p>
+                        $$ P = U \cdot I $$
+                        <p>Se essa potência atua durante um intervalo de tempo $\Delta t$, a energia elétrica (E) convertida em calor (Q) é: $E_{elétrica} = Q = P \cdot \Delta t$.</p>
+                    </div>
+                </div>
+                 <div class="concept">
+                    <h4>Conceito 3: Calorimetria (Item b)</h4>
+                     <div class="concept-explanation">
+                        <p>A quantidade de calor (Q) necessária para mudar a temperatura de uma massa (m) de uma substância é dada pela equação fundamental da calorimetria:</p>
+                        $$ Q = m \cdot c \cdot \Delta T $$
+                        <ul>
+                            <li><strong>Q</strong>: Quantidade de calor, em <strong>Joule (J)</strong>.</li>
+                            <li><strong>m</strong>: Massa, em <strong>quilograma (kg)</strong>.</li>
+                            <li><strong>c</strong>: Calor específico da substância, em <strong>J/(kg·°C)</strong>.</li>
+                            <li><strong>$\Delta T$</strong>: Variação de temperatura, em <strong>°C</strong> (ou Kelvin).</li>
+                        </ul>
+                        <p>O problema nos pede para igualar a energia elétrica gerada em 1 segundo com o calor necessário para aquecer a água.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="solution-box">
+                <h3>Resolução Passo a Passo</h3>
+                <div class="step">
+                    <h4>a) Cálculo da resistência do chuveiro e da associação</h4>
+                    <p><strong>Resistência do Chuveiro ($R_{chuveiro}$):</strong><br>
+                    Usando a 1ª Lei de Ohm com U = 220 V e I = 20 A:</p>
+                    $$ R_{chuveiro} = \frac{U}{I} = \frac{220 \text{ V}}{20 \text{ A}} = 11 \, \Omega $$
+                    <p><strong class="highlight">R<sub>chuveiro</sub> = 11 Ω</strong></p>
+                    <p><strong>Resistência Equivalente ($R_{eq}$) da Associação em Paralelo:</strong><br>
+                    Temos dois resistores idênticos de 11 Ω em paralelo. Usando a regra $R_{eq} = R/n$ com n=2:</p>
+                    $$ R_{eq} = \frac{R_{chuveiro}}{2} = \frac{11 \, \Omega}{2} = 5,5 \, \Omega $$
+                    <p><strong class="highlight">R<sub>eq</sub> = 5,5 Ω</strong></p>
+                </div>
+                <div class="step">
+                    <h4>b) Cálculo da massa de água aquecida por segundo</h4>
+                    <p><strong>Passo b.1: Calcular a potência elétrica do chuveiro.</strong></p>
+                    $$ P = U \cdot I = 220 \text{ V} \cdot 20 \text{ A} = 4400 \text{ W} $$
+                    <p>Lembrando que 1 Watt = 1 Joule/segundo, então P = 4400 J/s.</p>
+                    
+                    <p><strong>Passo b.2: Calcular a energia (Q) gerada em 1 segundo.</strong></p>
+                    <p>O problema pede a massa que passa "a cada segundo", então $\Delta t = 1$ s.</p>
+                    $$ Q = P \cdot \Delta t = 4400 \text{ J/s} \cdot 1 \text{ s} = 4400 \text{ J} $$
+                    
+                    <p><strong>Passo b.3: Igualar a energia gerada com a energia absorvida pela água.</strong></p>
+                    <p>A energia absorvida é $Q = m \cdot c \cdot \Delta T$. O enunciado diz que todo o calor gerado é transferido, então:</p>
+                    $$ 4400 \text{ J} = m \cdot c \cdot \Delta T $$
+                    <p>Substituímos os valores dados: c = 4,2×10³ J/(kg·°C) e $\Delta T = 10$ °C.</p>
+                    $$ 4400 = m \cdot (4,2 \times 10^3) \cdot 10 $$
+                    $$ 4400 = m \cdot 42000 $$
+
+                    <p><strong>Passo b.4: Isolar e calcular a massa (m).</strong></p>
+                    $$ m = \frac{4400}{42000} = \frac{44}{420} = \frac{11}{105} \text{ kg} $$
+                    $$ m \approx 0,1047... \text{ kg} $$
+                    <p>Arredondando para duas casas decimais significativas, como é comum em gabaritos:</p>
+                    <p><strong class="highlight">m ≈ 0,10 kg</strong> (ou 100 gramas) de água por segundo.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ======================= QUESTÃO 7 ======================= -->
+        <section id="q7" class="question-section">
+            <h2>Questão 7 (Ufjf-pism 3): Análise Gráfica de Resistores e Circuitos</h2>
+            <div class="enunciado">
+                <h3>Enunciado</h3>
+                <p>Um estudante da UFJF resolveu estudar o comportamento ôhmico de três resistores R<sub>1</sub>, R<sub>2</sub> e R<sub>3</sub> disponíveis no laboratório de ensino, mas sem identificação de seus valores. Os gráficos da figura abaixo mostram o comportamento da corrente elétrica i para cada um dos três resistores, quando submetidos a diferentes valores de diferença de potencial V, medidos pelo estudante.</p>
+                <div class="img-placeholder">[Imagem do gráfico i (A) vs V (Volts) para R₁, R₂, R₃]</div>
+                <p>a) Suponha uma associação em série entre os resistores R₁ e R₂, ligada a uma bateria apropriada. Se a tensão no resistor R₂ for igual a 40 V, determine os valores da corrente e tensão no resistor R₁.</p>
+                <p>b) Suponha agora uma associação em paralelo entre os resistores R₂ e R₃, ligada a uma bateria apropriada. Se a corrente que passa pelo resistor R₂ for igual a 0,6 A, determine os valores da tensão e corrente no resistor R₃.</p>
+            </div>
+            <div class="concepts-box">
+                <h3>Desvendando a Questão: Conceitos-Chave</h3>
+                <p>O desafio aqui é, primeiro, extrair o valor de cada resistência a partir do gráfico I vs V. Depois, aplicamos as regras de associação em série e paralelo, que já revisamos.</p>
+                <div class="concept">
+                    <h4>Conceito 1: Extraindo a Resistência de um Gráfico I vs V</h4>
+                    <div class="concept-explanation">
+                        <p>A Lei de Ohm nos diz que $R = V/I$. Em um gráfico de I (eixo y) versus V (eixo x), a resistência não é a inclinação da reta. A inclinação é $\Delta I / \Delta V$, que é o <strong class="keyword">inverso</strong> da resistência.</p>
+                        <p>O modo mais fácil e seguro de encontrar a resistência é pegar um ponto conveniente (onde a linha cruza uma grade) e aplicar a fórmula diretamente.</p>
+                        <div style="background-color: #d1ecf1; padding: 1rem; border-radius: 5px; border-left: 4px solid #0c5460;">
+                            <strong>Método:</strong> Para cada linha (R₁, R₂, R₃), escolha um ponto (V, I) fácil de ler e calcule <strong>R = V / I</strong>.
+                        </div>
+                    </div>
+                </div>
+                <div class="concept">
+                    <h4>Conceito 2: Regras de Associação de Resistores (Revisão)</h4>
+                    <div class="concept-explanation">
+                        <ul>
+                            <li><strong>Em Série (Item a):</strong> A <strong class="keyword">corrente é a mesma</strong> para todos ($i_1 = i_2$). A tensão total se divide ($U_{total} = U_1 + U_2$).</li>
+                            <li><strong>Em Paralelo (Item b):</strong> A <strong class="keyword">tensão é a mesma</strong> para todos ($U_2 = U_3$). A corrente total se divide ($i_{total} = i_2 + i_3$).</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="solution-box">
+                <h3>Resolução Passo a Passo</h3>
+                <div class="step">
+                    <h4>Passo 1: Determinar os valores das resistências R₁, R₂ e R₃ a partir do gráfico.</h4>
+                    <p>Vamos escolher um ponto para cada resistor:</p>
+                    <ul>
+                        <li><strong>Para R₁:</strong> A linha passa pelo ponto (V=20 V, I=0,4 A).
+                        <br>$ R_1 = \frac{V_1}{I_1} = \frac{20 \text{ V}}{0,4 \text{ A}} = 50 \, \Omega.$</li>
+                        <li><strong>Para R₂:</strong> A linha passa pelo ponto (V=40 V, I=0,4 A).
+                        <br>$ R_2 = \frac{V_2}{I_2} = \frac{40 \text{ V}}{0,4 \text{ A}} = 100 \, \Omega.$</li>
+                        <li><strong>Para R₃:</strong> A linha passa pelo ponto (V=40 V, I=0,2 A).
+                        <br>$ R_3 = \frac{V_3}{I_3} = \frac{40 \text{ V}}{0,2 \text{ A}} = 200 \, \Omega.$</li>
+                    </ul>
+                </div>
+                <div class="step">
+                    <h4>a) Análise da associação em série (R₁ e R₂)</h4>
+                    <p><strong>Dado:</strong> Tensão em R₂ é $U_2 = 40$ V.</p>
+                    <p><strong>Corrente no circuito:</strong> Como estão em série, a corrente é a mesma em ambos. Podemos encontrar a corrente usando os dados de R₂.</p>
+                    $$ i = i_2 = \frac{U_2}{R_2} = \frac{40 \text{ V}}{100 \, \Omega} = 0,4 \text{ A} $$
+                    <p>A corrente que passa por R₁ é <strong class="highlight">i₁ = i = 0,4 A</strong>.</p>
+                    <p><strong>Tensão em R₁:</strong> Agora usamos a Lei de Ohm para R₁.</p>
+                    $$ U_1 = R_1 \cdot i_1 = 50 \, \Omega \cdot 0,4 \text{ A} = 20 \text{ V} $$
+                    <p>A tensão em R₁ é <strong class="highlight">U₁ = 20 V</strong>.</p>
+                </div>
+                <div class="step">
+                    <h4>b) Análise da associação em paralelo (R₂ e R₃)</h4>
+                    <p><strong>Dado:</strong> Corrente em R₂ é $i'_2 = 0,6$ A.</p>
+                    <p><strong>Tensão no circuito:</strong> Como estão em paralelo, a tensão é a mesma em ambos os resistores. Podemos encontrar essa tensão usando os dados de R₂.</p>
+                    $$ U = U_2 = R_2 \cdot i'_2 = 100 \, \Omega \cdot 0,6 \text{ A} = 60 \text{ V} $$
+                    <p>A tensão em R₃ é <strong class="highlight">U₃ = U = 60 V</strong>.</p>
+                    <p><strong>Corrente em R₃:</strong> Agora usamos a Lei de Ohm para R₃.</p>
+                    $$ i_3 = \frac{U_3}{R_3} = \frac{60 \text{ V}}{200 \, \Omega} = 0,3 \text{ A} $$
+                    <p>A corrente em R₃ é <strong class="highlight">i₃ = 0,3 A</strong>.</p>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <footer>
+        <p>Guia de Estudo Prático © 2025</p>
+    </footer>
+
+</div>
+
+</body>
+</html>

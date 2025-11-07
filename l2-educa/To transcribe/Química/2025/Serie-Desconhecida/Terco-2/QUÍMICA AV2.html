@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guia de Estudo Definitivo: Química para Prova</title>
+    
+    <!-- Carregamento de Fontes do Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+
+    <!-- Carregamento dos Ícones do Google Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <!-- CDN da MathJax para renderização de fórmulas matemáticas -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        /* ------------------------------------ */
+        /* 1. VARIÁVEIS E CONFIGURAÇÕES GLOBAIS */
+        /* ------------------------------------ */
+        :root {
+            /* Paleta Principal */
+            --color-bg-main: #0d1117;
+            --color-text-main: #c9d1d9;
+            --color-text-secondary: #8b949e;
+            --color-glass-border: rgba(255, 255, 255, 0.15);
+
+            /* Tema Seção 1: Ligações (Azul Técnico) */
+            --section1-bg: #0d1117;
+            --section1-highlight: #58a6ff; 
+            --section1-text: #c9d1d9;
+
+            /* Tema Seção 2: Termoquímica (Laranja Energético) */
+            --section2-bg: #161b22;
+            --section2-highlight: #f78166;
+            --section2-text: #c9d1d9;
+
+            /* Tema Seção 3: Redox (Verde Reativo) */
+            --section3-bg: #0d1117;
+            --section3-highlight: #3fb950;
+            --section3-text: #c9d1d9;
+            
+            /* Dimensões */
+            --nav-width-desktop: 280px;
+            --nav-height-mobile: 65px;
+
+            /* Tipografia */
+            --font-primary: 'Poppins', sans-serif;
+            --font-secondary: 'Lora', serif;
+        }
+
+        /* Reset Básico e Padrões */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            background-color: var(--color-bg-main);
+            color: var(--color-text-main);
+            font-family: var(--font-secondary);
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
+        }
+        h1, h2, h3, h4, h5, h6 { font-family: var(--font-primary); font-weight: 600; line-height: 1.3; }
+
+        /* ------------------------------------ */
+        /* 2. NAVEGAÇÃO (SIDEBAR/TOPBAR)        */
+        /* ------------------------------------ */
+        .main-nav {
+            position: fixed;
+            top: 0; left: 0;
+            width: var(--nav-width-desktop);
+            height: 100vh;
+            background: rgba(13, 17, 23, 0.7);
+            backdrop-filter: blur(10px);
+            border-right: 1px solid var(--color-glass-border);
+            padding: 40px 20px;
+            z-index: 1000;
+            transition: transform 0.4s ease-in-out;
+        }
+        .nav-header { text-align: left; margin-bottom: 40px; padding-left: 10px; }
+        .nav-header h1 { font-size: 1.4rem; font-weight: 700; color: #FFFFFF; }
+        .nav-header p { font-size: 0.9rem; color: var(--color-text-secondary); }
+        .nav-links { list-style: none; }
+        .nav-links li a {
+            display: flex; align-items: center; padding: 15px 10px;
+            text-decoration: none; color: var(--color-text-secondary);
+            font-family: var(--font-primary); font-weight: 400;
+            border-radius: 8px; transition: all 0.3s ease; font-size: 1rem;
+        }
+        .nav-links li a .material-icons { margin-right: 15px; font-size: 22px; }
+        .nav-links li a:hover { background-color: rgba(255, 255, 255, 0.05); color: var(--color-text-main); }
+        .nav-links li a.active { color: #FFFFFF; font-weight: 600; }
+        .nav-links li a.active#nav-link-1 { background: linear-gradient(90deg, var(--section1-highlight) -50%, rgba(0,0,0,0) 100%); border-left: 4px solid var(--section1-highlight); }
+        .nav-links li a.active#nav-link-2 { background: linear-gradient(90deg, var(--section2-highlight) -50%, rgba(0,0,0,0) 100%); border-left: 4px solid var(--section2-highlight); }
+        .nav-links li a.active#nav-link-3 { background: linear-gradient(90deg, var(--section3-highlight) -50%, rgba(0,0,0,0) 100%); border-left: 4px solid var(--section3-highlight); }
+
+        /* ------------------------------------ */
+        /* 3. LAYOUT PRINCIPAL E SEÇÕES         */
+        /* ------------------------------------ */
+        main { margin-left: var(--nav-width-desktop); width: calc(100% - var(--nav-width-desktop)); }
+        section { min-height: 100vh; padding: 80px 60px; display: flex; flex-direction: column; justify-content: center; }
+        .section-header { margin-bottom: 40px; max-width: 900px; }
+        .section-header h2 { font-size: 3.5rem; font-weight: 700; margin-bottom: 10px; }
+        .section-header .subtitle { font-size: 1.2rem; font-style: italic; color: var(--color-text-secondary); max-width: 80%; }
+        
+        #ligacoes { background-color: var(--section1-bg); color: var(--section1-text); }
+        #ligacoes h2, #ligacoes h3 { color: var(--section1-highlight); }
+        #termoquimica { background-color: var(--section2-bg); color: var(--section2-text); }
+        #termoquimica h2, #termoquimica h3 { color: var(--section2-highlight); }
+        #redox { background-color: var(--section3-bg); color: var(--section3-text); }
+        #redox h2, #redox h3 { color: var(--section3-highlight); }
+
+        /* ------------------------------------ */
+        /* 4. COMPONENTES DE CONTEÚDO           */
+        /* ------------------------------------ */
+        .content-wrapper { max-width: 900px; }
+        p, li { font-size: 1.1rem; margin-bottom: 1.2em; }
+        .btn-expand {
+            display: inline-flex; align-items: center; justify-content: center;
+            color: #FFFFFF; font-family: var(--font-primary); font-size: 1.1rem; font-weight: 600;
+            padding: 15px 30px; border: 1px solid var(--color-glass-border); border-radius: 8px;
+            cursor: pointer; transition: all 0.3s ease; background-color: rgba(255,255,255,0.05);
+        }
+        .btn-expand:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(0,0,0,0.2); }
+        .btn-expand .icon-expand { margin-left: 10px; transition: transform 0.4s ease; }
+        .btn-expand.active .icon-expand { transform: rotate(180deg); }
+        .expanded-content { max-height: 0; overflow: hidden; transition: max-height 1.2s ease-in-out, margin-top 1.2s ease-in-out; }
+        .expanded-content.visible { max-height: 20000px; margin-top: 40px; }
+        .deep-dive-content { background: rgba(0, 0, 0, 0.2); padding: 40px; border-radius: 15px; border: 1px solid var(--color-glass-border); }
+        .deep-dive-content h3 { font-size: 2rem; font-weight: 700; margin-bottom: 25px; border-left: 4px solid; padding-left: 15px; }
+        .deep-dive-content h4 { font-size: 1.5rem; margin-top: 30px; margin-bottom: 15px; }
+        .didactic-block { background: rgba(0,0,0,0.2); border-left: 4px solid; padding: 20px; margin: 25px 0; border-radius: 0 8px 8px 0; }
+        .didactic-block p { font-size: 1.1rem; font-style: italic; margin-bottom: 0.5em; }
+        .didactic-block strong { font-weight: 600; }
+        code { background-color: rgba(139,148,158,0.2); padding: 3px 6px; border-radius: 6px; font-family: 'Courier New', Courier, monospace; }
+        
+        /* Componentes de Questões */
+        .questions-section { margin-top: 50px; }
+        .question-block { margin-bottom: 30px; background-color: rgba(255,255,255,0.03); padding: 25px; border-radius: 10px; }
+        .question-block .question-title { font-family: var(--font-primary); font-weight: 600; font-size: 1.2rem; }
+        .question-block .question-statement { margin: 15px 0; }
+        .btn-resolution {
+            font-family: var(--font-primary); font-size: 0.9rem; padding: 8px 15px;
+            border-radius: 6px; cursor: pointer; transition: all 0.3s ease;
+            border: 1px solid var(--color-glass-border); background-color: transparent; color: var(--color-text-secondary);
+        }
+        .btn-resolution:hover { background-color: rgba(255,255,255,0.1); color: var(--color-text-main); }
+        .resolution-content {
+            max-height: 0; overflow: hidden; transition: max-height 0.7s ease-out, margin-top 0.7s ease-out, opacity 0.7s ease-out;
+            background-color: rgba(0,0,0,0.2); padding: 0 20px; border-radius: 8px; margin-top: 0; opacity: 0;
+        }
+        .resolution-content.visible { max-height: 1000px; margin-top: 20px; padding: 20px; opacity: 1; }
+        .resolution-content h5 { font-size: 1.1rem; margin-bottom: 10px; }
+
+        /* ------------------------------------ */
+        /* 5. RESPONSIVIDADE (MOBILE-FIRST)     */
+        /* ------------------------------------ */
+        @media (max-width: 1024px) {
+            .main-nav {
+                width: 100%; height: var(--nav-height-mobile);
+                padding: 0 10px; border-right: none; border-bottom: 1px solid var(--color-glass-border);
+                display: flex; justify-content: space-between; align-items: center;
+            }
+            .nav-header { margin-bottom: 0; padding-left: 10px; }
+            .nav-header h1 { font-size: 1.2rem; }
+            .nav-header p { display: none; }
+            .nav-links { display: flex; }
+            .nav-links li a { padding: 10px; border-left: none !important; background: none !important; }
+            .nav-links li a .nav-text { display: none; }
+            .nav-links li a .material-icons { margin-right: 0; font-size: 24px; padding: 5px; }
+            .nav-links li a.active { background: rgba(255,255,255,0.1) !important; border-radius: 50%; }
+            .main-nav.nav-hidden { transform: translateY(-100%); }
+            main { margin-left: 0; width: 100%; padding-top: var(--nav-height-mobile); }
+            section { padding: 60px 20px; }
+            .section-header h2 { font-size: 2.5rem; }
+            .section-header .subtitle { font-size: 1.1rem; max-width: 100%; }
+            .deep-dive-content { padding: 20px; }
+        }
+
+        /* ------------------------------------ */
+        /* 6. RODAPÉ                            */
+        /* ------------------------------------ */
+        .main-footer { text-align: center; padding: 30px; background-color: #010409; font-size: 0.9rem; color: var(--color-text-secondary); font-family: var(--font-primary); }
+    </style>
+</head>
+<body>
+
+    <nav class="main-nav" id="main-nav">
+        <div class="nav-header">
+            <h1>Guia de Química</h1>
+            <p>Preparação para Prova</p>
+        </div>
+        <ul class="nav-links">
+            <li><a href="#ligacoes" id="nav-link-1" class="nav-link active"><i class="material-icons">hub</i><span class="nav-text">Ligações e Geometria</span></a></li>
+            <li><a href="#termoquimica" id="nav-link-2" class="nav-link"><i class="material-icons">local_fire_department</i><span class="nav-text">Termoquímica</span></a></li>
+            <li><a href="#redox" id="nav-link-3" class="nav-link"><i class="material-icons">sync_alt</i><span class="nav-text">NOX e Óxido-Redução</span></a></li>
+        </ul>
+    </nav>
+
+    <main>
+        
+        <!-- ====================================================== -->
+        <!-- SEÇÃO 1: LIGAÇÕES, GEOMETRIA E POLARIDADE              -->
+        <!-- ====================================================== -->
+        <section id="ligacoes">
+            <div class="section-header">
+                <h2 style="color: var(--section1-highlight);">Arquitetura Molecular</h2>
+                <p class="subtitle">Desvendando como os átomos se conectam para formar as estruturas do universo, da água que bebemos ao ar que respiramos.</p>
+            </div>
+            <div class="content-wrapper">
+                <p>Este módulo explora os fundamentos da estabilidade química: as <strong>ligações</strong>. Veremos como a busca dos átomos por estabilidade eletrônica dita as regras para a formação de moléculas. A partir daí, mergulharemos em como a disposição espacial desses átomos — a <strong>geometria molecular</strong> — e a distribuição de cargas — a <strong>polaridade</strong> — definem as propriedades físicas e químicas de todas as substâncias.</p>
+                
+                <button class="btn-expand" data-target="ligacoes-deep-dive" style="border-color: var(--section1-highlight); color: var(--section1-highlight);">
+                    Aprofundar Guia
+                    <span class="material-icons icon-expand">expand_more</span>
+                </button>
+
+                <div class="expanded-content" id="ligacoes-deep-dive">
+                    <div class="deep-dive-content" style="border-color: var(--section1-highlight);">
+                        <h3 style="border-color: var(--section1-highlight);">Guia Completo: Ligações, Geometria e Polaridade</h3>
+                        
+                        <h4>A Lógica Central: A Regra do Octeto e a Estabilidade</h4>
+                        <div class="didactic-block" style="border-color: var(--section1-highlight);"><p style="color: var(--section1-highlight);"><strong>A Regra do Octeto</strong> é a tendência que os átomos têm de se combinar de modo a ter <strong>oito elétrons em sua camada de valência</strong>, atingindo a configuração de um gás nobre.</p><p>Essa busca por estabilidade é a <strong>força motriz</strong> por trás de todas as ligações químicas, por isso...</p><p>...os átomos <strong>doam, recebem ou compartilham elétrons</strong> para completar seu octeto.</p></div>
+
+                        <h4>Tipos de Ligações Químicas</h4>
+                        <p><strong>Ligação Iônica:</strong> Ocorre entre um <strong>metal</strong> (baixa eletronegatividade, tende a doar elétrons) e um <strong>ametal</strong> (alta eletronegatividade, tende a receber elétrons). Há uma <strong>transferência definitiva</strong> de elétrons, formando íons (cátions e ânions) que se atraem por força eletrostática. Ex: \( \text{Na}^+ \text{Cl}^- \).</p>
+                        <p><strong>Ligação Covalente:</strong> Ocorre entre <strong>ametais</strong>, que compartilham pares de elétrons para que ambos atinjam a estabilidade. Pode ser <strong>simples</strong> (1 par), <strong>dupla</strong> (2 pares) ou <strong>tripla</strong> (3 pares). Ex: \( \text{O}_2 \) (dupla), \( \text{N}_2 \) (tripla).</p>
+                        <p><strong>Ligação Metálica:</strong> Ocorre entre <strong>metais</strong>, onde os elétrons da camada de valência são deslocalizados e formam um "mar de elétrons" que envolve os cátions metálicos fixos. Isso explica a alta condutividade elétrica e térmica dos metais.</p>
+
+                        <h4>Geometria Molecular: A Teoria VSEPR</h4>
+                        <div class="didactic-block" style="border-color: var(--section1-highlight);"><p style="color: var(--section1-highlight);"><strong>A Teoria da Repulsão dos Pares de Elétrons da Camada de Valência (VSEPR)</strong> diz que os pares de elétrons ao redor do átomo central <strong>se repelem</strong> e, por isso...</p><p>...eles se arranjam no espaço para ficar o <strong>mais longe possível uns dos outros</strong>, o que...</p><p>...<strong>define a forma tridimensional (geometria) da molécula.</strong></p></div>
+                        <p>Para determinar a geometria, contamos o número de "nuvens eletrônicas" (ligações simples, duplas, triplas ou pares de elétrons não ligantes) ao redor do átomo central. Principais geometrias: <strong>Linear</strong> (2 nuvens, ex: CO₂), <strong>Trigonal Plana</strong> (3 nuvens, ex: BF₃), <strong>Angular</strong> (3 ou 4 nuvens, com pares não ligantes, ex: H₂O), <strong>Tetraédrica</strong> (4 nuvens, ex: CH₄), <strong>Piramidal</strong> (4 nuvens, com 1 par não ligante, ex: NH₃).</p>
+
+                        <h4>Polaridade das Moléculas</h4>
+                        <p>A polaridade depende de dois fatores: (1) a <strong>polaridade das ligações</strong> (diferença de eletronegatividade) e (2) a <strong>geometria da molécula</strong>. Uma molécula é:</p>
+                        <ul>
+                            <li><strong>Apolar:</strong> Se as ligações são apolares (ex: O₂) ou se a geometria é simétrica e os vetores momento dipolar se anulam (ex: CO₂, CH₄).</li>
+                            <li><strong>Polar:</strong> Se a geometria é assimétrica e há um vetor momento dipolar resultante diferente de zero (ex: H₂O, NH₃).</li>
+                        </ul>
+
+                        <div class="questions-section">
+                            <h4>Questões de Fixação</h4>
+                            <!-- Questão 1 -->
+                            <div class="question-block">
+                                <p class="question-title">Questão 1</p>
+                                <p class="question-statement">Determine a geometria molecular e a polaridade das seguintes moléculas: amônia (NH₃) e dióxido de carbono (CO₂). Justifique sua resposta com base na Teoria VSEPR e na distribuição dos vetores momento dipolar.</p>
+                                <button class="btn-resolution" data-target="res1">Mostrar Resolução</button>
+                                <div class="resolution-content" id="res1">
+                                    <h5>Resolução Comentada</h5>
+                                    <p><strong>1. Amônia (NH₃):</strong></p>
+                                    <ul>
+                                        <li><strong>Átomo Central:</strong> Nitrogênio (N), família 15, 5 elétrons na camada de valência.</li>
+                                        <li><strong>Nuvens Eletrônicas:</strong> O N faz 3 ligações simples com H e sobra 1 par de elétrons não ligante. Total: 4 nuvens.</li>
+                                        <li><strong>Geometria:</strong> Com 4 nuvens e 1 par não ligante, a geometria é <strong>Piramidal Trigonal</strong>.</li>
+                                        <li><strong>Polaridade:</strong> A ligação N-H é polar (N é mais eletronegativo). A geometria piramidal é assimétrica, então os vetores momento dipolar não se anulam. A molécula é <strong>Polar</strong>.</li>
+                                    </ul>
+                                    <p><strong>2. Dióxido de Carbono (CO₂):</strong></p>
+                                    <ul>
+                                        <li><strong>Átomo Central:</strong> Carbono (C), família 14, 4 elétrons na camada de valência.</li>
+                                        <li><strong>Nuvens Eletrônicas:</strong> O C faz 2 ligações duplas com os dois O. Total: 2 nuvens.</li>
+                                        <li><strong>Geometria:</strong> Com 2 nuvens, a maior distância possível é 180°, resultando em uma geometria <strong>Linear</strong>.</li>
+                                        <li><strong>Polaridade:</strong> A ligação C=O é polar. No entanto, a geometria linear é perfeitamente simétrica. Os dois vetores momento dipolar, de mesma intensidade e sentidos opostos, se anulam. A molécula é <strong>Apolar</strong>.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <!-- Questão 2 -->
+                            <div class="question-block">
+                                <p class="question-title">Questão 2</p>
+                                <p class="question-statement">As moléculas de água (H₂O) e tetracloreto de carbono (CCl₄) apresentam diferentes pontos de ebulição. Relacione a geometria, a polaridade e o tipo de força intermolecular predominante em cada uma para explicar essa diferença.</p>
+                                <button class="btn-resolution" data-target="res2">Mostrar Resolução</button>
+                                <div class="resolution-content" id="res2">
+                                    <h5>Resolução Comentada</h5>
+                                    <p><strong>1. Água (H₂O):</strong></p>
+                                    <ul>
+                                        <li><strong>Geometria e Polaridade:</strong> Possui geometria <strong>Angular</strong> devido aos 2 pares de elétrons não ligantes no oxigênio, o que a torna uma molécula fortemente <strong>Polar</strong>.</li>
+                                        <li><strong>Força Intermolecular:</strong> Por ter hidrogênio ligado a um átomo muito eletronegativo (oxigênio), a força predominante é a <strong>Ligação de Hidrogênio</strong>, que é a mais forte das forças intermoleculares.</li>
+                                    </ul>
+                                    <p><strong>2. Tetracloreto de Carbono (CCl₄):</strong></p>
+                                    <ul>
+                                        <li><strong>Geometria e Polaridade:</strong> Possui geometria <strong>Tetraédrica</strong>. Apesar das ligações C-Cl serem polares, a simetria da molécula faz com que os vetores momento dipolar se anulem, tornando-a <strong>Apolar</strong>.</li>
+                                        <li><strong>Força Intermolecular:</strong> Sendo uma molécula apolar, a única força presente é a de <strong>Forças de London (ou Dipolo Induzido)</strong>, que é a mais fraca das forças.</li>
+                                    </ul>
+                                    <p><strong>Conclusão:</strong> A água tem um ponto de ebulição muito mais alto porque as Ligações de Hidrogênio são muito mais fortes que as Forças de London do CCl₄. É preciso muito mais energia para separar as moléculas de água do que as de CCl₄.</p>
+                                </div>
+                            </div>
+                            <!-- Questão 3 -->
+                            <div class="question-block">
+                                <p class="question-title">Questão 3</p>
+                                <p class="question-statement">O trifluoreto de boro (BF₃) é uma molécula com três ligações polares, mas a molécula como um todo é apolar. Explique esse aparente paradoxo.</p>
+                                <button class="btn-resolution" data-target="res3">Mostrar Resolução</button>
+                                <div class="resolution-content" id="res3">
+                                    <h5>Resolução Comentada</h5>
+                                    <p>O paradoxo é resolvido ao analisar a <strong>geometria molecular</strong>.</p>
+                                    <ul>
+                                        <li><strong>Átomo Central:</strong> Boro (B), família 13, 3 elétrons na camada de valência.</li>
+                                        <li><strong>Nuvens Eletrônicas:</strong> O Boro faz 3 ligações simples com os três átomos de Flúor (F). Não há pares de elétrons não ligantes. Total: 3 nuvens.</li>
+                                        <li><strong>Geometria:</strong> Com 3 nuvens, a geometria que maximiza a distância entre elas é a <strong>Trigonal Plana</strong>, com ângulos de 120° entre as ligações.</li>
+                                        <li><strong>Análise da Polaridade:</strong>
+                                            <ul>
+                                                <li>Cada ligação B-F é <strong>polar</strong>, pois o flúor é muito mais eletronegativo que o boro. Isso cria três vetores momento dipolar apontando do Boro para cada Flúor.</li>
+                                                <li>Devido à geometria perfeitamente simétrica (Trigonal Plana), a soma vetorial desses três vetores de igual intensidade, separados por 120°, é <strong>zero</strong>. Eles se anulam mutuamente.</li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                    <p><strong>Conclusão:</strong> Embora as ligações individuais sejam polares, a simetria da molécula faz com que o momento dipolar resultante seja nulo, tornando a molécula de BF₃ <strong>Apolar</strong>.</p>
+                                </div>
+                            </div>
+                            <!-- Questão 4 -->
+                            <div class="question-block">
+                                <p class="question-title">Questão 4</p>
+                                <p class="question-statement">Compare as ligações presentes no cloreto de sódio (NaCl) e na molécula de cloro (Cl₂). Descreva o tipo de ligação em cada um, o processo de formação e uma propriedade característica resultante de cada tipo de ligação.</p>
+                                <button class="btn-resolution" data-target="res4">Mostrar Resolução</button>
+                                <div class="resolution-content" id="res4">
+                                    <h5>Resolução Comentada</h5>
+                                    <p><strong>1. Cloreto de Sódio (NaCl):</strong></p>
+                                    <ul>
+                                        <li><strong>Tipo de Ligação:</strong> <strong>Iônica</strong>.</li>
+                                        <li><strong>Formação:</strong> Ocorre entre um metal (Sódio - Na) e um ametal (Cloro - Cl). O sódio doa seu único elétron da camada de valência para o cloro, que precisa de um elétron para completar seu octeto. Forma-se o cátion Na⁺ e o ânion Cl⁻, que são atraídos por forças eletrostáticas, formando um retículo cristalino.</li>
+                                        <li><strong>Propriedade Característica:</strong> Em estado sólido, <strong>não conduz eletricidade</strong> (íons presos no retículo), mas <strong>conduz eletricidade quando fundido ou dissolvido em água</strong> (íons livres para se mover).</li>
+                                    </ul>
+                                    <p><strong>2. Molécula de Cloro (Cl₂):</strong></p>
+                                    <ul>
+                                        <li><strong>Tipo de Ligação:</strong> <strong>Covalente Apolar</strong>.</li>
+                                        <li><strong>Formação:</strong> Ocorre entre dois átomos do mesmo ametal (Cloro). Cada átomo de cloro compartilha um elétron com o outro, formando uma ligação simples (Cl-Cl). Assim, ambos os átomos passam a ter 8 elétrons na camada de valência.</li>
+                                        <li><strong>Propriedade Característica:</strong> É um gás à temperatura ambiente com baixo ponto de ebulição, pois as forças intermoleculares entre as moléculas de Cl₂ (Forças de London) são fracas. <strong>Não conduz eletricidade</strong> em nenhum estado.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ====================================================== -->
+        <!-- SEÇÃO 2: TERMOQUÍMICA                                  -->
+        <!-- ====================================================== -->
+        <section id="termoquimica">
+            <div class="section-header">
+                <h2 style="color: var(--section2-highlight);">A Energia das Transformações</h2>
+                <p class="subtitle">Quantificando o calor liberado ou absorvido nas reações químicas, o motor invisível que move desde o nosso metabolismo até os foguetes espaciais.</p>
+            </div>
+            <div class="content-wrapper">
+                <p>A Termoquímica é o ramo da química que estuda a energia na forma de calor envolvida nas reações. Toda reação química envolve uma mudança energética. Vamos decifrar os conceitos de <strong>entalpia (H)</strong> e <strong>variação de entalpia (ΔH)</strong> para classificar reações como <strong>exotérmicas</strong> (liberam calor) ou <strong>endotérmicas</strong> (absorvem calor). O domínio da <strong>Lei de Hess</strong> será a chave para calcular a energia de reações complexas de forma indireta.</p>
+                
+                <button class="btn-expand" data-target="termo-deep-dive" style="border-color: var(--section2-highlight); color: var(--section2-highlight);">
+                    Aprofundar Guia
+                    <span class="material-icons icon-expand">expand_more</span>
+                </button>
+
+                <div class="expanded-content" id="termo-deep-dive">
+                    <div class="deep-dive-content" style="border-color: var(--section2-highlight);">
+                        <h3 style="border-color: var(--section2-highlight);">Guia Completo: Termoquímica</h3>
+                        
+                        <h4>A Lógica Central: Entalpia e Variação de Entalpia (ΔH)</h4>
+                        <div class="didactic-block" style="border-color: var(--section2-highlight);"><p style="color: var(--section2-highlight);"><strong>Entalpia (H)</strong> é o <strong>conteúdo total de energia</strong> de um sistema.</p><p>Como não podemos medir a entalpia absoluta, medimos a sua <strong>variação (ΔH)</strong> em uma reação, por isso...</p><p>...calculamos \( \Delta H = H_{\text{produtos}} - H_{\text{reagentes}} \).</p></div>
+                        <ul>
+                            <li><strong>Reação Exotérmica:</strong> Libera calor para o ambiente. Os produtos são menos energéticos que os reagentes. \( H_{\text{produtos}} < H_{\text{reagentes}} \), portanto, <strong>ΔH < 0 (negativo)</strong>.</li>
+                            <li><strong>Reação Endotérmica:</strong> Absorve calor do ambiente. Os produtos são mais energéticos que os reagentes. \( H_{\text{produtos}} > H_{\text{reagentes}} \), portanto, <strong>ΔH > 0 (positivo)</strong>.</li>
+                        </ul>
+
+                        <h4>Cálculo de ΔH: Métodos Principais</h4>
+                        <p><strong>1. Entalpia de Formação (ΔH°f):</strong> É a energia envolvida na formação de <strong>1 mol</strong> de uma substância a partir de seus elementos constituintes no estado padrão. Por convenção, \( \Delta H°_f \) de substâncias simples no estado padrão (ex: O₂(g), H₂(g), C(grafite)) é <strong>zero</strong>. A fórmula para calcular o ΔH da reação é:</p>
+                        <p>$$ \Delta H_{\text{reação}} = \sum (\Delta H°_{f, \text{produtos}}) - \sum (\Delta H°_{f, \text{reagentes}}) $$</p>
+
+                        <p><strong>2. Energia de Ligação:</strong> É a energia necessária para <strong>quebrar 1 mol</strong> de uma ligação no estado gasoso. A quebra de ligações é um processo <strong>endotérmico</strong> (absorve energia, sinal +), e a formação de ligações é um processo <strong>exotérmico</strong> (libera energia, sinal -). A fórmula é:</p>
+                        <p>$$ \Delta H_{\text{reação}} = \sum (\text{Energia das ligações quebradas}) - \sum (\text{Energia das ligações formadas}) $$</p>
+
+                        <h4>A Lei de Hess: O Poder das Reações Intermediárias</h4>
+                        <div class="didactic-block" style="border-color: var(--section2-highlight);"><p style="color: var(--section2-highlight);"><strong>A Lei de Hess</strong> afirma que a variação de entalpia de uma reação <strong>depende apenas dos estados inicial e final</strong>, e não do caminho percorrido.</p><p>Isso significa que podemos <strong>somar, inverter e multiplicar reações intermediárias</strong> (cujos ΔH conhecemos) para encontrar o ΔH de uma reação global, por isso...</p><p>...se invertemos uma reação, <strong>invertemos o sinal do ΔH</strong>.</p><p>...se multiplicamos uma reação por um número, <strong>multiplicamos o ΔH pelo mesmo número</strong>.</p></div>
+
+                        <div class="questions-section">
+                            <h4>Questões de Fixação</h4>
+                            <!-- Questão 1 -->
+                            <div class="question-block">
+                                <p class="question-title">Questão 1</p>
+                                <p class="question-statement">Calcule a variação de entalpia (ΔH) para a combustão completa do metano (CH₄), utilizando os dados de entalpia de formação padrão abaixo.<br>Reação: \( \text{CH}_4(g) + 2\text{O}_2(g) \rightarrow \text{CO}_2(g) + 2\text{H}_2\text{O}(l) \)<br>Dados: \( \Delta H°_f (\text{CH}_4) = -75 \text{ kJ/mol} \); \( \Delta H°_f (\text{CO}_2) = -394 \text{ kJ/mol} \); \( \Delta H°_f (\text{H}_2\text{O}) = -286 \text{ kJ/mol} \).</p>
+                                <button class="btn-resolution" data-target="res5">Mostrar Resolução</button>
+                                <div class="resolution-content" id="res5">
+                                    <h5>Resolução Comentada</h5>
+                                    <p>Usaremos a fórmula: \( \Delta H = H_{\text{produtos}} - H_{\text{reagentes}} \)</p>
+                                    <p><strong>1. Calcular a entalpia dos produtos:</strong></p>
+                                    <p>\( H_{\text{produtos}} = [1 \times \Delta H°_f(\text{CO}_2)] + [2 \times \Delta H°_f(\text{H}_2\text{O})] \)</p>
+                                    <p>\( H_{\text{produtos}} = [1 \times (-394)] + [2 \times (-286)] \)</p>
+                                    <p>\( H_{\text{produtos}} = -394 - 572 = -966 \text{ kJ} \)</p>
+                                    <p><strong>2. Calcular a entalpia dos reagentes:</strong></p>
+                                    <p>\( H_{\text{reagentes}} = [1 \times \Delta H°_f(\text{CH}_4)] + [2 \times \Delta H°_f(\text{O}_2)] \)</p>
+                                    <p>Lembre-se que \( \Delta H°_f \) de substância simples (O₂) é zero.</p>
+                                    <p>\( H_{\text{reagentes}} = [1 \times (-75)] + [2 \times 0] = -75 \text{ kJ} \)</p>
+                                    <p><strong>3. Calcular o ΔH da reação:</strong></p>
+                                    <p>\( \Delta H = (-966) - (-75) \)</p>
+                                    <p>\( \Delta H = -966 + 75 = -891 \text{ kJ/mol} \)</p>
+                                    <p><strong>Conclusão:</strong> A reação é <strong>exotérmica</strong>, liberando 891 kJ de energia por mol de metano queimado.</p>
+                                </div>
+                            </div>
+                            <!-- Questão 2 -->
+                            <div class="question-block">
+                                <p class="question-title">Questão 2</p>
+                                <p class="question-statement">Utilizando a Lei de Hess, calcule o ΔH para a reação de formação do metanol (CH₃OH) a partir de seus elementos:<br>\( \text{C(grafite)} + 2\text{H}_2(g) + \frac{1}{2}\text{O}_2(g) \rightarrow \text{CH}_3\text{OH}(l) \)<br>A partir das seguintes equações termoquímicas:<br>I) \( \text{CH}_3\text{OH}(l) + \frac{3}{2}\text{O}_2(g) \rightarrow \text{CO}_2(g) + 2\text{H}_2\text{O}(l) \quad \Delta H = -726 \text{ kJ} \)<br>II) \( \text{C(grafite)} + \text{O}_2(g) \rightarrow \text{CO}_2(g) \quad \Delta H = -394 \text{ kJ} \)<br>III) \( \text{H}_2(g) + \frac{1}{2}\text{O}_2(g) \rightarrow \text{H}_2\text{O}(l) \quad \Delta H = -286 \text{ kJ} \)</p>
+                                <button class="btn-resolution" data-target="res6">Mostrar Resolução</button>
+                                <div class="resolution-content" id="res6">
+                                    <h5>Resolução Comentada</h5>
+                                    <p>O objetivo é manipular as equações I, II e III para obter a reação global.</p>
+                                    <p><strong>1. Analisar a equação I:</strong> O CH₃OH está como reagente, mas na reação global ele é produto. Devemos <strong>inverter</strong> a equação I (e o sinal do ΔH).</p>
+                                    <p>I') \( \text{CO}_2(g) + 2\text{H}_2\text{O}(l) \rightarrow \text{CH}_3\text{OH}(l) + \frac{3}{2}\text{O}_2(g) \quad \Delta H = +726 \text{ kJ} \)</p>
+                                    <p><strong>2. Analisar a equação II:</strong> O C(grafite) está como reagente, assim como na global. Mantemos a equação II como está.</p>
+                                    <p>II) \( \text{C(grafite)} + \text{O}_2(g) \rightarrow \text{CO}_2(g) \quad \Delta H = -394 \text{ kJ} \)</p>
+                                    <p><strong>3. Analisar a equação III:</strong> O H₂ está como reagente, mas na global precisamos de 2 mols. Devemos <strong>multiplicar</strong> a equação III (e seu ΔH) por 2.</p>
+                                    <p>III') \( 2\text{H}_2(g) + \text{O}_2(g) \rightarrow 2\text{H}_2\text{O}(l) \quad \Delta H = 2 \times (-286) = -572 \text{ kJ} \)</p>
+                                    <p><strong>4. Somar as equações manipuladas (I', II, III'):</strong></p>
+                                    <p>\( \cancel{\text{CO}_2(g)} + \cancel{2\text{H}_2\text{O}(l)} + \text{C(grafite)} + \cancel{\text{O}_2(g)} + 2\text{H}_2(g) + \cancel{\text{O}_2(g)} \rightarrow \text{CH}_3\text{OH}(l) + \frac{3}{2}\text{O}_2(g) + \cancel{\text{CO}_2(g)} + \cancel{2\text{H}_2\text{O}(l)} \)</p>
+                                    <p>Simplificando os O₂ (2 mols nos reagentes e 1.5 mol nos produtos), obtemos a reação global:</p>
+                                    <p>\( \text{C(grafite)} + 2\text{H}_2(g) + \frac{1}{2}\text{O}_2(g) \rightarrow \text{CH}_3\text{OH}(l) \)</p>
+                                    <p><strong>5. Somar os ΔH:</strong></p>
+                                    <p>\( \Delta H = (+726) + (-394) + (-572) = -240 \text{ kJ} \)</p>
+                                    <p><strong>Conclusão:</strong> A entalpia de formação do metanol é <strong>-240 kJ/mol</strong>.</p>
+                                </div>
+                            </div>
+                            <!-- Questão 3 -->
+                            <div class="question-block">
+                                <p class="question-title">Questão 3</p>
+                                <p class="question-statement">A hidrazina (N₂H₄) é usada como combustível de foguete. Calcule a energia liberada na combustão de 1 mol de hidrazina, usando as energias de ligação fornecidas.<br>Reação: \( \text{N}_2\text{H}_4(g) + \text{O}_2(g) \rightarrow \text{N}_2(g) + 2\text{H}_2\text{O}(g) \)<br>Dados (Energia de Ligação em kJ/mol):<br>N-N: 163 | N-H: 391 | O=O: 498 | N≡N: 945 | O-H: 464</p>
+                                <button class="btn-resolution" data-target="res7">Mostrar Resolução</button>
+                                <div class="resolution-content" id="res7">
+                                    <h5>Resolução Comentada</h5>
+                                    <p>Usaremos a fórmula: \( \Delta H = \sum (\text{Ligações quebradas}) - \sum (\text{Ligações formadas}) \)</p>
+                                    <p><strong>1. Identificar e somar as energias das ligações quebradas (Reagentes):</strong></p>
+                                    <ul>
+                                        <li>Molécula de N₂H₄ (H₂N-NH₂): 1 ligação N-N e 4 ligações N-H.</li>
+                                        <li>Molécula de O₂: 1 ligação O=O.</li>
+                                    </ul>
+                                    <p>\( \text{Quebradas} = [1 \times (\text{N-N})] + [4 \times (\text{N-H})] + [1 \times (\text{O=O})] \)</p>
+                                    <p>\( \text{Quebradas} = [163] + [4 \times 391] + [498] = 163 + 1564 + 498 = 2225 \text{ kJ} \)</p>
+                                    <p><strong>2. Identificar e somar as energias das ligações formadas (Produtos):</strong></p>
+                                    <ul>
+                                        <li>Molécula de N₂: 1 ligação N≡N.</li>
+                                        <li>2 Moléculas de H₂O (H-O-H): Cada uma tem 2 ligações O-H. Total: \( 2 \times 2 = 4 \) ligações O-H.</li>
+                                    </ul>
+                                    <p>\( \text{Formadas} = [1 \times (\text{N≡N})] + [4 \times (\text{O-H})] \)</p>
+                                    <p>\( \text{Formadas} = [945] + [4 \times 464] = 945 + 1856 = 2801 \text{ kJ} \)</p>
+                                    <p><strong>3. Calcular o ΔH da reação:</strong></p>
+                                    <p>\( \Delta H = (2225) - (2801) = -576 \text{ kJ/mol} \)</p>
+                                    <p><strong>Conclusão:</strong> A combustão de 1 mol de hidrazina libera <strong>576 kJ</strong> de energia.</p>
+                                </div>
+                            </div>
+                            <!-- Questão 4 -->
+                            <div class="question-block">
+                                <p class="question-title">Questão 4</p>
+                                <p class="question-statement">Classifique os seguintes processos como exotérmicos ou endotérmicos e justifique brevemente: a) A queima de uma vela. b) O derretimento de um cubo de gelo. c) A fotossíntese realizada pelas plantas.</p>
+                                <button class="btn-resolution" data-target="res8">Mostrar Resolução</button>
+                                <div class="resolution-content" id="res8">
+                                    <h5>Resolução Comentada</h5>
+                                    <p><strong>a) Queima de uma vela:</strong></p>
+                                    <ul>
+                                        <li><strong>Classificação:</strong> <strong>Exotérmico</strong>.</li>
+                                        <li><strong>Justificativa:</strong> A queima (combustão) é uma reação que visivelmente <strong>libera energia</strong> na forma de calor e luz para o ambiente. O ΔH é negativo.</li>
+                                    </ul>
+                                    <p><strong>b) Derretimento de um cubo de gelo:</strong></p>
+                                    <ul>
+                                        <li><strong>Classificação:</strong> <strong>Endotérmico</strong>.</li>
+                                        <li><strong>Justificativa:</strong> Para que o gelo (sólido) se transforme em água (líquida), ele precisa <strong>absorver calor</strong> do ambiente. A energia é usada para quebrar as forças que mantêm as moléculas de água organizadas no estado sólido. O ΔH é positivo.</li>
+                                    </ul>
+                                    <p><strong>c) Fotossíntese:</strong></p>
+                                    <ul>
+                                        <li><strong>Classificação:</strong> <strong>Endotérmico</strong>.</li>
+                                        <li><strong>Justificativa:</strong> As plantas usam a energia da luz solar para converter CO₂ e água em glicose (energia química). O processo <strong>absorve energia</strong> (luminosa) do ambiente para ocorrer. O ΔH é positivo.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ====================================================== -->
+        <!-- SEÇÃO 3: NOX E ÓXIDO-REDUÇÃO                           -->
+        <!-- ====================================================== -->
+        <section id="redox">
+            <div class="section-header">
+                <h2 style="color: var(--section3-highlight);">A Dança dos Elétrons</h2>
+                <p class="subtitle">Mapeando a transferência de elétrons que energiza pilhas, causa a corrosão de metais e é fundamental para a vida.</p>
+            </div>
+            <div class="content-wrapper">
+                <p>As reações de óxido-redução (ou redox) são definidas pela transferência de elétrons. Para rastrear essa transferência, usamos o <strong>Número de Oxidação (NOX)</strong>. Aprenderemos a calcular o NOX e a identificar quem <strong>oxida</strong> (perde elétrons) e quem <strong>reduz</strong> (ganha elétrons). Dominar o conceito de <strong>agente oxidante</strong> e <strong>agente redutor</strong> e o método de <strong>balanceamento por óxido-redução</strong> será o foco deste módulo, essencial para entender desde a eletroquímica até processos metabólicos.</p>
+                
+                <button class="btn-expand" data-target="redox-deep-dive" style="border-color: var(--section3-highlight); color: var(--section3-highlight);">
+                    Aprofundar Guia
+                    <span class="material-icons icon-expand">expand_more</span>
+                </button>
+
+                <div class="expanded-content" id="redox-deep-dive">
+                    <div class="deep-dive-content" style="border-color: var(--section3-highlight);">
+                        <h3 style="border-color: var(--section3-highlight);">Guia Completo: NOX e Óxido-Redução</h3>
+                        
+                        <h4>A Lógica Central: Oxidação e Redução</h4>
+                        <div class="didactic-block" style="border-color: var(--section3-highlight);"><p style="color: var(--section3-highlight);"><strong>Oxidar</strong> é <strong>Perder</strong> elétrons. Quem oxida, tem seu <strong>NOX aumentado</strong>.</p><p style="color: var(--section3-highlight);"><strong>Reduzir</strong> é <strong>Receber</strong> (ganhar) elétrons. Quem reduz, tem seu <strong>NOX diminuído</strong>.</p><p>Quem <strong>oxida</strong>, provoca a redução de outro, por isso é o <strong>Agente Redutor</strong>.</p><p>Quem <strong>reduz</strong>, provoca a oxidação de outro, por isso é o <strong>Agente Oxidante</strong>.</p></div>
+
+                        <h4>Calculando o Número de Oxidação (NOX)</h4>
+                        <p>O NOX é a carga teórica de um átomo em uma substância. Existem regras fixas:</p>
+                        <ul>
+                            <li><strong>Substância Simples:</strong> NOX = 0 (ex: O₂, Fe, S₈).</li>
+                            <li><strong>Íon Monoatômico:</strong> NOX = carga do íon (ex: Na⁺, NOX = +1; Cl⁻, NOX = -1).</li>
+                            <li><strong>Hidrogênio:</strong> NOX = +1 (com ametais), -1 (com metais).</li>
+                            <li><strong>Oxigênio:</strong> NOX = -2 (maioria dos casos), -1 (peróxidos), -1/2 (superóxidos).</li>
+                            <li><strong>Metais Alcalinos (Família 1):</strong> NOX = +1.</li>
+                            <li><strong>Metais Alcalinoterrosos (Família 2):</strong> NOX = +2.</li>
+                            <li><strong>Halogênios (Família 17):</strong> NOX = -1 (em compostos binários).</li>
+                            <li>A <strong>soma dos NOX</strong> em uma molécula neutra é <strong>zero</strong>. Em um íon poliatômico, é igual à <strong>carga do íon</strong>.</li>
+                        </ul>
+
+                        <h4>Balanceamento de Equações por Óxido-Redução</h4>
+                        <p>É um método para balancear reações complexas onde a tentativa e erro falha.</p>
+                        <ol>
+                            <li><strong>1. Calcular o NOX</strong> de todos os elementos na equação.</li>
+                            <li><strong>2. Identificar</strong> quem oxidou e quem reduziu.</li>
+                            <li><strong>3. Calcular o ΔNOX</strong> (variação do NOX) para a oxidação e a redução. \( \Delta = |\text{NOX}_{\text{final}} - \text{NOX}_{\text{inicial}}| \times \text{atomicidade} \).</li>
+                            <li><strong>4. Inverter os valores de ΔNOX</strong> e usá-los como coeficientes para as espécies que sofreram oxidação e redução.</li>
+                            <li><strong>5. Terminar o balanceamento</strong> por tentativa para os elementos restantes.</li>
+                        </ol>
+
+                        <div class="questions-section">
+                            <h4>Questões de Fixação</h4>
+                            <!-- Questão 1 -->
+                            <div class="question-block">
+                                <p class="question-title">Questão 1</p>
+                                <p class="question-statement">Determine o número de oxidação (NOX) do átomo de Cromo (Cr) nos seguintes compostos: a) Cr₂O₃ b) K₂Cr₂O₇ c) CrO₄²⁻</p>
+                                <button class="btn-resolution" data-target="res9">Mostrar Resolução</button>
+                                <div class="resolution-content" id="res9">
+                                    <h5>Resolução Comentada</h5>
+                                    <p><strong>a) Cr₂O₃:</strong></p>
+                                    <ul>
+                                        <li>O NOX do Oxigênio (O) é -2.</li>
+                                        <li>A soma total deve ser zero. Seja 'x' o NOX do Cr.</li>
+                                        <li>\( 2x + 3(-2) = 0 \Rightarrow 2x - 6 = 0 \Rightarrow 2x = 6 \Rightarrow x = +3 \).</li>
+                                        <li><strong>NOX do Cr = +3</strong>.</li>
+                                    </ul>
+                                    <p><strong>b) K₂Cr₂O₇:</strong></p>
+                                    <ul>
+                                        <li>O NOX do Potássio (K, Família 1) é +1. O NOX do O é -2.</li>
+                                        <li>Seja 'x' o NOX do Cr.</li>
+                                        <li>\( 2(+1) + 2x + 7(-2) = 0 \Rightarrow 2 + 2x - 14 = 0 \Rightarrow 2x - 12 = 0 \Rightarrow 2x = 12 \Rightarrow x = +6 \).</li>
+                                        <li><strong>NOX do Cr = +6</strong>.</li>
+                                    </ul>
+                                    <p><strong>c) CrO₄²⁻ (íon cromato):</strong></p>
+                                    <ul>
+                                        <li>O NOX do O é -2.</li>
+                                        <li>A soma total deve ser igual à carga do íon (-2). Seja 'x' o NOX do Cr.</li>
+                                        <li>\( x + 4(-2) = -2 \Rightarrow x - 8 = -2 \Rightarrow x = -2 + 8 \Rightarrow x = +6 \).</li>
+                                        <li><strong>NOX do Cr = +6</strong>.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <!-- Questão 2 -->
+                            <div class="question-block">
+                                <p class="question-title">Questão 2</p>
+                                <p class="question-statement">Na reação \( \text{MnO}_2 + 4\text{HCl} \rightarrow \text{MnCl}_2 + \text{Cl}_2 + 2\text{H}_2\text{O} \), identifique: o elemento que sofre oxidação, o elemento que sofre redução, o agente oxidante e o agente redutor.</p>
+                                <button class="btn-resolution" data-target="res10">Mostrar Resolução</button>
+                                <div class="resolution-content" id="res10">
+                                    <h5>Resolução Comentada</h5>
+                                    <p><strong>1. Calcular o NOX de todos os elementos:</strong></p>
+                                    <p>Reagentes:</p>
+                                    <ul>
+                                        <li>MnO₂: O é -2, então Mn é +4.</li>
+                                        <li>HCl: H é +1, então Cl é -1.</li>
+                                    </ul>
+                                    <p>Produtos:</p>
+                                    <ul>
+                                        <li>MnCl₂: Cl é -1, então Mn é +2.</li>
+                                        <li>Cl₂: Substância simples, Cl é 0.</li>
+                                        <li>H₂O: H é +1, O é -2.</li>
+                                    </ul>
+                                    <p><strong>2. Analisar as variações de NOX:</strong></p>
+                                    <ul>
+                                        <li><strong>Manganês (Mn):</strong> Foi de <strong>+4</strong> para <strong>+2</strong>. O NOX diminuiu, então ele <strong>sofreu redução</strong>.</li>
+                                        <li><strong>Cloro (Cl):</strong> Parte do Cl foi de <strong>-1</strong> para <strong>0</strong> (no Cl₂). O NOX aumentou, então ele <strong>sofreu oxidação</strong>. (Note que parte do Cl manteve o NOX -1 no MnCl₂).</li>
+                                    </ul>
+                                    <p><strong>3. Identificar os agentes:</strong></p>
+                                    <ul>
+                                        <li><strong>Agente Oxidante:</strong> É a substância que contém o elemento que sofreu redução. Portanto, o <strong>MnO₂</strong>.</li>
+                                        <li><strong>Agente Redutor:</strong> É a substância que contém o elemento que sofreu oxidação. Portanto, o <strong>HCl</strong>.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <!-- Questão 3 -->
+                            <div class="question-block">
+                                <p class="question-title">Questão 3</p>
+                                <p class="question-statement">Balanceie a seguinte equação de óxido-redução em meio ácido pelo método do NOX:<br>\( \text{KMnO}_4 + \text{H}_2\text{O}_2 + \text{H}_2\text{SO}_4 \rightarrow \text{MnSO}_4 + \text{K}_2\text{SO}_4 + \text{O}_2 + \text{H}_2\text{O} \)</p>
+                                <button class="btn-resolution" data-target="res11">Mostrar Resolução</button>
+                                <div class="resolution-content" id="res11">
+                                    <h5>Resolução Comentada</h5>
+                                    <p><strong>1. Calcular os NOX e identificar as variações:</strong></p>
+                                    <ul>
+                                        <li>KMnO₄: K=+1, O=-2 \(\Rightarrow\) <strong>Mn = +7</strong>.</li>
+                                        <li>H₂O₂ (peróxido): H=+1 \(\Rightarrow\) <strong>O = -1</strong>.</li>
+                                        <li>MnSO₄: SO₄²⁻ \(\Rightarrow\) <strong>Mn = +2</strong>.</li>
+                                        <li>O₂: Substância simples \(\Rightarrow\) <strong>O = 0</strong>.</li>
+                                    </ul>
+                                    <p><strong>Redução:</strong> Mn vai de +7 para +2. (\( \Delta = |2 - 7| = 5 \))<br><strong>Oxidação:</strong> O vai de -1 para 0. (\( \Delta = |0 - (-1)| = 1 \))</p>
+                                    <p><strong>2. Calcular o ΔNOX total:</strong></p>
+                                    <ul>
+                                        <li>\( \Delta_{\text{red}} = 5 \times 1 (\text{atomicidade do Mn}) = 5 \)</li>
+                                        <li>\( \Delta_{\text{oxi}} = 1 \times 2 (\text{atomicidade do O no H}_2\text{O}_2) = 2 \)</li>
+                                    </ul>
+                                    <p><strong>3. Inverter os deltas como coeficientes:</strong></p>
+                                    <ul>
+                                        <li>O coeficiente <strong>2</strong> vai para o KMnO₄ (e MnSO₄).</li>
+                                        <li>O coeficiente <strong>5</strong> vai para o H₂O₂ (e O₂).</li>
+                                    </ul>
+                                    <p>\( \mathbf{2}\text{KMnO}_4 + \mathbf{5}\text{H}_2\text{O}_2 + \text{H}_2\text{SO}_4 \rightarrow \mathbf{2}\text{MnSO}_4 + \text{K}_2\text{SO}_4 + \mathbf{5}\text{O}_2 + \text{H}_2\text{O} \)</p>
+                                    <p><strong>4. Balancear os outros elementos por tentativa:</strong></p>
+                                    <ul>
+                                        <li><strong>Potássio (K):</strong> 2 K nos reagentes, então precisamos de 1 K₂SO₄ nos produtos.</li>
+                                        <li><strong>Enxofre (S):</strong> Agora temos 2 S (do MnSO₄) + 1 S (do K₂SO₄) = 3 S nos produtos. Precisamos de 3 H₂SO₄ nos reagentes.</li>
+                                        <li><strong>Hidrogênio (H):</strong> Nos reagentes, 10 H (do H₂O₂) + 6 H (do H₂SO₄) = 16 H. Precisamos de 8 H₂O nos produtos.</li>
+                                        <li><strong>Oxigênio (O):</strong> (Verificação) Reagentes: 8+10+12=30. Produtos: 8+4+10+8=30. Está correto.</li>
+                                    </ul>
+                                    <p><strong>Equação Final Balanceada:</strong><br>\( 2\text{KMnO}_4 + 5\text{H}_2\text{O}_2 + 3\text{H}_2\text{SO}_4 \rightarrow 2\text{MnSO}_4 + 1\text{K}_2\text{SO}_4 + 5\text{O}_2 + 8\text{H}_2\text{O} \)</p>
+                                </div>
+                            </div>
+                            <!-- Questão 4 -->
+                            <div class="question-block">
+                                <p class="question-title">Questão 4</p>
+                                <p class="question-statement">A ferrugem é um processo de óxido-redução onde o ferro metálico (Fe) reage com o oxigênio (O₂) do ar. Escreva a semi-reação de oxidação, a semi-reação de redução e identifique o agente oxidante e o redutor neste processo espontâneo.</p>
+                                <button class="btn-resolution" data-target="res12">Mostrar Resolução</button>
+                                <div class="resolution-content" id="res12">
+                                    <h5>Resolução Comentada</h5>
+                                    <p>A formação da ferrugem (principalmente óxido de ferro III, Fe₂O₃) envolve a oxidação do ferro.</p>
+                                    <p><strong>1. Identificar as mudanças de NOX:</strong></p>
+                                    <ul>
+                                        <li>Ferro (Fe) começa como substância simples (NOX = 0) e termina como íon Fe³⁺ no Fe₂O₃ (NOX = +3).</li>
+                                        <li>Oxigênio (O₂) começa como substância simples (NOX = 0) e termina como íon O²⁻ no Fe₂O₃ (NOX = -2).</li>
+                                    </ul>
+                                    <p><strong>2. Escrever as semi-reações:</strong></p>
+                                    <ul>
+                                        <li><strong>Semi-reação de Oxidação:</strong> O ferro perde elétrons. <br>\( \text{Fe} \rightarrow \text{Fe}^{3+} + 3e^- \)</li>
+                                        <li><strong>Semi-reação de Redução:</strong> O oxigênio ganha elétrons. <br>\( \text{O}_2 + 4e^- \rightarrow 2\text{O}^{2-} \)</li>
+                                    </ul>
+                                    <p><strong>3. Identificar os agentes:</strong></p>
+                                    <ul>
+                                        <li><strong>Agente Redutor:</strong> É quem sofre oxidação. Neste caso, o <strong>Ferro (Fe)</strong>.</li>
+                                        <li><strong>Agente Oxidante:</strong> É quem sofre redução. Neste caso, o <strong>Oxigênio (O₂)</strong>.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+    
+    <footer class="main-footer">
+        Página educacional desenvolvida como uma ferramenta de aprendizado. Design e conteúdo por L2.
+    </footer>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        // Expansão de Conteúdo Principal
+        const expandButtons = document.querySelectorAll('.btn-expand');
+        expandButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const targetId = button.getAttribute('data-target');
+                const content = document.getElementById(targetId);
+                content.classList.toggle('visible');
+                button.classList.toggle('active');
+            });
+        });
+
+        // Expansão de Resoluções de Questões
+        const resolutionButtons = document.querySelectorAll('.btn-resolution');
+        resolutionButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const targetId = button.getAttribute('data-target');
+                const content = document.getElementById(targetId);
+                content.classList.toggle('visible');
+                button.textContent = content.classList.contains('visible') ? 'Ocultar Resolução' : 'Mostrar Resolução';
+            });
+        });
+
+        // Navegação Ativa com Intersection Observer
+        const sections = document.querySelectorAll('section');
+        const navLinks = document.querySelectorAll('.nav-link');
+        const observerOptions = { root: null, rootMargin: '0px', threshold: 0.4 };
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    navLinks.forEach(link => {
+                        link.classList.remove('active');
+                        if (link.getAttribute('href').substring(1) === entry.target.id) {
+                            link.classList.add('active');
+                        }
+                    });
+                }
+            });
+        }, observerOptions);
+        sections.forEach(section => { observer.observe(section); });
+        
+        // Navegação Móvel Dinâmica
+        let lastScrollY = window.scrollY;
+        const mainNav = document.getElementById('main-nav');
+        window.addEventListener('scroll', () => {
+            if (window.innerWidth <= 1024) {
+                if (lastScrollY < window.scrollY && window.scrollY > 0) {
+                    mainNav.classList.add('nav-hidden');
+                } else {
+                    mainNav.classList.remove('nav-hidden');
+                }
+                lastScrollY = window.scrollY;
+            }
+        });
+    });
+    </script>
+</body>
+</html>

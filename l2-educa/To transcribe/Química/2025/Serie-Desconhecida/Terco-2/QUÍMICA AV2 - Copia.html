@@ -1,0 +1,1119 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>L2 EDUCA · Ligações/Geometria/Polaridade · Termoquímica · NOX & Óxido‑redução</title>
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+<!-- Material Icons -->
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<!-- MathJax -->
+<script>
+window.MathJax = { tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] }, svg: { fontCache: 'global' } };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
+<style>
+/* ===================== */
+/* SISTEMA DE DESIGN     */
+/* ===================== */
+:root{
+  --bg-0:#0b0f14;
+  --bg-1:#0e131a;
+  --ink-0:#eaf2ff;
+  --ink-1:#bac6d9;
+  --ink-2:#8ea1bd;
+  --brand:#8ad6ff;        /* luz fria */
+  --accent:#b699ff;       /* violeta luxo */
+  --ok:#53d18d;
+  --warn:#ffcc66;
+  --danger:#ff6b6b;
+  --glass:rgba(255,255,255,.06);
+  --glass-2:rgba(255,255,255,.1);
+  --shadow:0 10px 30px rgba(0,0,0,.35);
+  --radius:16px;
+  --t-fast:180ms cubic-bezier(.2,.8,.2,1);
+  --t-slow:420ms cubic-bezier(.2,.8,.2,1);
+  --maxw:1100px;
+
+  /* tipografia fluida */
+  --h1: clamp(2.2rem, 2.2rem + 2vw, 4.4rem);
+  --h2: clamp(1.6rem, 1.4rem + 1.2vw, 2.6rem);
+  --h3: clamp(1.25rem, 1.1rem + 0.6vw, 1.6rem);
+  --body: clamp(1rem, .95rem + 0.3vw, 1.15rem);
+  --small: clamp(.9rem, .85rem + .15vw, 1rem);
+}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  color:var(--ink-0);
+  background: radial-gradient(1200px 1200px at 15% -10%, #1a2440 0%, transparent 60%),
+              radial-gradient(1400px 1000px at 85% 0%, #2a1f3f 0%, transparent 65%),
+              radial-gradient(1000px 1000px at 50% 120%, #0b3a45 0%, transparent 60%),
+              var(--bg-0);
+  font: 400 var(--body)/1.6 "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  overflow-x:hidden;
+}
+
+/* Acessibilidade e UX global */
+html{scroll-behavior:smooth}
+.visually-hidden{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.skip-link{position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden}
+.skip-link:focus{left:12px;top:12px;width:auto;height:auto;padding:10px 14px;background:#fff;color:#000;border-radius:999px;z-index:99999}
+@media (prefers-reduced-motion: reduce){
+  *{animation:none!important; transition:none!important}
+}
+
+/* AURORA LÍQUIDA */
+.aurora{
+  position:fixed; inset:0; z-index:-1; overflow:hidden; pointer-events:none;
+}
+.blob{
+  position:absolute;
+  width:40vmax; height:40vmax;
+  filter: blur(150px);
+  opacity:.35;
+  border-radius:50%;
+  animation: drift var(--t-slow) infinite alternate;
+  mix-blend-mode:screen;
+}
+.blob.one{left:-10%; top:-10%; background: radial-gradient(circle at 30% 30%, #66d1ff, transparent 55%); animation-duration: 9s;}
+.blob.two{right:-15%; top:-5%; background: radial-gradient(circle at 70% 30%, #a58cff, transparent 55%); animation-duration: 11s;}
+.blob.three{left:10%; bottom:-15%; background: radial-gradient(circle at 40% 60%, #38efb2, transparent 55%); animation-duration: 13s;}
+@keyframes drift{to{transform: translate3d(4vw, 4vh, 0) scale(1.06); opacity:.45;}}
+
+/* PRELÚDIO (LOADER) */
+.loader{
+  position:fixed; inset:0; display:grid; place-items:center;
+  background: linear-gradient(180deg, #0c1118 0%, #0a0e13 100%);
+  z-index:9999; transition:opacity .6s ease, visibility .6s ease;
+}
+.loader.hidden{opacity:0; visibility:hidden}
+.brandmark{
+  display:flex; gap:.2em; align-items:center; justify-content:center; letter-spacing:.06em;
+  font-family:"Playfair Display", serif; font-weight:700; font-size: clamp(2rem, 1.3rem + 3vw, 4rem);
+}
+.brandmark span{
+  display:inline-block; transform:translateY(.6em); opacity:0;
+  color:var(--ink-0); text-shadow:0 6px 20px rgba(138,214,255,.35);
+  animation: letter-in .6s forwards;
+}
+.brandmark .accent{color:var(--brand)}
+@keyframes letter-in{to{transform:translateY(0); opacity:1}}
+.progress{
+  width:min(70vw, 580px); height:5px; border-radius:999px; overflow:hidden; background:rgba(255,255,255,.08);
+  margin-top:24px; box-shadow: inset 0 0 0 1px rgba(255,255,255,.05);
+}
+.progress .bar{
+  width:0%; height:100%;
+  background: linear-gradient(90deg, var(--brand), var(--accent));
+  box-shadow:0 0 20px var(--brand), 0 0 28px var(--accent);
+  animation: loadbar 3.2s ease-in-out forwards;
+}
+@keyframes loadbar{to{width:92%}}
+
+/* NAVEGAÇÃO */
+.nav{
+  position:fixed; top:12px; left:50%; transform:translateX(-50%);
+  z-index:20; display:flex; gap:12px; padding:10px 14px; backdrop-filter: blur(10px);
+  background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:999px; box-shadow: var(--shadow);
+  flex-wrap:wrap; justify-content:center;
+}
+.nav a{
+  color:var(--ink-1); text-decoration:none; padding:8px 12px; border-radius:999px; transition:background var(--t-fast), color var(--t-fast);
+  font-weight:600; font-size:.98rem;
+}
+.nav a:hover{background:var(--glass-2); color:var(--ink-0)}
+.nav a.active{background: linear-gradient(90deg, rgba(138,214,255,.25), rgba(182,153,255,.25)); color:white}
+.progress-line{
+  position:fixed; top:0; left:0; height:3px; background:linear-gradient(90deg, var(--brand), var(--accent));
+  width:0%; z-index:30; box-shadow:0 0 12px var(--brand);
+  transition:width 100ms linear;
+}
+
+/* ESTRUTURA DE SEÇÕES (SPA) */
+section.panel{
+  min-height:100vh; display:flex; align-items:center; position:relative; padding: clamp(64px, 6vw, 120px) 24px;
+}
+.panel{scroll-margin-top:84px}
+.container{width:100%; max-width:var(--maxw); margin:0 auto}
+.hero{
+  display:grid; gap:18px; align-items:center;
+}
+.kicker{font-size:var(--small); letter-spacing:.12em; text-transform:uppercase; color:var(--ink-2)}
+h1{
+  font: 700 var(--h1)/1.15 "Playfair Display", serif; margin:0;
+}
+h2{font: 700 var(--h2)/1.2 "Playfair Display", serif; margin: 20px 0 8px}
+h3{font: 700 var(--h3)/1.3 "Inter", system-ui; margin: 18px 0 6px; color:var(--ink-0)}
+p{margin:10px 0 10px; color:var(--ink-1)}
+.small{font-size:var(--small); color:var(--ink-2)}
+.lead{font-size: clamp(1.05rem,1rem + .5vw,1.35rem); color:var(--ink-0)}
+.card{
+  background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:var(--radius); box-shadow:var(--shadow); padding: clamp(16px, 2vw, 22px);
+}
+
+/* REVEAL ON SCROLL */
+.reveal{opacity:0; transform: translateY(16px); transition: opacity var(--t-slow), transform var(--t-slow)}
+.reveal.in{opacity:1; transform: translateY(0)}
+.stagger > *{opacity:0; transform: translateY(12px)}
+.stagger.in > *{animation: cascade .5s var(--t-fast) forwards}
+.stagger.in > *:nth-child(1){animation-delay:.05s}
+.stagger.in > *:nth-child(2){animation-delay:.12s}
+.stagger.in > *:nth-child(3){animation-delay:.18s}
+.stagger.in > *:nth-child(4){animation-delay:.24s}
+.stagger.in > *:nth-child(5){animation-delay:.30s}
+@keyframes cascade{to{opacity:1; transform: translateY(0)}}
+
+/* COMPONENTES */
+.grid{display:grid; gap:16px}
+.grid.cols-2{grid-template-columns: 1fr 1fr}
+.grid.cols-3{grid-template-columns: repeat(3, 1fr)}
+@media (max-width: 980px){ .grid.cols-2, .grid.cols-3 {grid-template-columns: 1fr} }
+
+.kpi{
+  display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:12px; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.08)
+}
+.kpi .material-icons-round{font-size:22px}
+
+input, select, button, textarea{
+  background: rgba(255,255,255,.05);
+  color:var(--ink-0); border:1px solid rgba(255,255,255,.16);
+  border-radius:10px; padding:12px 14px; font:600 1rem "Inter", sans-serif;
+  outline:none; transition: box-shadow var(--t-fast), transform var(--t-fast), background var(--t-fast), border-color var(--t-fast);
+}
+input:focus, select:focus, textarea:focus{box-shadow:0 0 0 3px rgba(138,214,255,.25); border-color:rgba(138,214,255,.55)}
+button{cursor:pointer}
+button.primary{
+  background: linear-gradient(90deg, var(--brand), var(--accent)); border:none; color:#081019; font-weight:800;
+}
+button.ghost{background:rgba(255,255,255,.06)}
+.row{display:flex; gap:12px; flex-wrap:wrap}
+.row > *{flex:1 1 240px}
+
+.badge{display:inline-flex; gap:6px; align-items:center; padding:6px 10px; border-radius:999px; background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.12); font-weight:700; color:var(--ink-0)}
+.badge.ok{background: rgba(83,209,141,.18); border-color: rgba(83,209,141,.45)}
+.badge.warn{background: rgba(255,204,102,.16); border-color: rgba(255,204,102,.45)}
+.badge.danger{background: rgba(255,107,107,.18); border-color: rgba(255,107,107,.45)}
+
+code, .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace}
+pre{white-space:pre-wrap; background:rgba(255,255,255,.04); padding:14px; border-radius:12px; border:1px solid rgba(255,255,255,.12)}
+
+/* TABELA + AVISO ORIENTAÇÃO */
+.table-wrap{position:relative; border-radius:12px; overflow:hidden; border:1px solid rgba(255,255,255,.12)}
+.table-wrap table{width:100%; border-collapse:collapse; background:rgba(255,255,255,.02)}
+.table-wrap th, .table-wrap td{padding:10px 12px; border-bottom:1px solid rgba(255,255,255,.08); text-align:left}
+.table-wrap tr:hover td{background:rgba(255,255,255,.03)}
+.orientation-guard{
+  display:none; position:absolute; inset:0; backdrop-filter: blur(4px);
+  background: rgba(10,14,22,.65); color:var(--ink-0);
+  align-items:center; justify-content:center; text-align:center; padding:26px;
+}
+@media (max-width: 740px) and (orientation: portrait){
+  .table-wrap .orientation-guard{display:flex}
+}
+
+/* DIAGRAMAS SVG */
+.svgbox{width:100%; height:360px; border-radius:12px; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.12); overflow:hidden}
+
+/* RÓTULOS DE FÓRMULA */
+.formula{font-weight:800; letter-spacing:.02em}
+.sub{font-variant-position: sub}
+
+/* FOOTER */
+footer{
+  display:flex; align-items:center; justify-content:center; text-align:center; padding:28px 12px; color:var(--ink-2);
+  border-top:1px solid rgba(255,255,255,.08); background: rgba(255,255,255,.02)
+}
+
+/* AJUDA VISUAL DE SEÇÃO ATIVA */
+.panel.is-active::after{
+  content:""; position:absolute; inset:auto 0 0 0; height:2px;
+  background:linear-gradient(90deg, var(--brand), transparent 60%); opacity:.6;
+}
+</style>
+</head>
+<body>
+
+<a class="skip-link" href="#main">Pular para o conteúdo principal</a>
+
+<!-- PRELÚDIO -->
+<div class="loader" id="loader" role="alert" aria-live="polite">
+  <div>
+    <div class="brandmark" id="brandmark" aria-label="L2 EDUCA"></div>
+    <div class="progress" aria-hidden="true"><div class="bar" id="loadbar"></div></div>
+  </div>
+</div>
+
+<!-- AURORA LÍQUIDA -->
+<div class="aurora" aria-hidden="true">
+  <div class="blob one"></div>
+  <div class="blob two"></div>
+  <div class="blob three"></div>
+</div>
+
+<!-- BARRA DE PROGRESSO DE LEITURA -->
+<div class="progress-line" id="progressLine" aria-hidden="true"></div>
+
+<!-- NAV -->
+<nav class="nav" aria-label="Navegação principal">
+  <a href="#ligacoes" data-nav> Ligações & Geometria </a>
+  <a href="#termo" data-nav> Termoquímica </a>
+  <a href="#redox" data-nav> NOX & Redox </a>
+</nav>
+
+<!-- =============== -->
+<!-- SEÇÃO 1: LIGAÇÕES/GEOMETRIA/POLARIDADE -->
+<!-- =============== -->
+<main id="main" tabindex="-1" role="main">
+<section class="panel" id="ligacoes" aria-labelledby="title-lig">
+  <div class="container">
+    <div class="hero reveal">
+      <div class="kicker">Portal de abertura</div>
+      <h1 id="title-lig">Ligações, Geometria e Polaridade</h1>
+      <p class="lead">
+        A estrutura determina o comportamento. A partir da distribuição eletrônica e da repulsão entre pares de elétrons,
+        deduzimos <strong>ligações</strong>, <strong>formas moleculares</strong> e a <strong>polaridade</strong> — a tríade que governa propriedades
+        como ponto de ebulição, solubilidade e reatividade.
+      </p>
+      <div class="grid cols-3 stagger">
+        <div class="card kpi"><span class="material-icons-round">bolt</span><div><strong>ΔEN</strong><br><span class="mono">classifica ligações</span></div></div>
+        <div class="card kpi"><span class="material-icons-round">share</span><div><strong>VSEPR</strong><br><span class="mono">geom. minimiza repulsões</span></div></div>
+        <div class="card kpi"><span class="material-icons-round">explore</span><div><strong>μ⃗</strong><br><span class="mono">soma vetorial → polaridade</span></div></div>
+      </div>
+    </div>
+
+    <div class="reveal">
+      <h2>1) Ligações químicas e eletronegatividade</h2>
+      <p><strong>Eletronegatividade (Pauling)</strong> mede a tendência de um átomo atrair elétrons em uma ligação. O <strong>ΔEN = |EN_A − EN_B|</strong> orienta:</p>
+      <ul class="stagger">
+        <li><span class="badge ok">covalente apolar</span> ΔEN ≲ 0,4</li>
+        <li><span class="badge warn">covalente polar</span> 0,4 ≲ ΔEN ≲ 1,7</li>
+        <li><span class="badge danger">iônica</span> ΔEN ≳ 1,7 (regra prática)</li>
+      </ul>
+    </div>
+
+    <div class="grid cols-2 reveal">
+      <div class="card">
+        <h3>Simulador VSEPR + Hibridização</h3>
+        <p>Escolha domínios eletrônicos ao redor do átomo central e pares livres. O desenho (SVG) atualiza a geometria ideal e a hibridização.</p>
+        <div class="row">
+          <label>Domínios (áreas de densidade): 
+            <select id="vseprDomains">
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4" selected>4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+            </select>
+          </label>
+          <label>Pares livres no central:
+            <select id="vseprLP">
+              <option value="0" selected>0</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+            </select>
+          </label>
+          <label>Ligantes (X):
+            <input id="vseprLigantes" type="number" min="1" max="6" value="4" />
+          </label>
+        </div>
+        <div class="row">
+          <div class="badge" id="vseprName">–</div>
+          <div class="badge" id="vseprHybrid">–</div>
+          <div class="badge" id="vseprAngles">–</div>
+        </div>
+        <div class="svgbox" id="vseprSvg" role="img" aria-label="Diagrama VSEPR"></div>
+        <p id="vseprNotes" class="small"></p>
+      </div>
+
+      <div class="card">
+        <h3>Polaridade da ligação e da molécula</h3>
+        <p>Defina átomos e geometria; o módulo calcula ΔEN, classifica cada ligação e soma vetores de dipolo para estimar a polaridade molecular.</p>
+        <div class="row">
+          <label>Átomo central (símbolo): <input id="polCentral" value="O" /></label>
+          <label>Ligantes (ex.: H,H): <input id="polLigantes" value="H,H" /></label>
+        </div>
+        <div class="row">
+          <label>Geometria:
+            <select id="polGeom">
+              <option value="linear">linear</option>
+              <option value="trigonal_planar">trigonal planar</option>
+              <option value="tetraedrica" selected>tetraédrica</option>
+              <option value="trigonal_bipiramidal">trigonal bipiramidal</option>
+              <option value="octaédrica">octaédrica</option>
+              <option value="angular">angular (AX2E)</option>
+              <option value="trigonal_piramidal">trigonal piramidal (AX3E)</option>
+              <option value="quadrada_planar">quadrada planar (AX4E2)</option>
+            </select>
+          </label>
+          <button type="button" class="ghost" id="exampleWater">Exemplo: H₂O</button>
+          <button type="button" class="ghost" id="exampleCO2">Exemplo: CO₂</button>
+        </div>
+        <div class="row">
+          <div class="badge" id="polResult" aria-live="polite">–</div>
+          <div class="badge" id="polDipole" aria-live="polite">μ estimado: –</div>
+        </div>
+        <div class="svgbox" id="polSvg" role="img" aria-label="Vetores de dipolo"></div>
+        <p class="small">Heurística: considera magnitudes de dipolo proporcionais a |ΔEN| e orientadas ao longo das ligações. Simetria ideal zera a soma vetorial.</p>
+      </div>
+    </div>
+
+    <div class="reveal">
+      <h3>Casos‑chave (do simétrico ao polar)</h3>
+      <div class="grid cols-3">
+        <div class="card"><strong>CO₂</strong> — linear, ligações C=O polares, mas vetores opostos → <span class="badge">molécula apolar</span></div>
+        <div class="card"><strong>CH₄</strong> — tetraédrica perfeita → <span class="badge">apolar</span></div>
+        <div class="card"><strong>H₂O</strong> — angular, pares livres comprimem ângulo → <span class="badge warn">polar</span></div>
+      </div>
+    </div>
+  </div>
+ </section>
+
+<!-- =============== -->
+<!-- SEÇÃO 2: TERMOQUÍMICA -->
+<!-- =============== -->
+<section class="panel" id="termo" aria-labelledby="title-termo">
+  <div class="container">
+    <div class="hero reveal">
+      <div class="kicker">Portal de abertura</div>
+      <h1 id="title-termo">Termoquímica</h1>
+      <p class="lead">A energia flui, a matéria responde. A <strong>Primeira Lei</strong> impõe conservação: \(\Delta U = q + w\). Em processos a pressão constante, o calor observado é a <strong>variação de entalpia</strong> \(\Delta H\), um farol para distinguir reações exotérmicas (ΔH &lt; 0) e endotérmicas (ΔH &gt; 0).</p>
+      <div class="grid cols-3 stagger">
+        <div class="card kpi"><span class="material-icons-round">thermostat</span><div><strong>Calorimetria</strong><br><span class="mono">q = m·c·ΔT</span></div></div>
+        <div class="card kpi"><span class="material-icons-round">functions</span><div><strong>Hess</strong><br><span class="mono">ΔH rxn = ΣνΔHf°(prod) − ΣνΔHf°(reag)</span></div></div>
+        <div class="card kpi"><span class="material-icons-round">show_chart</span><div><strong>Perfis de energia</strong><br><span class="mono">Ea e ΔH</span></div></div>
+      </div>
+    </div>
+
+    <div class="grid cols-2 reveal">
+      <div class="card">
+        <h3>Calorimetria: \( q = m \, c \, \Delta T \)</h3>
+        <div class="row">
+          <label>m (g): <input id="cal_m" type="number" value="100.0" step="0.1"></label>
+          <label>c (J·g⁻¹·°C⁻¹): <input id="cal_c" type="number" value="4.184" step="0.001"></label>
+          <label>T<sub>i</sub> (°C): <input id="cal_ti" type="number" value="20.0" step="0.1"></label>
+          <label>T<sub>f</sub> (°C): <input id="cal_tf" type="number" value="80.0" step="0.1"></label>
+        </div>
+        <div class="row">
+           <button type="button" class="primary" id="cal_calc">Calcular q</button>
+           <div class="badge" id="cal_out" aria-live="polite">–</div>
+        </div>
+        <p class="small">Sinal: \(q&gt;0\) = sistema absorve calor (endotérmico); \(q&lt;0\) = libera calor (exotérmico). Em reação a P constante, \(q_p=\Delta H\).</p>
+      </div>
+
+      <div class="card">
+        <h3>ΔH por entalpias padrão de formação</h3>
+        <p>Monte a reação: adicione espécies com coeficientes e ΔHf°. Uma base local está disponível; você pode substituir valores.</p>
+        <div id="hf_list" class="small" style="opacity:.85; margin-bottom:8px"></div>
+        <div class="table-wrap">
+          <div class="orientation-guard">
+            <div>
+              <span class="material-icons-round" style="font-size:40px;display:block;margin-bottom:6px">screen_rotation</span>
+              <strong>Vire o dispositivo</strong><br>Para visualizar a tabela de espécies com conforto.
+            </div>
+          </div>
+          <table id="rxnTable" aria-label="Tabela da reação">
+            <caption class="visually-hidden">Espécies químicas da reação com tipo, fórmula, coeficiente e entalpia padrão de formação</caption>
+            <thead>
+              <tr><th>Tipo</th><th>Fórmula</th><th>Coef.</th><th>ΔHf° (kJ·mol⁻¹)</th><th>Ações</th></tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <div class="row" style="margin-top:8px">
+          <select id="rxnType">
+            <option value="reag">Reagente</option>
+            <option value="prod">Produto</option>
+          </select>
+          <input id="rxnFormula" placeholder="ex.: CH4(g)" />
+          <input id="rxnCoef" type="number" step="1" value="1"/>
+          <input id="rxnHf" type="number" step="0.1" placeholder="ΔHf° (deixe em branco p/ base)"/>
+          <button type="button" class="ghost" id="addSpecies">Adicionar</button>
+          <button type="button" class="ghost" id="clearSpecies">Limpar</button>
+        </div>
+        <div class="row">
+          <button type="button" class="primary" id="calcDH">Calcular ΔH da reação</button>
+          <div class="badge" id="dhOut" aria-live="polite">–</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="reveal">
+      <h3>Perfil de energia (Chart.js)</h3>
+      <p>Visualize a energia relativa dos reagentes e produtos. Ajuste ΔH e a barreira (Ea) para ver perfis exo/endo e o estado de transição.</p>
+      <div class="row">
+        <label>ΔH (kJ·mol⁻¹): <input id="profDH" type="number" value="-200" step="5"></label>
+        <label>Ea (kJ·mol⁻¹): <input id="profEa" type="number" value="150" step="5"></label>
+        <button type="button" class="ghost" id="updateChart">Atualizar</button>
+      </div>
+      <div class="card">
+        <canvas id="energyChart" height="200" aria-label="Perfil de energia"></canvas>
+      </div>
+      <p class="small">Curva esquemática; o pico representa o <em>estado de transição</em>. Catalisador reduz \(\mathrm{E_a}\), mas não altera ΔH.</p>
+    </div>
+  </div>
+</section>
+
+<!-- =============== -->
+<!-- SEÇÃO 3: NOX & ÓXIDO-REDUÇÃO -->
+<!-- =============== -->
+<section class="panel" id="redox" aria-labelledby="title-redox">
+  <div class="container">
+    <div class="hero reveal">
+      <div class="kicker">Portal de abertura</div>
+      <h1 id="title-redox">NOX & Reações de Óxido‑redução</h1>
+      <p class="lead">Número de oxidação (NOX) é um modelo contábil de elétrons. Oxidação: NOX ↑ (perda de e⁻). Redução: NOX ↓ (ganho de e⁻). Agente <em>oxidante</em> é reduzido; agente <em>redutor</em> é oxidado.</p>
+    </div>
+
+    <div class="grid cols-2 reveal">
+      <div class="card">
+        <h3>Calculadora de NOX — por fórmula</h3>
+        <p>Digite uma fórmula (suporta parênteses e carga com ^, ex.: <span class="mono">SO4^2-</span>, <span class="mono">MnO4^-</span>, <span class="mono">Fe2(SO4)3</span>). Regras comuns (O = −2, H = +1, 1A = +1, 2A = +2, F = −1) são aplicadas; exceções podem ser desativadas.</p>
+        <div class="row">
+          <input id="noxFormula" value="MnO4^-" />
+          <label class="small"><input type="checkbox" id="ruleO" checked> O = −2</label>
+          <label class="small"><input type="checkbox" id="ruleH" checked> H = +1</label>
+          <label class="small"><input type="checkbox" id="ruleHal" checked> Halogênios = −1 (sem O/F)</label>
+        </div>
+        <div class="row">
+          <button type="button" class="primary" id="calcNOX">Calcular NOX</button>
+          <div class="badge" id="noxOut" aria-live="polite">–</div>
+        </div>
+        <pre id="noxSteps" class="small" aria-live="polite"></pre>
+      </div>
+
+      <div class="card">
+        <h3>Detector de oxidação/redução em uma reação</h3>
+        <p>Forneça reagentes e produtos (separe espécies por “+”). O módulo infere mudanças médias de NOX por elemento e identifica agentes.</p>
+        <div class="row">
+          <input id="rxnLeft" value="Fe^2+ + MnO4^- + H^+">
+          <input id="rxnRight" value="Fe^3+ + Mn^2+ + H2O">
+        </div>
+        <div class="row">
+          <button type="button" class="primary" id="analyzeRedox">Analisar</button>
+          <div class="badge" id="redoxSummary" aria-live="polite">–</div>
+        </div>
+        <pre id="redoxDetail" class="small" aria-live="polite"></pre>
+        <p class="small">O balanceamento completo por meio iônico (ácido/básico) é mostrado passo‑a‑passo em exemplos guiados abaixo.</p>
+      </div>
+    </div>
+
+    <div class="reveal">
+      <h3>Exemplos guiados de balanceamento (método das semi‑reações)</h3>
+      <div class="grid cols-3">
+        <div class="card">
+          <strong>Ácido:</strong> <span class="mono">Fe^2+ + MnO4^- → Fe^3+ + Mn^2+</span>
+          <ol class="small">
+            <li>Separe: Fe²⁺ → Fe³⁺ (oxidação, e⁻ à <em>direita</em>); MnO₄⁻ → Mn²⁺ (redução, e⁻ à <em>esquerda</em>).</li>
+            <li>Balanceie O com H₂O; H com H⁺; depois cargas com e⁻.</li>
+            <li>Iguale elétrons e some; em meio ácido, já está.</li>
+          </ol>
+        </div>
+        <div class="card">
+          <strong>Básico:</strong> <span class="mono">ClO^- + Cr(OH)3 → Cl^- + CrO4^2-</span>
+          <ol class="small">
+            <li>Balanceie como se fosse ácido (usando H⁺/H₂O).</li>
+            <li>Neutralize H⁺ adicionando OH⁻ a ambos os lados; converta H⁺ + OH⁻ → H₂O.</li>
+            <li>Simplifique águas e verifique elementos/cargas.</li>
+          </ol>
+        </div>
+        <div class="card">
+          <strong>Observações:</strong>
+          <ul class="small">
+            <li>Compostos como Fe₃O₄ rendem NOX médio (mistura Fe²⁺/Fe³⁺).</li>
+            <li>Exceções: peróxidos (O = −1), H em hidretos (H = −1), halogênios positivos em oxoácidos.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </div>
+ </section>
+
+</main>
+
+<footer>Página educacional desenvolvida como uma ferramenta de aprendizado. Design e conteúdo por L2.</footer>
+
+<script>
+/* ============================================
+   PRELÚDIO: LOGO "L2 EDUCA" COM ANIMAÇÃO
+============================================ */
+(function(){
+  const brand = document.getElementById('brandmark');
+  const text = "L2 EDUCA";
+  [...text].forEach((ch,i)=>{
+    const s = document.createElement('span');
+    s.textContent = ch;
+    if(/[A-Z0-9]/.test(ch)) s.classList.add('accent');
+    s.style.animationDelay = (0.06*i)+'s';
+    brand.appendChild(s);
+  });
+  // Completa a barra ao load e encerra o prelúdio
+  window.addEventListener('load', ()=>{
+    const bar = document.getElementById('loadbar');
+    bar.style.animation = 'none'; bar.style.width='100%';
+    setTimeout(()=>document.getElementById('loader').classList.add('hidden'), 400);
+  });
+})();
+
+/* ============================================
+   ROLAGEM CINEMATOGRÁFICA + PROGRESSO
+============================================ */
+const sections = [...document.querySelectorAll('section.panel')];
+const navLinks = [...document.querySelectorAll('[data-nav]')];
+const prog = document.getElementById('progressLine');
+
+function throttle(fn, wait){
+  let t=0, pend=null;
+  return function(...args){
+    const now = performance.now();
+    if(now - t >= wait){ t = now; fn.apply(this,args); }
+    else{ clearTimeout(pend); pend = setTimeout(()=>{t = performance.now(); fn.apply(this,args)}, wait-(now-t)); }
+  }
+}
+
+function computeActive(){
+  const mid = window.scrollY + window.innerHeight/2;
+  let activeIndex = 0;
+  sections.forEach((s,i)=>{
+    const top = s.offsetTop;
+    if(top <= mid) activeIndex = i;
+    s.classList.toggle('is-previous', i < activeIndex);
+    s.classList.toggle('is-active', i === activeIndex);
+  });
+  navLinks.forEach((a,i)=>{
+    const isActive = i===activeIndex;
+    a.classList.toggle('active', isActive);
+    if(isActive) a.setAttribute('aria-current','page'); else a.removeAttribute('aria-current');
+  });
+  // Linha de progresso
+  const max = document.body.scrollHeight - window.innerHeight;
+  const pct = Math.max(0, Math.min(1, window.scrollY / max));
+  prog.style.width = (pct*100).toFixed(2)+'%';
+}
+window.addEventListener('scroll', throttle(computeActive, 60));
+window.addEventListener('resize', throttle(computeActive, 120));
+computeActive();
+
+// IntersectionObserver para "reveal"
+const io = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.classList.add('in');
+      if(e.target.classList.contains('stagger')) {
+        e.target.classList.add('in');
+      }
+      io.unobserve(e.target);
+    }
+  });
+},{threshold: .16});
+document.querySelectorAll('.reveal, .stagger').forEach(el=>io.observe(el));
+
+/* ============================================
+   SIMULADOR VSEPR (SVG)
+============================================ */
+const VSEPR_MAP = {
+  "2-0": {name:"linear (AX2)", angles:"180°", hybrid:"sp", coords:"linear"},
+  "3-0": {name:"trigonal planar (AX3)", angles:"120°", hybrid:"sp2", coords:"tplan"},
+  "3-1": {name:"angular (AX2E)", angles:"~118°", hybrid:"sp2", coords:"angular120"},
+  "4-0": {name:"tetraédrica (AX4)", angles:"109,5°", hybrid:"sp3", coords:"tetra"},
+  "4-1": {name:"trigonal piramidal (AX3E)", angles:"~107°", hybrid:"sp3", coords:"tpiram"},
+  "4-2": {name:"angular (AX2E2)", angles:"~104,5°", hybrid:"sp3", coords:"angular104"},
+  "5-0": {name:"trigonal bipiramidal (AX5)", angles:"90°/120°", hybrid:"sp3d", coords:"tbp"},
+  "5-1": {name:"gangorra (AX4E)", angles:"~90°/~120°", hybrid:"sp3d", coords:"see"},
+  "5-2": {name:"em T (AX3E2)", angles:"~90°", hybrid:"sp3d", coords:"tshape"},
+  "5-3": {name:"linear (AX2E3)", angles:"180°", hybrid:"sp3d", coords:"linear"},
+  "6-0": {name:"octaédrica (AX6)", angles:"90°", hybrid:"sp3d2", coords:"oct"},
+  "6-1": {name:"pirâmide quadrada (AX5E)", angles:"~88°", hybrid:"sp3d2", coords:"sq_pyr"},
+  "6-2": {name:"quadrada planar (AX4E2)", angles:"90°", hybrid:"sp3d2", coords:"sq_plan"}
+};
+
+function svgAtom(svg, x, y, r, fill, text){
+  const c = document.createElementNS('http://www.w3.org/2000/svg','circle');
+  c.setAttribute('cx', x); c.setAttribute('cy', y); c.setAttribute('r', r); c.setAttribute('fill', fill);
+  c.setAttribute('opacity','0.95'); svg.appendChild(c);
+  if(text){
+    const t = document.createElementNS('http://www.w3.org/2000/svg','text');
+    t.setAttribute('x', x); t.setAttribute('y', y+4); t.setAttribute('text-anchor','middle');
+    t.setAttribute('font-size','14'); t.setAttribute('font-weight','800'); t.textContent = text; svg.appendChild(t);
+  }
+}
+function svgBond(svg, x1,y1,x2,y2){
+  const l = document.createElementNS('http://www.w3.org/2000/svg','line');
+  l.setAttribute('x1',x1); l.setAttribute('y1',y1); l.setAttribute('x2',x2); l.setAttribute('y2',y2);
+  l.setAttribute('stroke','rgba(255,255,255,.9)'); l.setAttribute('stroke-width','3');
+  l.setAttribute('stroke-linecap','round'); svg.appendChild(l);
+}
+function drawVSEPR(coords, ligantes){
+  const box = document.getElementById('vseprSvg');
+  box.innerHTML='';
+  const w = box.clientWidth || 600, h = box.clientHeight || 360;
+  const cx = w/2, cy = h/2;
+  const svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
+  svg.setAttribute('width', w); svg.setAttribute('height', h);
+  // gradientes e defs primeiro
+  const defs = document.createElementNS('http://www.w3.org/2000/svg','defs');
+  const grad = document.createElementNS('http://www.w3.org/2000/svg','radialGradient');
+  grad.setAttribute('id','gradX');
+  grad.innerHTML = '<stop offset="0%" stop-color="#8ad6ff"/><stop offset="100%" stop-color="#b699ff"/>';
+  defs.appendChild(grad);
+  svg.appendChild(defs);
+  // posições ideais 2D para projeção
+  let points=[];
+  const r=110;
+  if(coords==='linear'){
+    points=[[cx-r,cy],[cx+r,cy]];
+  }else if(coords==='tplan'){
+    points=[[cx,cy-r],[cx-r*Math.sin(Math.PI/3), cy+r/2],[cx+r*Math.sin(Math.PI/3), cy+r/2]];
+  }else if(coords==='angular120'){
+    points=[[cx-90,cy+20],[cx+90,cy+20]];
+  }else if(coords==='tetra'){
+    points=[[cx,cy-r],[cx-r*.86,cy+r*.5],[cx+r*.86,cy+r*.5],[cx, cy+10]]; // pseudo 3D
+  }else if(coords==='tpiram'){
+    points=[[cx-r*.86,cy+r*.35],[cx+r*.86,cy+r*.35],[cx, cy-r*.8]];
+  }else if(coords==='angular104'){
+    points=[[cx-80,cy+30],[cx+80,cy+30]];
+  }else if(coords==='tbp'){
+    points=[[cx,cy-r],[cx-r,cy],[cx,cy+r],[cx+r,cy],[cx, cy]]; // 5 vizinhos (um axial + 3 eq + 1 axial
+  }else if(coords==='see'){
+    points=[[cx,cy-r],[cx-r,cy],[cx+r,cy],[cx,cy+r*0.25]];
+  }else if(coords==='tshape'){
+    points=[[cx,cy-r],[cx,cy],[cx,cy+r]];
+  }else if(coords==='oct'){
+    points=[[cx,cy-r],[cx-r,cy],[cx+r,cy],[cx,cy+r],[cx-r*.75,cy-r*.05],[cx+r*.75,cy-r*.05]];
+  }else if(coords==='sq_pyr'){
+    points=[[cx-r*.8,cy-r*.2],[cx+r*.8,cy-r*.2],[cx+r*.8,cy+r*.2],[cx-r*.8,cy+r*.2],[cx,cy-r]];
+  }else if(coords==='sq_plan'){
+    points=[[cx-r*.8,cy-r*.2],[cx+r*.8,cy-r*.2],[cx+r*.8,cy+r*.2],[cx-r*.8,cy+r*.2]];
+  }
+  // desenhar
+  svgAtom(svg, cx, cy, 16, 'white', 'A');
+  for(let i=0;i<Math.min(ligantes, points.length);i++){
+    svgBond(svg, cx, cy, points[i][0], points[i][1]);
+    svgAtom(svg, points[i][0], points[i][1], 12, 'url(#gradX)', 'X');
+  }
+
+  box.appendChild(svg);
+}
+
+function updateVSEPR(){
+  const d = +document.getElementById('vseprDomains').value;
+  const lp = +document.getElementById('vseprLP').value;
+  const ligInput = document.getElementById('vseprLigantes');
+  const maxLig = Math.max(0, d - lp);
+  if(+ligInput.value > maxLig){ ligInput.value = String(maxLig); }
+  if(+ligInput.value < 0){ ligInput.value = '0'; }
+  const lig = +ligInput.value;
+  const key = `${d}-${lp}`;
+  const info = VSEPR_MAP[key];
+  const nameEl = document.getElementById('vseprName');
+  const hybEl = document.getElementById('vseprHybrid');
+  const angEl = document.getElementById('vseprAngles');
+  const notes = document.getElementById('vseprNotes');
+  if(!info){
+    nameEl.textContent = 'Combinação não suportada';
+    hybEl.textContent = '—';
+    angEl.textContent = '—';
+    document.getElementById('vseprSvg').innerHTML='';
+    notes.textContent = 'Valide o número de pares livres e ligantes para a contagem de domínios.';
+    return;
+  }
+  nameEl.textContent = info.name;
+  hybEl.textContent = 'hibridização: ' + info.hybrid;
+  angEl.textContent = 'ângulos: ' + info.angles;
+  drawVSEPR(info.coords, lig);
+  notes.textContent = `Modelo VSEPR idealizado; pares livres comprimem ângulos. Valores aproximados. Ligantes mostrados: ${lig}/${maxLig}.`;
+}
+['vseprDomains','vseprLP','vseprLigantes'].forEach(id=>document.getElementById(id).addEventListener('input', updateVSEPR));
+updateVSEPR();
+
+/* ============================================
+   POLARIDADE (ΔEN + SOMA VETORIAL HEURÍSTICA)
+============================================ */
+const EN = {
+  H:2.20, C:2.55, N:3.04, O:3.44, F:3.98, P:2.19, S:2.58, Cl:3.16, Br:2.96, I:2.66,
+  B:2.04, Si:1.90, Xe:2.60, Se:2.55, Kr:3.00,
+  Na:0.93, K:0.82, Li:0.98, Be:1.57, Mg:1.31, Ca:1.00, Al:1.61,
+};
+function unitVectors(geom, n){
+  // Vetores 2D normalizados por geometria ideal (projeção)
+  const a=[];
+  if(geom==='linear'){ a.push([-1,0],[1,0]); }
+  else if(geom==='trigonal_planar'){ a.push([0,-1],[-Math.sin(Math.PI/3),.5],[Math.sin(Math.PI/3),.5]); }
+  else if(geom==='tetraedrica'){ a.push([0,-1],[-.86,.5],[.86,.5],[0,.08]); }
+  else if(geom==='trigonal_bipiramidal'){ a.push([0,-1],[-1,0],[1,0],[0,1],[0, .2]); }
+  else if(geom==='octaédrica'){ a.push([0,-1],[-1,0],[1,0],[0,1],[-.75,-.05],[.75,-.05]); }
+  else if(geom==='angular'){ a.push([-1,.2],[1,.2]); }
+  else if(geom==='trigonal_piramidal'){ a.push([-0.86,.4],[0.86,.4],[0,-.9]); }
+  else if(geom==='quadrada_planar'){ a.push([-1,0],[1,0],[0,-1],[0,1]); }
+  return a.slice(0,n);
+}
+function drawDipoles(vectors){
+  const box = document.getElementById('polSvg'); box.innerHTML='';
+  const w = box.clientWidth||600, h = box.clientHeight||360, cx=w/2, cy=h/2;
+  const svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
+  svg.setAttribute('width', w); svg.setAttribute('height', h);
+  // defs primeiro
+  const defs = document.createElementNS('http://www.w3.org/2000/svg','defs');
+  defs.innerHTML = `
+    <marker id="arrow" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b7e1ff"/>
+    </marker>
+    <linearGradient id="rg" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#8ad6ff"/><stop offset="100%" stop-color="#b699ff"/>
+    </linearGradient>`;
+  svg.appendChild(defs);
+  // origem
+  const origin = [cx, cy];
+  // desenhar vetores
+  vectors.forEach(v=>{
+    const scale = 120*v.mag; // escalar magnitude
+    const x2 = cx + v.dir[0]*scale, y2 = cy + v.dir[1]*scale;
+    const line = document.createElementNS('http://www.w3.org/2000/svg','line');
+    line.setAttribute('x1',cx); line.setAttribute('y1',cy); line.setAttribute('x2',x2); line.setAttribute('y2',y2);
+    line.setAttribute('stroke','rgba(255,255,255,.95)'); line.setAttribute('stroke-width','3'); line.setAttribute('marker-end','url(#arrow)');
+    svg.appendChild(line);
+  });
+  // resultante
+  const R = vectors.reduce((acc,v)=>[acc[0]+v.dir[0]*v.mag, acc[1]+v.dir[1]*v.mag], [0,0]);
+  const rmag = Math.hypot(R[0],R[1]);
+  const x2 = cx + R[0]*160, y2 = cy + R[1]*160;
+  const rline = document.createElementNS('http://www.w3.org/2000/svg','line');
+  rline.setAttribute('x1',cx); rline.setAttribute('y1',cy); rline.setAttribute('x2',x2); rline.setAttribute('y2',y2);
+  rline.setAttribute('stroke','url(#rg)'); rline.setAttribute('stroke-width','5'); rline.setAttribute('marker-end','url(#arrow)');
+  svg.appendChild(rline);
+
+  box.appendChild(svg);
+  return rmag;
+}
+function analyzePolarity(){
+  const central = (document.getElementById('polCentral').value||'O').trim();
+  const ligs = (document.getElementById('polLigantes').value||'H,H').split(',').map(s=>s.trim()).filter(Boolean);
+  const geom = document.getElementById('polGeom').value;
+  const enC = EN[central];
+  const msg = document.getElementById('polResult');
+  const dip = document.getElementById('polDipole');
+  if(!enC){ msg.textContent = 'EN do átomo central desconhecida na base'; return; }
+  const vecs = [];
+  const dirs = unitVectors(geom, ligs.length);
+  let summary=[];
+  for(let i=0;i<ligs.length;i++){
+    const e = EN[ligs[i]];
+    if(!e){ summary.push(`${ligs[i]}: EN não encontrada`); continue; }
+    const den = Math.abs(e - enC);
+    let cls = den<0.4? 'apolar' : den<=1.7? 'polar' : 'iônica';
+    summary.push(`A–${ligs[i]}: ΔEN=${den.toFixed(2)} → ${cls}`);
+    vecs.push({dir: dirs[i]||[Math.cos(i), Math.sin(i)], mag: Math.min(1, den/2.5)});
+  }
+  const rmag = drawDipoles(vecs);
+  const polar = rmag<0.06? 'molécula apolar (cancelamento vetorial)' : rmag<0.22? 'polar (fraca)' : 'polar';
+  msg.textContent = polar + ' | ' + summary.join(' · ');
+  dip.textContent = 'μ estimado: '+ rmag.toFixed(2) + ' (rel.)';
+}
+document.getElementById('exampleWater').addEventListener('click', ()=>{
+  document.getElementById('polCentral').value='O';
+  document.getElementById('polLigantes').value='H,H';
+  document.getElementById('polGeom').value='angular';
+  analyzePolarity();
+});
+document.getElementById('exampleCO2').addEventListener('click', ()=>{
+  document.getElementById('polCentral').value='C';
+  document.getElementById('polLigantes').value='O,O';
+  document.getElementById('polGeom').value='linear';
+  analyzePolarity();
+});
+['polCentral','polLigantes','polGeom'].forEach(id=>document.getElementById(id).addEventListener('input', analyzePolarity));
+analyzePolarity();
+
+/* ============================================
+   CALORIMETRIA q = m c ΔT
+============================================ */
+document.getElementById('cal_calc').addEventListener('click', ()=>{
+  const m = +document.getElementById('cal_m').value;
+  const c = +document.getElementById('cal_c').value;
+  const Ti = +document.getElementById('cal_ti').value;
+  const Tf = +document.getElementById('cal_tf').value;
+  const q = m*c*(Tf-Ti);
+  const out = `${q.toFixed(2)} J (${q>0?'endotérmico para o sistema':'exotérmico para o sistema'})`;
+  document.getElementById('cal_out').textContent = out;
+});
+
+/* ============================================
+   ΔH A PARTIR DE ΔHf°
+============================================ */
+const HF_DB = {
+  "H2(g)": 0,"O2(g)":0,"N2(g)":0,"Cl2(g)":0,"Br2(l)":0,"I2(s)":0,"C(s)":0,
+  "H2O(l)": -285.83, "H2O(g)": -241.82, "CO2(g)": -393.51, "CO(g)": -110.53, "CH4(g)": -74.81,
+  "C2H6(g)": -84.68, "NH3(g)": -46.11, "HCl(g)": -92.31, "SO2(g)": -296.81, "SO3(g)": -395.72,
+  "H2SO4(l)": -814.0, "NO(g)": 90.25, "NO2(g)": 33.10, "N2O(g)": 82.05,
+  "NaCl(s)": -411.12, "KCl(s)": -436.68, "CaCO3(s)": -1206.9, "CaO(s)": -635.1,
+  "Fe2O3(s)": -824.2, "Fe3O4(s)": -1118.4, "Al2O3(s)": -1675.7
+};
+function renderHFList(){
+  const el = document.getElementById('hf_list');
+  el.innerHTML = '<strong>Base local ΔHf° (298 K):</strong> ' + Object.entries(HF_DB).slice(0,24).map(([k,v])=>`${k}=${v}`).join(' · ') + ' · ...';
+}
+renderHFList();
+
+const tbody = document.querySelector('#rxnTable tbody');
+document.getElementById('addSpecies').addEventListener('click', ()=>{
+  const type = document.getElementById('rxnType').value;
+  const formula = document.getElementById('rxnFormula').value.trim();
+  const coef = +document.getElementById('rxnCoef').value;
+  const hfIn = document.getElementById('rxnHf').value;
+  if(!formula || !coef){ return; }
+  const hf = hfIn==='' ? (HF_DB[formula] ?? NaN) : +hfIn;
+  const tr = document.createElement('tr');
+  const tdType=document.createElement('td'); tdType.textContent=type; tr.appendChild(tdType);
+  const tdForm=document.createElement('td'); tdForm.className='mono'; tdForm.textContent=formula; tr.appendChild(tdForm);
+  const tdCoef=document.createElement('td'); tdCoef.textContent=String(coef); tr.appendChild(tdCoef);
+  const tdHf=document.createElement('td'); tdHf.textContent= isNaN(hf)? '—' : String(hf); tr.appendChild(tdHf);
+  const tdAct=document.createElement('td'); const btn=document.createElement('button'); btn.type='button'; btn.className='ghost remove'; btn.textContent='Remover'; tdAct.appendChild(btn); tr.appendChild(tdAct);
+  tbody.appendChild(tr);
+  btn.addEventListener('click', ()=>tr.remove());
+  document.getElementById('rxnFormula').value='';
+  document.getElementById('rxnHf').value='';
+});
+document.getElementById('clearSpecies').addEventListener('click', ()=>{tbody.innerHTML='';});
+document.getElementById('calcDH').addEventListener('click', ()=>{
+  let sumP=0, sumR=0, missing=[];
+  [...tbody.querySelectorAll('tr')].forEach(tr=>{
+    const t = tr.children[0].textContent;
+    const f = tr.children[1].textContent;
+    const n = +tr.children[2].textContent;
+    const hf = tr.children[3].textContent==='—' ? NaN : +tr.children[3].textContent;
+    if(isNaN(hf)) missing.push(f);
+    else if(t==='Produto') sumP += n*hf;
+    else sumR += n*hf;
+  });
+  const out = document.getElementById('dhOut');
+  if(missing.length){ out.textContent = 'Faltam ΔHf°: ' + missing.join(', '); return; }
+  const dH = sumP - sumR;
+  out.textContent = `ΔHrxn = ${dH.toFixed(1)} kJ·mol⁻¹ (${dH<0?'exotérmica':'endotérmica'})`;
+});
+
+/* ============================================
+   PERFIL DE ENERGIA (Chart.js)
+============================================ */
+let chart;
+function makeChart(){
+  const ctx = document.getElementById('energyChart');
+  chart = new Chart(ctx, {
+    type:'line',
+    data:{labels:[], datasets:[{data:[], tension:.35, borderColor:'#9ed1ff', borderWidth:3, fill:false}]},
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{display:false}},
+      scales:{x:{display:false}, y:{display:false}}
+    }
+  });
+  updateProfile();
+}
+function profileData(dH= -200, Ea=150){
+  // perfil esquemático: 0→1 (reag), pico (Ea), 2→3 (prod)
+  const base=0, R=0, P=dH/100; // escala compacta
+  const peak = Math.max(R,P) + Ea/100;
+  return [ {x:0, y:R}, {x:.3, y:R}, {x:.5, y:peak}, {x:.7, y:P}, {x:1, y:P} ];
+}
+function updateProfile(){
+  const dH = +document.getElementById('profDH').value;
+  const Ea = +document.getElementById('profEa').value;
+  const pts = profileData(dH, Ea);
+  chart.data.labels = pts.map(p=>p.x);
+  chart.data.datasets[0].data = pts.map(p=>p.y);
+  chart.update();
+}
+document.getElementById('updateChart').addEventListener('click', updateProfile);
+['profDH','profEa'].forEach(id=>document.getElementById(id).addEventListener('input', updateProfile));
+makeChart();
+
+/* ============================================
+   PARSER QUÍMICO BÁSICO E NOX
+============================================ */
+function parseFormula(formula){
+  // Suporta: elementos, parênteses, multiplicadores, carga ^n+, ^n-, ^+, ^-
+  // Ex.: Fe2(SO4)3, MnO4^-, NH4^+, Cr(OH)3
+  const f = formula.replace(/\s+/g,'');
+  // Carga
+  let charge = 0;
+  const chargeMatch = f.match(/\^([0-9]*)([+-])/);
+  if(chargeMatch){
+    const num = chargeMatch[1]===''?1:parseInt(chargeMatch[1],10);
+    charge = chargeMatch[2]==='+'? +num : -num;
+  }
+  const clean = f.replace(/\^([0-9]*)([+-])/,'');
+  let i=0;
+  function readToken(){
+    if(i>=clean.length) return null;
+    const ch = clean[i];
+    if(ch==='('){ i++; const inner=[]; while(i<clean.length && clean[i]!==')'){ inner.push(readToken()); } i++; // skip ')'
+      // multiplicador
+      let num=''; while(i<clean.length && /\d/.test(clean[i])){ num+=clean[i++]; }
+      const mul = num?parseInt(num,10):1;
+      return {type:'group', items:inner.filter(Boolean), mul};
+    }
+    if(/[A-Z]/.test(ch)){
+      let el = ch; i++;
+      if(i<clean.length && /[a-z]/.test(clean[i])){ el+=clean[i]; i++; }
+      let num=''; while(i<clean.length && /\d/.test(clean[i])){ num+=clean[i++]; }
+      const count = num?parseInt(num,10):1;
+      return {type:'el', el, count};
+    }
+    return null;
+  }
+  const ast=[];
+  while(i<clean.length){
+    const tok = readToken();
+    if(tok) ast.push(tok); else i++;
+  }
+  // Flatten
+  const map = {};
+  function add(tok, factor){
+    if(tok.type==='el'){
+      map[tok.el] = (map[tok.el]||0) + tok.count*factor;
+    }else if(tok.type==='group'){
+      tok.items.forEach(it=>add(it, factor*tok.mul));
+    }
+  }
+  ast.forEach(t=>add(t,1));
+  return {atoms:map, charge};
+}
+
+// Regras de NOX heurísticas
+const GROUP1 = new Set(['Li','Na','K','Rb','Cs']);
+const GROUP2 = new Set(['Be','Mg','Ca','Sr','Ba']);
+const FIXED = {'F':-1, 'Al':+3, 'Zn':+2, 'Ag':+1}; // comuns
+function guessNOX(formula, rules={O:true, H:true, Hal:true}){
+  const {atoms, charge} = parseFormula(formula);
+  const elems = Object.keys(atoms);
+  const unknown = {};
+  const known = {};
+  // Aplique regras
+  elems.forEach(E=>{
+    if(GROUP1.has(E)) known[E]=+1;
+    else if(GROUP2.has(E)) known[E]=+2;
+    else if(E in FIXED) known[E]=FIXED[E];
+    else if(E==='O' && rules.O) known[E]=-2;
+    else if(E==='H' && rules.H) known[E]=+1;
+    else if((E==='Cl'||E==='Br'||E==='I') && rules.Hal){
+      // halogênios -1 salvo com O/F presentes
+      if(!('O' in atoms) && !('F' in atoms)) known[E]=-1;
+    }
+    else unknown[E]=null;
+  });
+  const totalKnown = Object.entries(known).reduce((s,[E,v])=>s + v*atoms[E], 0);
+  const totalUnknownAtoms = Object.keys(unknown).reduce((s,E)=>s + atoms[E], 0);
+  const steps = [];
+  steps.push(`Fórmula: ${formula} · Átomos: ${JSON.stringify(atoms)} · Carga: ${charge}`);
+  steps.push(`Aplicando regras: conhecidos = ${JSON.stringify(known)}`);
+  const results = {};
+  Object.assign(results, known);
+  const U = Object.keys(unknown);
+  if(U.length===1){
+    const E = U[0];
+    const x = (charge - totalKnown) / atoms[E];
+    results[E] = x;
+    steps.push(`Único desconhecido ${E}: ${atoms[E]}·x + (${totalKnown}) = ${charge} ⇒ x = ${x.toFixed(2)}`);
+  }else if(U.length===0){
+    steps.push('Tudo determinado por regras.');
+  }else{
+    // múltiplos desconhecidos → NOX médio
+    steps.push('Vários desconhecidos → solução média (subdeterminada).');
+    const x = (charge - totalKnown) / totalUnknownAtoms;
+    U.forEach(E=>results[E]=x);
+    steps.push(`Média: Σ(n_i·x) = ${charge-totalKnown} ⇒ x = ${(x).toFixed(2)} (pode representar mistura de estados).`);
+  }
+  return {atoms, charge, results, steps};
+}
+
+document.getElementById('calcNOX').addEventListener('click', ()=>{
+  const f = document.getElementById('noxFormula').value.trim();
+  const opt = {O:document.getElementById('ruleO').checked, H:document.getElementById('ruleH').checked, Hal:document.getElementById('ruleHal').checked};
+  try{
+    const {results, steps} = guessNOX(f, opt);
+    const msg = Object.entries(results).map(([E,v])=>`${E}=${Number.isInteger(v)?v:v.toFixed(2)}`).join(' · ');
+    document.getElementById('noxOut').textContent = msg;
+    document.getElementById('noxSteps').textContent = steps.join('\n');
+  }catch(err){
+    document.getElementById('noxOut').textContent = 'Erro ao processar fórmula';
+    document.getElementById('noxSteps').textContent = String(err);
+  }
+});
+
+/* ============================================
+   ANÁLISE REDOX EM REAÇÃO
+============================================ */
+function splitSpecies(s){ return s.split('+').map(x=>x.trim()).filter(Boolean); }
+function analyzeReaction(left, right, rules){
+  const L = splitSpecies(left), R = splitSpecies(right);
+  const elemsSet = new Set();
+  const mapL={}, mapR={};
+  function analyzeSide(arr, map){
+    arr.forEach(f=>{
+      const g = guessNOX(f, rules);
+      map[f]=g;
+      Object.keys(g.atoms).forEach(E=>elemsSet.add(E));
+    });
+  }
+  analyzeSide(L,mapL); analyzeSide(R,mapR);
+  // NOX médios por elemento em cada espécie
+  // Para detectar mudança, comparamos o mesmo elemento entre espécies que o contêm
+  const changes=[];
+  elemsSet.forEach(E=>{
+    // procura todos os NOX médios de E na esquerda/direita
+    const leftVals=[], rightVals=[];
+    Object.values(mapL).forEach(g=>{ if(E in g.results) leftVals.push(g.results[E]); });
+    Object.values(mapR).forEach(g=>{ if(E in g.results) rightVals.push(g.results[E]); });
+    if(leftVals.length && rightVals.length){
+      const l = leftVals[0], r = rightVals[0]; // heurística: primeira ocorrência
+      if(Math.abs(l - r) > 1e-6){
+        changes.push({element:E, from:l, to:r, delta:r-l});
+      }
+    }
+  });
+  return {L,R, mapL, mapR, changes};
+}
+document.getElementById('analyzeRedox').addEventListener('click', ()=>{
+  const L = document.getElementById('rxnLeft').value;
+  const R = document.getElementById('rxnRight').value;
+  const rules = {O:true,H:true,Hal:true};
+  const result = analyzeReaction(L,R,rules);
+  const {changes} = result;
+  if(!changes.length){
+    document.getElementById('redoxSummary').textContent = 'Nenhuma variação de NOX detectada (ou insuficiente para inferir).';
+    document.getElementById('redoxDetail').textContent = '';
+    return;
+  }
+  let ox=[], red=[];
+  changes.forEach(ch=>{
+    if(ch.delta>0) ox.push(`${ch.element}: ${ch.from.toFixed(2)} → ${ch.to.toFixed(2)} (oxidação)`);
+    else red.push(`${ch.element}: ${ch.from.toFixed(2)} → ${ch.to.toFixed(2)} (redução)`);
+  });
+  const sum = `Oxidação: ${ox.join(' | ')} · Redução: ${red.join(' | ')}`;
+  document.getElementById('redoxSummary').textContent = sum;
+  let detail="Detalhamento por espécies:\n";
+  detail += "REAGENTES:\n";
+  Object.entries(result.mapL).forEach(([f,g])=>{
+    detail += `  ${f} :: NOX ${JSON.stringify(g.results)}\n`;
+  });
+  detail += "PRODUTOS:\n";
+  Object.entries(result.mapR).forEach(([f,g])=>{
+    detail += `  ${f} :: NOX ${JSON.stringify(g.results)}\n`;
+  });
+  document.getElementById('redoxDetail').textContent = detail;
+});
+</script>
+</body>
+</html>

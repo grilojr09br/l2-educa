@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Idade Média: Estudo Interativo com Quizzes</title>
+    <!-- Chosen Palette: Parchment & Ink -->
+    <!-- Application Structure Plan: A two-tab layout for 'High' and 'Low' Middle Ages. Each tab contains collapsible sections for its respective subdivisions (e.g., 'Genesis', 'Feudal Structures' for High; 'Apogee', 'Crisis' for Low). After each section, a "Test Your Knowledge" button will trigger a modal with a multiple-choice quiz related to that specific content. This structure creates a logical learning path: read, then test, reinforcing comprehension step-by-step as requested by the user. -->
+    <!-- Visualization & Content Choices: 
+        - Report Info: All sections from the source report -> Goal: Inform -> Viz: Structured Text with clear headings.
+        - Interaction: After each section, a quiz is provided. Goal: Reinforce -> Viz: Modal window with multiple-choice questions -> Justification: Active recall is a powerful learning tool. The quizzes are placed immediately after the relevant content to maximize retention.
+        - Previous Visuals: The Feudal Pyramid diagram, architecture charts, and Black Death chart are retained and placed within their corresponding chronological sections to provide visual context. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        body { background-color: #FDFBF5; color: #3a3a3a; font-family: 'Lato', sans-serif; }
+        h1, h2, h3, h4, .font-serif { font-family: 'EB Garamond', serif; }
+        .main-tab { transition: background-color 0.3s, color 0.3s, border-color 0.3s; border-bottom: 3px solid transparent; }
+        .main-tab.active { color: #800020; border-color: #800020; background-color: #f8f4e9; }
+        .content-section { display: none; }
+        .content-section.active { display: block; }
+        .interactive-card { background-color: #f8f4e9; border: 1px solid #e8e2d4; }
+        .quiz-modal { display: none; }
+        .quiz-option { transition: background-color 0.2s; }
+        .quiz-option.correct { background-color: #d1fae5; border-color: #10b981; }
+        .quiz-option.incorrect { background-color: #fee2e2; border-color: #ef4444; }
+        .chart-container { position: relative; width: 100%; max-width: 400px; margin-left: auto; margin-right: auto; height: 350px; max-height: 400px; }
+    </style>
+</head>
+<body class="antialiased">
+
+    <header class="bg-[#FDFBF5]/90 backdrop-blur-sm py-4">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="font-serif text-4xl font-bold text-[#800020]">Estudo Interativo da Idade Média</h1>
+            <p class="max-w-3xl mx-auto text-lg leading-relaxed mt-2">
+                Explore as duas grandes fases do período medieval. Leia o conteúdo aprofundado de cada seção e teste seus conhecimentos com os quizzes.
+            </p>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4 md:p-8">
+        <div class="mb-8 border-b-2 border-gray-300">
+            <nav class="flex justify-center -mb-px" aria-label="Tabs">
+                <button class="main-tab w-1/2 py-4 px-1 text-center font-serif text-2xl" data-target="alta-idade-media">
+                    Alta Idade Média (Séc. V-X)
+                </button>
+                <button class="main-tab w-1/2 py-4 px-1 text-center font-serif text-2xl" data-target="baixa-idade-media">
+                    Baixa Idade Média (Séc. XI-XV)
+                </button>
+            </nav>
+        </div>
+
+        <div id="content-container">
+            <!-- ALTA IDADE MÉDIA -->
+            <section id="alta-idade-media" class="content-section space-y-8">
+                <div class="interactive-card rounded-lg p-6">
+                    <h2 class="font-serif text-3xl text-[#800020] border-b-2 border-[#800020]/30 pb-3 mb-4">A Gênese do Mundo Medieval: De Roma aos Reinos Germânicos</h2>
+                    <p class="mb-4">O início da Idade Média é marcado pela lenta desintegração do Império Romano do Ocidente, um processo complexo com múltiplas causas: a <strong>crise militar</strong> (dependência de mercenários bárbaros), a <strong>crise econômica</strong> (desvalorização da moeda e colapso fiscal), e a <strong>pressão demográfica e militar</strong> dos povos germânicos nas fronteiras. A deposição de Rômulo Augusto em 476 d.C. não foi o fim, mas o clímax de uma longa transformação.</p>
+                    <p class="mb-4">Este cenário de instabilidade gerou uma profunda <strong>ruralização</strong> da sociedade. As pessoas abandonaram as cidades em busca de segurança no campo, fazendo da terra a principal fonte de riqueza e poder. O comércio diminuiu drasticamente, e a economia tornou-se agrária e focada na subsistência. Nos antigos territórios romanos, emergiram os <strong>Reinos Germânicos</strong> (Visigodos na Península Ibérica, Ostrogodos na Itália, Francos na Gália, Anglo-Saxões na Britânia), que mesclaram tradições romanas e germânicas, formando novas identidades culturais e políticas.</p>
+                    <button class="quiz-btn mt-4 bg-[#800020] text-white font-bold py-2 px-4 rounded hover:bg-[#600018] transition-colors" data-quiz="genesis">Verificar Conhecimento</button>
+                </div>
+
+                <div class="interactive-card rounded-lg p-6">
+                    <h2 class="font-serif text-3xl text-[#800020] border-b-2 border-[#800020]/30 pb-3 mb-4">Estruturas Feudais: Uma Sociedade de Ordens</h2>
+                    <p class="mb-4">O Feudalismo foi o sistema que organizou a sociedade medieval. Politicamente, era marcado pela <strong>fragmentação do poder</strong>: os reis eram figuras muitas vezes simbólicas, e o poder real era exercido localmente pelos senhores feudais. A coesão da elite guerreira era mantida pela relação de <strong>suserania e vassalagem</strong>, um pacto de lealdade onde um suserano concedia um feudo (terra) a um vassalo em troca de serviço militar e fidelidade.</p>
+                    <p class="mb-4">Socialmente, a sociedade era concebida como divinamente ordenada em três estamentos: o <strong>Clero</strong> (<em>Oratores</em>, os que oravam), com a função espiritual; a <strong>Nobreza</strong> (<em>Bellatores</em>, os que guerreavam), responsável pela defesa e justiça; e os <strong>Trabalhadores</strong> (<em>Laboratores</em>), majoritariamente camponeses e servos que sustentavam a todos com seu trabalho. Os servos estavam presos à terra e deviam obrigações como a <strong>corveia</strong> (trabalho gratuito), a <strong>talha</strong> (parte da produção) e as <strong>banalidades</strong> (taxas pelo uso de infraestruturas do feudo).</p>
+                    <button class="quiz-btn mt-4 bg-[#800020] text-white font-bold py-2 px-4 rounded hover:bg-[#600018] transition-colors" data-quiz="feudalismo">Verificar Conhecimento</button>
+                </div>
+                
+                 <div class="interactive-card rounded-lg p-6">
+                    <h2 class="font-serif text-3xl text-[#800020] border-b-2 border-[#800020]/30 pb-3 mb-4">Novas Invasões e a Consolidação Feudal</h2>
+                    <p class="mb-4">Entre os séculos IX e X, a Europa Ocidental foi novamente abalada por uma onda de invasões que aprofundou a insegurança e acelerou a consolidação do feudalismo. Do norte, os <strong>Vikings</strong> (ou Normandos), exímios navegadores, lançaram ataques devastadores ao longo das costas e rios, saqueando cidades e mosteiros. Com o tempo, passaram da pilhagem à conquista, estabelecendo-se em regiões como a Normandia (França) e influenciando a formação da Inglaterra.</p>
+                    <p class="mb-4">Do leste, os <strong>Magiares</strong> (húngaros), cavaleiros nômades, realizaram incursões rápidas e violentas sobre a Europa Central. A incapacidade dos reis em oferecer uma defesa eficaz contra estas ameaças multifacetadas reforçou a necessidade de proteção local, solidificando o poder dos senhores feudais e seus castelos como os verdadeiros garantidores da segurança.</p>
+                    <button class="quiz-btn mt-4 bg-[#800020] text-white font-bold py-2 px-4 rounded hover:bg-[#600018] transition-colors" data-quiz="invasoes">Verificar Conhecimento</button>
+                </div>
+
+                <div class="interactive-card rounded-lg p-6">
+                    <h2 class="font-serif text-3xl text-[#800020] border-b-2 border-[#800020]/30 pb-3 mb-4">A Igreja Católica e o Brilho de Al-Andalus</h2>
+                    <p class="mb-4">Em meio à fragmentação política, a <strong>Igreja Católica</strong> emergiu como a grande força unificadora. Tornou-se a maior proprietária de terras, detinha o monopólio do conhecimento formal e exercia imensa influência espiritual e política. Os <strong>mosteiros</strong> foram cruciais na preservação da cultura clássica, onde monges copistas salvaram do esquecimento inúmeros textos da Antiguidade.</p>
+                    <p class="mb-4">Enquanto isso, um contraponto brilhante existia na Península Ibérica. A partir de 711, a conquista muçulmana estabeleceu <strong>Al-Andalus</strong>, que se tornou um dos maiores centros culturais e científicos do mundo. Cidades como Córdoba eram faróis de erudição, com grandes bibliotecas e escolas onde muçulmanos, judeus e cristãos colaboravam. O conhecimento em matemática, medicina e filosofia (especialmente de Aristóteles) floresceu, servindo como uma ponte crucial para a reintrodução deste saber clássico na Europa cristã nos séculos seguintes.</p>
+                    <button class="quiz-btn mt-4 bg-[#800020] text-white font-bold py-2 px-4 rounded hover:bg-[#600018] transition-colors" data-quiz="igreja-islam">Verificar Conhecimento</button>
+                </div>
+            </section>
+
+            <!-- BAIXA IDADE MÉDIA -->
+            <section id="baixa-idade-media" class="content-section space-y-8">
+                <div class="interactive-card rounded-lg p-6">
+                    <h2 class="font-serif text-3xl text-[#003366] border-b-2 border-[#003366]/30 pb-3 mb-4">O Apogeu Medieval: Expansão e Renascimento (Séc. XI-XIII)</h2>
+                    <p class="mb-4">Este período foi de grande expansão. A "Revolução Agrícola", com inovações como a <strong>rotação trienal de culturas</strong> e a <strong>charrua</strong> (arado de ferro), aumentou a produção de alimentos, sustentando um vigoroso crescimento populacional. Isso impulsionou o <strong>Renascimento Comercial e Urbano</strong>: cidades (burgos) cresceram como centros de artesanato e comércio, e uma nova classe, a <strong>burguesia</strong>, ganhou proeminência.</p>
+                    <p class="mb-4">Rotas comerciais foram reativadas. No sul, cidades italianas (Veneza, Gênova) dominavam o comércio de especiarias e artigos de luxo com o Oriente. No norte, a <strong>Liga Hanseática</strong>, uma confederação de cidades alemãs, controlava o comércio de matérias-primas. As <strong>Feiras de Champagne</strong>, na França, conectavam esses dois polos. A produção artesanal era organizada em <strong>corporações de ofício (guildas)</strong>, que regulavam preços, qualidade e o acesso à profissão.</p>
+                    <button class="quiz-btn mt-4 bg-[#003366] text-white font-bold py-2 px-4 rounded hover:bg-[#002244] transition-colors" data-quiz="apogeu-economia">Verificar Conhecimento</button>
+                </div>
+                
+                <div class="interactive-card rounded-lg p-6">
+                    <h2 class="font-serif text-3xl text-[#003366] border-b-2 border-[#003366]/30 pb-3 mb-4">Fé em Ação: Cruzadas, Universidades e Catedrais</h2>
+                     <p class="mb-4">O poder da Igreja manifestou-se nas <strong>Cruzadas</strong> (1095-1291), expedições para retomar a Terra Santa. Com motivações religiosas, políticas e econômicas, elas intensificaram o contato com o Oriente. Para combater heresias internas, a Igreja criou a <strong>Inquisição</strong>, tribunais para investigar e punir desvios da fé.</p>
+                    <p class="mb-4">O conhecimento floresceu com as <strong>universidades</strong> (Bolonha, Paris, Oxford), onde se desenvolveu a <strong>filosofia escolástica</strong>. Pensadores como <strong>Tomás de Aquino</strong> buscaram harmonizar a fé cristã com a razão aristotélica. Na arquitetura, a grandiosidade da fé se materializou nas catedrais: o estilo <strong>Românico</strong>, massivo e austero ("fortaleza de Deus"), deu lugar ao <strong>Gótico</strong>, com sua busca por verticalidade e luz divina, possível graças a inovações como o arco ogival e os arcobotantes.</p>
+                     <div class="flex flex-col md:flex-row justify-around items-center gap-4 mt-6">
+                        <div class="chart-container"> <canvas id="romanesqueChart"></canvas> </div>
+                        <div class="chart-container"> <canvas id="gothicChart"></canvas> </div>
+                    </div>
+                    <button class="quiz-btn mt-6 bg-[#003366] text-white font-bold py-2 px-4 rounded hover:bg-[#002244] transition-colors" data-quiz="apogeu-cultura">Verificar Conhecimento</button>
+                </div>
+
+                <div class="interactive-card rounded-lg p-6">
+                    <h2 class="font-serif text-3xl text-[#5a1d1d] border-b-2 border-[#5a1d1d]/30 pb-3 mb-4">O Outono da Idade Média: A Crise do Século XIV</h2>
+                    <p class="mb-4">O século XIV foi um tempo de calamidades. A <strong>Grande Fome (1315-1317)</strong>, a <strong>Peste Negra</strong> (a partir de 1347, que matou até metade da população europeia) e a <strong>Guerra dos Cem Anos (1337-1453)</strong> entre França e Inglaterra desestruturaram a sociedade. A miséria e a exploração levaram a violentas <strong>Revoltas Camponesas</strong>, como a Jacquerie (França) e a de Wat Tyler (Inglaterra), que, apesar de esmagadas, mostraram a crise do sistema senhorial.</p>
+                    <p class="mb-4">A própria Igreja mergulhou em crise com o <strong>Grande Cisma do Ocidente (1378-1417)</strong>, um período com dois (e até três) papas rivais, o que abalou profundamente a autoridade papal e abriu espaço para o fortalecimento dos reis e para os futuros movimentos de reforma religiosa.</p>
+                    <div class="chart-container mx-auto mt-6"> <canvas id="blackDeathChart"></canvas> </div>
+                    <button class="quiz-btn mt-6 bg-[#5a1d1d] text-white font-bold py-2 px-4 rounded hover:bg-[#4a1515] transition-colors" data-quiz="crise">Verificar Conhecimento</button>
+                </div>
+
+                 <div class="interactive-card rounded-lg p-6">
+                    <h2 class="font-serif text-3xl text-green-800 border-b-2 border-green-800/30 pb-3 mb-4">Transição para a Modernidade e o Legado Medieval</h2>
+                    <p class="mb-4">As crises aceleraram o fim da Idade Média. A <strong>Queda de Constantinopla (1453)</strong> para os turcos otomanos marcou o fim do Império Bizantino e estimulou as Grandes Navegações. Este período viu a <strong>centralização do poder monárquico</strong> e a formação dos Estados Nacionais modernos, com os reis se fortalecendo sobre a nobreza, apoiados pela burguesia.</p>
+                    <p class="mb-4">O legado medieval é vasto: as <strong>universidades</strong>, as bases dos sistemas de <strong>direito</strong> (romano, canônico e comum), as <strong>línguas nacionais</strong>, as técnicas comerciais que originaram o <strong>capitalismo</strong>, e invenções cruciais como a <strong>prensa de Gutenberg</strong> (c. 1450). Longe de uma "Idade das Trevas", foi um período fundamental que moldou as estruturas do mundo moderno.</p>
+                    <button class="quiz-btn mt-4 bg-green-800 text-white font-bold py-2 px-4 rounded hover:bg-green-900 transition-colors" data-quiz="legado">Verificar Conhecimento</button>
+                </div>
+            </section>
+        </div>
+    </main>
+    
+    <div id="quiz-modal" class="quiz-modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-lg shadow-xl p-6 md:p-8 w-full max-w-2xl max-h-full overflow-y-auto">
+            <h2 id="quiz-title" class="font-serif text-2xl md:text-3xl mb-6 text-center">Quiz</h2>
+            <div id="quiz-content" class="space-y-4"></div>
+            <div id="quiz-feedback" class="mt-4 text-center font-bold h-6"></div>
+            <div class="text-center mt-6">
+                <button id="close-quiz-btn" class="bg-gray-500 text-white font-bold py-2 px-6 rounded hover:bg-gray-600 transition-colors">Fechar</button>
+            </div>
+        </div>
+    </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    
+    const quizzes = {
+        genesis: {
+            title: 'Quiz: Gênese Medieval',
+            questions: [
+                { q: "Qual destes NÃO é considerado uma das causas principais da queda do Império Romano do Ocidente?", opts: ["Crise militar e dependência de mercenários", "Crise econômica e fiscal", "Ascensão do Islamismo na Arábia", "Pressão dos povos germânicos nas fronteiras"], a: 2 },
+                { q: "O processo de abandono das cidades e busca por segurança no campo é chamado de:", opts: ["Urbanização", "Monetarização", "Ruralização", "Centralização"], a: 2 }
+            ]
+        },
+        feudalismo: {
+            title: 'Quiz: Estruturas Feudais',
+            questions: [
+                { q: "Na sociedade feudal, qual ordem tinha a função de guerrear e defender a sociedade?", opts: ["Clero (Oratores)", "Nobreza (Bellatores)", "Servos (Laboratores)", "Burguesia"], a: 1 },
+                { q: "A obrigação servil de entregar parte da produção de sua terra ao senhor feudal era a:", opts: ["Banalidade", "Dízimo", "Talha", "Corveia"], a: 2 }
+            ]
+        },
+        invasoes: {
+             title: 'Quiz: Novas Invasões',
+             questions: [
+                 { q: "Qual foi a principal consequência das invasões dos Vikings e Magiares nos séculos IX e X?", opts: ["O fortalecimento do poder dos reis", "O renascimento das cidades", "A consolidação do poder dos senhores feudais locais", "A conversão em massa ao Islamismo"], a: 2 },
+                 { q: "De onde eram originários os Vikings?", opts: ["Das estepes da Ásia Central", "Do Norte da África", "Da Península Itálica", "Da Escandinávia"], a: 3 }
+             ]
+        },
+        'igreja-islam': {
+            title: 'Quiz: Igreja e Al-Andalus',
+            questions: [
+                { q: "Qual instituição se consolidou como a grande força unificadora na Europa da Alta Idade Média?", opts: ["O Império Carolíngio", "A Liga Hanseática", "A Igreja Católica", "As universidades"], a: 2 },
+                { q: "Al-Andalus, um brilhante centro cultural e científico na Idade Média, localizava-se em qual região?", opts: ["Península Itálica", "Ilhas Britânicas", "Escandinávia", "Península Ibérica"], a: 3 }
+            ]
+        },
+        'apogeu-economia': {
+            title: 'Quiz: Apogeu Econômico',
+            questions: [
+                { q: "Qual destes elementos foi fundamental para a 'Revolução Agrícola' que impulsionou o crescimento populacional?", opts: ["O sistema de plantio bienal", "A invenção do motor a combustão", "A rotação trienal de culturas", "A diminuição do uso do ferro"], a: 2 },
+                { q: "A Liga Hanseática foi uma poderosa confederação de cidades mercantis que dominava o comércio em qual região?", opts: ["Mar Mediterrâneo", "Mar Negro", "Oceano Atlântico", "Mares do Norte e Báltico"], a: 3 }
+            ]
+        },
+        'apogeu-cultura': {
+            title: 'Quiz: Apogeu Cultural',
+            questions: [
+                { q: "Qual o principal objetivo da filosofia escolástica, desenvolvida nas universidades medievais?", opts: ["Provar a inexistência de Deus", "Harmonizar a fé cristã com a razão aristotélica", "Criticar a arte gótica", "Promover o ateísmo"], a: 1 },
+                { q: "Arcos ogivais, arcobotantes e grandes vitrais são características de qual estilo arquitetônico?", opts: ["Românico", "Gótico", "Bizantino", "Clássico"], a: 1 }
+            ]
+        },
+        crise: {
+            title: 'Quiz: A Crise do Século XIV',
+            questions: [
+                { q: "A Peste Negra, que dizimou a população europeia, teve como uma de suas consequências econômicas:", opts: ["O fortalecimento da servidão", "A diminuição geral dos salários", "A escassez de mão de obra e valorização do trabalho", "O fim completo do comércio"], a: 2 },
+                { q: "O que foi o Grande Cisma do Ocidente?", opts: ["A guerra entre França e Inglaterra", "A separação entre a Igreja e o Estado", "Um período com papas rivais em Roma e Avinhão", "Uma grande revolta camponesa"], a: 2 }
+            ]
+        },
+        legado: {
+            title: 'Quiz: O Legado Medieval',
+            questions: [
+                { q: "Qual invenção do final da Idade Média (c. 1450) revolucionou a disseminação da informação?", opts: ["A bússola", "O telescópio", "A prensa de tipos móveis de Gutenberg", "O relógio mecânico"], a: 2 },
+                { q: "Qual das seguintes instituições modernas tem sua origem direta na Idade Média?", opts: ["A Organização das Nações Unidas (ONU)", "As Bolsas de Valores", "As Universidades", "A Internet"], a: 2 }
+            ]
+        }
+    };
+
+    const mainTabs = document.querySelectorAll('.main-tab');
+    const contentSections = document.querySelectorAll('.content-section');
+    const quizModal = document.getElementById('quiz-modal');
+    const quizTitle = document.getElementById('quiz-title');
+    const quizContent = document.getElementById('quiz-content');
+    const quizFeedback = document.getElementById('quiz-feedback');
+    const closeQuizBtn = document.getElementById('close-quiz-btn');
+    const quizButtons = document.querySelectorAll('.quiz-btn');
+    let chartsInitialized = false;
+
+    function activateTab(tab) {
+        const targetId = tab.dataset.target;
+        mainTabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        contentSections.forEach(section => {
+            section.classList.remove('active');
+            if (section.id === targetId) section.classList.add('active');
+        });
+        if (targetId === 'baixa-idade-media' && !chartsInitialized) {
+            initCharts();
+            chartsInitialized = true;
+        }
+    }
+
+    function openQuiz(quizId) {
+        const quizData = quizzes[quizId];
+        if (!quizData) return;
+        
+        quizTitle.textContent = quizData.title;
+        quizContent.innerHTML = '';
+        quizFeedback.innerHTML = '';
+
+        quizData.questions.forEach((q, index) => {
+            const questionBlock = document.createElement('div');
+            questionBlock.className = 'p-4 border rounded';
+            const questionText = document.createElement('p');
+            questionText.className = 'font-bold mb-3';
+            questionText.textContent = `${index + 1}. ${q.q}`;
+            questionBlock.appendChild(questionText);
+
+            const optionsList = document.createElement('div');
+            optionsList.className = 'space-y-2';
+            q.opts.forEach((opt, optIndex) => {
+                const button = document.createElement('button');
+                button.className = 'quiz-option block w-full text-left p-3 border rounded-lg hover:bg-gray-100';
+                button.textContent = opt;
+                button.dataset.correct = (optIndex === q.a);
+                button.addEventListener('click', () => checkAnswer(button, optionsList), { once: true });
+                optionsList.appendChild(button);
+            });
+            questionBlock.appendChild(optionsList);
+            quizContent.appendChild(questionBlock);
+        });
+
+        quizModal.style.display = 'flex';
+    }
+
+    function checkAnswer(button, optionsList) {
+        const buttons = optionsList.querySelectorAll('.quiz-option');
+        buttons.forEach(btn => btn.disabled = true);
+        
+        if (button.dataset.correct === 'true') {
+            button.classList.add('correct');
+        } else {
+            button.classList.add('incorrect');
+            buttons.forEach(btn => {
+                if(btn.dataset.correct === 'true') btn.classList.add('correct');
+            });
+        }
+    }
+
+    mainTabs.forEach(tab => tab.addEventListener('click', () => activateTab(tab)));
+    quizButtons.forEach(btn => btn.addEventListener('click', () => openQuiz(btn.dataset.quiz)));
+    closeQuizBtn.addEventListener('click', () => quizModal.style.display = 'none');
+    
+    activateTab(mainTabs[0]);
+
+    function initCharts() {
+        const chartOptions = {
+            maintainAspectRatio: false,
+            scales: { r: { angleLines: { display: true }, suggestedMin: 0, suggestedMax: 10, pointLabels: { font: { size: 12 }}, ticks: { display: false } } },
+            plugins: { legend: { display: false } }
+        };
+
+        new Chart(document.getElementById('romanesqueChart'), {
+            type: 'radar',
+            data: { labels: ['Estrutura', 'Verticalidade', 'Iluminação', 'Arcos', 'Suportes', 'Sensação'], datasets: [{ label: 'Românico', data: [3, 2, 2, 3, 2, 3], fill: true, backgroundColor: 'rgba(128, 0, 32, 0.2)', borderColor: 'rgb(128, 0, 32)' }] },
+            options: { ...chartOptions, plugins: { ...chartOptions.plugins, title: { display: true, text: 'Românico', font: { family: 'EB Garamond', size: 16 } } } }
+        });
+
+        new Chart(document.getElementById('gothicChart'), {
+            type: 'radar',
+            data: { labels: ['Estrutura', 'Verticalidade', 'Iluminação', 'Arcos', 'Suportes', 'Sensação'], datasets: [{ label: 'Gótico', data: [8, 9, 9, 8, 8, 9], fill: true, backgroundColor: 'rgba(0, 51, 102, 0.2)', borderColor: 'rgb(0, 51, 102)' }] },
+            options: { ...chartOptions, plugins: { ...chartOptions.plugins, title: { display: true, text: 'Gótico', font: { family: 'EB Garamond', size: 16 } } } }
+        });
+
+        new Chart(document.getElementById('blackDeathChart'), {
+            type: 'line',
+            data: {
+                labels: ['1300', '1347', '1351', '1400', '1450'],
+                datasets: [{ label: 'População Europeia (est. em milhões)', data: [75, 75, 45, 50, 60], fill: false, borderColor: 'rgb(90, 29, 29)', tension: 0.1 }]
+            },
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top' }, title: { display: true, text: 'Impacto Demográfico da Peste Negra' } } }
+        });
+        chartsInitialized = true;
+    }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,20 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const authController_1 = require("../controllers/authController");
+const auth_1 = require("../middleware/auth");
+const rateLimiter_1 = require("../middleware/rateLimiter");
+const errorHandler_1 = require("../middleware/errorHandler");
+const router = (0, express_1.Router)();
+router.post('/register', rateLimiter_1.rateLimiterMiddleware, (0, errorHandler_1.asyncHandler)(authController_1.AuthController.register));
+router.post('/login', rateLimiter_1.authRateLimiterMiddleware, (0, errorHandler_1.asyncHandler)(authController_1.AuthController.login));
+router.post('/forgot-password', rateLimiter_1.strictRateLimiterMiddleware, (0, errorHandler_1.asyncHandler)(authController_1.AuthController.forgotPassword));
+router.post('/reset-password', rateLimiter_1.rateLimiterMiddleware, (0, errorHandler_1.asyncHandler)(authController_1.AuthController.resetPassword));
+router.post('/refresh-token', rateLimiter_1.rateLimiterMiddleware, (0, errorHandler_1.asyncHandler)(authController_1.AuthController.refreshToken));
+router.get('/verify-email', rateLimiter_1.rateLimiterMiddleware, (0, errorHandler_1.asyncHandler)(authController_1.AuthController.verifyEmail));
+router.post('/logout', auth_1.authMiddleware, (0, errorHandler_1.asyncHandler)(authController_1.AuthController.logout));
+router.post('/change-password', auth_1.authMiddleware, rateLimiter_1.rateLimiterMiddleware, (0, errorHandler_1.asyncHandler)(authController_1.AuthController.changePassword));
+router.get('/me', auth_1.authMiddleware, (0, errorHandler_1.asyncHandler)(authController_1.AuthController.getCurrentUser));
+router.patch('/profile', auth_1.authMiddleware, rateLimiter_1.rateLimiterMiddleware, (0, errorHandler_1.asyncHandler)(authController_1.AuthController.updateProfile));
+exports.default = router;
+//# sourceMappingURL=auth.js.map

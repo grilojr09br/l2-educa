@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guia de Filosofia: Renascimento e Maquiavel</title>
+    
+    <!-- Carregamento de Fontes do Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+
+    <!-- Carregamento dos Ícones do Google Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    
+    <style>
+        /* ------------------------------------ */
+        /* 1. VARIÁVEIS E CONFIGURAÇÕES GLOBAIS */
+        /* ------------------------------------ */
+        :root {
+            /* Paleta Principal */
+            --color-bg-main: #1C1C1C;
+            --color-text-main: #EAEAEA;
+            --color-text-secondary: #A9A9A9;
+            --color-glass-border: rgba(255, 255, 255, 0.15);
+
+            /* Tema Seção 1: Renascimento (Dourado e Sépia) */
+            --section1-bg: #28221B; /* Sépia escuro */
+            --section1-highlight: #D4AF37; /* Dourado metálico */
+            --section1-text: #EAE0D5;
+
+            /* Tema Seção 2: Maquiavel (Vermelho e Cinza Poder) */
+            --section2-bg: #1A1A1A;
+            --section2-highlight: #B22222; /* Firebrick */
+            --section2-text: #DCDCDC;
+            
+            /* Dimensões */
+            --nav-width-desktop: 280px;
+            --nav-height-mobile: 65px;
+
+            /* Tipografia */
+            --font-primary: 'Poppins', sans-serif;
+            --font-secondary: 'Lora', serif;
+        }
+
+        /* Reset Básico e Padrões */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            background-color: var(--color-bg-main);
+            color: var(--color-text-main);
+            font-family: var(--font-secondary);
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
+        }
+        h1, h2, h3, h4, h5, h6 { font-family: var(--font-primary); font-weight: 600; line-height: 1.3; }
+
+        /* ------------------------------------ */
+        /* 2. NAVEGAÇÃO (SIDEBAR/TOPBAR)        */
+        /* ------------------------------------ */
+        .main-nav {
+            position: fixed;
+            top: 0; left: 0;
+            width: var(--nav-width-desktop);
+            height: 100vh;
+            background: rgba(20, 20, 20, 0.7);
+            backdrop-filter: blur(10px);
+            border-right: 1px solid var(--color-glass-border);
+            padding: 40px 20px;
+            z-index: 1000;
+            transition: transform 0.4s ease-in-out;
+        }
+        .nav-header { text-align: left; margin-bottom: 40px; padding-left: 10px; }
+        .nav-header h1 { font-size: 1.4rem; font-weight: 700; color: #FFFFFF; }
+        .nav-header p { font-size: 0.9rem; color: var(--color-text-secondary); }
+        .nav-links { list-style: none; }
+        .nav-links li a {
+            display: flex; align-items: center; padding: 15px 10px;
+            text-decoration: none; color: var(--color-text-secondary);
+            font-family: var(--font-primary); font-weight: 400;
+            border-radius: 8px; transition: all 0.3s ease; font-size: 1rem;
+        }
+        .nav-links li a .material-icons { margin-right: 15px; font-size: 22px; }
+        .nav-links li a:hover { background-color: rgba(255, 255, 255, 0.05); color: var(--color-text-main); }
+        .nav-links li a.active { color: #FFFFFF; font-weight: 600; }
+        .nav-links li a.active#nav-link-1 { background: linear-gradient(90deg, var(--section1-highlight) -50%, rgba(0,0,0,0) 100%); border-left: 4px solid var(--section1-highlight); }
+        .nav-links li a.active#nav-link-2 { background: linear-gradient(90deg, var(--section2-highlight) -50%, rgba(0,0,0,0) 100%); border-left: 4px solid var(--section2-highlight); }
+
+        /* ------------------------------------ */
+        /* 3. LAYOUT PRINCIPAL E SEÇÕES         */
+        /* ------------------------------------ */
+        main { margin-left: var(--nav-width-desktop); width: calc(100% - var(--nav-width-desktop)); }
+        section { min-height: 100vh; padding: 80px 60px; display: flex; flex-direction: column; justify-content: center; }
+        .section-header { margin-bottom: 40px; max-width: 900px; }
+        .section-header h2 { font-size: 3.5rem; font-weight: 700; margin-bottom: 10px; }
+        .section-header .subtitle { font-size: 1.2rem; font-style: italic; color: var(--color-text-secondary); max-width: 80%; }
+        
+        #renascimento { background-color: var(--section1-bg); color: var(--section1-text); }
+        #renascimento h2, #renascimento h3 { color: var(--section1-highlight); }
+        #maquiavel { background-color: var(--section2-bg); color: var(--section2-text); }
+        #maquiavel h2, #maquiavel h3 { color: var(--section2-highlight); }
+
+        /* ------------------------------------ */
+        /* 4. COMPONENTES DE CONTEÚDO           */
+        /* ------------------------------------ */
+        .content-wrapper { max-width: 900px; }
+        p, li { font-size: 1.1rem; margin-bottom: 1.2em; }
+        .btn-expand {
+            display: inline-flex; align-items: center; justify-content: center;
+            color: #FFFFFF; font-family: var(--font-primary); font-size: 1.1rem; font-weight: 600;
+            padding: 15px 30px; border: 1px solid var(--color-glass-border); border-radius: 8px;
+            cursor: pointer; transition: all 0.3s ease; background-color: rgba(255,255,255,0.05);
+        }
+        .btn-expand:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(0,0,0,0.2); }
+        .btn-expand .icon-expand { margin-left: 10px; transition: transform 0.4s ease; }
+        .btn-expand.active .icon-expand { transform: rotate(180deg); }
+        .expanded-content { max-height: 0; overflow: hidden; transition: max-height 1.2s ease-in-out, margin-top 1.2s ease-in-out; }
+        .expanded-content.visible { max-height: 20000px; margin-top: 40px; }
+        .deep-dive-content { background: rgba(0, 0, 0, 0.2); padding: 40px; border-radius: 15px; border: 1px solid var(--color-glass-border); }
+        .deep-dive-content h3 { font-size: 2rem; font-weight: 700; margin-bottom: 25px; border-left: 4px solid; padding-left: 15px; }
+        .deep-dive-content h4 { font-size: 1.5rem; margin-top: 30px; margin-bottom: 15px; }
+        .didactic-block { background: rgba(0,0,0,0.2); border-left: 4px solid; padding: 20px; margin: 25px 0; border-radius: 0 8px 8px 0; }
+        .didactic-block p { font-size: 1.1rem; font-style: italic; margin-bottom: 0.5em; }
+        .didactic-block strong { font-weight: 600; }
+        code { background-color: rgba(139,148,158,0.2); padding: 3px 6px; border-radius: 6px; font-family: 'Courier New', Courier, monospace; }
+        
+        /* Componentes de Questões */
+        .questions-section { margin-top: 50px; }
+        .question-block { margin-bottom: 30px; background-color: rgba(255,255,255,0.03); padding: 25px; border-radius: 10px; }
+        .question-block .question-title { font-family: var(--font-primary); font-weight: 600; font-size: 1.2rem; }
+        .question-block .question-statement { margin: 15px 0; }
+        .btn-resolution {
+            font-family: var(--font-primary); font-size: 0.9rem; padding: 8px 15px;
+            border-radius: 6px; cursor: pointer; transition: all 0.3s ease;
+            border: 1px solid var(--color-glass-border); background-color: transparent; color: var(--color-text-secondary);
+        }
+        .btn-resolution:hover { background-color: rgba(255,255,255,0.1); color: var(--color-text-main); }
+        .resolution-content {
+            max-height: 0; overflow: hidden; transition: max-height 0.7s ease-out, margin-top 0.7s ease-out, opacity 0.7s ease-out;
+            background-color: rgba(0,0,0,0.2); padding: 0 20px; border-radius: 8px; margin-top: 0; opacity: 0;
+        }
+        .resolution-content.visible { max-height: 1000px; margin-top: 20px; padding: 20px; opacity: 1; }
+        .resolution-content h5 { font-size: 1.1rem; margin-bottom: 10px; }
+
+        /* ------------------------------------ */
+        /* 5. RESPONSIVIDADE (MOBILE-FIRST)     */
+        /* ------------------------------------ */
+        @media (max-width: 1024px) {
+            .main-nav {
+                width: 100%; height: var(--nav-height-mobile);
+                padding: 0 10px; border-right: none; border-bottom: 1px solid var(--color-glass-border);
+                display: flex; justify-content: space-between; align-items: center;
+            }
+            .nav-header { margin-bottom: 0; padding-left: 10px; }
+            .nav-header h1 { font-size: 1.2rem; }
+            .nav-header p { display: none; }
+            .nav-links { display: flex; }
+            .nav-links li a { padding: 10px; border-left: none !important; background: none !important; }
+            .nav-links li a .nav-text { display: none; }
+            .nav-links li a .material-icons { margin-right: 0; font-size: 24px; padding: 5px; }
+            .nav-links li a.active { background: rgba(255,255,255,0.1) !important; border-radius: 50%; }
+            .main-nav.nav-hidden { transform: translateY(-100%); }
+            main { margin-left: 0; width: 100%; padding-top: var(--nav-height-mobile); }
+            section { padding: 60px 20px; }
+            .section-header h2 { font-size: 2.5rem; }
+            .section-header .subtitle { font-size: 1.1rem; max-width: 100%; }
+            .deep-dive-content { padding: 20px; }
+        }
+
+        /* ------------------------------------ */
+        /* 6. RODAPÉ                            */
+        /* ------------------------------------ */
+        .main-footer { text-align: center; padding: 30px; background-color: #000; font-size: 0.9rem; color: var(--color-text-secondary); font-family: var(--font-primary); }
+    </style>
+</head>
+<body>
+
+    <nav class="main-nav" id="main-nav">
+        <div class="nav-header">
+            <h1>Guia de Filosofia</h1>
+            <p>Renascimento e Maquiavel</p>
+        </div>
+        <ul class="nav-links">
+            <li><a href="#renascimento" id="nav-link-1" class="nav-link active"><i class="material-icons">palette</i><span class="nav-text">Renascimento</span></a></li>
+            <li><a href="#maquiavel" id="nav-link-2" class="nav-link"><i class="material-icons">account_balance</i><span class="nav-text">Maquiavel</span></a></li>
+        </ul>
+    </nav>
+
+    <main>
+        
+        <!-- ====================================================== -->
+        <!-- SEÇÃO 1: Renascimento Cultural e Científico            -->
+        <!-- ====================================================== -->
+        <section id="renascimento">
+            <div class="section-header">
+                <h2 style="color: var(--section1-highlight);">O Despertar do Homem</h2>
+                <p class="subtitle">A transição monumental do pensamento medieval para a modernidade, onde o ser humano se redescobre como centro e medida de todas as coisas.</p>
+            </div>
+            <div class="content-wrapper">
+                <p>O Renascimento (séculos XIV-XVI) representa uma ruptura com a mentalidade medieval. A filosofia deixa de ser exclusivamente serva da teologia e volta-se para questões humanas. O <strong>Teocentrismo</strong> (Deus como centro) dá lugar ao <strong>Antropocentrismo</strong> (Homem como centro), resgatando os valores da antiguidade clássica greco-romana. Essa mudança de foco impulsiona uma revolução não apenas nas artes, mas também na ciência, que passa a buscar explicações racionais e empíricas para o funcionamento do universo.</p>
+                
+                <button class="btn-expand" data-target="renascimento-deep-dive" style="border-color: var(--section1-highlight); color: var(--section1-highlight);">
+                    Explorar Guia Completo
+                    <span class="material-icons icon-expand">expand_more</span>
+                </button>
+
+                <div class="expanded-content" id="renascimento-deep-dive">
+                    <div class="deep-dive-content" style="border-color: var(--section1-highlight);">
+                        <h3 style="border-color: var(--section1-highlight);">Guia Completo: A Filosofia Renascentista</h3>
+                        
+                        <h4>A Lógica Central: Antropocentrismo vs. Teocentrismo</h4>
+                        <div class="didactic-block" style="border-color: var(--section1-highlight);"><p style="color: var(--section1-highlight);"><strong>O Renascimento é a mudança de foco de Deus para o Homem.</strong></p><p>Na Idade Média, a vida e o conhecimento giravam em torno de Deus (<strong>Teocentrismo</strong>), por isso...</p><p>...a filosofia buscava justificar a fé. No Renascimento, o ser humano, sua razão e suas capacidades se tornam o ponto de partida (<strong>Antropocentrismo</strong>), por isso...</p><p>...a filosofia passa a valorizar a <strong>razão humana, a observação da natureza e a realização individual</strong> como caminhos para o conhecimento e a verdade.</p></div>
+
+                        <h4>O Humanismo: A Valorização do Ser Humano</h4>
+                        <p>O Humanismo foi o movimento intelectual que definiu o Renascimento. Seus pilares eram:</p>
+                        <ul>
+                            <li><strong>Estudo dos Clássicos:</strong> Retorno às fontes originais da filosofia, literatura e arte greco-romana, buscando inspiração na sabedoria pagã.</li>
+                            <li><strong>Individualismo:</strong> A crença no potencial único de cada indivíduo, em sua capacidade de criar, inovar e deixar uma marca no mundo.</li>
+                            <li><strong>Racionalismo:</strong> A confiança na razão como principal ferramenta para compreender o mundo, em oposição à aceitação dogmática da fé.</li>
+                        </ul>
+
+                        <h4>A Revolução Científica: Um Novo Olhar para o Universo</h4>
+                        <p>Impulsionada pelo Humanismo, a ciência renascentista desafiou dogmas antigos com um novo método baseado na observação e experimentação.</p>
+                        <ul>
+                            <li><strong>Heliocentrismo:</strong> Nicolau Copérnico propõe que o Sol, e não a Terra, é o centro do sistema solar, contrariando o modelo geocêntrico de Ptolomeu e da Igreja.</li>
+                            <li><strong>O Método Experimental:</strong> Galileu Galilei, com o uso do telescópio, defende o heliocentrismo com provas observacionais. Ele é considerado o pai da ciência moderna por sistematizar um método que une a observação empírica à descrição matemática dos fenômenos.</li>
+                            <li><strong>Novas Leis do Universo:</strong> Johannes Kepler e, posteriormente, Isaac Newton, formularão as leis matemáticas que regem o movimento dos planetas e dos corpos na Terra, consolidando a visão de um universo ordenado e compreensível pela razão.</li>
+                        </ul>
+
+                        <div class="questions-section">
+                            <h4>Questões de Fixação</h4>
+                            <div class="question-block">
+                                <p class="question-title">Questão 1</p>
+                                <p class="question-statement">Explique a diferença fundamental entre o Teocentrismo medieval e o Antropocentrismo renascentista e como essa mudança impactou a produção de conhecimento.</p>
+                                <button class="btn-resolution" data-target="res1">Mostrar Resolução</button>
+                                <div class="resolution-content" id="res1">
+                                    <h5>Resolução Comentada</h5>
+                                    <p>A diferença fundamental reside no <strong>centro de referência do pensamento</strong>.</p>
+                                    <ul>
+                                        <li><strong>Teocentrismo:</strong> Coloca Deus e a religião como o centro de tudo. A verdade é revelada pela fé e pelas escrituras sagradas. A filosofia (ancilla theologiae) e a ciência buscavam comprovar e entender os dogmas religiosos.</li>
+                                        <li><strong>Antropocentrismo:</strong> Coloca o ser humano e sua capacidade racional no centro. A verdade deve ser buscada pela razão, pela observação e pela experiência.</li>
+                                    </ul>
+                                    <p><strong>Impacto:</strong> Essa mudança libertou a filosofia e a ciência da submissão à teologia. O conhecimento passou a ser valorizado por seu potencial de transformar o mundo real e melhorar a vida humana, e não apenas como um caminho para a salvação divina. Isso abriu as portas para a investigação autônoma da natureza, da política e da própria mente humana.</p>
+                                </div>
+                            </div>
+                             <div class="question-block">
+                                <p class="question-title">Questão 2</p>
+                                <p class="question-statement">Qual o papel de Galileu Galilei na Revolução Científica e por que suas ideias entraram em conflito com a Igreja?</p>
+                                <button class="btn-resolution" data-target="res2">Mostrar Resolução</button>
+                                <div class="resolution-content" id="res2">
+                                    <h5>Resolução Comentada</h5>
+                                    <p><strong>Papel de Galileu:</strong></p>
+                                    <ul>
+                                        <li><strong>Pai do Método Experimental:</strong> Galileu foi pioneiro na utilização de instrumentos (como o telescópio) para realizar observações sistemáticas da natureza.</li>
+                                        <li><strong>Comprovação do Heliocentrismo:</strong> Com suas observações das luas de Júpiter, das fases de Vênus e das manchas solares, ele acumulou evidências empíricas que sustentavam o modelo heliocêntrico de Copérnico, mostrando que a Terra não era o centro de todos os movimentos celestes.</li>
+                                    </ul>
+                                    <p><strong>Conflito com a Igreja:</strong></p>
+                                    <p>Suas ideias entraram em conflito com a Igreja porque o modelo geocêntrico (a Terra no centro) era o dogma oficial, baseado em interpretações literais da Bíblia e na filosofia aristotélica adotada pela teologia. Ao defender o heliocentrismo com base em evidências, Galileu não apenas desafiou um modelo astronômico, mas também a autoridade da Igreja como a detentora final da verdade sobre o universo, o que o levou a ser julgado e condenado pela Inquisição.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ====================================================== -->
+        <!-- SEÇÃO 2: Maquiavel                                     -->
+        <!-- ====================================================== -->
+        <section id="maquiavel">
+            <div class="section-header">
+                <h2 style="color: var(--section2-highlight);">A Lógica Fria do Poder</h2>
+                <p class="subtitle">Nicolau Maquiavel e a fundação da ciência política moderna, separando a moralidade pessoal da necessidade do Estado.</p>
+            </div>
+            <div class="content-wrapper">
+                <p>Nicolau Maquiavel (1469-1527) é uma figura central na transição para o pensamento moderno. Em sua obra mais famosa, <strong>"O Príncipe"</strong>, ele rompe com a tradição filosófica que descrevia governos ideais e utópicos. Em vez disso, Maquiavel inaugura o <strong>realismo político</strong>, analisando a política como ela é na prática: uma luta constante pela conquista e manutenção do poder. Seus conceitos de <i>virtù</i> e <i>fortuna</i> e a separação entre ética e política continuam a ser estudados e debatidos até hoje.</p>
+                
+                <button class="btn-expand" data-target="maquiavel-deep-dive" style="border-color: var(--section2-highlight); color: var(--section2-highlight);">
+                    Explorar Guia Completo
+                    <span class="material-icons icon-expand">expand_more</span>
+                </button>
+
+                <div class="expanded-content" id="maquiavel-deep-dive">
+                    <div class="deep-dive-content" style="border-color: var(--section2-highlight);">
+                        <h3 style="border-color: var(--section2-highlight);">Guia Completo: O Pensamento de Maquiavel</h3>
+                        
+                        <h4>A Lógica Central: O Realismo Político</h4>
+                        <div class="didactic-block" style="border-color: var(--section2-highlight);"><p style="color: var(--section2-highlight);"><strong>Maquiavel ensina a ver a política como ela é, e não como deveria ser.</strong></p><p>Filósofos antigos (como Platão) imaginavam a república ideal, baseada na virtude e na justiça, por isso...</p><p>...eles misturavam ética e política. Maquiavel observa os governantes reais e percebe que o poder tem suas próprias regras, por isso...</p><p>...ele <strong>separa a moral do indivíduo da necessidade do Estado</strong>. Para ele, uma ação "má" (como mentir) pode ser necessária e até virtuosa se for para garantir a estabilidade e a segurança do Estado.</p></div>
+
+                        <h4><i>Virtù</i> e <i>Fortuna</i>: A Dinâmica do Poder</h4>
+                        <p>Para Maquiavel, o sucesso de um príncipe depende da sua habilidade em lidar com duas forças:</p>
+                        <ul>
+                            <li><strong><i>Fortuna</i>:</strong> Representa a sorte, o acaso, as circunstâncias incontroláveis, as oportunidades que surgem. É como um rio selvagem que pode destruir tudo em seu caminho.</li>
+                            <li><strong><i>Virtù</i>:</strong> Não é a virtude cristã (bondade, piedade). É a capacidade do governante de agir com astúcia, coragem, força e inteligência para domar a <i>fortuna</i>. É a habilidade de construir "diques e canais" para controlar o rio da sorte, aproveitando as oportunidades e se protegendo das ameaças.</li>
+                        </ul>
+
+                        <h4>"Os Fins Justificam os Meios"?</h4>
+                        <p>Esta frase, embora não escrita textualmente por Maquiavel, resume uma de suas ideias centrais. O "fim" em questão é sempre a <strong>estabilidade e a glória do Estado</strong>. O "meio" é qualquer ação que o príncipe precise tomar para atingir esse fim. Maquiavel não defende a maldade por si só. Ele argumenta que, se um príncipe precisa ser cruel, mentir ou trair para salvar o Estado de um mal maior (como a anarquia ou a invasão), essa ação se torna politicamente necessária e, portanto, justificada. A moralidade do ato é julgada pelo seu <strong>resultado político</strong>.</p>
+
+                        <div class="questions-section">
+                            <h4>Questões de Fixação</h4>
+                            <div class="question-block">
+                                <p class="question-title">Questão 1</p>
+                                <p class="question-statement">Diferencie os conceitos de <i>virtù</i> e <i>fortuna</i> segundo Maquiavel e explique como um príncipe de sucesso deve se relacionar com ambos.</p>
+                                <button class="btn-resolution" data-target="res3">Mostrar Resolução</button>
+                                <div class="resolution-content" id="res3">
+                                    <h5>Resolução Comentada</h5>
+                                    <ul>
+                                        <li><strong><i>Fortuna</i></strong> é o conjunto de circunstâncias externas, a sorte, o acaso. São os eventos que o príncipe não controla, como uma crise econômica, uma rebelião popular inesperada ou a ascensão de um inimigo poderoso.</li>
+                                        <li><strong><i>Virtù</i></strong> é a capacidade do príncipe de responder a essas circunstâncias. É sua habilidade, astúcia, força, flexibilidade e inteligência para prever os problemas, aproveitar as oportunidades (a "boa fortuna") e minimizar os danos dos eventos ruins (a "má fortuna").</li>
+                                    </ul>
+                                    <p><strong>Relação:</strong> Um príncipe de sucesso não pode depender apenas da sorte (<i>fortuna</i>). Ele deve usar sua <i>virtù</i> para se antecipar aos golpes da <i>fortuna</i> e para moldar os acontecimentos a seu favor sempre que possível. Ele deve ser ousado para agarrar a oportunidade quando ela surge e prudente para se preparar para os tempos difíceis. A <i>virtù</i> é a ferramenta para dominar e direcionar a <i>fortuna</i>.</p>
+                                </div>
+                            </div>
+                            <div class="question-block">
+                                <p class="question-title">Questão 2</p>
+                                <p class="question-statement">Maquiavel aconselha o príncipe que é mais seguro ser temido do que amado. Explique o raciocínio por trás desse conselho, considerando a visão do autor sobre a natureza humana.</p>
+                                <button class="btn-resolution" data-target="res4">Mostrar Resolução</button>
+                                <div class="resolution-content" id="res4">
+                                    <h5>Resolução Comentada</h5>
+                                    <p>O raciocínio de Maquiavel é baseado em seu profundo pessimismo sobre a <strong>natureza humana</strong>. Ele acreditava que os homens são, em geral, "ingratos, volúveis, simuladores, covardes e ávidos de lucro".</p>
+                                    <ul>
+                                        <li><strong>O Amor é Volúvel:</strong> O amor é um laço de gratidão que os homens, por sua natureza egoísta, rompem sempre que lhes convém. Um governante amado pode ser facilmente traído se surgir uma oportunidade melhor para seus súditos.</li>
+                                        <li><strong>O Temor é Constante:</strong> O temor, por outro lado, é mantido pelo medo da punição, um sentimento que nunca abandona os homens. Um governante temido tem maior controle sobre seus súditos, pois eles hesitarão em traí-lo por medo das consequências.</li>
+                                    </ul>
+                                    <p><strong>Importante:</strong> Maquiavel adverte que o príncipe deve ser temido, mas <strong>nunca odiado</strong>. O ódio pode levar a conspirações e revoltas. Para evitar o ódio, o príncipe deve respeitar os bens e as mulheres de seus súditos e só aplicar punições quando houver justificativa clara.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+    
+    <footer class="main-footer">
+        Página educacional desenvolvida como uma ferramenta de aprendizado. Design e conteúdo por L2.
+    </footer>
+
+    <script>
+    // Todo o script de inicialização agora está seguro dentro do 'window.onload'
+    window.onload = function() {
+        
+        // Expansão de Conteúdo Principal
+        const expandButtons = document.querySelectorAll('.btn-expand');
+        expandButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const targetId = button.getAttribute('data-target');
+                const content = document.getElementById(targetId);
+                content.classList.toggle('visible');
+                button.classList.toggle('active');
+            });
+        });
+
+        // Expansão de Resoluções de Questões
+        const resolutionButtons = document.querySelectorAll('.btn-resolution');
+        resolutionButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const targetId = button.getAttribute('data-target');
+                const content = document.getElementById(targetId);
+                content.classList.toggle('visible');
+                button.textContent = content.classList.contains('visible') ? 'Ocultar Resolução' : 'Mostrar Resolução';
+            });
+        });
+
+        // Navegação Ativa com Intersection Observer
+        const sections = document.querySelectorAll('section');
+        const navLinks = document.querySelectorAll('.nav-link');
+        const observerOptions = { root: null, rootMargin: '0px', threshold: 0.4 };
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    navLinks.forEach(link => {
+                        link.classList.remove('active');
+                        if (link.getAttribute('href').substring(1) === entry.target.id) {
+                            link.classList.add('active');
+                        }
+                    });
+                }
+            });
+        }, observerOptions);
+        sections.forEach(section => { observer.observe(section); });
+        
+        // Navegação Móvel Dinâmica
+        let lastScrollY = window.scrollY;
+        const mainNav = document.getElementById('main-nav');
+        window.addEventListener('scroll', () => {
+            if (window.innerWidth <= 1024) {
+                if (lastScrollY < window.scrollY && window.scrollY > 0) {
+                    mainNav.classList.add('nav-hidden');
+                } else {
+                    mainNav.classList.remove('nav-hidden');
+                }
+                lastScrollY = window.scrollY;
+            }
+        });
+
+        // --- INÍCIO DA LÓGICA DE VISUALIZAÇÃO 2D ---
+        
+        try {
+            // Função para inicializar um visualizador 2D ChemDoodle
+            function init2DViewer(canvasId, moleculeBuilder) {
+                let canvas = document.getElementById(canvasId);
+                // Adiciona uma verificação para garantir que o canvas existe antes de prosseguir
+                if (!canvas) {
+                    console.error(`Canvas com ID '${canvasId}' não encontrado.`);
+                    return;
+                }
+                let viewer = new ChemDoodle.ViewerCanvas(canvasId, canvas.clientWidth, canvas.clientHeight);
+                
+                viewer.specs.backgroundColor = '#010409';
+                viewer.specs.atoms_color = '#c9d1d9';
+                viewer.specs.bonds_color = '#8b949e';
+                viewer.specs.atoms_displayLabels_color = '#c9d1d9';
+                
+                let molecule = moleculeBuilder();
+                viewer.loadMolecule(molecule);
+            }
+
+            // Funções para construir cada molécula
+            function createMethane() {
+                let mol = new ChemDoodle.structures.Molecule();
+                let c = mol.addAtom(new ChemDoodle.structures.Atom('C', 0, 0));
+                let h1 = mol.addAtom(new ChemDoodle.structures.Atom('H', 0, 1.5));
+                let h2 = mol.addAtom(new ChemDoodle.structures.Atom('H', 1.41, -0.75));
+                let h3 = mol.addAtom(new ChemDoodle.structures.Atom('H', -1.41, -0.75));
+                mol.addBond(new ChemDoodle.structures.Bond(c, h1, 1));
+                mol.addBond(new ChemDoodle.structures.Bond(c, h2, 1));
+                mol.addBond(new ChemDoodle.structures.Bond(c, h3, 1));
+                return mol;
+            }
+
+            function createAmmonia() {
+                let mol = new ChemDoodle.structures.Molecule();
+                let n = mol.addAtom(new ChemDoodle.structures.Atom('N', 0, 0));
+                let h1 = mol.addAtom(new ChemDoodle.structures.Atom('H', 0, 1.5));
+                let h2 = mol.addAtom(new ChemDoodle.structures.Atom('H', 1.3, -0.75));
+                let h3 = mol.addAtom(new ChemDoodle.structures.Atom('H', -1.3, -0.75));
+                mol.addBond(new ChemDoodle.structures.Bond(n, h1, 1));
+                mol.addBond(new ChemDoodle.structures.Bond(n, h2, 1));
+                mol.addBond(new ChemDoodle.structures.Bond(n, h3, 1));
+                return mol;
+            }
+
+            function createWater() {
+                let mol = new ChemDoodle.structures.Molecule();
+                let o = mol.addAtom(new ChemDoodle.structures.Atom('O', 0, 0));
+                let h1 = mol.addAtom(new ChemDoodle.structures.Atom('H', 1, 1));
+                let h2 = mol.addAtom(new ChemDoodle.structures.Atom('H', -1, 1));
+                mol.addBond(new ChemDoodle.structures.Bond(o, h1, 1));
+                mol.addBond(new ChemDoodle.structures.Bond(o, h2, 1));
+                return mol;
+            }
+            
+            function createCarbonDioxide() {
+                let mol = new ChemDoodle.structures.Molecule();
+                let c = mol.addAtom(new ChemDoodle.structures.Atom('C', 0, 0));
+                let o1 = mol.addAtom(new ChemDoodle.structures.Atom('O', -2, 0));
+                let o2 = mol.addAtom(new ChemDoodle.structures.Atom('O', 2, 0));
+                mol.addBond(new ChemDoodle.structures.Bond(c, o1, 2));
+                mol.addBond(new ChemDoodle.structures.Bond(c, o2, 2));
+                return mol;
+            }
+
+            function createBF3() {
+                let mol = new ChemDoodle.structures.Molecule();
+                let b = mol.addAtom(new ChemDoodle.structures.Atom('B', 0, 0));
+                let f1 = mol.addAtom(new ChemDoodle.structures.Atom('F', 0, 1.5));
+                let f2 = mol.addAtom(new ChemDoodle.structures.Atom('F', 1.3, -0.75));
+                let f3 = mol.addAtom(new ChemDoodle.structures.Atom('F', -1.3, -0.75));
+                mol.addBond(new ChemDoodle.structures.Bond(b, f1, 1));
+                mol.addBond(new ChemDoodle.structures.Bond(b, f2, 1));
+                mol.addBond(new ChemDoodle.structures.Bond(b, f3, 1));
+                return mol;
+            }
+
+            function createPCl5() {
+                let mol = new ChemDoodle.structures.Molecule();
+                let p = mol.addAtom(new ChemDoodle.structures.Atom('P', 0, 0));
+                let cl1 = mol.addAtom(new ChemDoodle.structures.Atom('Cl', 0, 1.5));
+                let cl2 = mol.addAtom(new ChemDoodle.structures.Atom('Cl', 0, -1.5));
+                let cl3 = mol.addAtom(new ChemDoodle.structures.Atom('Cl', 1.4, 0));
+                let cl4 = mol.addAtom(new ChemDoodle.structures.Atom('Cl', -0.7, -1.2));
+                let cl5 = mol.addAtom(new ChemDoodle.structures.Atom('Cl', -0.7, 1.2));
+                mol.addBond(new ChemDoodle.structures.Bond(p, cl1, 1));
+                mol.addBond(new ChemDoodle.structures.Bond(p, cl2, 1));
+                mol.addBond(new ChemDoodle.structures.Bond(p, cl3, 1));
+                mol.addBond(new ChemDoodle.structures.Bond(p, cl4, 1));
+                mol.addBond(new ChemDoodle.structures.Bond(p, cl5, 1));
+                return mol;
+            }
+
+            function createSF6() {
+                let mol = new ChemDoodle.structures.Molecule();
+                let s = mol.addAtom(new ChemDoodle.structures.Atom('S', 0, 0));
+                let f1 = mol.addAtom(new ChemDoodle.structures.Atom('F', 0, 1.5));
+                let f2 = mol.addAtom(new ChemDoodle.structures.Atom('F', 0, -1.5));
+                let f3 = mol.addAtom(new ChemDoodle.structures.Atom('F', 1.5, 0));
+                let f4 = mol.addAtom(new ChemDoodle.structures.Atom('F', -1.5, 0));
+                let f5 = mol.addAtom(new ChemDoodle.structures.Atom('F', 1.06, 1.06));
+                let f6 = mol.addAtom(new ChemDoodle.structures.Atom('F', -1.06, -1.06));
+                mol.addBond(new ChemDoodle.structures.Bond(s, f1, 1));
+                mol.addBond(new ChemDoodle.structures.Bond(s, f2, 1));
+                mol.addBond(new ChemDoodle.structures.Bond(s, f3, 1));
+                mol.addBond(new ChemDoodle.structures.Bond(s, f4, 1));
+                mol.addBond(new ChemDoodle.structures.Bond(s, f5, 1));
+                mol.addBond(new ChemDoodle.structures.Bond(s, f6, 1));
+                return mol;
+            }
+
+            // Inicializar todos os visualizadores
+            init2DViewer('canvas-co2', createCarbonDioxide);
+            init2DViewer('canvas-bf3', createBF3);
+            init2DViewer('canvas-h2o', createWater);
+            init2DViewer('canvas-ch4', createMethane);
+            init2DViewer('canvas-nh3', createAmmonia);
+            init2DViewer('canvas-pcl5', createPCl5);
+            init2DViewer('canvas-sf6', createSF6);
+
+        } catch (e) {
+            console.error("Erro ao inicializar ChemDoodle: ", e);
+            document.querySelectorAll('.molecule-viewer-canvas').forEach(canvas => {
+                canvas.parentElement.innerHTML = '<p style="color: #ff4d4d; text-align: center;">Erro ao carregar visualizador.</p>';
+            });
+        }
+
+    };
+    </script>
+</body>
+</html>

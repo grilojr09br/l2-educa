@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="no-js">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guia de Inglês Avançado: Uma Jornada Imersiva</title>
+    
+    <!-- Google Fonts: Poppins & Lora -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <!-- Google Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <script>(function(d){var c=d.documentElement;c.className=c.className.replace('no-js','js');})(document);</script>
+
+    <style>
+        /* 1. RESET E CONFIGURAÇÕES GLOBAIS (V8) */
+        :root {
+            --primary-color: #D1FAE5; /* Verde menta claro */
+            --secondary-color: #A7F3D0; /* Verde menta médio */
+            --accent-color: #34D399; /* Verde esmeralda */
+            --text-color: #F9FAFB;
+            --bg-color: #1f2937; /* Cinza-azulado escuro */
+            --card-bg: rgba(55, 65, 81, 0.3);
+            --border-color: rgba(52, 211, 153, 0.2);
+            --font-main: 'Poppins', sans-serif;
+            --font-serif: 'Lora', serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: var(--font-main);
+            line-height: 1.8;
+            overflow-x: hidden;
+        }
+
+        /* 2. ESTÉTICA "AURORA LÍQUIDA" */
+        .aurora-background { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; z-index: -1; overflow: hidden; }
+        .aurora-shape { position: absolute; border-radius: 50%; filter: blur(180px); opacity: 0.4; }
+        .shape1 { width: 500px; height: 500px; background: #10B981; top: -150px; left: -150px; animation: move-aurora 25s infinite alternate ease-in-out; }
+        .shape2 { width: 400px; height: 400px; background: #3B82F6; bottom: -100px; right: -100px; animation: move-aurora 30s infinite alternate-reverse ease-in-out; }
+        .shape3 { width: 350px; height: 350px; background: #6366F1; top: 50%; left: 50%; transform: translate(-50%, -50%); animation: move-aurora 20s infinite ease-in-out; }
+        @keyframes move-aurora {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(100px, 50px) scale(1.2); }
+            100% { transform: translate(-50px, -100px) scale(1); }
+        }
+
+        /* 3. TELA DE CARREGAMENTO */
+        html.no-js .loading-overlay { display: none !important; }
+        .loading-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: var(--bg-color); display: none; flex-direction: column; justify-content: center; align-items: center; z-index: 1000; transition: opacity 0.8s ease-out; will-change: opacity; -webkit-transform: translateZ(0); -webkit-backface-visibility: hidden; }
+        .loading-logo { font-size: clamp(2rem, 8vw, 4rem); font-weight: 700; color: var(--primary-color); margin-bottom: 2rem; }
+        .loading-logo span { opacity: 0; animation: letter-fade-in 0.5s forwards; }
+        @keyframes letter-fade-in { to { opacity: 1; } }
+        .progress-bar-container { width: 250px; height: 4px; background-color: rgba(255, 255, 255, 0.1); border-radius: 2px; overflow: hidden; }
+        .progress-bar { width: 0; height: 100%; background: linear-gradient(90deg, var(--secondary-color), var(--accent-color)); border-radius: 2px; animation: fill-progress 2s ease-out forwards; }
+        @keyframes fill-progress { to { width: 100%; } }
+        .loading-overlay.hidden { opacity: 0; pointer-events: none; visibility: hidden; }
+
+        /* 4. NAVEGAÇÃO DINÂMICA (ESTILO ANTIGO RESTAURADO) */
+        .main-nav {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border-color);
+            border-radius: 50px;
+            padding: 0.5rem;
+            z-index: 500;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+        }
+        .main-nav ul { list-style: none; display: flex; align-items: center; gap: 0.25rem; }
+        .main-nav a {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem;
+            color: var(--primary-color);
+            text-decoration: none;
+            border-radius: 30px;
+            transition: background-color 0.4s ease, color 0.4s ease, transform 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .main-nav .nav-text {
+            font-weight: 500;
+            font-size: 0.9rem;
+            white-space: nowrap;
+            max-width: 0;
+            opacity: 0;
+            transition: max-width 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.3s ease;
+        }
+        .main-nav a:hover {
+            background-color: var(--primary-color);
+            color: var(--bg-color);
+            transform: scale(1.05);
+        }
+        .main-nav a.active {
+            background-color: var(--primary-color);
+            color: var(--bg-color);
+            transform: scale(1.05);
+        }
+        @media (min-width: 1024px) {
+            .main-nav:hover .nav-text { max-width: 150px; opacity: 1; margin-left: 0.25rem; }
+            .main-nav:hover a { padding: 0.75rem 1rem; }
+        }
+        @media (max-width: 1023px) {
+            html.js .main-nav { top: -100px; }
+            html.js .main-nav.nav-visible { top: 20px; }
+            .main-nav .nav-text { display: none; }
+        }
+
+        /* 5. LAYOUT E CONTEÚDO */
+        main { opacity: 1; transition: opacity 0.8s ease-in; }
+        html.js main { opacity: 0; }
+        html.js main.loaded { opacity: 1; }
+        .topic-section { min-height: 100vh; width: 100%; padding: 120px 5% 60px; display: flex; flex-direction: column; justify-content: center; align-items: center; position: relative; }
+        .section-container { max-width: 960px; width: 100%; margin: 0 auto; }
+        h1, h2, h3 { font-weight: 600; letter-spacing: -0.5px; margin-bottom: 1rem; text-shadow: 0 0 15px rgba(0,0,0,0.3); }
+        .section-title { font-size: clamp(2.5rem, 6vw, 4rem); text-align: center; color: var(--primary-color); line-height: 1.1; font-family: var(--font-serif); }
+        .section-intro { font-size: clamp(1rem, 2.5vw, 1.25rem); max-width: 750px; text-align: center; margin: 1rem auto 3rem; color: var(--secondary-color); font-weight: 300; }
+        .subsection-title { font-size: clamp(1.8rem, 4vw, 2.5rem); color: var(--primary-color); margin-top: 3rem; margin-bottom: 1.5rem; border-left: 4px solid var(--accent-color); padding-left: 1rem; font-family: var(--font-serif); }
+        p { margin-bottom: 1.5rem; font-size: clamp(1rem, 2vw, 1.1rem); text-align: justify; }
+        strong { color: var(--secondary-color); font-weight: 600; }
+        blockquote { background: var(--card-bg); border-left: 4px solid var(--accent-color); margin: 2rem 0; padding: 1.5rem; border-radius: 0 8px 8px 0; font-family: var(--font-serif); font-style: italic; color: var(--secondary-color); }
+        blockquote footer { font-style: normal; text-align: right; margin-top: 1rem; font-size: 0.9rem; color: var(--primary-color); font-family: var(--font-main); }
+        .example-box { background: rgba(0,0,0,0.2); padding: 1.5rem; border-radius: 8px; margin: 1rem 0; font-family: var(--font-serif); }
+        .example-box ul { list-style: none; }
+        .example-box li { margin-bottom: 1rem; }
+        .example-box li::before { content: '→'; color: var(--accent-color); margin-right: 1rem; }
+
+        /* 6. ANIMAÇÕES E RODAPÉ */
+        .reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.8s ease-out, transform 0.8s ease-out; }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+        html.no-js .reveal { opacity: 1; transform: none; }
+        footer { width: 100%; text-align: center; padding: 2rem; font-size: 0.9rem; color: var(--secondary-color); background-color: rgba(0,0,0,0.2); }
+    </style>
+    <noscript><style>.loading-overlay{display:none!important}.reveal{opacity:1!important;transform:none!important}main{opacity:1!important}</style></noscript>
+</head>
+<body>
+
+    <div class="aurora-background"><div class="aurora-shape shape1"></div><div class="aurora-shape shape2"></div><div class="aurora-shape shape3"></div></div>
+
+    <div class="loading-overlay">
+        <div class="loading-logo"><span>L</span><span>2</span><span> </span><span>E</span><span>D</span><span>U</span><span>C</span><span>A</span></div>
+        <div class="progress-bar-container"><div class="progress-bar"></div></div>
+    </div>
+
+    <nav class="main-nav">
+        <ul>
+            <li><a href="#verb-tenses" class="nav-link"><i class="material-icons">query_builder</i><span class="nav-text">Tenses</span></a></li>
+            <li><a href="#modal-verbs" class="nav-link"><i class="material-icons">rule</i><span class="nav-text">Modals</span></a></li>
+            <li><a href="#structure-vocab" class="nav-link"><i class="material-icons">translate</i><span class="nav-text">Structure</span></a></li>
+            <li><a href="#themed-topic" class="nav-link"><i class="material-icons">smartphone</i><span class="nav-text">Topic</span></a></li>
+        </ul>
+    </nav>
+    
+    <main id="main-content">
+
+        <!-- SEÇÃO 1: VERB TENSES -->
+        <section id="verb-tenses" class="topic-section">
+            <div class="section-container">
+                <h1 class="section-title reveal">Dominando o Tempo</h1>
+                <p class="section-intro reveal" style="transition-delay: 0.2s;">
+                    Os tempos verbais em inglês são a espinha dorsal da comunicação. Compreender suas nuances não é apenas decorar regras, mas entender como o tempo e a perspectiva moldam o significado de uma ação. Vamos explorar as conexões entre passado e presente.
+                </p>
+
+                <div class="reveal" style="transition-delay: 0.4s;">
+                    <h2 class="subsection-title">Present Perfect vs. Simple Past</h2>
+                    <p>Esta é uma das maiores fontes de dúvida para aprendizes. A chave não está em *quando* a ação aconteceu, mas em sua *conexão com o presente*. O <strong>Simple Past</strong> é usado para ações concluídas em um tempo específico no passado. O tempo acabou. O <strong>Present Perfect</strong> é usado para ações que aconteceram em um tempo não especificado no passado, mas que têm relevância ou consequência no presente.</p>
+                    <div class="example-box">
+                        <ul>
+                            <li><strong>Simple Past:</strong> <i>"I <strong>visited</strong> Japan in 2019."</i> (A viagem aconteceu em 2019 e terminou. O tempo é específico e finalizado).</li>
+                            <li><strong>Present Perfect:</strong> <i>"I <strong>have visited</strong> Japan."</i> (A experiência de ter visitado o Japão faz parte de quem eu sou agora. O tempo não é o foco).</li>
+                            <li><strong>Consequência no presente:</strong> <i>"She <strong>has lost</strong> her keys."</i> (A ação de perder aconteceu no passado, mas a consequência é agora: ela não pode entrar em casa).</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="reveal">
+                    <h2 class="subsection-title">Os Advérbios do Present Perfect (JEANYSFLR)</h2>
+                    <p>Certos advérbios são pistas importantes para o uso do Present Perfect. O acrônimo JEANYSFLR (Just, Ever, Already, Never, Yet, Since, For, Lately, Recently) ajuda a lembrar os principais:</p>
+                    <div class="example-box">
+                        <ul>
+                            <li><strong>Just / Already:</strong> Ações que acabaram de acontecer ou aconteceram antes do esperado. <i>"They have <strong>just</strong> arrived." / "I've <strong>already</strong> seen that movie."</i></li>
+                            <li><strong>Ever / Never:</strong> Experiências de vida. <i>"Have you <strong>ever</strong> been to Canada?" / "He has <strong>never</strong> eaten sushi."</i></li>
+                            <li><strong>Yet:</strong> Usado em negativas e perguntas, para algo que se espera que aconteça. <i>"She hasn't finished her homework <strong>yet</strong>."</i></li>
+                            <li><strong>Since / For:</strong> Duração de uma ação que começou no passado e continua até agora. <strong>For</strong> + período de tempo (two years). <strong>Since</strong> + ponto de partida (2022). <i>"We have lived here <strong>for</strong> ten years." / "I haven't seen him <strong>since</strong> last month."</i></li>
+                            <li><strong>Lately / Recently:</strong> Período recente. <i>"I've been very busy <strong>lately</strong>."</i></li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="reveal">
+                    <h2 class="subsection-title">Past Perfect & Past Perfect Continuous</h2>
+                    <p>Estes tempos são usados para falar sobre o "passado do passado". Eles estabelecem a sequência de duas ou mais ações que aconteceram no passado. O <strong>Past Perfect (had + past participle)</strong> descreve uma ação que foi concluída *antes* de outra ação no passado.</p>
+                    <p>O <strong>Past Perfect Continuous (had + been + verb-ing)</strong> foca na duração de uma ação que estava acontecendo *antes* de outra ação no passado a interromper ou ocorrer.</p>
+                    <div class="example-box">
+                        <ul>
+                            <li><strong>Past Perfect:</strong> <i>"When I arrived at the party, John <strong>had already left</strong>."</i> (Primeiro, John saiu. Depois, eu cheguei).</li>
+                            <li><strong>Past Perfect Continuous:</strong> <i>"I <strong>had been waiting</strong> for an hour when the bus finally arrived."</i> (A ação de esperar estava em progresso por uma hora antes da chegada do ônibus).</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- SEÇÃO 2: MODAL VERBS -->
+        <section id="modal-verbs" class="topic-section">
+            <div class="section-container">
+                <h1 class="section-title reveal">A Nuance dos Modais</h1>
+                <p class="section-intro reveal" style="transition-delay: 0.2s;">
+                    Verbos modais são auxiliares que adicionam significados específicos a um verbo principal, como habilidade, permissão, possibilidade ou obrigação. Eles não mudam com a pessoa (I can, she can) e são sempre seguidos por um verbo no infinitivo sem "to".
+                </p>
+
+                <div class="reveal" style="transition-delay: 0.4s;">
+                    <h2 class="subsection-title">Habilidade, Permissão e Possibilidade</h2>
+                    <p>Este grupo expressa o que é possível ou permitido.</p>
+                     <div class="example-box">
+                        <ul>
+                            <li><strong>Can:</strong> Habilidade ou permissão no presente. <i>"She <strong>can</strong> speak three languages." / "<strong>Can</strong> I use your phone?"</i></li>
+                            <li><strong>Could:</strong> Habilidade no passado, ou um pedido/sugestão mais educado. <i>"I <strong>could</strong> swim when I was five." / "<strong>Could</strong> you help me, please?"</i></li>
+                            <li><strong>May:</strong> Permissão formal ou possibilidade (menos de 50% de chance). <i>"<strong>May</strong> I come in?" / "It <strong>may</strong> rain tomorrow."</i></li>
+                            <li><strong>Might:</strong> Possibilidade remota (menos de 30% de chance). É um pouco menos provável que "may". <i>"He <strong>might</strong> be late."</i></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="reveal">
+                    <h2 class="subsection-title">Conselho, Necessidade e Obrigação</h2>
+                    <p>Este grupo lida com o que é recomendado, necessário ou proibido.</p>
+                    <div class="example-box">
+                        <ul>
+                            <li><strong>Should:</strong> Conselho, sugestão ou recomendação. <i>"You <strong>should</strong> see a doctor."</i></li>
+                            <li><strong>Must:</strong> Obrigação forte (geralmente interna, do falante) ou dedução lógica. <i>"I <strong>must</strong> finish this report today." / "He's not answering. He <strong>must</strong> be busy."</i></li>
+                            <li><strong>Have to:</strong> Obrigação externa (uma regra, uma lei). <i>"You <strong>have to</strong> wear a uniform at school."</i></li>
+                             <li><strong>Mustn't:</strong> Proibição. É proibido fazer algo. <i>"You <strong>mustn't</strong> smoke here."</i></li>
+                            <li><strong>Don't have to:</strong> Ausência de necessidade. Não é necessário fazer algo. <i>"You <strong>don't have to</strong> pay, it's free."</i></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEÇÃO 3: STRUCTURE & VOCAB -->
+        <section id="structure-vocab" class="topic-section">
+            <div class="section-container">
+                <h1 class="section-title reveal">Construindo Sentido</h1>
+                <p class="section-intro reveal" style="transition-delay: 0.2s;">
+                    Além da gramática, a escolha precisa das palavras e a compreensão de estruturas fixas são essenciais para a fluência. Vamos explorar algumas áreas-chave que enriquecem a comunicação.
+                </p>
+
+                <div class="reveal" style="transition-delay: 0.4s;">
+                    <h2 class="subsection-title">Fatos vs. Opiniões</h2>
+                    <p>Distinguir fatos de opiniões é crucial para a interpretação de textos e para a argumentação. Um <strong>fato</strong> é uma declaração que pode ser provada como verdadeira ou falsa, de forma objetiva. Uma <strong>opinião</strong> é um julgamento, crença ou sentimento que não pode ser provado, expressando uma perspectiva pessoal.</p>
+                    <div class="example-box">
+                        <ul>
+                            <li><strong>Fato:</strong> <i>"Brazil is the largest country in South America."</i> (Pode ser verificado com dados geográficos).</li>
+                            <li><strong>Opinião:</strong> <i>"Brazilian music is the best in the world."</i> (É uma preferência pessoal, não pode ser provada).</li>
+                            <li><strong>Palavras-chave de opinião:</strong> <i>I think, I believe, in my opinion, good, bad, beautiful, ugly.</i></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="reveal">
+                    <h2 class="subsection-title">Adjetivos + Preposições</h2>
+                    <p>Muitos adjetivos em inglês são seguidos por preposições específicas. Aprender essas combinações (collocations) é fundamental para a naturalidade da fala.</p>
+                     <div class="example-box">
+                        <ul>
+                            <li><strong>Good AT:</strong> <i>"She is good <strong>at</strong> playing the piano."</i></li>
+                            <li><strong>Interested IN:</strong> <i>"I'm interested <strong>in</strong> ancient history."</i></li>
+                            <li><strong>Afraid OF:</strong> <i>"He is afraid <strong>of</strong> spiders."</i></li>
+                            <li><strong>Proud OF:</strong> <i>"They are proud <strong>of</strong> their daughter."</i></li>
+                            <li><strong>Similar TO:</strong> <i>"Your car is similar <strong>to</strong> mine."</i></li>
+                            <li><strong>Responsible FOR:</strong> <i>"You are responsible <strong>for</strong> this project."</i></li>
+                        </ul>
+                    </div>
+                </div>
+
+                 <div class="reveal">
+                    <h2 class="subsection-title">Palavras Confundidas</h2>
+                    <p>Pequenas diferenças podem alterar completamente o sentido de uma frase.</p>
+                     <div class="example-box">
+                        <ul>
+                            <li><strong>Been vs. Gone:</strong> <strong>Been</strong> significa que alguém foi a um lugar e já voltou. <strong>Gone</strong> significa que alguém foi e ainda não retornou. <i>"She has <strong>been</strong> to Paris." (Ela foi e voltou). / "She has <strong>gone</strong> to Paris." (Ela está em Paris agora).</i></li>
+                            <li><strong>Meet vs. Get to know:</strong> <strong>Meet</strong> é o primeiro encontro, o ato de ser apresentado. <strong>Get to know</strong> é o processo de conhecer alguém melhor ao longo do tempo. <i>"I'm going to <strong>meet</strong> my new boss today." / "It was great to <strong>get to know</strong> you better on our trip."</i></li>
+                            <li><strong>Find out:</strong> Significa descobrir uma informação, muitas vezes por acaso ou através de investigação. <i>"I need to <strong>find out</strong> what time the train leaves."</i></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEÇÃO 4: THEMED TOPIC -->
+        <section id="themed-topic" class="topic-section">
+            <div class="section-container">
+                <h1 class="section-title reveal">Tópico Temático</h1>
+                <p class="section-intro reveal" style="transition-delay: 0.2s;">
+                    Aplicar o conhecimento em um contexto real é a etapa final da alquimia. Vamos analisar um tema contemporâneo usando as estruturas e o vocabulário que exploramos.
+                </p>
+
+                <div class="reveal" style="transition-delay: 0.4s;">
+                    <h2 class="subsection-title">Smartphone Addiction</h2>
+                    <p>In recent years, many people <strong>have become</strong> worried about smartphone addiction. In my opinion, this is a serious issue that <strong>should</strong> be addressed. A fact is that the average person checks their phone over 100 times a day. Some people feel they <strong>must</strong> respond to messages immediately, creating a constant state of anxiety. They are afraid <strong>of</strong> missing out (FOMO).</p>
+                    <p>I think we <strong>have to</strong> find a better balance. For example, you <strong>don't have to</strong> take your phone to bed. You <strong>could</strong> try turning off notifications for certain apps. I <strong>have recently</strong> started doing this, and I've found out that it helps a lot. I believe everyone <strong>can</strong> benefit from a "digital detox" from time to time. What do you think? Have you <strong>ever</strong> tried to reduce your screen time?</p>
+                    <blockquote>
+                        <p>The difference between technology and slavery is that slaves are fully aware that they are not free.</p>
+                        <footer>— Nassim Nicholas Taleb</footer>
+                    </blockquote>
+                </div>
+            </div>
+        </section>
+
+    </main>
+    
+    <footer>
+        <p>Página educacional desenvolvida como uma ferramenta de aprendizado. Design e conteúdo por L2.</p>
+    </footer>
+
+    <script>
+    (function () {
+      function onReady(fn) {
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', fn);
+        } else {
+          fn();
+        }
+      }
+
+      onReady(function () {
+        try {
+          var loadingOverlay = document.querySelector('.loading-overlay');
+          var mainEl = document.getElementById('main-content');
+
+          function hideOverlay() {
+            if (!loadingOverlay) return;
+            loadingOverlay.classList.add('hidden');
+            if (mainEl) {
+              mainEl.classList.add('loaded');
+            }
+            var removed = false;
+            var cleanup = function () {
+              if (removed) return;
+              removed = true;
+              if (loadingOverlay && loadingOverlay.parentNode) {
+                loadingOverlay.parentNode.removeChild(loadingOverlay);
+              }
+            };
+            loadingOverlay.addEventListener('transitionend', cleanup, { once: true });
+            setTimeout(cleanup, 1200);
+          }
+
+          // Mostrar overlay apenas se JS realmente inicializou (navegadores que bloqueiam JS manterão overlay oculto via CSS)
+          if (loadingOverlay) {
+            // Exibe o overlay rapidamente e agenda sua remoção para evitar travas
+            loadingOverlay.style.display = 'flex';
+            setTimeout(hideOverlay, 2500);
+          }
+
+          // --- LÓGICA DE NAVEGAÇÃO (ESTILO ANTIGO RESTAURADO) ---
+          var nav = document.querySelector('.main-nav');
+          var navLinks = document.querySelectorAll('.nav-link');
+          var sections = document.querySelectorAll('.topic-section');
+          var lastScrollY = window.scrollY || window.pageYOffset || 0;
+          var isNavVisible = true;
+
+          // Detecta suporte a passive listeners
+          var passiveOptions = false;
+          try {
+            var opts = Object.defineProperty({}, 'passive', {
+              get: function () { passiveOptions = { passive: true }; }
+            });
+            window.addEventListener('testPassive', null, opts);
+            window.removeEventListener('testPassive', null, opts);
+          } catch (e) { passiveOptions = false; }
+
+          // Lógica para mostrar/esconder nav no scroll (mobile)
+          window.addEventListener('scroll', function () {
+            if (window.innerWidth <= 1023 && nav) {
+              var currentY = window.scrollY || window.pageYOffset || 0;
+              var scrollDown = currentY > lastScrollY;
+              var scrollUp = currentY < lastScrollY;
+
+              if (scrollDown && currentY > nav.offsetHeight) {
+                if (isNavVisible) {
+                  nav.classList.remove('nav-visible');
+                  isNavVisible = false;
+                }
+              } else if (scrollUp) {
+                if (!isNavVisible) {
+                  nav.classList.add('nav-visible');
+                  isNavVisible = true;
+                }
+              }
+              lastScrollY = currentY;
+            }
+          }, passiveOptions || false);
+
+          // Helper para iterar NodeList em Safari antigo
+          function forEachNode(list, cb) {
+            for (var i = 0; i < list.length; i++) {
+              cb(list[i], i);
+            }
+          }
+
+          // --- Destaque do link ativo e animação de reveal ---
+          var supportsIntersectionObserver = typeof window.IntersectionObserver !== 'undefined';
+
+          if (supportsIntersectionObserver) {
+            // thresholds [0, 0.1, ..., 1.0]
+            var thresholds = [];
+            for (var t = 0; t <= 10; t++) { thresholds.push(t / 10); }
+
+            // Observer para seção ativa
+            var navObserver = new IntersectionObserver(function (entries) {
+              var mostVisibleEntry = null;
+              for (var i = 0; i < entries.length; i++) {
+                var entry = entries[i];
+                if (!mostVisibleEntry || entry.intersectionRatio > mostVisibleEntry.intersectionRatio) {
+                  mostVisibleEntry = entry;
+                }
+              }
+              if (!mostVisibleEntry) return;
+
+              var activeId = mostVisibleEntry.target.id;
+              forEachNode(navLinks, function (link) {
+                if (link.getAttribute('href') === '#' + activeId) {
+                  link.classList.add('active');
+                } else {
+                  link.classList.remove('active');
+                }
+              });
+            }, {
+              root: null,
+              rootMargin: '0px',
+              threshold: thresholds
+            });
+
+            forEachNode(sections, function (section) { navObserver.observe(section); });
+
+            // Observer para revelar elementos
+            var revealElements = document.querySelectorAll('.reveal');
+            var revealObserver = new IntersectionObserver(function (entries, observer) {
+              for (var i = 0; i < entries.length; i++) {
+                var entry = entries[i];
+                if (entry.isIntersecting) {
+                  entry.target.classList.add('visible');
+                  observer.unobserve(entry.target);
+                }
+              }
+            }, { root: null, rootMargin: '0px 0px -100px 0px', threshold: 0.1 });
+
+            forEachNode(revealElements, function (el) { revealObserver.observe(el); });
+
+          } else {
+            // Fallback para iOS sem IntersectionObserver
+            var revealElementsAll = document.querySelectorAll('.reveal');
+            forEachNode(revealElementsAll, function (el) { el.classList.add('visible'); });
+
+            function highlightActiveLink() {
+              var scrollY = window.scrollY || window.pageYOffset || 0;
+              var viewportMiddle = scrollY + (window.innerHeight / 2);
+              var currentSectionId = null;
+              for (var i = 0; i < sections.length; i++) {
+                var s = sections[i];
+                var rect = s.getBoundingClientRect();
+                var top = rect.top + scrollY;
+                var bottom = top + rect.height;
+                if (viewportMiddle >= top && viewportMiddle < bottom) {
+                  currentSectionId = s.id;
+                  break;
+                }
+              }
+              if (currentSectionId) {
+                forEachNode(navLinks, function (link) {
+                  if (link.getAttribute('href') === '#' + currentSectionId) {
+                    link.classList.add('active');
+                  } else {
+                    link.classList.remove('active');
+                  }
+                });
+              }
+            }
+            window.addEventListener('scroll', highlightActiveLink, passiveOptions || false);
+            window.addEventListener('resize', highlightActiveLink);
+            highlightActiveLink();
+          }
+
+        } catch (e) {
+          // Garantir que o overlay nunca bloqueie a página em caso de falha
+          try {
+            var overlay = document.querySelector('.loading-overlay');
+            if (overlay) {
+              overlay.classList.add('hidden');
+              setTimeout(function () {
+                if (overlay && overlay.parentNode) {
+                  overlay.parentNode.removeChild(overlay);
+                }
+              }, 1200);
+            }
+            var mainEl2 = document.getElementById('main-content');
+            if (mainEl2) { mainEl2.classList.add('loaded'); }
+          } catch (_) { }
+        }
+      });
+    })();
+    </script>
+</body>
+</html>

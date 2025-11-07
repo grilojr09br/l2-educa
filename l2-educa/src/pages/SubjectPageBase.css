@@ -1,0 +1,343 @@
+/* Base Styles for Subject Pages - Shared across all subjects */
+
+/* Common Layout */
+.subject-page-base {
+  min-height: 100vh;
+  padding: clamp(1.5rem, 4vw, 3rem) clamp(1rem, 5vw, 2rem);
+  overflow-x: hidden;
+  width: 100%;
+}
+
+/* Breadcrumb */
+.breadcrumb {
+  max-width: 1200px;
+  margin: 0 auto 2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.6);
+  flex-wrap: wrap;
+}
+
+.breadcrumb-link {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: rgba(255, 255, 255, 0.7);
+  text-decoration: none;
+  transition: all 0.3s ease-out;
+  padding: 0.4rem 0.8rem;
+  border-radius: 8px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: inherit;
+}
+
+.breadcrumb-separator {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+/* Hero Section */
+.subject-hero {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: clamp(3rem, 8vw, 6rem) 0;
+  text-align: center;
+}
+
+.subject-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.6rem 1.5rem;
+  border-radius: 50px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 0.1em;
+  margin-bottom: 2rem;
+}
+
+.subject-badge .material-icons {
+  font-size: 1.2rem;
+}
+
+.subject-title {
+  font-size: clamp(2.5rem, 7vw, 4.5rem);
+  font-weight: 800;
+  margin-bottom: 1.5rem;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.gradient-text {
+  animation: gradient-shift 5s ease infinite;
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+@keyframes gradient-shift {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+.subject-subtitle {
+  font-size: clamp(1rem, 2.5vw, 1.2rem);
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.6;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+/* Stats Row */
+.stats-row {
+  display: flex;
+  justify-content: center;
+  gap: clamp(1.5rem, 4vw, 3rem);
+  flex-wrap: wrap;
+  margin-top: 3rem;
+}
+
+.stat-box {
+  padding: 1.5rem 2rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  backdrop-filter: blur(10px);
+  min-width: 150px;
+  transition: all 0.3s ease-out;
+}
+
+.stat-number {
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin-bottom: 0.5rem;
+}
+
+.stat-label {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.6);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Topics Section */
+.topics-section {
+  max-width: 1200px;
+  margin: 4rem auto;
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+  font-size: clamp(1.8rem, 4vw, 2.5rem);
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 3rem;
+  text-align: center;
+}
+
+.section-title .material-icons {
+  font-size: 2rem;
+}
+
+/* Topics Grid */
+.topics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: clamp(1.5rem, 4vw, 2.5rem);
+  width: 100%;
+  max-width: 100%;
+  padding: clamp(2rem, 5vw, 3rem);
+}
+
+/* Topic Card */
+.topic-card-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  height: 100%;
+  position: relative;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  filter: drop-shadow(0 0 0 transparent);
+}
+
+.topic-card-link:not(.disabled):hover {
+  transform: translateY(-8px);
+}
+
+.topic-card-link:not(.disabled):active {
+  transform: translateY(-12px) scale(0.97);
+}
+
+.topic-card-link.disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.topic-card-content {
+  height: 100%;
+  min-height: 350px;
+  display: flex;
+  flex-direction: column;
+  padding: 2rem;
+  position: relative;
+}
+
+/* Coming Soon Badge */
+.coming-soon-badge {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  z-index: 10;
+}
+
+.coming-soon-badge .material-icons {
+  font-size: 1rem;
+}
+
+/* Topic Icon */
+.topic-icon {
+  width: 80px;
+  height: 80px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+.topic-icon .material-icons {
+  font-size: 2.5rem;
+  color: white;
+}
+
+/* Topic Content */
+.topic-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 0.75rem;
+}
+
+.topic-description {
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+  flex: 1;
+}
+
+/* Topic Stats */
+.topic-stats {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.topic-stat {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.topic-stat .material-icons {
+  font-size: 1rem;
+}
+
+/* Difficulty Badge */
+.topic-difficulty {
+  display: inline-block;
+  padding: 0.4rem 0.8rem;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+/* Arrow */
+.topic-arrow {
+  position: absolute;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease-out;
+}
+
+.topic-card-link:hover .topic-arrow {
+  transform: translateX(5px);
+}
+
+.topic-arrow .material-icons {
+  font-size: 1.2rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .topics-grid {
+    grid-template-columns: 1fr;
+    padding: 1.5rem;
+  }
+
+  .subject-hero {
+    padding: 2rem 0;
+  }
+
+  .stats-row {
+    gap: 1rem;
+  }
+
+  .stat-box {
+    min-width: 120px;
+    padding: 1rem 1.5rem;
+  }
+
+  .stat-number {
+    font-size: 2rem;
+  }
+
+  .topic-card-content {
+    min-height: 320px;
+  }
+}
+
+@media (max-width: 480px) {
+  .subject-badge {
+    font-size: 0.8rem;
+    padding: 0.5rem 1rem;
+  }
+
+  .topics-grid {
+    padding: 1rem;
+  }
+}
+

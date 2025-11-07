@@ -1,0 +1,1121 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <!-- =========================================
+       Guia Educacional (SPA) — Renascimento & Maquiavel
+       Filosofia | Conteúdo, UI e Interatividade de nível mestre
+       Autor: L2 (IA Arquiteto Pedagógico Digital)
+       ========================================= -->
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="light dark" />
+  <title>Renascimento Cultural & Científico + Maquiavel — Guia Definitivo</title>
+
+  <!-- Google Fonts: Elegância + Legibilidade -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Playfair+Display:wght@400;700;900&display=swap" rel="stylesheet">
+  <!-- Material Icons (somente elas, via CDN) -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+  <!-- Bibliotecas JS via CDN (interatividade robusta) -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vis-network/standalone/umd/vis-network.min.js"></script>
+
+  <style>
+    /* ============================================================
+       SISTEMA DE DESIGN — LUXO, CLAREZA, FLUIDEZ (Mobile-first)
+       ============================================================ */
+    :root{
+      /* Tipografia */
+      --font-sans: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, sans-serif;
+      --font-serif: 'Playfair Display', Georgia, serif;
+
+      /* Cores base (modo claro) */
+      --bg: #0f1220;
+      --bg-soft: #13172a;
+      --text: #e8ecff;
+      --text-dim: #b9c0e7;
+      --accent: #7aa2ff;
+      --accent-2: #b388ff;
+      --positive: #3bd3a6;
+      --warning: #ffd166;
+      --danger: #ff6b6b;
+
+      /* Glass */
+      --glass-bg: rgba(255,255,255,0.06);
+      --glass-stroke: rgba(255,255,255,0.12);
+      --blur: 14px;
+
+      /* Layout */
+      --sidebar-w: 300px;
+      --radius-lg: 16px;
+      --radius-md: 12px;
+      --radius-sm: 10px;
+      --shadow-1: 0 10px 30px rgba(0,0,0,.35);
+      --shadow-2: 0 4px 14px rgba(0,0,0,.25);
+
+      /* Tamanhos */
+      --fs-xxl: clamp(2.2rem, 2.3rem + 1vw, 4rem);
+      --fs-xl: clamp(1.6rem, 1.4rem + 0.8vw, 2.6rem);
+      --fs-lg: clamp(1.25rem, 1.15rem + 0.4vw, 1.6rem);
+      --fs-md: 1rem;
+      --fs-sm: .9rem;
+
+      /* Espaços */
+      --gap-xxl: 56px;
+      --gap-xl: 36px;
+      --gap-lg: 24px;
+      --gap-md: 16px;
+      --gap-sm: 10px;
+
+      /* Transições */
+      --t-fast: .25s;
+      --t-base: .35s;
+      --t-slow: .5s;
+    }
+
+    @media (prefers-color-scheme: light){
+      :root{
+        --bg:#f6f7fb;
+        --bg-soft:#ffffff;
+        --text:#16181d;
+        --text-dim:#525866;
+        --accent:#2453ff;
+        --accent-2:#6a35ff;
+        --glass-bg: rgba(0,0,0,0.04);
+        --glass-stroke: rgba(0,0,0,0.08);
+      }
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:var(--font-sans);
+      background:
+        radial-gradient(1200px 700px at 15% 10%, rgba(122,162,255,.18), transparent 60%),
+        radial-gradient(1000px 600px at 85% 15%, rgba(179,136,255,.14), transparent 60%),
+        linear-gradient(180deg, var(--bg) 0%, #0b0e1b 100%);
+      color:var(--text);
+      line-height:1.6;
+      overflow-x:hidden;
+    }
+
+    a{color:var(--accent); text-decoration:none}
+    a:hover{text-decoration:underline}
+
+    /* Skip link (acessibilidade) */
+    .skip-link{
+      position:absolute; left:-999px; top:auto; width:1px; height:1px; overflow:hidden;
+    }
+    .skip-link:focus{
+      position:fixed; left:12px; top:12px; width:auto; height:auto; padding:10px 14px;
+      background:var(--bg-soft); border:1px solid var(--glass-stroke); border-radius:10px;
+      box-shadow:var(--shadow-2); z-index:9999;
+    }
+
+    /* ===== Layout principal (SPA) ===== */
+    .layout{
+      display:flex; gap:0;
+    }
+
+    /* Sidebar (desktop) */
+    .sidebar{
+      position:sticky; top:0; height:100vh; width:var(--sidebar-w);
+      padding:24px; backdrop-filter: blur(var(--blur));
+      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+      border-right:1px solid var(--glass-stroke);
+      box-shadow:var(--shadow-1);
+    }
+    .brand{
+      display:flex; align-items:center; gap:10px; margin-bottom:20px;
+    }
+    .brand .logo{
+      width:40px; height:40px; border-radius:12px;
+      display:grid; place-items:center; background:linear-gradient(135deg, var(--accent), var(--accent-2));
+      color:white; font-weight:800; font-family:var(--font-serif);
+      box-shadow: 0 6px 18px rgba(36,83,255,.35);
+    }
+    .brand h1{
+      font-family:var(--font-serif); font-weight:900; font-size:1.1rem; letter-spacing:.2px; margin:0;
+    }
+    .brand small{color:var(--text-dim)}
+
+    .nav{
+      margin-top:12px; padding-right:6px; height:calc(100% - 120px); overflow:auto;
+    }
+    .nav ul{list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:6px}
+    .nav a{
+      display:flex; align-items:center; gap:12px; padding:10px 12px; border-radius:10px;
+      color:var(--text); text-decoration:none; border:1px solid transparent;
+      transition:background var(--t-base), border-color var(--t-base), transform var(--t-fast);
+    }
+    .nav a .material-icons{font-size:20px}
+    .nav a:hover{background:var(--glass-bg); border-color:var(--glass-stroke)}
+    .nav a.active{
+      background:linear-gradient(180deg, rgba(122,162,255,.20), rgba(122,162,255,.05));
+      border-color:rgba(122,162,255,.35);
+      box-shadow: 0 8px 20px rgba(122,162,255,.25);
+    }
+
+    /* Header (mobile) — mostra em telas menores */
+    .topbar{
+      position:sticky; top:0; z-index:999; display:none;
+      backdrop-filter: blur(var(--blur)); border-bottom:1px solid var(--glass-stroke);
+      background:linear-gradient(180deg, rgba(255,255,255,.7), rgba(255,255,255,.3));
+    }
+    .topbar-inner{
+      display:flex; gap:10px; align-items:center; overflow-x:auto; padding:10px 12px;
+    }
+    .topbar a{
+      white-space:nowrap; padding:8px 12px; margin-right:8px; border-radius:999px;
+      border:1px solid var(--glass-stroke); text-decoration:none; color:var(--text);
+      background:var(--glass-bg);
+      transition: background var(--t-base), transform var(--t-fast);
+    }
+    .topbar a.active{background:rgba(36,83,255,.18); border-color:rgba(36,83,255,.35)}
+    .topbar.nav-hidden{transform:translateY(-100%); transition:transform var(--t-base)}
+    .topbar.nav-visible{transform:translateY(0); transition:transform var(--t-base)}
+
+    /* Conteúdo */
+    main{
+      flex:1; min-width:0; padding:32px clamp(14px, 3vw, 40px);
+    }
+
+    /* Cards de vidro (glassmorphism) */
+    .glass{
+      background:var(--glass-bg); border:1px solid var(--glass-stroke);
+      border-radius:var(--radius-lg); backdrop-filter: blur(var(--blur));
+      box-shadow:var(--shadow-2);
+    }
+
+    /* Hero */
+    .hero{
+      padding:28px; display:grid; gap:18px;
+      background:
+        radial-gradient(800px 400px at 80% -10%, rgba(36,83,255,.22), transparent 60%),
+        radial-gradient(900px 500px at -5% 120%, rgba(179,136,255,.18), transparent 60%),
+        linear-gradient(160deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+    }
+    .hero h2{font-family:var(--font-serif); font-size:var(--fs-xxl); line-height:1.2; margin:0}
+    .hero p{font-size:var(--fs-lg); color:var(--text-dim); margin:0}
+    .cta-row{display:flex; flex-wrap:wrap; gap:10px; align-items:center}
+    .btn{
+      display:inline-flex; align-items:center; gap:8px; padding:12px 16px; border-radius:12px;
+      border:1px solid var(--glass-stroke); background:var(--bg-soft); color:var(--text);
+      cursor:pointer; transition: transform var(--t-fast), background var(--t-base), box-shadow var(--t-base);
+    }
+    .btn:hover{transform:translateY(-1px); box-shadow:var(--shadow-2)}
+    .btn.primary{background:linear-gradient(135deg, var(--accent), var(--accent-2)); color:#fff; border-color:transparent}
+    .btn.ghost{background:var(--glass-bg)}
+    .btn .material-icons{font-size:20px}
+
+    /* Seções temáticas com identidade visual */
+    section{
+      margin-top:var(--gap-xxl);
+      scroll-margin-top: 90px;
+    }
+    section .heading{
+      display:flex; align-items:flex-end; justify-content:space-between; gap:16px; margin-bottom:16px;
+    }
+    section h3{
+      font-family:var(--font-serif); font-size:var(--fs-xl); margin:0;
+      letter-spacing:.2px;
+    }
+    section p.lead{font-size:var(--fs-lg); color:var(--text-dim); margin:.25rem 0 1rem}
+
+    /* Temas por seção (cores sutis) */
+    .theme-rena{--theme: rgba(122,162,255,.25)}
+    .theme-metodo{--theme: rgba(59,211,166,.22)}
+    .theme-ciencia{--theme: rgba(255,209,102,.22)}
+    .theme-maq{--theme: rgba(255,107,107,.22)}
+    .theme-casos{--theme: rgba(186, 104, 200, .22)}
+    .theme-quiz{--theme: rgba(36, 83, 255, .22)}
+    .section-shell{
+      padding:18px; background: linear-gradient(180deg, var(--theme), rgba(255,255,255,.02));
+      border-radius:var(--radius-lg);
+      border:1px solid var(--glass-stroke);
+      box-shadow:var(--shadow-2);
+    }
+
+    /* Lista de "cards" resumidos */
+    .cards{display:grid; grid-template-columns:repeat(3, 1fr); gap:12px}
+    .card{padding:14px; border-radius:14px; border:1px dashed var(--glass-stroke)}
+    .card strong{display:block; font-weight:800}
+    .muted{color:var(--text-dim)}
+
+    /* Conteúdo expandível (Aprofundar) */
+    .expand-wrap{overflow:hidden; max-height:0; transition:max-height var(--t-slow) ease; will-change:max-height}
+    .expand-wrap.open{max-height:4000px} /* valor alto para permitir expansão longa */
+    .btn-expand .icon{transition: transform var(--t-base)}
+    .btn-expand[aria-expanded="true"] .icon{transform: rotate(180deg)}
+
+    /* Tabelas */
+    table{width:100%; border-collapse:collapse; font-size:.98rem}
+    th, td{border-bottom:1px dashed var(--glass-stroke); padding:10px 8px; vertical-align:top}
+    th{text-align:left; color:var(--text); font-weight:700}
+    tr:hover td{background:rgba(255,255,255,.03)}
+
+    /* Glossário */
+    .glossario{display:grid; grid-template-columns: 1fr 1fr; gap:12px}
+    .g-item{padding:12px; border:1px solid var(--glass-stroke); border-radius:12px; background:var(--glass-bg)}
+    .g-item b{display:block; margin-bottom:4px}
+
+    /* Contêineres utilitários */
+    .grid-2{display:grid; grid-template-columns:1.4fr 1fr; gap:16px}
+    .grid-3{display:grid; grid-template-columns:repeat(3, 1fr); gap:16px}
+    .stack{display:grid; gap:12px}
+    .kbd{font-family:ui-monospace, SFMono-Regular, Menlo, monospace; font-size:.9em; background:rgba(0,0,0,.25); padding:2px 6px; border-radius:6px}
+
+    /* Footer obrigatório */
+    footer{margin-top:64px; padding:24px 10px; text-align:center; color:var(--text-dim)}
+
+    /* Acessibilidade e foco */
+    :focus-visible{outline:2px solid var(--accent); outline-offset:2px; border-radius:10px}
+
+    /* Responsividade */
+    @media (max-width: 1200px){
+      .cards{grid-template-columns:repeat(2,1fr)}
+      .grid-3{grid-template-columns:repeat(2,1fr)}
+      .grid-2{grid-template-columns:1fr}
+      .glossario{grid-template-columns: 1fr}
+    }
+    @media (max-width: 1024px){
+      .sidebar{display:none}
+      .topbar{display:block}
+      main{padding-top:8px}
+    }
+    @media (max-width: 640px){
+      .hero h2{font-size: clamp(1.8rem, 5vw, 2.4rem)}
+      .hero p{font-size: 1rem}
+      section h3{font-size: clamp(1.3rem, 4.2vw, 1.8rem)}
+      .cards{grid-template-columns:1fr}
+    }
+
+    /* Reduzir movimentos se o usuário preferir */
+    @media (prefers-reduced-motion: reduce){
+      *{animation:none !important; transition:none !important}
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#conteudo">Ir para o conteúdo principal</a>
+
+  <!-- Topbar (mobile) com comportamento inteligente de esconder/mostrar -->
+  <nav class="topbar nav-visible" id="topbar" aria-label="Navegação móvel">
+    <div class="topbar-inner" id="top-links">
+      <a href="#intro" class="active">Início</a>
+      <a href="#renascimento">Renascimento</a>
+      <a href="#metodologia">Humanismo & Método</a>
+      <a href="#ciencia">Renascimento Científico</a>
+      <a href="#maquiavel">Maquiavel</a>
+      <a href="#casos">Estudos de Caso</a>
+      <a href="#quiz">Autoavaliação</a>
+      <a href="#fontes">Fontes</a>
+    </div>
+  </nav>
+
+  <div class="layout">
+    <!-- Sidebar (desktop) -->
+    <aside class="sidebar" aria-label="Navegação lateral">
+      <div class="brand">
+        <div class="logo" aria-hidden="true">L2</div>
+        <div>
+          <h1>Guia — Renascimento & Maquiavel</h1>
+          <small>Arquiteto Pedagógico Digital</small>
+        </div>
+      </div>
+      <nav class="nav" id="side-nav">
+        <ul>
+          <li><a class="active" href="#intro"><span class="material-icons">home</span> Início</a></li>
+          <li><a href="#renascimento"><span class="material-icons">auto_stories</span> Renascimento: Fundamentos</a></li>
+          <li><a href="#metodologia"><span class="material-icons">psychology</span> Humanismo & Método</a></li>
+          <li><a href="#ciencia"><span class="material-icons">science</span> Renascimento Científico</a></li>
+          <li><a href="#maquiavel"><span class="material-icons">gavel</span> Maquiavel: Primeiras Ideias</a></li>
+          <li><a href="#casos"><span class="material-icons">travel_explore</span> Estudos de Caso</a></li>
+          <li><a href="#quiz"><span class="material-icons">quiz</span> Autoavaliação</a></li>
+          <li><a href="#fontes"><span class="material-icons">library_books</span> Leituras & Fontes</a></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- Conteúdo principal -->
+    <main id="conteudo" tabindex="-1">
+      <!-- HERO -->
+      <section id="intro" class="hero glass">
+        <h2>Renascimento Cultural & Científico na Filosofia<br> + Primeiras Noções sobre <em>Maquiavel</em></h2>
+        <p>Uma experiência de aprendizado integral para dominar as bases do Renascimento, entender suas interseções com a ciência e entrar, com segurança conceitual, no pensamento inicial de Maquiavel — virtù, fortuna e razão de Estado.</p>
+        <div class="cta-row">
+          <button class="btn primary" onclick="document.querySelector('#renascimento').scrollIntoView({behavior:'smooth'})">
+            <span class="material-icons">play_arrow</span> Explorar Guia Completo
+          </button>
+          <button class="btn ghost" id="btnTema" aria-pressed="false">
+            <span class="material-icons">dark_mode</span> Alternar tema
+          </button>
+          <span class="muted">Zero fluff. Profundidade máxima. Design como ferramenta pedagógica.</span>
+        </div>
+      </section>
+
+      <!-- SEÇÃO: RENASCIMENTO (Fundamentos) -->
+      <section id="renascimento" class="theme-rena">
+        <div class="section-shell">
+          <div class="heading">
+            <div>
+              <h3>Renascimento: Fundamentos, Clima Intelectual e Lógica Central</h3>
+              <p class="lead">Do <em>ad fontes</em> humanista à reconfiguração do horizonte filosófico: ruptura seletiva com o escolasticismo, intensificação filológica e novas práticas de leitura do mundo e dos textos.</p>
+            </div>
+            <button class="btn btn-expand" data-target="#exp-rena" aria-expanded="false" aria-controls="exp-rena">
+              <span class="material-icons icon" aria-hidden="true">expand_more</span> Aprofundar
+            </button>
+          </div>
+
+          <!-- Cards resumo -->
+          <div class="cards">
+            <div class="card glass">
+              <strong>Humanismo</strong>
+              Ênfase na dignidade humana, retórica, história e moral prática; recuperação crítica de fontes clássicas.
+            </div>
+            <div class="card glass">
+              <strong>Filologia</strong>
+              Métodos textuais: crítica de manuscritos, comparação de versões, contexto histórico-linguístico.
+            </div>
+            <div class="card glass">
+              <strong>Imprensa & Mecenato</strong>
+              Difusão de ideias e redes intelectuais via tipografia; patronos moldam agendas culturais.
+            </div>
+          </div>
+
+          <!-- Expandido SUPER DUPER MEGA -->
+          <div class="expand-wrap" id="exp-rena" aria-live="polite">
+            <div class="stack" style="margin-top:16px">
+              <div class="glass" style="padding:16px">
+                <h4>Lógica Central</h4>
+                <ul>
+                  <li><b>Reordenamento das autoridades:</b> dos comentários escolásticos para o contato direto com Antigos (Platão, Aristóteles, Cícero, Tácito), priorizando <em>texto, contexto e uso</em>.</li>
+                  <li><b>Do silogismo à prudência:</b> a razão prática, historicamente informada, ganha protagonismo na ética e política.</li>
+                  <li><b>Novo horizonte antropológico:</b> capacidade humana de criar si própria (autoconstrução) e as instituições; ênfase em educação, virtudes cívicas e linguagem.</li>
+                </ul>
+              </div>
+
+              <div class="grid-2">
+                <div class="glass" style="padding:16px">
+                  <h4>Aplicações Práticas</h4>
+                  <ol>
+                    <li><b>Educação cívica:</b> currículos humanistas (gramática, retórica, história) formam elites administrativas.</li>
+                    <li><b>Política realista embrionária:</b> análise de crônicas e exemplos para orientar decisões de governo.</li>
+                    <li><b>Tradução como filosofia:</b> escolhas filológicas alteram significados (ex.: <em>virtus</em>, <em>fortuna</em>).</li>
+                    <li><b>Historiografia crítica:</b> confronto entre fontes, identificação de vieses, periodização.</li>
+                  </ol>
+                </div>
+                <div class="glass" style="padding:16px">
+                  <h4>Raciocínio Sequencial (procedimento de leitura crítica)</h4>
+                  <ol>
+                    <li>Mapeie o gênero do texto (carta, tratado, discurso).</li>
+                    <li>Levante o <em>contexto de produção</em> (cidade, patrono, controvérsia).</li>
+                    <li>Liste termos-chave e variações semânticas.</li>
+                    <li>Compare passagens paralelas e traduções.</li>
+                    <li>Relacione com eventos históricos coetâneos (guerras, alianças).</li>
+                    <li>Extraia implicações normativas e limitações do argumento.</li>
+                  </ol>
+                </div>
+              </div>
+
+              <div class="glass" style="padding:16px">
+                <h4>Linhas do Tempo (seleção)</h4>
+                <div class="stack">
+                  <div>
+                    <label for="anoRange"><b>Filtrar até o ano:</b> <span id="anoValue">1520</span></label>
+                    <input id="anoRange" type="range" min="1350" max="1620" value="1520" step="10" aria-label="Filtro de ano da linha do tempo">
+                  </div>
+                  <table aria-label="Linha do tempo do Renascimento">
+                    <thead><tr><th>Ano</th><th>Evento</th><th>Relevância Filosófica</th></tr></thead>
+                    <tbody id="timelineBody">
+                      <!-- Preenchido por JS -->
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <div class="glass" style="padding:16px">
+                <h4>Tabela — Pensadores & Contribuições</h4>
+                <table>
+                  <thead><tr><th>Autor</th><th>Ideias-chave</th><th>Impacto</th></tr></thead>
+                  <tbody>
+                    <tr><td>Petrarca</td><td><em>Ad fontes</em>, interioridade, crítica à escolástica tardia.</td><td>Redireciona método: elo entre moral antiga e vida civil cristã.</td></tr>
+                    <tr><td>Ficino</td><td>Platonismo renascentista, dignidade da alma, amor como princípio cósmico.</td><td>Reencena Platão para cultura cristã, legitima contemplação e ação.</td></tr>
+                    <tr><td>Pico della Mirandola</td><td><em>Oratio</em> sobre dignidade humana, liberdade e autoconstrução.</td><td>Manifesto do potencial humano e da unidade do saber.</td></tr>
+                    <tr><td>Erasmo</td><td>Filologia bíblica, moral cristã prática, sátira.</td><td>Refina método crítico, prepara debates da Reforma.</td></tr>
+                    <tr><td>Maquiavel</td><td><em>Virtù</em>, <em>fortuna</em>, <em>necessità</em>, razão de Estado.</td><td>Reformula a filosofia política como análise realista de poderes.</td></tr>
+                    <tr><td>Galileu</td><td>Matematização da natureza, experimento, método.</td><td>Reconfigura a <em>physis</em>, tensiona tradições filosóficas.</td></tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="glass" style="padding:16px">
+                <h4>Dicas & Macetes</h4>
+                <ul>
+                  <li><span class="kbd">3×C</span> para leitura humanista: <b>Contexto</b> histórico, <b>Cânone</b> de referência, <b>Conflitos</b> de interpretação.</li>
+                  <li>Tradução é teoria: compare termos recorrentes em latim/italiano — <em>virtù</em> não é “virtude” moderna.</li>
+                  <li>Patrocínio importa: pergunte sempre <i>quem financia</i> e <i>com qual finalidade</i>.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SEÇÃO: HUMANISMO & METODOLOGIA -->
+      <section id="metodologia" class="theme-metodo">
+        <div class="section-shell">
+          <div class="heading">
+            <div>
+              <h3>Humanismo & Metodologia: Filologia, Retórica, História</h3>
+              <p class="lead">Como o humanismo altera o que significa “fazer filosofia”: do argumento abstrato à prudência histórica e ao uso público da eloquência.</p>
+            </div>
+            <button class="btn btn-expand" data-target="#exp-metodo" aria-expanded="false" aria-controls="exp-metodo">
+              <span class="material-icons icon">expand_more</span> Aprofundar
+            </button>
+          </div>
+
+          <div class="cards">
+            <div class="card glass"><strong>Ad fontes</strong> Volta às fontes originais, crítica textual e recontextualização.</div>
+            <div class="card glass"><strong>Retórica</strong> Persuasão responsável: adequação ao auditório e ao momento (<em>kairos</em>).</div>
+            <div class="card glass"><strong>História</strong> Exemplos (<em>exempla</em>) orientam o juízo político e moral.</div>
+          </div>
+
+          <div class="expand-wrap" id="exp-metodo">
+            <div class="grid-2" style="margin-top:16px">
+              <div class="glass" style="padding:16px">
+                <h4>Glossário pesquisável</h4>
+                <input id="buscaGloss" type="search" placeholder="Pesquisar termo (ex.: virtù, fortuna...)" aria-label="Pesquisar no glossário" style="width:100%; padding:10px; border-radius:10px; border:1px solid var(--glass-stroke); background:var(--glass-bg); color:var(--text)">
+                <div class="glossario" id="glossarioLista" style="margin-top:12px">
+                  <!-- Itens gerados por JS -->
+                </div>
+              </div>
+              <div class="glass" style="padding:16px">
+                <h4>Rede de Influências (interativa)</h4>
+                <div id="network" style="height:380px; border-radius:12px; background:var(--glass-bg); border:1px solid var(--glass-stroke)"></div>
+                <small class="muted">Arraste, dê zoom (pinça/scroll) e toque nos nós para destacar relações.</small>
+              </div>
+            </div>
+
+            <div class="glass" style="padding:16px; margin-top:16px">
+              <h4>Roteiro de análise (passo a passo)</h4>
+              <ol>
+                <li><b>Defina o problema:</b> Que questão filosófico‑política o texto enfrenta?</li>
+                <li><b>Mapeie as fontes:</b> Antigos citados, história local, documentos administrativos.</li>
+                <li><b>Identifique os <em>exempla</em>:</b> Que casos sustentam as teses?</li>
+                <li><b>Construa o eixo semântico:</b> termos nucleares e seus antagonistas.</li>
+                <li><b>Teste a tese em casos-limite:</b> funciona em cenários adversos?</li>
+                <li><b>Explicite trade-offs:</b> custos, riscos e critérios de prudência.</li>
+              </ol>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SEÇÃO: RENASCIMENTO CIENTÍFICO -->
+      <section id="ciencia" class="theme-ciencia">
+        <div class="section-shell">
+          <div class="heading">
+            <div>
+              <h3>Renascimento Científico & Filosofia Natural</h3>
+              <p class="lead">Da filologia dos textos naturais à matematização da natureza: como o novo método científico repercute nos modos de pensar o humano e a política.</p>
+            </div>
+            <button class="btn btn-expand" data-target="#exp-ciencia" aria-expanded="false" aria-controls="exp-ciencia">
+              <span class="material-icons icon">expand_more</span> Aprofundar
+            </button>
+          </div>
+
+          <div class="cards">
+            <div class="card glass"><strong>Observação & Experimento</strong> Hipóteses testáveis, repetição, instrumentação.</div>
+            <div class="card glass"><strong>Matematização</strong> Do discurso qualitativo à formalização de leis.</div>
+            <div class="card glass"><strong>Tensão Teológica</strong> Reinterpretação de passagens e limites do discurso natural.</div>
+          </div>
+
+          <div class="expand-wrap" id="exp-ciencia">
+            <div class="grid-2" style="margin-top:16px">
+              <div class="glass" style="padding:16px">
+                <h4>Aplicações filosóficas</h4>
+                <ul>
+                  <li><b>Epistemologia prática:</b> prioridade do método sobre a autoridade textual.</li>
+                  <li><b>Modelagem de fenômenos sociais:</b> metáforas mecânicas e estatísticas para pensar repúblicas e exércitos.</li>
+                  <li><b>Revisão da causalidade:</b> causas eficientes ganham protagonismo; finais, menos centrais.</li>
+                </ul>
+              </div>
+              <div class="glass" style="padding:16px">
+                <h4>Checklist de leitura de ciência renascentista</h4>
+                <ul>
+                  <li>Qual a <b>técnica</b> ou instrumento novo envolvido?</li>
+                  <li>Como o argumento trata <b>erros e incertezas</b>?</li>
+                  <li>Há <b>modelos matemáticos</b> ou analogias estruturantes?</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- SEÇÃO: MAQUIAVEL — PRIMEIRAS IDEIAS -->
+      <section id="maquiavel" class="theme-maq">
+        <div class="section-shell">
+          <div class="heading">
+            <div>
+              <h3>Maquiavel: Primeiras Ideias e Noções Iniciais</h3>
+              <p class="lead">Núcleo conceitual: <b>virtù</b> (capacidade efetiva), <b>fortuna</b> (contingência), <b>necessità</b> (exigência do momento) e a <b>razão de Estado</b> como arte de preservar a ordem política.</p>
+            </div>
+            <button class="btn btn-expand" data-target="#exp-maq" aria-expanded="false" aria-controls="exp-maq">
+              <span class="material-icons icon">expand_more</span> Aprofundar
+            </button>
+          </div>
+
+          <div class="cards">
+            <div class="card glass"><strong>Virtù</strong> Capacidade de perceber conjunturas, decidir e executar com firmeza.</div>
+            <div class="card glass"><strong>Fortuna</strong> Variações do acaso e do fluxo dos eventos (meandro do rio).</div>
+            <div class="card glass"><strong>Necessità</strong> Dureza das circunstâncias que impõem ações não-ideais.</div>
+          </div>
+
+          <div class="expand-wrap" id="exp-maq">
+            <div class="grid-2" style="margin-top:16px">
+              <!-- Simulador Virtù–Fortuna -->
+              <div class="glass" style="padding:16px">
+                <h4>Simulador Virtù–Fortuna</h4>
+                <p class="muted">Ajuste os controles para estimar a estabilidade de um principado em um cenário simplificado. A simulação <em>não</em> é determinista; é uma heurística pedagógica.</p>
+                <div class="stack">
+                  <label>Virtù (0–100): <span id="vVal">60</span></label>
+                  <input id="virtusRange" type="range" min="0" max="100" value="60" step="1" aria-label="Controle de virtù">
+                  <label>Fortuna favorável (0–100): <span id="fVal">40</span></label>
+                  <input id="fortunaRange" type="range" min="0" max="100" value="40" step="1" aria-label="Controle de fortuna">
+                  <canvas id="vfChart" height="260" aria-label="Gráfico de equilíbrio Virtù–Fortuna" role="img"></canvas>
+                  <div id="vfSaida" class="glass" style="padding:12px"></div>
+                </div>
+              </div>
+
+              <!-- Comparador de Conselhos -->
+              <div class="glass" style="padding:16px">
+                <h4>Comparador de Conselhos: Clássico × Maquiavel</h4>
+                <p class="muted">Insira um objetivo político; o comparador sintetiza um conselho “clássico” e um “maquiaveliano”, destacando trade-offs.</p>
+                <div class="stack">
+                  <input id="objetivo" type="text" placeholder="Ex.: Unificar cidades rivais mantendo baixa tributação" aria-label="Objetivo político" style="width:100%; padding:10px; border-radius:10px; border:1px solid var(--glass-stroke); background:var(--glass-bg); color:var(--text)">
+                  <div class="grid-3">
+                    <label><input type="checkbox" id="limiteEtico" checked> Respeitar limites éticos estritos</label>
+                    <label><input type="checkbox" id="baixaViolencia" checked> Minimizar uso da força</label>
+                    <label><input type="checkbox" id="rapidezExec"> Priorizar rapidez de execução</label>
+                  </div>
+                  <button class="btn" id="btnComparar"><span class="material-icons">compare</span> Gerar comparação</button>
+                  <div id="comparadorSaida" class="glass" style="padding:12px"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="glass" style="padding:16px; margin-top:16px">
+              <h4>Quadro conceitual (organização)</h4>
+              <table>
+                <thead><tr><th>Conceito</th><th>Definição operacional</th><th>Indicadores práticos</th></tr></thead>
+                <tbody>
+                  <tr><td>Virtù</td><td>Capacidade de configurar o campo de forças por decisão e execução.</td><td>Reformas eficazes, disciplina militar, comunicação pública.</td></tr>
+                  <tr><td>Fortuna</td><td>Fatores externos instáveis que favorecem ou dificultam ações.</td><td>Crises, epidemias, alianças, clima econômico.</td></tr>
+                  <tr><td>Necessità</td><td>Obrigação circunstancial que reduz o leque de meios.</td><td>Estado de sítio, invasão iminente, bancarrota.</td></tr>
+                  <tr><td>Aparência</td><td>Gestão simbólica dos atos para preservar confiança.</td><td>Rituais públicos, mensagens, reputação de firmeza.</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="glass" style="padding:16px; margin-top:16px">
+              <h4>Leituras focais iniciais</h4>
+              <ul>
+                <li><em>O Príncipe</em> (cap. VI, VII, XV–XVIII): fundação, crueldade bem usada, ser amado/temido.</li>
+                <li><em>Discursos sobre a Primeira Década de Tito Lívio</em>: repúblicas, corrupção, milícias.</li>
+                <li>Cartas e Relatórios: treinamento do olhar prático e diagnóstico institucional.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SEÇÃO: ESTUDOS DE CASO -->
+      <section id="casos" class="theme-casos">
+        <div class="section-shell">
+          <div class="heading">
+            <div>
+              <h3>Estudos de Caso — Prudência Histórica em Ação</h3>
+              <p class="lead">Aplicações da lógica renascentista e maquiaveliana a episódios paradigmáticos.</p>
+            </div>
+            <button class="btn btn-expand" data-target="#exp-casos" aria-expanded="false" aria-controls="exp-casos">
+              <span class="material-icons icon">expand_more</span> Aprofundar
+            </button>
+          </div>
+
+          <div class="expand-wrap" id="exp-casos">
+            <div class="grid-2" style="margin-top:16px">
+              <div class="glass" style="padding:16px">
+                <h4>Cesare Borgia (Romagna)</h4>
+                <ul>
+                  <li><b>Virtù:</b> reorganização administrativa e militar rápida.</li>
+                  <li><b>Fortuna:</b> dependência do papado; colapso com mudança de conjuntura.</li>
+                  <li><b>Necessità:</b> uso calibrado da severidade (Remirro de Orco) seguido de clemência simbólica.</li>
+                  <li><b>Lição:</b> consolidar instituições além da sorte de um patrono.</li>
+                </ul>
+              </div>
+              <div class="glass" style="padding:16px">
+                <h4>Florença Republicana vs. Savonarola</h4>
+                <ul>
+                  <li><b>Conflito de linguagens:</b> profética × pragmática.</li>
+                  <li><b>Base social:</b> mobilização popular volátil; institucionalidade frágil.</li>
+                  <li><b>Lição:</b> carisma sem engenharia institucional é efêmero.</li>
+                </ul>
+              </div>
+            </div>
+            <div class="glass" style="padding:16px; margin-top:16px">
+              <h4>Método de estudo de caso (passo a passo)</h4>
+              <ol>
+                <li>Defina <b>agentes</b>, <b>recursos</b> e <b>restrições</b>.</li>
+                <li>Reconstrua a <b>sequência temporal</b> dos eventos-chave.</li>
+                <li>Mapeie decisões e <b>pontos de bifurcação</b>.</li>
+                <li>Teste contrafactuais plausíveis (limites da fortuna/virtù).</li>
+                <li>Extraia <b>máximas de prudência</b> com escopo delimitado.</li>
+              </ol>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SEÇÃO: QUIZ / AVALIAÇÃO -->
+      <section id="quiz" class="theme-quiz">
+        <div class="section-shell">
+          <div class="heading">
+            <div>
+              <h3>Autoavaliação — Fixe os Conceitos</h3>
+              <p class="lead">Questões objetivas com feedback imediato e explicações curtas.</p>
+            </div>
+            <button class="btn" id="btnReset"><span class="material-icons">restart_alt</span> Resetar progresso</button>
+          </div>
+
+          <div id="quizArea" class="glass" style="padding:16px">
+            <!-- Quiz gerado por JS -->
+          </div>
+        </div>
+      </section>
+
+      <!-- SEÇÃO: FONTES -->
+      <section id="fontes">
+        <div class="section-shell">
+          <div class="heading">
+            <div>
+              <h3>Leituras & Fontes Essenciais</h3>
+              <p class="lead">Para continuidade dos estudos em profundidade.</p>
+            </div>
+          </div>
+          <div class="glass" style="padding:16px">
+            <ul>
+              <li>Maquiavel, <em>O Príncipe</em>; <em>Discursos sobre a Primeira Década de Tito Lívio</em> (ed. críticas).</li>
+              <li>Pico della Mirandola, <em>Oratio de hominis dignitate</em>.</li>
+              <li>Petrarca, <em>Cartas Familiares</em> e escritos morais.</li>
+              <li>Erasmo de Roterdã, <em>O Elogio da Loucura</em> e edições críticas do Novo Testamento.</li>
+              <li>Galileu, <em>O Ensaiador</em> e <em>Diálogo sobre os Dois Principais Sistemas do Mundo</em>.</li>
+              <li>Estudos secundários: JGA Pocock; Quentin Skinner; Paul Oskar Kristeller; Eugenio Garin.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <footer>Página educacional desenvolvida como uma ferramenta de aprendizado. Design e conteúdo por L2.</footer>
+    </main>
+  </div>
+
+  <script>
+    /* ============================================================
+       JS PEDAGÓGICO E DE UX
+       - IntersectionObserver para navegação ativa
+       - Topbar móvel inteligente (esconde no scroll down, mostra no up)
+       - Atores: expansores, timeline, rede, simulador, comparador, glossário, quiz
+       ============================================================ */
+
+    // ===== Util: seleção
+    const $ = (sel, el=document) => el.querySelector(sel);
+    const $$ = (sel, el=document) => [...el.querySelectorAll(sel)];
+
+    // ===== Alternância de Tema (simples: alterna classe no body)
+    const btnTema = $('#btnTema');
+    if (btnTema){
+      btnTema.addEventListener('click', () => {
+        const pressed = btnTema.getAttribute('aria-pressed') === 'true';
+        btnTema.setAttribute('aria-pressed', String(!pressed));
+        document.documentElement.classList.toggle('force-dark');
+        document.body.classList.toggle('force-dark');
+      });
+    }
+
+    // ===== Expanders (Aprofundar)
+    $$('.btn-expand').forEach(btn=>{
+      const targetSel = btn.dataset.target;
+      const target = $(targetSel);
+      btn.addEventListener('click', ()=>{
+        const expanded = btn.getAttribute('aria-expanded') === 'true';
+        btn.setAttribute('aria-expanded', String(!expanded));
+        target.classList.toggle('open');
+        // foco acessível quando abrir
+        if (!expanded) setTimeout(()=>target.scrollIntoView({behavior:'smooth', block:'start'}), 100);
+      });
+    });
+
+    // ===== Navegação ativa (sidebar + topbar)
+    const sections = $$('main section[id]');
+    const sideLinks = $$('#side-nav a');
+    const topLinks = $$('#top-links a');
+    const setActive = (id) => {
+      [...sideLinks, ...topLinks].forEach(a=>{
+        a.classList.toggle('active', a.getAttribute('href') === `#${id}`);
+      });
+    };
+    const io = new IntersectionObserver((entries)=>{
+      entries.forEach(entry=>{
+        if (entry.isIntersecting){
+          setActive(entry.target.id);
+        }
+      });
+    }, {rootMargin: '-40% 0px -55% 0px', threshold: 0});
+    sections.forEach(sec=>io.observe(sec));
+
+    // ===== Topbar móvel: esconder ao rolar para baixo, mostrar ao subir
+    let lastY = window.scrollY;
+    const topbar = $('#topbar');
+    const onScroll = () =>{
+      const y = window.scrollY;
+      const goingDown = y > lastY + 8;
+      const goingUp = y < lastY - 8;
+      if (goingDown) { topbar.classList.remove('nav-visible'); topbar.classList.add('nav-hidden'); }
+      if (goingUp) { topbar.classList.remove('nav-hidden'); topbar.classList.add('nav-visible'); }
+      lastY = y;
+    };
+    window.addEventListener('scroll', onScroll, {passive:true});
+
+    // ===== Linha do tempo (dados + filtro)
+    const timelineData = [
+      {ano:1374, evento:'Morte de Petrarca', rel:'Marca simbólica da primeira geração humanista.'},
+      {ano:1439, evento:'Concílio de Florença', rel:'Canais de troca intelectual entre Oriente e Ocidente.'},
+      {ano:1450, evento:'Difusão da imprensa', rel:'Barateia a circulação de textos e controvérsias.'},
+      {ano:1494, evento:'Invasões francesas na Itália', rel:'Reorganiza a geopolítica, pressiona repúblicas.'},
+      {ano:1503, evento:'Ascensão de Júlio II', rel:'Mecenato e guerras: contexto de Maquiavel.'},
+      {ano:1513, evento:'Redação d’ O Príncipe', rel:'Síntese da razão de Estado e análise das fundações.'},
+      {ano:1532, evento:'Publicação póstuma d’ O Príncipe', rel:'Vetor de debates europeus subsequentes.'},
+      {ano:1543, evento:'Copérnico, De revolutionibus', rel:'Cosmologia desafia quadros tradicionais.'},
+      {ano:1564, evento:'Nascimento de Galileu', rel:'Ponte para ciência moderna e método.'},
+      {ano:1610, evento:'Galileu, Mensageiro Sideral', rel:'Observações telescópicas e choque de paradigmas.'},
+    ];
+    const anoRange = $('#anoRange');
+    const anoValue = $('#anoValue');
+    const timelineBody = $('#timelineBody');
+    const renderTimeline = (limit) =>{
+      anoValue.textContent = limit;
+      timelineBody.innerHTML = timelineData
+        .filter(item=>item.ano <= limit)
+        .sort((a,b)=>a.ano-b.ano)
+        .map(i=>`<tr><td><b>${i.ano}</b></td><td>${i.evento}</td><td class="muted">${i.rel}</td></tr>`)
+        .join('');
+    };
+    renderTimeline(+anoRange.value);
+    anoRange.addEventListener('input', e=>renderTimeline(+e.target.value));
+
+    // ===== Glossário (dados + busca)
+    const glossario = [
+      {t:'Virtù', d:'Capacidade efetiva de compreender conjunturas, decidir e executar.'},
+      {t:'Fortuna', d:'Contingência e fluxo de eventos que escapam ao controle.'},
+      {t:'Necessità', d:'Exigência circunstancial que impõe meios duros.'},
+      {t:'Ad fontes', d:'Programa humanista de retorno às fontes originais.'},
+      {t:'Exempla', d:'Casos históricos que orientam o juízo prático.'},
+      {t:'Kairos', d:'O momento oportuno para agir/argumentar.'},
+      {t:'Razão de Estado', d:'Prioridade da preservação da ordem política.'},
+      {t:'Aparência', d:'Gestão simbólica de reputação e confiança.'},
+      {t:'Filologia', d:'Crítica textual e histórica de documentos.'},
+      {t:'Prudência', d:'Virtude de julgar e decidir bem em incerteza.'},
+    ];
+    const glossWrap = $('#glossarioLista');
+    const buscaGloss = $('#buscaGloss');
+    const renderGloss = (q='')=>{
+      const s = q.trim().toLowerCase();
+      const data = glossario.filter(g => [g.t, g.d].join(' ').toLowerCase().includes(s));
+      glossWrap.innerHTML = data.map(g=> `<div class="g-item"><b>${g.t}</b><span class="muted">${g.d}</span></div>`).join('');
+    };
+    renderGloss();
+    buscaGloss.addEventListener('input', e=>renderGloss(e.target.value));
+
+    // ===== Rede de influências (vis-network)
+    const networkEl = $('#network');
+    if (networkEl){
+      const nodes = new vis.DataSet([
+        {id:'Petrarca', label:'Petrarca', group:'hum'},
+        {id:'Ficino', label:'Ficino', group:'hum'},
+        {id:'Pico', label:'Pico', group:'hum'},
+        {id:'Erasmo', label:'Erasmo', group:'hum'},
+        {id:'Maquiavel', label:'Maquiavel', group:'pol'},
+        {id:'Copernico', label:'Copérnico', group:'sci'},
+        {id:'Galileu', label:'Galileu', group:'sci'},
+        {id:'Aristoteles', label:'Aristóteles', group:'ant'},
+        {id:'Platao', label:'Platão', group:'ant'},
+        {id:'Cicero', label:'Cícero', group:'ant'},
+        {id:'Tacito', label:'Tácito', group:'ant'}
+      ]);
+      const edges = new vis.DataSet([
+        {from:'Aristoteles', to:'Ficino'},
+        {from:'Platao', to:'Ficino'},
+        {from:'Cicero', to:'Erasmo'},
+        {from:'Tacito', to:'Maquiavel'},
+        {from:'Petrarca', to:'Pico'},
+        {from:'Ficino', to:'Pico'},
+        {from:'Petrarca', to:'Erasmo'},
+        {from:'Erasmo', to:'Maquiavel'},
+        {from:'Copernico', to:'Galileu'},
+        {from:'Galileu', to:'Maquiavel'}, // influência indireta (método/analogias)
+      ]);
+      const net = new vis.Network(networkEl, {nodes, edges}, {
+        physics: {stabilization:true, barnesHut:{gravitationalConstant:-3000}},
+        nodes:{
+          shape:'dot', size:16,
+          font:{color:'#fff', face:'Inter', size:14},
+          borderWidth:1
+        },
+        groups:{
+          hum:{color:{background:'rgba(122,162,255,.8)', border:'#6c8cff'}},
+          pol:{color:{background:'rgba(255,107,107,.85)', border:'#ff7f7f'}},
+          sci:{color:{background:'rgba(255,209,102,.85)', border:'#ffd166'}},
+          ant:{color:{background:'rgba(59,211,166,.85)', border:'#3bd3a6'}}
+        },
+        edges:{color:{color:'rgba(255,255,255,.5)'}, arrows:{to:{enabled:true, scaleFactor:.6}}}
+      });
+    }
+
+    // ===== Simulador Virtù–Fortuna (Chart.js)
+    const virtusRange = $('#virtusRange');
+    const fortunaRange = $('#fortunaRange');
+    const vVal = $('#vVal'); const fVal = $('#fVal');
+    const vfSaida = $('#vfSaida');
+    const ctx = $('#vfChart');
+    let vfChart;
+    function calcEstabilidade(v, f){
+      // Modelo heurístico: estabilidade ~ (0.65*v + 0.35*f) - penalidade por desequilíbrio extremo
+      const balancePenalty = Math.abs(v - f) * 0.12;
+      const base = (0.65*v + 0.35*f) - balancePenalty;
+      return Math.max(0, Math.min(100, base));
+    }
+    function renderVF(){
+      const v = +virtusRange.value, f = +fortunaRange.value;
+      vVal.textContent = v; fVal.textContent = f;
+      const est = calcEstabilidade(v,f);
+      const risk = 100 - est;
+      const msg = est >= 70
+        ? 'Alta probabilidade de estabilização: instituições e comunicação podem consolidar o ganho.'
+        : est >= 45
+          ? 'Cenário intermediário: priorize reformas visíveis e buffers contra choques.'
+          : 'Baixa probabilidade: expanda capacidade executiva e diversifique apoios para mitigar a fortuna.';
+      vfSaida.innerHTML = `
+        <b>Estimativa de estabilidade:</b> ${est.toFixed(0)} / 100
+        <br><span class="muted">${msg}</span>
+      `;
+      const data = {
+        labels:['Virtù (capacidade)','Fortuna (contexto)','Risco residual'],
+        datasets:[{data:[v, f, risk]}]
+      };
+      if (!vfChart){
+        vfChart = new Chart(ctx, {
+          type:'doughnut',
+          data,
+          options:{
+            responsive:true,
+            plugins:{legend:{display:true}, tooltip:{enabled:true}},
+            cutout:'55%'
+          }
+        });
+      } else {
+        vfChart.data = data;
+        vfChart.update();
+      }
+    }
+    renderVF();
+    virtusRange.addEventListener('input', renderVF);
+    fortunaRange.addEventListener('input', renderVF);
+
+    // ===== Comparador de Conselhos
+    const objetivoEl = $('#objetivo');
+    const limiteEtico = $('#limiteEtico');
+    const baixaViolencia = $('#baixaViolencia');
+    const rapidezExec = $('#rapidezExec');
+    const saidaComp = $('#comparadorSaida');
+    $('#btnComparar').addEventListener('click', ()=>{
+      const obj = objetivoEl.value.trim() || 'Consolidar governo em território recém-anexado';
+      const flags = {
+        etica: limiteEtico.checked,
+        nViol: baixaViolencia.checked,
+        rapido: rapidezExec.checked
+      };
+      const classico = [
+        `Fundamente o plano em leis estáveis e costumes locais.`,
+        flags.nViol ? `Prefira persuasão, incentivos e assembleias abertas.` : `Use força apenas como último recurso visível e regulado.`,
+        `Amplie legitimidade por alianças e rituais públicos.`
+      ];
+      const maq = [
+        `Priorize a ordem: identifique focos de resistência e neutralize-os cedo.`,
+        flags.rapido ? `Execução rápida de medidas-chave para criar fato consumado.` : `Cadencie reformas para testar reações e aprender.`,
+        flags.etica ? `Evite atos que corroam irreversivelmente a confiança pública.` : `Use severidade calculada e rara; compense com benefícios tangíveis.`
+      ];
+      const trade = `Trade-offs: rapidez pode elevar risco de erro; clemência sem capacidade convida a tentativas de reversão. Reputação precisa alinhar-se a atos: aparência sustenta confiança, mas não substitui instituições.`;
+      saidaComp.innerHTML = `
+        <div class="grid-2">
+          <div><h5>Conselho “Clássico”</h5><ul>${classico.map(x=>`<li>${x}</li>`).join('')}</ul></div>
+          <div><h5>Conselho “Maquiaveliano”</h5><ul>${maq.map(x=>`<li>${x}</li>`).join('')}</ul></div>
+        </div>
+        <p class="muted"><b>Objetivo:</b> ${obj}<br>${trade}</p>
+      `;
+    });
+
+    // ===== Quiz (com feedback e localStorage)
+    const QUIZ_KEY = 'quiz_rena_maquiavel_v1';
+    const perguntas = [
+      {
+        q:'O princípio humanista de “ad fontes” implica principalmente:',
+        a:['Retorno às fontes originais com crítica filológica.',
+           'Substituição total de autores antigos por modernos.',
+           'Rejeição da retórica em favor da matemática.',
+           'Preferência por comentários escolásticos tardiamente.'],
+        c:0,
+        e:'“Ad fontes” é voltar aos textos originais, comparando versões e contexto.'
+      },
+      {
+        q:'Em Maquiavel, “virtù” significa sobretudo:',
+        a:['Bondade moral no sentido moderno.',
+           'Capacidade efetiva de agir conforme a conjuntura.',
+           'Sorte favorável em batalhas.',
+           'Conformidade estrita à tradição.'],
+        c:1,
+        e:'Virtù é potência operativa: percepção, decisão e execução eficaz.'
+      },
+      {
+        q:'A “fortuna” em Maquiavel pode ser entendida como:',
+        a:['Destino fixo e imutável.',
+           'Força externa contingente que pode ser contida por virtù.',
+           'Apenas clima econômico.',
+           'Graça divina sem mediação política.'],
+        c:1,
+        e:'Fortuna é contingência; virtù pode canalizá-la, não eliminá-la.'
+      },
+      {
+        q:'A inovação técnica da imprensa favoreceu:',
+        a:['Fechamento de redes intelectuais.',
+           'Expansão e barateamento da circulação de ideias.',
+           'Declínio do humanismo.',
+           'Supressão de debates teológicos.'],
+        c:1,
+        e:'A tipografia acelera a difusão e o pluralismo de controvérsias.'
+      },
+      {
+        q:'No método renascentista, o papel dos “exempla” é:',
+        a:['Decorar nomes célebres.',
+           'Fornecer casos históricos para orientar o juízo prático.',
+           'Eliminar a necessidade de leis.',
+           'Substituir a ética por cálculo utilitarista.'],
+        c:1,
+        e:'Exempla estruturam prudência: aprendemos com casos.'
+      },
+      {
+        q:'“Necessità” indica:',
+        a:['Apenas conveniência estética.',
+           'Obrigação imposta por circunstâncias críticas.',
+           'Mandato religioso universal.',
+           'Vontade popular sempre pacífica.'],
+        c:1,
+        e:'Necessità delimita o menu de meios viáveis sob pressão.'
+      },
+    ];
+    const quizArea = $('#quizArea');
+    const salvarProgresso = (estado)=>localStorage.setItem(QUIZ_KEY, JSON.stringify(estado));
+    const lerProgresso = ()=>JSON.parse(localStorage.getItem(QUIZ_KEY) || 'null');
+    function renderQuiz(){
+      const saved = lerProgresso() || {resp:{}, score:null};
+      quizArea.innerHTML = perguntas.map((p,i)=>{
+        const marc = saved.resp[i];
+        const status = saved.score!=null
+          ? (marc===p.c ? `<span class="material-icons" aria-label="correto" style="vertical-align:middle">check_circle</span>`
+                        : `<span class="material-icons" aria-label="incorreto" style="vertical-align:middle">cancel</span>`)
+          : '';
+        return `
+          <div class="glass" style="padding:12px; margin:12px 0">
+            <div style="display:flex; align-items:flex-start; gap:10px">
+              <div class="kbd">${i+1}</div>
+              <div style="flex:1">
+                <b>${p.q}</b> ${status}
+                <div role="group" aria-label="Opções da questão ${i+1}">
+                  ${p.a.map((alt,j)=>`
+                    <label style="display:block; margin:.25rem 0">
+                      <input type="radio" name="q${i}" value="${j}" ${saved.resp[i]==j?'checked':''}> ${alt}
+                    </label>
+                  `).join('')}
+                </div>
+                <div class="muted" id="exp${i}" style="display:${saved.score!=null ? 'block' : 'none'}; margin-top:6px">
+                  <b>Explicação:</b> ${p.e}
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('') + `
+        <div class="cta-row" style="margin-top:12px">
+          <button class="btn primary" id="btnCorrigir"><span class="material-icons">task_alt</span> Corrigir</button>
+          <div id="scoreOut" class="muted"></div>
+        </div>
+      `;
+      // Bind inputs
+      perguntas.forEach((_,i)=>{
+        $$('input[name="q'+i+'"]', quizArea).forEach(inp=>{
+          inp.addEventListener('change', ()=>{
+            const st = lerProgresso() || {resp:{}, score:null};
+            st.resp[i] = +inp.value;
+            st.score = null; // reset score se alterar
+            salvarProgresso(st);
+          });
+        });
+      });
+      $('#btnCorrigir').addEventListener('click', ()=>{
+        const st = lerProgresso() || {resp:{}, score:null};
+        let acertos = 0;
+        perguntas.forEach((p,i)=>{
+          if (st.resp[i]===p.c) acertos++;
+          $('#exp'+i).style.display = 'block';
+        });
+        st.score = acertos;
+        salvarProgresso(st);
+        $('#scoreOut').innerHTML = `<b>Resultado:</b> ${acertos} / ${perguntas.length}`;
+        renderQuiz();
+      });
+      const savedAfter = lerProgresso();
+      if (savedAfter && savedAfter.score!=null){
+        $('#scoreOut').innerHTML = `<b>Resultado:</b> ${savedAfter.score} / ${perguntas.length}`;
+      }
+    }
+    renderQuiz();
+    $('#btnReset').addEventListener('click', ()=>{
+      localStorage.removeItem(QUIZ_KEY);
+      renderQuiz();
+    });
+
+    // ===== Acessibilidade: teclas rápidas (g = glossário, t = topo)
+    window.addEventListener('keydown', (e)=>{
+      if (e.target.tagName==='INPUT' || e.target.tagName==='TEXTAREA') return;
+      if (e.key.toLowerCase()==='g'){ $('#metodologia').scrollIntoView({behavior:'smooth'}); }
+      if (e.key.toLowerCase()==='t'){ window.scrollTo({top:0, behavior:'smooth'}); }
+    });
+
+    // ===== Sincronizar clique nos menus (scroll suave)
+    [...sideLinks, ...topLinks].forEach(a=>{
+      a.addEventListener('click', (e)=>{
+        const id = a.getAttribute('href');
+        const el = document.querySelector(id);
+        if (el){
+          e.preventDefault();
+          el.scrollIntoView({behavior:'smooth'});
+        }
+      });
+    });
+
+  </script>
+</body>
+</html>

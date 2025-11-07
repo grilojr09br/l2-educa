@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>L2 EDUCA | Uma Jornada pela Arte</title>
+    <style>
+        /* RESET E CONFIGURAÇÕES GLOBAIS */
+        :root {
+            --color-text: #EAEAEA;
+            --color-heading: #FFFFFF;
+            --color-background: #0D0D0D;
+            --color-primary: #C0A0FF;
+            --color-accent1: #8B5FBF;
+            --color-accent2: #FF6B6B;
+            --font-main: 'Inter', sans-serif;
+            --font-headings: 'Playfair Display', serif;
+            font-size: 16px;
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--color-background);
+            color: var(--color-text);
+            font-family: var(--font-main);
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: var(--font-headings);
+            color: var(--color-heading);
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        p {
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+            max-width: 75ch;
+        }
+
+        a {
+            color: var(--color-primary);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: var(--color-heading);
+        }
+        
+        strong {
+            color: var(--color-primary);
+            font-weight: 600;
+        }
+
+        /* FONTES E ÍCONES VIA CDN */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Playfair+Display:wght@700&display=swap');
+        @import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+
+        /* FUNDO "AURORA LÍQUIDA" */
+        .aurora-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .aurora {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(150px);
+            opacity: 0.2;
+        }
+
+        .aurora.shape1 {
+            width: 80vw;
+            height: 80vh;
+            background: #4a00e0;
+            top: -20vh;
+            left: -20vw;
+            animation: moveAurora 25s infinite alternate ease-in-out;
+        }
+
+        .aurora.shape2 {
+            width: 70vw;
+            height: 70vh;
+            background: #8e2de2;
+            bottom: -15vh;
+            right: -15vw;
+            animation: moveAurora 30s infinite alternate-reverse ease-in-out;
+        }
+        
+        .aurora.shape3 {
+            width: 50vw;
+            height: 50vh;
+            background: #1e3a8a;
+            top: 50%;
+            left: 50%;
+            animation: moveAurora 20s infinite alternate ease-in-out;
+        }
+
+
+        @keyframes moveAurora {
+            from {
+                transform: translate(0, 0) rotate(0deg);
+            }
+            to {
+                transform: translate(100px, 50px) rotate(45deg);
+            }
+        }
+
+        /* TELA DE CARREGAMENTO */
+        #loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--color-background);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            transition: opacity 0.8s ease-out;
+        }
+
+        .loading-logo {
+            font-family: var(--font-headings);
+            font-size: clamp(2rem, 5vw, 3rem);
+            color: var(--color-heading);
+            margin-bottom: 2rem;
+            overflow: hidden;
+        }
+        
+        .loading-logo span {
+            display: inline-block;
+            opacity: 0;
+            transform: translateY(100%);
+            animation: revealLetters 1s forwards;
+        }
+
+        @keyframes revealLetters {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .progress-bar {
+            width: 250px;
+            height: 2px;
+            background-color: rgba(255,255,255,0.2);
+            overflow: hidden;
+        }
+
+        .progress-bar-inner {
+            width: 0;
+            height: 100%;
+            background-color: var(--color-primary);
+            animation: loadProgress 2.5s ease-out forwards;
+        }
+        
+        @keyframes loadProgress {
+            to {
+                width: 100%;
+            }
+        }
+
+        #loading-screen.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* NAVEGAÇÃO FIXA */
+        .main-nav {
+            position: fixed;
+            top: 50%;
+            right: 2rem;
+            transform: translateY(-50%);
+            z-index: 1000;
+        }
+        
+        .main-nav ul {
+            list-style: none;
+        }
+
+        .main-nav li {
+            margin: 1rem 0;
+            text-align: right;
+        }
+        
+        .main-nav a {
+            color: rgba(234, 234, 234, 0.5);
+            font-family: var(--font-main);
+            font-weight: 600;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            transition: all 0.3s ease;
+        }
+
+        .main-nav a::after {
+            content: '';
+            display: block;
+            width: 25px;
+            height: 2px;
+            background-color: rgba(234, 234, 234, 0.5);
+            margin-left: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .main-nav a.active, .main-nav a:hover {
+            color: var(--color-heading);
+        }
+
+        .main-nav a.active::after, .main-nav a:hover::after {
+            background-color: var(--color-primary);
+            width: 50px;
+        }
+        
+        @media (max-width: 1024px) {
+            .main-nav {
+                display: none;
+            }
+        }
+
+        /* ARQUITETURA DE LAYOUT E ROLAGEM CINEMATOGRÁFICA */
+        main {
+            width: 100%;
+        }
+
+        .content-section {
+            width: 100%;
+            min-height: 100vh;
+            padding: clamp(2rem, 8vw, 6rem) clamp(1rem, 5vw, 4rem);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            z-index: 2;
+            opacity: 0.3;
+            transition: opacity 0.8s ease;
+        }
+        
+        @media (min-width: 1025px) {
+            .content-section {
+                padding: clamp(2rem, 8vw, 6rem) clamp(8rem, 15vw, 12rem) clamp(2rem, 8vw, 6rem) clamp(2rem, 5vw, 4rem);
+            }
+        }
+        
+        .content-section.is-active {
+            opacity: 1;
+            z-index: 3;
+        }
+
+        .content-section.is-previous {
+            z-index: 1;
+        }
+        
+        .intro-portal {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            height: 100vh;
+        }
+
+        .intro-portal h1 {
+            font-size: clamp(3rem, 10vw, 7rem);
+        }
+
+        .intro-portal p {
+            font-size: clamp(1rem, 2vw, 1.25rem);
+            color: rgba(234, 234, 234, 0.8);
+            max-width: 60ch;
+        }
+        
+        .deep-dive h2 {
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            margin-bottom: 2.5rem;
+            border-left: 4px solid var(--color-primary);
+            padding-left: 1.5rem;
+        }
+        
+        .deep-dive h3 {
+            font-size: clamp(1.5rem, 4vw, 2.2rem);
+            margin-top: 3rem;
+            margin-bottom: 1.5rem;
+            color: var(--color-accent1);
+        }
+
+        /* ANIMAÇÃO DE REVELAÇÃO AO ROLAR */
+        .reveal-on-scroll {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+
+        .reveal-on-scroll.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .reveal-on-scroll.staggered-item {
+            transition-delay: var(--delay);
+        }
+
+        /* COMPONENTES DE CONTEÚDO */
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            align-items: start;
+        }
+        
+        .artist-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 1.5rem;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+        
+        .artwork-analysis {
+            margin-top: 3rem;
+            background: rgba(0,0,0,0.2);
+            padding: 2rem;
+            border-radius: 8px;
+            overflow: hidden; /* Garante que o float funcione bem */
+        }
+        
+        .artwork-analysis img {
+            width: 100%;
+            max-width: 400px;
+            height: auto;
+            border-radius: 4px;
+            float: left;
+            margin-right: 2rem;
+            margin-bottom: 1rem;
+            background-color: #222;
+        }
+        
+        @media (max-width: 768px) {
+            .artwork-analysis img {
+                float: none;
+                margin-right: 0;
+                margin-bottom: 1.5rem;
+                display: block;
+                max-width: 100%;
+            }
+        }
+        
+        .artwork-analysis .title {
+            font-family: var(--font-headings);
+            font-size: 1.8rem;
+            color: var(--color-heading);
+        }
+        
+        .artwork-analysis .artist {
+            font-style: italic;
+            color: var(--color-accent1);
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        /* GALERIA DE IMAGENS */
+        .image-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+            background-color: #222;
+        }
+
+        .gallery-item img:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        
+        /* RODAPÉ */
+        footer {
+            /* MUDANÇA: CSS para centralização robusta */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            font-size: 0.875rem;
+            color: rgba(234, 234, 234, 0.6);
+            position: relative;
+            z-index: 5;
+            background-color: var(--color-background);
+        }
+        
+        footer p {
+            margin: 0; /* Remove a margem do parágrafo para um alinhamento perfeito */
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Tela de Carregamento Coreografada -->
+    <div id="loading-screen">
+        <div class="loading-logo" aria-label="L2 EDUCA">
+            <span style="animation-delay: 0.2s;">L</span>
+            <span style="animation-delay: 0.3s;">2</span>
+            <span style="animation-delay: 0.4s;">&nbsp;</span>
+            <span style="animation-delay: 0.5s;">E</span>
+            <span style="animation-delay: 0.6s;">D</span>
+            <span style="animation-delay: 0.7s;">U</span>
+            <span style="animation-delay: 0.8s;">C</span>
+            <span style="animation-delay: 0.9s;">A</span>
+        </div>
+        <div class="progress-bar">
+            <div class="progress-bar-inner"></div>
+        </div>
+    </div>
+
+    <!-- Fundo Aurora Líquida -->
+    <div class="aurora-background">
+        <div class="aurora shape1"></div>
+        <div class="aurora shape2"></div>
+        <div class="aurora shape3"></div>
+    </div>
+    
+    <!-- Navegação Fixa -->
+    <nav class="main-nav">
+        <ul>
+            <li><a href="#neoclassicismo" data-section="neoclassicismo">Neoclassicismo</a></li>
+            <li><a href="#romantismo" data-section="romantismo">Romantismo</a></li>
+            <li><a href="#realismo" data-section="realismo">Realismo</a></li>
+            <li><a href="#impressionismo" data-section="impressionismo">Impressionismo</a></li>
+            <li><a href="#pos-impressionismo" data-section="pos-impressionismo">Pós-Impressionismo</a></li>
+            <li><a href="#simbolismo" data-section="simbolismo">Simbolismo</a></li>
+            <li><a href="#art-nouveau" data-section="art-nouveau">Art Nouveau</a></li>
+            <li><a href="#fauvismo" data-section="fauvismo">Fauvismo</a></li>
+            <li><a href="#salgado" data-section="salgado">Sebastião Salgado</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <!-- SEÇÃO 1: Neoclassicismo -->
+        <section id="neoclassicismo" class="content-section intro-portal">
+            <h1 class="reveal-on-scroll">Neoclassicismo</h1>
+            <p class="reveal-on-scroll" style="transition-delay: 0.2s;">
+                Uma redescoberta da ordem, da razão e da virtude cívica. Inspirado pela clareza da antiguidade clássica, o Neoclassicismo foi a resposta estética e filosófica à exuberância do Barroco e aos ideais iluministas que varriam a Europa.
+            </p>
+        </section>
+
+        <section class="content-section deep-dive">
+            <div class="reveal-on-scroll">
+                <h2>A Busca pela Forma Perfeita</h2>
+                <p>Nascido na segunda metade do século XVIII, o Neoclassicismo refletia uma profunda mudança intelectual. As escavações de Pompeia e Herculano revelaram um mundo clássico puro e íntegro, oferecendo um modelo de clareza e racionalidade. Artistas e pensadores, influenciados pelo Iluminismo, viram na arte greco-romana a encarnação da lógica, do equilíbrio e da moralidade, valores que desejavam instilar em sua própria era, marcada por revoluções e transformações sociais.</p>
+                <p>As características são inconfundíveis: <strong>formalismo e racionalismo</strong>, contornos nítidos, composições geométricas e uma paleta de cores sóbria. A temática era frequentemente heroica e moralizante, extraída da história antiga, servindo como alegoria para as virtudes cívicas e o sacrifício pessoal em prol do Estado.</p>
+            </div>
+            
+            <div class="artwork-analysis reveal-on-scroll">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/3/35/Jacques-Louis_David_-_Oath_of_the_Horatii_-_Google_Art_Project.jpg" alt="O Juramento dos Horácios, por Jacques-Louis David" onerror="this.onerror=null;this.parentElement.style.display='none'">
+                <span class="title">O Juramento dos Horácios</span>
+                <span class="artist">Jacques-Louis David, 1784</span>
+                <p>Esta obra é o manifesto do Neoclassicismo. David retrata um episódio da história romana onde três irmãos, os Horácios, juram lutar por Roma até a morte. A composição é teatral e rigorosamente organizada: o grupo masculino, à esquerda, é composto por linhas retas e rígidas, simbolizando a coragem e o dever. Em contraste, as mulheres, à direita, são representadas por linhas curvas e suaves, expressando a dor e o sofrimento emocional. O ponto focal são as espadas, para as quais todos os olhares e gestos convergem. A pintura tornou-se um símbolo da Revolução Francesa, exaltando o patriotismo e o auto-sacrifício.</p>
+            </div>
+        </section>
+
+        <!-- SEÇÃO 2: Romantismo -->
+        <section id="romantismo" class="content-section intro-portal">
+            <h1 class="reveal-on-scroll">Romantismo</h1>
+            <p class="reveal-on-scroll" style="transition-delay: 0.2s;">
+                Uma tempestade de emoção, individualismo e sublime. Em reação à rigidez do Neoclassicismo, o Romantismo mergulhou na subjetividade da alma humana, explorando a paixão, o medo e a grandiosidade indomável da natureza.
+            </p>
+        </section>
+
+        <section class="content-section deep-dive">
+            <div class="reveal-on-scroll">
+                <h2>O Coração Desacorrentado</h2>
+                <p>O Romantismo, que floresceu do final do século XVIII até meados do século XIX, foi mais que um estilo; foi uma visão de mundo. Nascido das convulsões da Revolução Francesa e da Revolução Industrial, ele rejeitou a primazia da razão e celebrou o <strong>sentimento, a imaginação e a intuição</strong>. Os artistas românticos buscavam o sublime – aquela mistura de fascínio e terror sentida perante a vastidão da natureza, as ruínas do passado ou os abismos da psique humana. O herói romântico é um indivíduo incompreendido, em conflito com a sociedade e em busca de uma liberdade transcendental.</p>
+            </div>
+            
+            <div class="artwork-analysis reveal-on-scroll">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/Eug%C3%A8ne_Delacroix_-_Le_28_Juillet._La_Libert%C3%A9_guidant_le_peuple.jpg/1280px-Eug%C3%A8ne_Delacroix_-_Le_28_Juillet._La_Libert%C3%A9_guidant_le_peuple.jpg" alt="A Liberdade Guiando o Povo, por Eugène Delacroix" onerror="this.onerror=null;this.parentElement.style.display='none'">
+                <span class="title">A Liberdade Guiando o Povo</span>
+                <span class="artist">Eugène Delacroix, 1830</span>
+                <p>Delacroix captura o clímax da Revolução de Julho de 1830 em Paris com uma energia explosiva. No centro, uma figura alegórica da Liberdade, com o gorro frígio e a bandeira tricolor, avança sobre uma barricada de corpos. Ela não é uma deusa etérea, mas uma mulher do povo, vigorosa e inspiradora. Ao seu redor, todas as classes sociais se unem na luta: burgueses, operários, jovens. A composição é piramidal, dinâmica e caótica, com pinceladas soltas e cores vibrantes que transmitem a fúria e a paixão do momento. É a apoteose do drama e do idealismo romântico.</p>
+            </div>
+        </section>
+        
+        <!-- SEÇÃO 3: Realismo -->
+        <section id="realismo" class="content-section intro-portal">
+            <h1 class="reveal-on-scroll">Realismo</h1>
+            <p class="reveal-on-scroll" style="transition-delay: 0.2s;">
+                A arte sem idealizações. O Realismo voltou-se para o mundo concreto e o cotidiano, retratando a vida das classes trabalhadoras e a sociedade como ela era, com suas verdades cruas e, por vezes, brutais.
+            </p>
+        </section>
+
+        <section class="content-section deep-dive">
+            <div class="reveal-on-scroll">
+                <h2>A Verdade Nua e Crua</h2>
+                <p>Surgindo em meados do século XIX, o Realismo foi uma reação direta tanto ao idealismo do Neoclassicismo quanto ao drama do Romantismo. Impulsionado por novas ideias sociais e políticas, como o socialismo, e pelo avanço da fotografia, os artistas realistas buscaram uma <strong>objetividade quase documental</strong>. Seu lema, encapsulado por Gustave Courbet, era "pintar o que se vê". Os temas grandiosos foram substituídos por cenas do trabalho rural e urbano, retratos de pessoas comuns e paisagens sem embelezamento. A técnica era sóbria, com uma paleta muitas vezes terrosa, focada em capturar a realidade sem filtros.</p>
+            </div>
+            
+            <div class="artwork-analysis reveal-on-scroll">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/Gustave_Courbet_-_The_Stone_Breakers_-_WGA5471.jpg" alt="Os Quebradores de Pedra, por Gustave Courbet" onerror="this.onerror=null;this.parentElement.style.display='none'">
+                <span class="title">Os Quebradores de Pedra</span>
+                <span class="artist">Gustave Courbet, 1849</span>
+                <p>Esta obra, infelizmente destruída durante a Segunda Guerra Mundial, foi um escândalo em sua época. Courbet retrata dois trabalhadores anônimos, um velho e um jovem, realizando um trabalho árduo e repetitivo. Ele não os heroiciza nem sentimentaliza sua pobreza. Pelo contrário, os pinta em tamanho real, com roupas rasgadas e expressões ocultas ou cansadas, conferindo uma dignidade monumental à sua labuta. A composição angular e a paleta de cores terrosas reforçam a dureza da cena. Ao apresentar o trabalho pesado em uma escala antes reservada a temas históricos ou mitológicos, Courbet fez uma poderosa declaração política e artística sobre a realidade social da França.</p>
+            </div>
+        </section>
+
+        <!-- SEÇÃO 4: Impressionismo -->
+        <section id="impressionismo" class="content-section intro-portal">
+            <h1 class="reveal-on-scroll">Impressionismo</h1>
+            <p class="reveal-on-scroll" style="transition-delay: 0.2s;">
+                A captura do instante fugaz. Os impressionistas abandonaram o ateliê para pintar ao ar livre, obcecados em registrar as variações da luz e da atmosfera com pinceladas rápidas e cores puras.
+            </p>
+        </section>
+
+        <section class="content-section deep-dive">
+            <div class="reveal-on-scroll">
+                <h2>A Revolução da Luz</h2>
+                <p>O Impressionismo, que eclodiu em Paris na década de 1870, foi uma das mais radicais rupturas na história da arte. Artistas como Monet, Renoir e Degas rejeitaram as regras da Academia, que valorizava o desenho preciso e o acabamento polido. Equipados com tintas em tubo e cavaletes portáteis, eles foram para o campo e para as ruas de uma Paris em modernização para capturar suas <strong>"impressões" visuais</strong>. A técnica era revolucionária: pinceladas curtas e visíveis, o uso de cores complementares para criar vibração, e a representação das sombras com cor, em vez de preto. O foco não era o objeto em si, mas como a luz o transformava a cada momento.</p>
+            </div>
+            
+            <div class="artwork-analysis reveal-on-scroll">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/54/Claude_Monet%2C_Impression%2C_soleil_levant.jpg/1280px-Claude_Monet%2C_Impression%2C_soleil_levant.jpg" alt="Impressão, Nascer do Sol, por Claude Monet" onerror="this.onerror=null;this.parentElement.style.display='none'">
+                <span class="title">Impressão, Nascer do Sol</span>
+                <span class="artist">Claude Monet, 1872</span>
+                <p>A obra que batizou o movimento. Exibida na primeira exposição do grupo em 1874, foi alvo de zombaria do crítico Louis Leroy, que usou o termo "impressionista" de forma pejorativa. Monet não busca detalhar o porto de Le Havre, mas sim capturar a sensação atmosférica do amanhecer. As formas dos barcos e guindastes se dissolvem na névoa, as pinceladas são rápidas e fragmentadas. O sol é uma mancha vibrante de laranja que se reflete na água com toques de cor pura. A pintura não é uma janela para o mundo, mas o registro de uma percepção subjetiva e momentânea da luz e da cor.</p>
+            </div>
+        </section>
+        
+        <!-- SEÇÃO 5: Pós-Impressionismo -->
+        <section id="pos-impressionismo" class="content-section intro-portal">
+            <h1 class="reveal-on-scroll">Pós-Impressionismo</h1>
+            <p class="reveal-on-scroll" style="transition-delay: 0.2s;">
+                Além da impressão, em busca da estrutura e da emoção. Os pós-impressionistas herdaram a liberdade de cor do Impressionismo, mas buscaram um arte mais estruturada, simbólica e profundamente pessoal.
+            </p>
+        </section>
+
+        <section class="content-section deep-dive">
+            <div class="reveal-on-scroll">
+                <h2>Forma, Símbolo e Emoção</h2>
+                <p>O Pós-Impressionismo não foi um movimento unificado, mas um termo que agrupa artistas como Cézanne, Van Gogh, Gauguin e Seurat. Eles começaram como impressionistas, mas sentiram que a obsessão pela luz e pelo instante sacrificava a solidez da forma e o conteúdo emocional. Cada um seguiu um caminho único: <strong>Cézanne</strong> buscou a estrutura geométrica subjacente à natureza ("tratar a natureza pelo cilindro, pela esfera, pelo cone"); <strong>Van Gogh</strong> usou a cor e a pincelada expressiva para exteriorizar sua turbulência interior; e <strong>Gauguin</strong> empregou cores arbitrárias e formas simplificadas em busca de um primitivismo simbólico.</p>
+            </div>
+            
+            <div class="artwork-analysis reveal-on-scroll">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg/1280px-Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg" alt="A Noite Estrelada, por Vincent van Gogh" onerror="this.onerror=null;this.parentElement.style.display='none'">
+                <span class="title">A Noite Estrelada</span>
+                <span class="artist">Vincent van Gogh, 1889</span>
+                <p>Pintada da janela do asilo em Saint-Rémy-de-Provence, esta obra transcende a mera paisagem. É uma visão cósmica e espiritual. O céu noturno pulsa com uma energia violenta, com estrelas explodindo em luz e uma espiral nebulosa dominando a composição. Em contraste, a vila abaixo dorme tranquilamente, com a exceção da agulha da igreja que se estende para o céu. Em primeiro plano, um cipreste escuro e flamejante age como um elo entre a terra e o cosmos, simbolizando a morte e a eternidade. As pinceladas empastadas e o uso emocional da cor fazem desta obra um ícone da expressão artística moderna.</p>
+            </div>
+            
+            <div class="image-gallery">
+                <div class="gallery-item reveal-on-scroll staggered-item" style="--delay: 0.1s;"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Mont_Sainte-Victoire_by_Paul_C%C3%A9zanne.jpg/1280px-Mont_Sainte-Victoire_by_Paul_C%C3%A9zanne.jpg" alt="Monte Sainte-Victoire por Cézanne" onerror="this.onerror=null;this.parentElement.style.display='none'"></div>
+                <div class="gallery-item reveal-on-scroll staggered-item" style="--delay: 0.2s;"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Paul_Gauguin_-_Tahitian_Women_on_the_Beach.jpg/1280px-Paul_Gauguin_-_Tahitian_Women_on_the_Beach.jpg" alt="Mulheres Taitianas na Praia por Gauguin" onerror="this.onerror=null;this.parentElement.style.display='none'"></div>
+                <div class="gallery-item reveal-on-scroll staggered-item" style="--delay: 0.3s;"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Vincent_van_Gogh_-_The_potato_eaters_-_Google_Art_Project.jpg/1280px-Vincent_van_Gogh_-_The_potato_eaters_-_Google_Art_Project.jpg" alt="Os Comedores de Batata por Van Gogh" onerror="this.onerror=null;this.parentElement.style.display='none'"></div>
+            </div>
+        </section>
+        
+        <!-- SEÇÃO 6: Simbolismo -->
+        <section id="simbolismo" class="content-section intro-portal">
+            <h1 class="reveal-on-scroll">Simbolismo</h1>
+            <p class="reveal-on-scroll" style="transition-delay: 0.2s;">
+                Um mergulho no mundo dos sonhos, mitos e do mistério. O Simbolismo rejeitou o Realismo e o Naturalismo para explorar o mundo interior, a espiritualidade e as verdades sugeridas, nunca declaradas explicitamente.
+            </p>
+        </section>
+
+        <section class="content-section deep-dive">
+            <div class="reveal-on-scroll">
+                <h2>A Floresta de Símbolos</h2>
+                <p>Florescendo no final do século XIX, o Simbolismo foi um movimento literário e artístico que acreditava que a arte deveria representar verdades absolutas de forma indireta e sugestiva. Para os simbolistas, o mundo visível era apenas um reflexo de um plano espiritual mais elevado. Eles se voltaram para <strong>sonhos, mitologia, o bizarro e o perverso</strong> para expressar ideias e emoções complexas. A abordagem não era narrativa, mas evocativa, usando a cor, a linha e a forma para criar uma atmosfera e provocar uma resposta subjetiva no espectador. Artistas como Gustave Moreau, Odilon Redon e Edvard Munch foram pioneiros dessa introspecção.</p>
+            </div>
+            
+            <div class="artwork-analysis reveal-on-scroll">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Edvard_Munch%2C_1893%2C_The_Scream%2C_oil%2C_tempera_and_pastel_on_cardboard%2C_91_x_73_cm%2C_National_Gallery_of_Norway.jpg/1024px-Edvard_Munch%2C_1893%2C_The_Scream%2C_oil%2C_tempera_and_pastel_on_cardboard%2C_91_x_73_cm%2C_National_Gallery_of_Norway.jpg" alt="O Grito, por Edvard Munch" onerror="this.onerror=null;this.parentElement.style.display='none'">
+                <span class="title">O Grito</span>
+                <span class="artist">Edvard Munch, 1893</span>
+                <p>"O Grito" é a personificação da angústia existencial moderna. Munch descreveu a experiência que o inspirou: "caminhava com dois amigos... o sol se punha... de repente, o céu tornou-se vermelho-sangue... senti um grito infinito a atravessar a natureza". A figura central, andrógina e esquelética, leva as mãos ao rosto em um gesto de pânico primordial. As linhas sinuosas e as cores dissonantes do céu e da paisagem parecem vibrar com essa onda sonora de desespero. As duas figuras ao fundo continuam seu caminho, indiferentes, acentuando o isolamento do protagonista. A obra não retrata uma realidade externa, mas a crua paisagem da alma.</p>
+            </div>
+            
+            <div class="artwork-analysis reveal-on-scroll">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Les_Portes_de_l%27Enfer_par_Auguste_Rodin_au_mus%C3%A9e_Rodin_de_Paris_2.jpg/800px-Les_Portes_de_l%27Enfer_par_Auguste_Rodin_au_mus%C3%A9e_Rodin_de_Paris_2.jpg" alt="As Portas do Inferno, por Auguste Rodin" onerror="this.onerror=null;this.parentElement.style.display='none'">
+                <span class="title">As Portas do Inferno</span>
+                <span class="artist">Auguste Rodin, 1880-1917</span>
+                <p>Uma obra monumental que consumiu quase quatro décadas da vida de Rodin, "As Portas do Inferno" é um turbilhão de figuras atormentadas, inspiradas pela "Divina Comédia" de Dante. Mais do que uma ilustração, é uma meditação sobre o sofrimento, o desejo e a condição humana. Muitas das esculturas mais famosas de Rodin, como "O Pensador" (originalmente posicionado no topo, contemplando o caos abaixo) e "O Beijo", foram concebidas como parte deste projeto colossal. A superfície texturizada e o jogo de luz e sombra criam um drama intenso, fazendo da obra um portal para os abismos da psique humana.</p>
+            </div>
+        </section>
+
+        <!-- SEÇÃO 7: Art Nouveau -->
+        <section id="art-nouveau" class="content-section intro-portal">
+            <h1 class="reveal-on-scroll">Art Nouveau</h1>
+            <p class="reveal-on-scroll" style="transition-delay: 0.2s;">
+                A arte da linha sinuosa e da beleza orgânica. O Art Nouveau buscou romper com os estilos históricos, criando uma linguagem visual nova e unificada que se estendia da arquitetura e do design de interiores à pintura e às artes gráficas.
+            </p>
+        </section>
+
+        <section class="content-section deep-dive">
+            <div class="reveal-on-scroll">
+                <h2>A Natureza como Ornamento</h2>
+                <p>No final do século XIX e início do XX, o Art Nouveau (Arte Nova) emergiu como um movimento internacional que aspirava à <strong>obra de arte total (Gesamtkunstwerk)</strong>, onde todas as artes trabalhariam em harmonia. Sua principal característica é a "linha chicote" – linhas longas, sinuosas e assimétricas, inspiradas em formas naturais como caules de plantas, flores e insetos. O movimento abraçou novos materiais como o ferro e o vidro e se manifestou vigorosamente nas artes decorativas, criando uma estética elegante e fluida que embelezava o cotidiano.</p>
+            </div>
+            
+            <div class="artwork-analysis reveal-on-scroll">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/40/The_Kiss_-_Gustav_Klimt_-_Google_Cultural_Institute.jpg/1024px-The_Kiss_-_Gustav_Klimt_-_Google_Cultural_Institute.jpg" alt="O Beijo, por Gustav Klimt" onerror="this.onerror=null;this.parentElement.style.display='none'">
+                <span class="title">O Beijo</span>
+                <span class="artist">Gustav Klimt, 1907-1908</span>
+                <p>O apogeu da "Fase Dourada" de Klimt e um ícone do Art Nouveau. Dois amantes, envoltos em mantos ricamente ornamentados, fundem-se em um abraço à beira de um precipício florido. A obra combina um erotismo terno com uma opulência quase bizantina, graças ao uso extensivo de folha de ouro. Os padrões geométricos (retângulos no manto do homem, círculos no da mulher) simbolizam a união dos opostos. Embora os rostos e mãos sejam representados de forma naturalista, os corpos se dissolvem em um mosaico decorativo, transcendendo o físico para o plano do êxtase e da eternidade. É uma fusão perfeita entre Simbolismo e a estética ornamental do Art Nouveau.</p>
+            </div>
+        </section>
+        
+        <!-- SEÇÃO 8: Fauvismo -->
+        <section id="fauvismo" class="content-section intro-portal">
+            <h1 class="reveal-on-scroll">Fauvismo</h1>
+            <p class="reveal-on-scroll" style="transition-delay: 0.2s;">
+                A explosão da cor pura e arbitrária. Os Fauves ("feras") libertaram a cor da sua função descritiva, usando-a de forma instintiva e emocional para criar composições de uma intensidade vibrante e chocante.
+            </p>
+        </section>
+
+        <section class="content-section deep-dive">
+            <div class="reveal-on-scroll">
+                <h2>A Cor como Fera Livre</h2>
+                <p>O Fauvismo foi a primeira vanguarda do século XX, embora tenha sido um movimento de vida curta (1905-1907). Liderados por Henri Matisse e André Derain, os Fauves foram apelidados de "feras" por um crítico chocado com a intensidade de suas telas no Salão de Outono de 1905. A sua grande revolução foi o uso da <strong>cor de forma arbitrária e não naturalista</strong>. Árvores podiam ser vermelhas, rostos podiam ter pinceladas de verde. A cor não servia para imitar a realidade, mas para expressar as emoções do artista e construir a composição da pintura. As formas eram simplificadas, e o resultado era uma arte de uma alegria e energia contagiantes.</p>
+            </div>
+            
+            <div class="artwork-analysis reveal-on-scroll">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Matisse-LaDanse.jpg/1280px-Matisse-LaDanse.jpg" alt="A Dança, por Henri Matisse" onerror="this.onerror=null;this.parentElement.style.display='none'">
+                <span class="title">A Dança (II)</span>
+                <span class="artist">Henri Matisse, 1910</span>
+                <p>Esta obra monumental é a síntese da estética fauvista. Cinco figuras nuas dançam em um círculo frenético, em um ritmo primitivo e extático. Matisse reduz a paleta a três cores saturadas e chapadas: o vermelho-alaranjado intenso dos corpos, o azul profundo do céu e o verde vibrante da terra. Não há profundidade ou modelagem; a obra vive da tensão dinâmica entre as linhas curvas dos corpos e a energia pura das cores. A composição, embora pareça simples, é magistralmente equilibrada, capturando um sentimento de alegria de viver e uma energia primordial e pagã. É a cor e o ritmo em sua forma mais essencial.</p>
+            </div>
+        </section>
+        
+        <!-- SEÇÃO 9: Sebastião Salgado -->
+        <section id="salgado" class="content-section intro-portal">
+            <h1 class="reveal-on-scroll">Sebastião Salgado</h1>
+            <p class="reveal-on-scroll" style="transition-delay: 0.2s;">
+                O fotógrafo da condição humana e da majestade do planeta. Com uma estética em preto e branco de rigor composicional e beleza monumental, Salgado documenta as grandes narrativas do nosso tempo.
+            </p>
+        </section>
+
+        <section class="content-section deep-dive">
+            <div class="reveal-on-scroll">
+                <h2>Uma Testemunha do Nosso Tempo</h2>
+                <p>Economista de formação, o brasileiro Sebastião Salgado (nascido em 1944) encontrou na fotografia sua verdadeira vocação. Seu trabalho é caracterizado por projetos de longo prazo, que o levam a mergulhar por anos em um único tema. Sua fotografia, exclusivamente em preto e branco, possui uma qualidade épica e escultural. O uso dramático da luz, a composição impecável e a profundidade de tons de cinza conferem uma <strong>dignidade monumental</strong> aos seus sujeitos, sejam eles trabalhadores manuais, refugiados ou paisagens intocadas. Salgado não é um observador distante; ele é uma testemunha que busca gerar empatia e reflexão sobre as injustiças sociais e a fragilidade do nosso planeta.</p>
+            </div>
+            
+             <div class="content-grid">
+                <div class="artist-card reveal-on-scroll staggered-item" style="--delay: 0.1s;">
+                    <h3>Trabalhadores (1986-1992)</h3>
+                    <p>Uma "arqueologia da era industrial". Salgado viajou o mundo para documentar o trabalho manual em vias de extinção, desde os garimpeiros de Serra Pelada no Brasil até os trabalhadores em poços de petróleo no Kuwait. As imagens são um tributo poderoso à força e resiliência do corpo humano.</p>
+                </div>
+                 <div class="artist-card reveal-on-scroll staggered-item" style="--delay: 0.2s;">
+                    <h3>Êxodos (1993-1999)</h3>
+                    <p>Um retrato avassalador das migrações em massa no final do século XX. Salgado documentou a história de pessoas forçadas a deixar suas casas por guerra, genocídio, pobreza ou desastres ambientais. É um testemunho sombrio, mas profundamente humano, da dor do deslocamento.</p>
+                </div>
+                <div class="artist-card reveal-on-scroll staggered-item" style="--delay: 0.3s;">
+                    <h3>Gênesis (2004-2011)</h3>
+                    <p>Após testemunhar tanta brutalidade, Salgado adoeceu. A cura veio através da natureza. Com sua esposa, Lélia Wanick Salgado, ele restaurou a Mata Atlântica na fazenda de sua família, criando o Instituto Terra. Este projeto inspirou "Gênesis", uma carta de amor ao planeta, documentando paisagens, animais e comunidades humanas que ainda vivem em harmonia com a Terra.</p>
+                </div>
+            </div>
+            
+            <div class="image-gallery">
+                <div class="gallery-item reveal-on-scroll staggered-item" style="--delay: 0.1s;"><img src="https://media.icp.org/images/1986.0028.0016_1wVqgW9.max-1000x1000.jpg" alt="Garimpeiros em Serra Pelada, por Sebastião Salgado" onerror="this.onerror=null;this.parentElement.style.display='none'"></div>
+                <div class="gallery-item reveal-on-scroll staggered-item" style="--delay: 0.2s;"><img src="https://www.magnumphotos.com/wp-content/uploads/2017/03/c-sebastia-o-salgado-magnum-photos-nn1120063-1200x800.jpg" alt="Refugiados em Ruanda, por Sebastião Salgado (Êxodos)" onerror="this.onerror=null;this.parentElement.style.display='none'"></div>
+                <div class="gallery-item reveal-on-scroll staggered-item" style="--delay: 0.3s;"><img src="https://i.natgeofe.com/n/e3657055-4a43-4693-b03f-1132e36d4039/01_salgado_galapagos.jpg" alt="Iguana Marinha, Galápagos, por Sebastião Salgado (Gênesis)" onerror="this.onerror=null;this.parentElement.style.display='none'"></div>
+            </div>
+        </section>
+    </main>
+    
+    <!-- Rodapé Inalterável -->
+    <footer>
+        <p>Página educacional desenvolvida como uma ferramenta de aprendizado. Design e conteúdo por L2.</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // --- LÓGICA DA TELA DE CARREGAMENTO ---
+            const loadingScreen = document.getElementById('loading-screen');
+            window.addEventListener('load', () => {
+                setTimeout(() => {
+                    loadingScreen.classList.add('hidden');
+                }, 2800); 
+            });
+
+            // --- LÓGICA DA ROLAGEM CINEMATOGRÁFICA (JS-DRIVEN) ---
+            const sections = document.querySelectorAll('.content-section');
+            let lastActiveSection = null;
+
+            const throttle = (func, limit) => {
+                let inThrottle;
+                return function() {
+                    const args = arguments;
+                    const context = this;
+                    if (!inThrottle) {
+                        func.apply(context, args);
+                        inThrottle = true;
+                        setTimeout(() => inThrottle = false, limit);
+                    }
+                }
+            };
+            
+            const handleCinematicScroll = () => {
+                const viewportCenter = window.innerHeight / 2;
+                let activeSection = null;
+                
+                sections.forEach(section => {
+                    if (section.getBoundingClientRect().top < viewportCenter) {
+                        activeSection = section;
+                    }
+                });
+
+                if (activeSection === null && sections.length > 0) {
+                     activeSection = sections[0];
+                }
+                
+                if (activeSection && activeSection !== lastActiveSection) {
+                    sections.forEach(s => {
+                        s.classList.remove('is-active', 'is-previous');
+                    });
+
+                    activeSection.classList.add('is-active');
+                    if(activeSection.previousElementSibling && activeSection.previousElementSibling.classList.contains('content-section')) {
+                       activeSection.previousElementSibling.classList.add('is-previous');
+                    }
+                    lastActiveSection = activeSection;
+                }
+            };
+            
+            handleCinematicScroll();
+            window.addEventListener('scroll', throttle(handleCinematicScroll, 100));
+            
+
+            // --- LÓGICA DE NAVEGAÇÃO ATIVA (IntersectionObserver) ---
+            const navLinks = document.querySelectorAll('.main-nav a');
+            const navObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const id = entry.target.getAttribute('id');
+                        navLinks.forEach(link => {
+                            link.classList.toggle('active', link.getAttribute('href') === `#${id}`);
+                        });
+                    }
+                });
+            }, { rootMargin: '-50% 0px -50% 0px', threshold: 0 });
+
+            sections.forEach(section => {
+                if(section.id) navObserver.observe(section);
+            });
+
+
+            // --- LÓGICA DE REVELAÇÃO AO ROLAR (IntersectionObserver) ---
+            const revealElements = document.querySelectorAll('.reveal-on-scroll');
+            const revealObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            revealElements.forEach(el => {
+                revealObserver.observe(el);
+            });
+            
+            // --- LÓGICA DE ANIMAÇÃO ESCALONADA (STAGGERED) ---
+            const staggeredContainers = document.querySelectorAll('.image-gallery, .content-grid');
+            staggeredContainers.forEach(container => {
+                const items = container.querySelectorAll('.staggered-item');
+                items.forEach((item, index) => {
+                    item.style.setProperty('--delay', `${index * 0.1}s`);
+                });
+            });
+
+            // --- ERROR HANDLING PARA IMAGENS ---
+            // MUDANÇA: Alterei o onerror para ser mais robusto e ocultar o elemento pai se a imagem falhar
+            // A implementação anterior era `this.style.display='none'`
+            // A nova é `this.onerror=null;this.parentElement.style.display='none'`
+            // Isso evita que o espaço da imagem quebrada permaneça no layout.
+            // No entanto, para as análises de obras, onde a imagem flutua,
+            // ocultar o `parentElement` (artwork-analysis) seria demais.
+            // A solução mais simples e robusta é ocultar o elemento pai da imagem
+            // apenas nas galerias, e a própria imagem na análise.
+            // A implementação `onerror="this.style.display='none'"` é suficiente para a análise.
+            // Para as galerias, o ideal seria `this.parentElement.style.display='none'`.
+            // Vou ajustar o onerror para ser mais específico.
+            
+            const galleryImages = document.querySelectorAll('.gallery-item img');
+            galleryImages.forEach(img => {
+                img.onerror = function() {
+                    this.parentElement.style.display = 'none';
+                };
+            });
+
+            const analysisImages = document.querySelectorAll('.artwork-analysis img');
+            analysisImages.forEach(img => {
+                img.onerror = function() {
+                    this.style.display = 'none';
+                    // Quando a imagem de análise falha, o texto flutuará para preencher o espaço.
+                    // Isso é um comportamento aceitável e melhor do que um espaço em branco.
+                };
+            });
+
+        });
+    </script>
+</body>
+</html>

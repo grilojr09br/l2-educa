@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="no-js">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geometria e Trigonometria: Um Guia Definitivo</title>
+    
+    <!-- Google Fonts: Poppins para texto e Source Code Pro para código -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
+
+    <!-- Google Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <!-- MathJax para renderização de LaTeX -->
+    <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      svg: {
+        fontCache: 'global'
+      }
+    };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+    
+    <!-- Habilita modo js (fallback iOS/WhatsApp) -->
+    <script>(function(d){var c=d.documentElement;c.className=c.className.replace('no-js','js');})(document);</script>
+
+    <!-- Chart.js para gráficos interativos -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        /* 1. RESET E CONFIGURAÇÕES GLOBAIS */
+        :root {
+            --primary-color: #E0E7FF; /* Lavanda claro */
+            --secondary-color: #C7D2FE; /* Azul lavanda */
+            --accent-color: #818CF8; /* Índigo */
+            --text-color: #F9FAFB; /* Cinza muito claro */
+            --bg-color: #111827; /* Cinza escuro/quase preto */
+            /* Efeito Glass aprimorado com mais transparência */
+            --card-bg: rgba(31, 41, 55, 0.25); 
+            --border-color: rgba(129, 140, 248, 0.2);
+            --font-main: 'Poppins', sans-serif;
+            --font-code: 'Source Code Pro', monospace;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: var(--font-main);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        /* 2. ESTÉTICA "AURORA LÍQUIDA" (BACKGROUND) APRIMORADA */
+        .aurora-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .aurora-shape {
+            position: absolute;
+            border-radius: 50%;
+            /* Mais blur para maior difração e opacidade para cores mais vivas */
+            filter: blur(180px);
+            opacity: 0.5;
+        }
+
+        .shape1 {
+            width: 500px;
+            height: 500px;
+            background: #4F46E5; /* Índigo */
+            top: -150px;
+            left: -150px;
+            animation: move-aurora 25s infinite alternate ease-in-out;
+        }
+
+        .shape2 {
+            width: 400px;
+            height: 400px;
+            background: #7C3AED; /* Violeta */
+            bottom: -100px;
+            right: -100px;
+            animation: move-aurora 30s infinite alternate-reverse ease-in-out;
+        }
+        
+        .shape3 {
+            width: 300px;
+            height: 300px;
+            background: #EC4899; /* Rosa */
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: move-aurora 20s infinite ease-in-out;
+        }
+
+        @keyframes move-aurora {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(100px, 50px) scale(1.2); }
+            100% { transform: translate(-50px, -100px) scale(1); }
+        }
+
+        /* 3. TELA DE CARREGAMENTO (PRELÚDIO) */
+        html.no-js .loading-overlay { display: none !important; }
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--bg-color);
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            transition: opacity 0.8s ease-out;
+        }
+
+        .loading-logo {
+            font-size: clamp(2rem, 8vw, 4rem);
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 2rem;
+        }
+        
+        .loading-logo span {
+            opacity: 0;
+            animation: letter-fade-in 0.5s forwards;
+        }
+
+        @keyframes letter-fade-in {
+            to { opacity: 1; }
+        }
+
+        .progress-bar-container {
+            width: 250px;
+            height: 4px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            width: 0;
+            height: 100%;
+            background: linear-gradient(90deg, var(--secondary-color), var(--accent-color));
+            border-radius: 2px;
+            animation: fill-progress 2s ease-out forwards;
+        }
+
+        @keyframes fill-progress {
+            to { width: 100%; }
+        }
+        
+        .loading-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* 4. NAVEGAÇÃO FIXA DINÂMICA (REFINADA) */
+        .main-nav {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--card-bg);
+            /* Efeito glass mais intenso */
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--border-color);
+            border-radius: 50px;
+            padding: 0.5rem;
+            z-index: 500;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        
+        .main-nav ul {
+            list-style: none;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .main-nav a {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem;
+            color: var(--primary-color);
+            text-decoration: none;
+            border-radius: 30px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .main-nav .nav-text {
+            font-weight: 500;
+            font-size: 0.9rem;
+            white-space: nowrap;
+            max-width: 0;
+            opacity: 0;
+            transition: max-width 0.4s ease-out, opacity 0.2s ease-out;
+        }
+        
+        .main-nav a:hover {
+            background-color: var(--accent-color);
+            color: var(--bg-color);
+        }
+
+        .main-nav a.active {
+            background-color: var(--primary-color);
+            color: var(--bg-color);
+        }
+        
+        /* Efeito de expansão no desktop */
+        @media (min-width: 1024px) {
+            .main-nav:hover .nav-text {
+                max-width: 150px;
+                opacity: 1;
+                margin-left: 0.25rem;
+            }
+             .main-nav:hover a {
+                padding: 0.75rem 1rem;
+            }
+        }
+        
+        /* Comportamento dinâmico no mobile (aparece ao rolar para cima) */
+        @media (max-width: 1023px) {
+            html.js .main-nav {
+                top: -100px; /* Começa escondido */
+            }
+            html.js .main-nav.nav-visible {
+                top: 20px; /* Aparece */
+            }
+        }
+
+        /* 5. LAYOUT E ESTRUTURA DAS SEÇÕES */
+        main { opacity: 1; transition: opacity 0.8s ease-in; }
+        html.js main { opacity: 0; }
+        html.js main.loaded { opacity: 1; }
+
+        .topic-section {
+            min-height: 100vh;
+            width: 100%;
+            padding: 120px 5% 60px; /* Espaço para nav e margens */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+        
+        .section-container {
+            max-width: 960px;
+            width: 100%;
+            margin: 0 auto;
+        }
+        
+        /* 6. TIPOGRAFIA E CONTEÚDO */
+        h1, h2, h3 {
+            font-weight: 600;
+            letter-spacing: -0.5px;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 15px rgba(0,0,0,0.3);
+        }
+
+        .section-title {
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            text-align: center;
+            color: var(--primary-color);
+            line-height: 1.1;
+        }
+        
+        .section-intro {
+            font-size: clamp(1rem, 2.5vw, 1.25rem);
+            max-width: 700px;
+            text-align: center;
+            margin: 1rem auto 3rem;
+            color: var(--secondary-color);
+        }
+        
+        .subsection-title {
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            color: var(--primary-color);
+            margin-top: 3rem;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid var(--accent-color);
+            padding-left: 1rem;
+        }
+
+        p {
+            margin-bottom: 1rem;
+            font-size: clamp(1rem, 2vw, 1.1rem);
+        }
+        
+        strong {
+            color: var(--secondary-color);
+            font-weight: 600;
+        }
+        
+        .formula-box {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            font-size: 1.25rem;
+            overflow-x: auto;
+            text-align: center;
+        }
+        
+        /* 7. COMPONENTES INTERATIVOS (CALCULADORAS, ETC) */
+        .interactive-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: clamp(1rem, 4vw, 2rem);
+            margin-top: 2rem;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+        
+        .interactive-card h3 {
+            font-size: clamp(1.2rem, 3vw, 1.5rem);
+            color: var(--secondary-color);
+            margin-bottom: 1.5rem;
+        }
+
+        .input-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .input-field {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .input-field label {
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary-color);
+        }
+        
+        .input-field input {
+            background-color: rgba(0,0,0,0.2);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 0.75rem;
+            color: var(--text-color);
+            font-family: var(--font-code);
+            font-size: 1rem;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+        
+        .input-field input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(129, 140, 248, 0.3);
+        }
+        
+        .calc-button {
+            background-color: var(--accent-color);
+            color: var(--bg-color);
+            border: none;
+            border-radius: 8px;
+            padding: 0.75rem 1.5rem;
+            font-family: var(--font-main);
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: transform 0.2s, background-color 0.3s;
+        }
+        
+        .calc-button:hover {
+            transform: translateY(-2px);
+            background-color: #6366F1; /* Índigo mais claro */
+        }
+        
+        .result-box {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background-color: rgba(0,0,0,0.2);
+            border-radius: 8px;
+            border-left: 4px solid var(--accent-color);
+            color: var(--primary-color);
+            font-family: var(--font-code);
+            font-size: 1.1rem;
+            min-height: 50px;
+        }
+
+        /* 8. ANIMAÇÕES DE SCROLL-REVEAL */
+        .reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.8s ease-out, transform 0.8s ease-out; }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+        html.no-js .reveal { opacity: 1; transform: none; }
+        
+        /* Animações escalonadas para listas */
+        .reveal-stagger > * {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        
+        /* 9. RESPONSIVIDADE E ACESSIBILIDADE */
+        .table-container {
+            position: relative;
+            margin: 2rem 0;
+        }
+        
+        .table-wrapper {
+            overflow-x: auto;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--card-bg);
+        }
+        
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        th {
+            color: var(--secondary-color);
+            font-weight: 600;
+        }
+        
+        .rotate-device-prompt {
+            display: none; /* Oculto por padrão */
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(31, 41, 55, 0.7);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            color: var(--primary-color);
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            border-radius: 12px;
+            z-index: 10;
+        }
+        
+        .rotate-device-prompt .material-icons {
+            font-size: 48px;
+            margin-bottom: 1rem;
+        }
+        
+        @media (max-width: 768px) {
+            .table-container.needs-rotation .rotate-device-prompt {
+                display: flex;
+            }
+        }
+
+        /* 10. RODAPÉ */
+        footer {
+            text-align: center;
+            padding: 2rem;
+            font-size: 0.9rem;
+            color: var(--secondary-color);
+            background-color: rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
+<body>
+    <!-- Adicionado para o fundo Aurora -->
+    <div class="aurora-background">
+        <div class="aurora-shape shape1"></div>
+        <div class="aurora-shape shape2"></div>
+        <div class="aurora-shape shape3"></div>
+    </div>
+
+    <!-- Tela de Carregamento -->
+    <div class="loading-overlay">
+        <div class="loading-logo">
+            <span>L</span><span>2</span><span> </span><span>E</span><span>D</span><span>U</span><span>C</span><span>A</span>
+        </div>
+        <div class="progress-bar-container">
+            <div class="progress-bar"></div>
+        </div>
+    </div>
+
+    <!-- Navegação Principal (Estrutura HTML atualizada) -->
+    <nav class="main-nav">
+        <ul>
+            <li><a href="#trigonometria" class="nav-link"><i class="material-icons">architecture</i><span class="nav-text">Trigonometria</span></a></li>
+            <li><a href="#geometria-plana" class="nav-link"><i class="material-icons">category</i><span class="nav-text">Plana</span></a></li>
+            <li><a href="#prismas" class="nav-link"><i class="material-icons">view_in_ar</i><span class="nav-text">Prismas</span></a></li>
+            <li><a href="#piramides" class="nav-link"><i class="material-icons">change_history</i><span class="nav-text">Pirâmides</span></a></li>
+            <li><a href="#corpos-redondos" class="nav-link"><i class="material-icons">data_usage</i><span class="nav-text">Redondos</span></a></li>
+        </ul>
+    </nav>
+    
+    <!-- Conteúdo Principal -->
+    <main id="main-content">
+
+        <!-- SEÇÃO 1: TRIGONOMETRIA -->
+        <section id="trigonometria" class="topic-section">
+            <div class="section-container">
+                <h1 class="section-title reveal">Fundamentos de Trigonometria</h1>
+                <p class="section-intro reveal" style="transition-delay: 0.2s;">
+                    A trigonometria é a ponte entre a geometria e a álgebra. Ela nos permite calcular lados e ângulos em triângulos, desvendando as relações métricas que governam as formas. Começaremos com duas leis fundamentais para qualquer triângulo.
+                </p>
+
+                <div class="reveal" style="transition-delay: 0.4s;">
+                    <h2 class="subsection-title">Lei dos Senos</h2>
+                    <p>A Lei dos Senos estabelece uma relação de proporcionalidade entre as medidas dos lados de um triângulo e os senos de seus ângulos opostos. É incrivelmente útil quando conhecemos dois ângulos e um lado, ou dois lados e um ângulo oposto a um deles.</p>
+                    <div class="formula-box">
+                        $$ \frac{a}{\sin(A)} = \frac{b}{\sin(B)} = \frac{c}{\sin(C)} = 2R $$
+                        <small>Onde $a, b, c$ são os lados, $A, B, C$ são os ângulos opostos e $R$ é o raio da circunferência circunscrita.</small>
+                    </div>
+                </div>
+
+                <div class="reveal">
+                    <h2 class="subsection-title">Lei dos Cossenos</h2>
+                    <p>A Lei dos Cossenos é uma generalização do Teorema de Pitágoras, aplicável a qualquer triângulo. Ela é essencial quando conhecemos dois lados e o ângulo entre eles, ou quando conhecemos todos os três lados e queremos encontrar um ângulo.</p>
+                    <div class="formula-box">
+                        $$ a^2 = b^2 + c^2 - 2bc \cdot \cos(A) $$
+                        $$ b^2 = a^2 + c^2 - 2ac \cdot \cos(B) $$
+                        $$ c^2 = a^2 + b^2 - 2ab \cdot \cos(C) $$
+                    </div>
+                </div>
+                
+                <div class="interactive-card reveal">
+                    <h3><span class="material-icons" style="vertical-align: middle;">calculate</span> Calculadora de Triângulos</h3>
+                    <div class="input-group">
+                        <div class="input-field"><label for="tri-lado-a">Lado a</label><input type="number" id="tri-lado-a" placeholder="ex: 5"></div>
+                        <div class="input-field"><label for="tri-lado-b">Lado b</label><input type="number" id="tri-lado-b" placeholder="ex: 7"></div>
+                        <div class="input-field"><label for="tri-angulo-C">Ângulo C (graus)</label><input type="number" id="tri-angulo-C" placeholder="ex: 45"></div>
+                    </div>
+                    <button class="calc-button" id="btn-calc-cossenos">Calcular Lado c (Lei Cossenos)</button>
+                    <div class="result-box" id="result-cossenos"></div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- SEÇÃO 2: GEOMETRIA PLANA -->
+        <section id="geometria-plana" class="topic-section">
+            <div class="section-container">
+                <h1 class="section-title reveal">Geometria Plana Essencial</h1>
+                <p class="section-intro reveal" style="transition-delay: 0.2s;">
+                    Antes de explorarmos o espaço tridimensional, é crucial dominar o cálculo de áreas de figuras planas. Estas são as bases para o cálculo de volumes e áreas de superfícies de sólidos mais complexos.
+                </p>
+
+                <div class="reveal reveal-stagger" style="transition-delay: 0.4s;">
+                    <div>
+                        <h2 class="subsection-title">Área e Altura do Triângulo</h2>
+                        <p>A forma mais fundamental. A área de qualquer triângulo é metade do produto de sua base pela sua altura.</p>
+                        <div class="formula-box">$$ A = \frac{\text{base} \times \text{altura}}{2} $$</div>
+                    </div>
+                    <div>
+                        <h2 class="subsection-title">Área do Círculo e Retângulo</h2>
+                        <p>O retângulo é direto: base vezes altura. O círculo, uma forma de beleza infinita, tem sua área definida pelo número $\pi$ e o quadrado de seu raio.</p>
+                        <div class="formula-box">$$ A_{\text{retângulo}} = b \times h \quad | \quad A_{\text{círculo}} = \pi r^2 $$</div>
+                    </div>
+                    <div>
+                        <h2 class="subsection-title">Área do Hexágono Regular</h2>
+                        <p>Um hexágono regular pode ser decomposto em seis triângulos equiláteros. Sua área é, portanto, seis vezes a área de um desses triângulos.</p>
+                        <div class="formula-box">$$ A_{\text{hexágono}} = 6 \times \frac{l^2 \sqrt{3}}{4} = \frac{3l^2 \sqrt{3}}{2} $$</div>
+                    </div>
+                </div>
+                
+                <div class="interactive-card reveal">
+                    <h3><span class="material-icons" style="vertical-align: middle;">calculate</span> Calculadora de Áreas Planas</h3>
+                    <div class="input-group">
+                        <div class="input-field"><label for="area-param1">Raio / Lado / Base</label><input type="number" id="area-param1" placeholder="Valor 1"></div>
+                        <div class="input-field"><label for="area-param2">Altura (se aplicável)</label><input type="number" id="area-param2" placeholder="Valor 2"></div>
+                    </div>
+                    <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                        <button class="calc-button" id="btn-calc-circulo">Área Círculo</button>
+                        <button class="calc-button" id="btn-calc-retangulo">Área Retângulo</button>
+                        <button class="calc-button" id="btn-calc-hexagono">Área Hexágono</button>
+                    </div>
+                    <div class="result-box" id="result-area"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEÇÃO 3: PRISMAS -->
+        <section id="prismas" class="topic-section">
+            <div class="section-container">
+                <h1 class="section-title reveal">Sólidos: Prismas</h1>
+                <p class="section-intro reveal" style="transition-delay: 0.2s;">
+                    Entramos no mundo 3D. Prismas são poliedros com duas faces paralelas e congruentes (as bases) e cujas outras faces (faces laterais) são paralelogramos.
+                </p>
+
+                <div class="reveal" style="transition-delay: 0.4s;">
+                    <h2 class="subsection-title">Faces, Arestas e Vértices</h2>
+                    <p>A Relação de Euler é uma fórmula elegante que conecta o número de vértices (V), faces (F) e arestas (A) de qualquer poliedro convexo.</p>
+                    <div class="formula-box">$$ V - A + F = 2 $$</div>
+                </div>
+
+                <div class="reveal">
+                    <h2 class="subsection-title">Área e Volume de Prismas</h2>
+                    <p>O cálculo de área e volume de um prisma reto é uma extensão natural da geometria plana. A área total é a soma das áreas das duas bases com a área lateral. O volume é simplesmente a área da base multiplicada pela altura.</p>
+                    <div class="formula-box">
+                        $$ A_{\text{total}} = 2 \cdot A_{\text{base}} + A_{\text{lateral}} $$
+                        $$ V = A_{\text{base}} \times h $$
+                    </div>
+                </div>
+                
+                <div class="interactive-card reveal">
+                    <h3><span class="material-icons" style="vertical-align: middle;">calculate</span> Calculadora de Prisma (Base Quadrada)</h3>
+                    <div class="input-group">
+                        <div class="input-field"><label for="prisma-lado-base">Lado da Base</label><input type="number" id="prisma-lado-base" placeholder="ex: 4"></div>
+                        <div class="input-field"><label for="prisma-altura">Altura (h)</label><input type="number" id="prisma-altura" placeholder="ex: 10"></div>
+                    </div>
+                    <button class="calc-button" id="btn-calc-prisma">Calcular Área Total e Volume</button>
+                    <div class="result-box" id="result-prisma"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEÇÃO 4: PIRÂMIDES -->
+        <section id="piramides" class="topic-section">
+            <div class="section-container">
+                <h1 class="section-title reveal">Sólidos: Pirâmides</h1>
+                <p class="section-intro reveal" style="transition-delay: 0.2s;">
+                    Pirâmides são poliedros formados pela conexão de uma base poligonal a um ponto, o ápice. A trigonometria é fundamental para relacionar a altura, o apótema da base e o apótema da pirâmide.
+                </p>
+
+                <div class="reveal" style="transition-delay: 0.4s;">
+                    <h2 class="subsection-title">Trigonometria na Pirâmide</h2>
+                    <p>Em uma pirâmide regular reta, um triângulo retângulo crucial é formado pela altura (h), o apótema da base ($a_b$) e o apótema da pirâmide ($a_p$). O Teorema de Pitágoras os une: $a_p^2 = h^2 + a_b^2$.</p>
+                </div>
+
+                <div class="reveal">
+                    <h2 class="subsection-title">Volume da Pirâmide</h2>
+                    <p>Surpreendentemente, o volume de qualquer pirâmide é um terço do volume de um prisma com a mesma base e altura. Uma das mais belas fórmulas da geometria.</p>
+                    <div class="formula-box">$$ V = \frac{1}{3} A_{\text{base}} \times h $$</div>
+                </div>
+                
+                <div class="interactive-card reveal">
+                    <h3><span class="material-icons" style="vertical-align: middle;">calculate</span> Calculadora de Pirâmide (Base Quadrada)</h3>
+                    <div class="input-group">
+                        <div class="input-field"><label for="piramide-lado-base">Lado da Base</label><input type="number" id="piramide-lado-base" placeholder="ex: 6"></div>
+                        <div class="input-field"><label for="piramide-altura">Altura (h)</label><input type="number" id="piramide-altura" placeholder="ex: 4"></div>
+                    </div>
+                    <button class="calc-button" id="btn-calc-piramide">Calcular Volume e Apótema</button>
+                    <div class="result-box" id="result-piramide"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEÇÃO 5: CORPOS REDONDOS -->
+        <section id="corpos-redondos" class="topic-section">
+            <div class="section-container">
+                <h1 class="section-title reveal">Corpos Redondos</h1>
+                <p class="section-intro reveal" style="transition-delay: 0.2s;">
+                    Finalizamos nossa jornada com os sólidos de revolução: o cilindro e o cone. Suas superfícies curvas e fórmulas elegantes são onipresentes na natureza e na engenharia.
+                </p>
+
+                <div class="reveal" style="transition-delay: 0.4s;">
+                    <h2 class="subsection-title">Cilindro</h2>
+                    <p>Um cilindro reto pode ser visto como um "prisma de base circular". Suas fórmulas de área e volume seguem a mesma lógica.</p>
+                    <div class="formula-box">
+                        $$ A_{\text{total}} = 2\pi r^2 + 2\pi r h $$
+                        $$ V = \pi r^2 h $$
+                    </div>
+                </div>
+
+                <div class="reveal">
+                    <h2 class="subsection-title">Cone</h2>
+                    <p>Assim como a pirâmide está para o prisma, o cone está para o cilindro. Seu volume é um terço do cilindro correspondente.</p>
+                    <div class="formula-box">
+                        $$ A_{\text{total}} = \pi r^2 + \pi r g \quad (\text{g = geratriz}) $$
+                        $$ V = \frac{1}{3} \pi r^2 h $$
+                    </div>
+                </div>
+                
+                <div class="interactive-card reveal">
+                    <h3><span class="material-icons" style="vertical-align: middle;">calculate</span> Calculadora de Cilindro e Cone</h3>
+                    <div class="input-group">
+                        <div class="input-field"><label for="corpo-raio">Raio da Base (r)</label><input type="number" id="corpo-raio" placeholder="ex: 3"></div>
+                        <div class="input-field"><label for="corpo-altura">Altura (h)</label><input type="number" id="corpo-altura" placeholder="ex: 5"></div>
+                    </div>
+                     <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                        <button class="calc-button" id="btn-calc-cilindro">Calcular Cilindro</button>
+                        <button class="calc-button" id="btn-calc-cone">Calcular Cone</button>
+                    </div>
+                    <div class="result-box" id="result-corpos"></div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+    
+    <!-- Rodapé Obrigatório -->
+    <footer>
+        <p>Página educacional desenvolvida como uma ferramenta de aprendizado. Design e conteúdo por L2.</p>
+    </footer>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+
+        // --- 1. LÓGICA DA TELA DE CARREGAMENTO ---
+        var loadingOverlay = document.querySelector('.loading-overlay');
+        var mainContent = document.getElementById('main-content');
+        var logoLetters = document.querySelectorAll('.loading-logo span');
+        
+        for (var i = 0; i < logoLetters.length; i++) {
+            (function(letter, index){
+                setTimeout(function(){
+                    letter.style.animationDelay = (index * 0.1) + 's';
+                    letter.style.animationPlayState = 'running';
+                }, 500);
+            })(logoLetters[i], i);
+        }
+        
+        function hideOverlay(){
+            if (!loadingOverlay) return;
+            loadingOverlay.classList.add('hidden');
+            if (mainContent) mainContent.classList.add('loaded');
+            var removed = false;
+            var cleanup = function(){
+                if (removed) return; removed = true;
+                if (loadingOverlay && loadingOverlay.parentNode) loadingOverlay.parentNode.removeChild(loadingOverlay);
+            };
+            loadingOverlay.addEventListener('transitionend', cleanup, { once: true });
+            setTimeout(cleanup, 1200);
+        }
+        if (loadingOverlay) {
+            loadingOverlay.style.display = 'flex';
+            setTimeout(hideOverlay, 2500);
+        }
+
+        // --- 2. LÓGICA DE NAVEGAÇÃO DINÂMICA E SCROLL-SPY ---
+        var nav = document.querySelector('.main-nav');
+        var navLinks = document.querySelectorAll('.nav-link');
+        var sections = document.querySelectorAll('.topic-section');
+
+        // Lógica para mostrar/esconder nav no scroll (mobile/tablet)
+        var lastScrollY = window.scrollY || window.pageYOffset || 0;
+        window.addEventListener('scroll', function(){
+            if (window.innerWidth <= 1023 && nav) {
+                var y = window.scrollY || window.pageYOffset || 0;
+                if (lastScrollY < y) { nav.classList.remove('nav-visible'); }
+                else { nav.classList.add('nav-visible'); }
+                lastScrollY = y;
+            }
+        }, { passive: true });
+
+        var observerOptionsNav = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.5 
+        };
+
+        var navObserver = new IntersectionObserver(function(entries){
+            for (var i = 0; i < entries.length; i++) {
+                var entry = entries[i];
+                if (entry.isIntersecting) {
+                    var id = entry.target.getAttribute('id');
+                    for (var j = 0; j < navLinks.length; j++) {
+                        var link = navLinks[j];
+                        link.classList.remove('active');
+                        if (link.getAttribute('href') === '#' + id) {
+                            link.classList.add('active');
+                        }
+                    }
+                }
+            }
+        }, observerOptionsNav);
+
+        for (var s = 0; s < sections.length; s++) navObserver.observe(sections[s]);
+
+        // --- 3. ANIMAÇÃO DE SCROLL-REVEAL ---
+        var revealElements = document.querySelectorAll('.reveal');
+        
+        var observerOptionsReveal = {
+            root: null,
+            rootMargin: '0px 0px -100px 0px',
+            threshold: 0.1
+        };
+
+        var revealObserver = new IntersectionObserver(function(entries, observer){
+            for (var i = 0; i < entries.length; i++) {
+                var entry = entries[i];
+                if (entry.isIntersecting) {
+                    if (entry.target.classList.contains('reveal-stagger')) {
+                        var children = entry.target.children;
+                        for (var k = 0; k < children.length; k++) {
+                            children[k].style.transitionDelay = (k * 0.15) + 's';
+                            children[k].classList.add('visible');
+                        }
+                    } else {
+                        entry.target.classList.add('visible');
+                    }
+                    observer.unobserve(entry.target);
+                }
+            }
+        }, observerOptionsReveal);
+
+        for (var r = 0; r < revealElements.length; r++) revealObserver.observe(revealElements[r]);
+
+        // --- 4. LÓGICA DAS CALCULADORAS INTERATIVAS ---
+        function getFloat(id) { return parseFloat(document.getElementById(id).value) || 0; }
+        function setResult(id, text) { document.getElementById(id).innerHTML = text; }
+        
+        document.getElementById('btn-calc-cossenos').addEventListener('click', () => {
+            const a = getFloat('tri-lado-a');
+            const b = getFloat('tri-lado-b');
+            const angleC_deg = getFloat('tri-angulo-C');
+            if (a > 0 && b > 0 && angleC_deg > 0) {
+                const angleC_rad = angleC_deg * (Math.PI / 180);
+                const c2 = a*a + b*b - 2 * a * b * Math.cos(angleC_rad);
+                const c = Math.sqrt(c2);
+                setResult('result-cossenos', `Lado c ≈ ${c.toFixed(3)}`);
+            } else {
+                setResult('result-cossenos', 'Por favor, insira valores válidos.');
+            }
+        });
+        
+        document.getElementById('btn-calc-circulo').addEventListener('click', () => {
+            const r = getFloat('area-param1');
+            if(r > 0) {
+                const area = Math.PI * r * r;
+                setResult('result-area', `Área do Círculo ≈ ${area.toFixed(3)} u.a.`);
+            } else {
+                setResult('result-area', 'Insira um raio válido.');
+            }
+        });
+        document.getElementById('btn-calc-retangulo').addEventListener('click', () => {
+            const b = getFloat('area-param1');
+            const h = getFloat('area-param2');
+            if(b > 0 && h > 0) {
+                const area = b * h;
+                setResult('result-area', `Área do Retângulo = ${area.toFixed(3)} u.a.`);
+            } else {
+                setResult('result-area', 'Insira base e altura válidas.');
+            }
+        });
+        document.getElementById('btn-calc-hexagono').addEventListener('click', () => {
+            const l = getFloat('area-param1');
+            if(l > 0) {
+                const area = (3 * l * l * Math.sqrt(3)) / 2;
+                setResult('result-area', `Área do Hexágono ≈ ${area.toFixed(3)} u.a.`);
+            } else {
+                setResult('result-area', 'Insira um lado válido.');
+            }
+        });
+
+        document.getElementById('btn-calc-prisma').addEventListener('click', () => {
+            const l = getFloat('prisma-lado-base');
+            const h = getFloat('prisma-altura');
+            if(l > 0 && h > 0) {
+                const areaBase = l * l;
+                const areaLateral = 4 * l * h;
+                const areaTotal = 2 * areaBase + areaLateral;
+                const volume = areaBase * h;
+                setResult('result-prisma', `Área Total: ${areaTotal.toFixed(2)} u.a. <br> Volume: ${volume.toFixed(2)} u.v.`);
+            } else {
+                setResult('result-prisma', 'Insira valores válidos.');
+            }
+        });
+        
+        document.getElementById('btn-calc-piramide').addEventListener('click', () => {
+            const l = getFloat('piramide-lado-base');
+            const h = getFloat('piramide-altura');
+            if(l > 0 && h > 0) {
+                const areaBase = l * l;
+                const volume = (areaBase * h) / 3;
+                const apotemaBase = l / 2;
+                const apotemaPiramide = Math.sqrt(h*h + apotemaBase*apotemaBase);
+                setResult('result-piramide', `Volume: ${volume.toFixed(2)} u.v. <br> Apótema da Pirâmide: ${apotemaPiramide.toFixed(2)} u.m.`);
+            } else {
+                setResult('result-piramide', 'Insira valores válidos.');
+            }
+        });
+        
+        document.getElementById('btn-calc-cilindro').addEventListener('click', () => {
+            const r = getFloat('corpo-raio');
+            const h = getFloat('corpo-altura');
+            if(r > 0 && h > 0) {
+                const areaBase = Math.PI * r * r;
+                const areaLateral = 2 * Math.PI * r * h;
+                const areaTotal = 2 * areaBase + areaLateral;
+                const volume = areaBase * h;
+                setResult('result-corpos', `<b>Cilindro:</b><br>Área Total ≈ ${areaTotal.toFixed(2)} u.a. <br> Volume ≈ ${volume.toFixed(2)} u.v.`);
+            } else {
+                setResult('result-corpos', 'Insira raio e altura válidos.');
+            }
+        });
+        document.getElementById('btn-calc-cone').addEventListener('click', () => {
+            const r = getFloat('corpo-raio');
+            const h = getFloat('corpo-altura');
+            if(r > 0 && h > 0) {
+                const g = Math.sqrt(r*r + h*h); // Geratriz
+                const areaBase = Math.PI * r * r;
+                const areaLateral = Math.PI * r * g;
+                const areaTotal = areaBase + areaLateral;
+                const volume = (areaBase * h) / 3;
+                setResult('result-corpos', `<b>Cone:</b><br>Área Total ≈ ${areaTotal.toFixed(2)} u.a. <br> Volume ≈ ${volume.toFixed(2)} u.v.`);
+            } else {
+                setResult('result-corpos', 'Insira raio e altura válidos.');
+            }
+        });
+    });
+    </script>
+</body>
+</html>

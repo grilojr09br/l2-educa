@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>História do Brasil: Dos Povos Originários à Crise do Açúcar</title>
+    
+    <!-- Google Fonts: Poppins para texto e Source Code Pro para código -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
+
+    <!-- Google Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <style>
+        /* 1. RESET E CONFIGURAÇÕES GLOBAIS (V8) */
+        :root {
+            --primary-color: #E0E7FF;
+            --secondary-color: #C7D2FE;
+            --accent-color: #818CF8;
+            --text-color: #F9FAFB;
+            --bg-color: #111827;
+            --card-bg: rgba(31, 41, 55, 0.25);
+            --border-color: rgba(129, 140, 248, 0.2);
+            --font-main: 'Poppins', sans-serif;
+            --font-code: 'Source Code Pro', monospace;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: var(--font-main);
+            line-height: 1.8;
+            overflow-x: hidden;
+        }
+
+        /* 2. ESTÉTICA "AURORA LÍQUIDA" APRIMORADA (V8) */
+        .aurora-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .aurora-shape {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(180px);
+            opacity: 0.5;
+        }
+
+        .shape1 { width: 500px; height: 500px; background: #3B82F6; top: -150px; left: -150px; animation: move-aurora 25s infinite alternate ease-in-out; }
+        .shape2 { width: 400px; height: 400px; background: #8B5CF6; bottom: -100px; right: -100px; animation: move-aurora 30s infinite alternate-reverse ease-in-out; }
+        .shape3 { width: 350px; height: 350px; background: #10B981; top: 50%; left: 50%; transform: translate(-50%, -50%); animation: move-aurora 20s infinite ease-in-out; }
+
+        @keyframes move-aurora {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(100px, 50px) scale(1.2); }
+            100% { transform: translate(-50px, -100px) scale(1); }
+        }
+
+        /* 3. TELA DE CARREGAMENTO (PRELÚDIO) */
+        .loading-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: var(--bg-color);
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            z-index: 1000; transition: opacity 0.8s ease-out;
+        }
+        .loading-logo { font-size: clamp(2rem, 8vw, 4rem); font-weight: 700; color: var(--primary-color); margin-bottom: 2rem; }
+        .loading-logo span { opacity: 0; animation: letter-fade-in 0.5s forwards; }
+        @keyframes letter-fade-in { to { opacity: 1; } }
+        .progress-bar-container { width: 250px; height: 4px; background-color: rgba(255, 255, 255, 0.1); border-radius: 2px; overflow: hidden; }
+        .progress-bar { width: 0; height: 100%; background: linear-gradient(90deg, var(--secondary-color), var(--accent-color)); border-radius: 2px; animation: fill-progress 2s ease-out forwards; }
+        @keyframes fill-progress { to { width: 100%; } }
+        .loading-overlay.hidden { opacity: 0; pointer-events: none; }
+
+        /* 4. NAVEGAÇÃO DINÂMICA (V8) */
+        .main-nav {
+            position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+            background: var(--card-bg);
+            backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--border-color); border-radius: 50px;
+            padding: 0.5rem; z-index: 500; display: flex;
+            justify-content: center; align-items: center;
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        .main-nav ul { list-style: none; display: flex; align-items: center; gap: 0.25rem; }
+        .main-nav a { display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem; color: var(--primary-color); text-decoration: none; border-radius: 30px; transition: background-color 0.3s ease, color 0.3s ease; position: relative; overflow: hidden; }
+        .main-nav .nav-text { font-weight: 500; font-size: 0.9rem; white-space: nowrap; max-width: 0; opacity: 0; transition: max-width 0.4s ease-out, opacity 0.2s ease-out; }
+        .main-nav a:hover, .main-nav a.active { background-color: var(--primary-color); color: var(--bg-color); }
+        
+        @media (min-width: 1024px) {
+            .main-nav:hover .nav-text { max-width: 150px; opacity: 1; margin-left: 0.25rem; }
+            .main-nav:hover a { padding: 0.75rem 1rem; }
+        }
+        @media (max-width: 1023px) {
+            .main-nav { top: -100px; }
+            .main-nav.nav-visible { top: 20px; }
+            .main-nav .nav-text { display: none; } /* Em mobile, sempre só ícones */
+        }
+
+        /* 5. LAYOUT E CONTEÚDO */
+        main { opacity: 0; transition: opacity 0.8s ease-in; }
+        main.loaded { opacity: 1; }
+        .topic-section { min-height: 100vh; width: 100%; padding: 120px 5% 60px; display: flex; flex-direction: column; justify-content: center; align-items: center; position: relative; }
+        .section-container { max-width: 960px; width: 100%; margin: 0 auto; }
+        
+        h1, h2, h3 { font-weight: 600; letter-spacing: -0.5px; margin-bottom: 1rem; text-shadow: 0 0 15px rgba(0,0,0,0.3); }
+        .section-title { font-size: clamp(2.5rem, 6vw, 4rem); text-align: center; color: var(--primary-color); line-height: 1.1; }
+        .section-intro { font-size: clamp(1rem, 2.5vw, 1.25rem); max-width: 750px; text-align: center; margin: 1rem auto 3rem; color: var(--secondary-color); font-weight: 300; }
+        .subsection-title { font-size: clamp(1.8rem, 4vw, 2.5rem); color: var(--primary-color); margin-top: 3rem; margin-bottom: 1.5rem; border-left: 4px solid var(--accent-color); padding-left: 1rem; }
+        p { margin-bottom: 1.5rem; font-size: clamp(1rem, 2vw, 1.1rem); text-align: justify; }
+        strong { color: var(--secondary-color); font-weight: 600; }
+        blockquote {
+            background: var(--card-bg); border-left: 4px solid var(--accent-color);
+            margin: 2rem 0; padding: 1.5rem; border-radius: 0 8px 8px 0;
+            font-style: italic; color: var(--secondary-color);
+        }
+        blockquote footer { font-style: normal; text-align: right; margin-top: 1rem; font-size: 0.9rem; color: var(--primary-color); }
+
+        /* 6. ANIMAÇÕES E RODAPÉ */
+        .reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.8s ease-out, transform 0.8s ease-out; }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+        footer { text-align: center; padding: 2rem; font-size: 0.9rem; color: var(--secondary-color); background-color: rgba(0,0,0,0.2); }
+    </style>
+</head>
+<body>
+
+    <div class="aurora-background">
+        <div class="aurora-shape shape1"></div>
+        <div class="aurora-shape shape2"></div>
+        <div class="aurora-shape shape3"></div>
+    </div>
+
+    <div class="loading-overlay">
+        <div class="loading-logo">
+            <span>L</span><span>2</span><span> </span><span>E</span><span>D</span><span>U</span><span>C</span><span>A</span>
+        </div>
+        <div class="progress-bar-container"><div class="progress-bar"></div></div>
+    </div>
+
+    <nav class="main-nav">
+        <ul>
+            <li><a href="#brasil-pre-colonial" class="nav-link"><i class="material-icons">forest</i><span class="nav-text">Pré-Colonial</span></a></li>
+            <li><a href="#chegada-portuguesa" class="nav-link"><i class="material-icons">sailing</i><span class="nav-text">Chegada</span></a></li>
+            <li><a href="#ciclo-acucar" class="nav-link"><i class="material-icons">agriculture</i><span class="nav-text">Açúcar</span></a></li>
+            <li><a href="#invasoes-estrangeiras" class="nav-link"><i class="material-icons">flag</i><span class="nav-text">Invasões</span></a></li>
+        </ul>
+    </nav>
+    
+    <main id="main-content">
+
+        <!-- SEÇÃO 1: BRASIL PRÉ-COLONIAL -->
+        <section id="brasil-pre-colonial" class="topic-section">
+            <div class="section-container">
+                <h1 class="section-title reveal">O Brasil Antes do Brasil</h1>
+                <p class="section-intro reveal" style="transition-delay: 0.2s;">
+                    Antes de 1500, o vasto território que viria a ser o Brasil era um mosaico pulsante de culturas, línguas e povos. Milhares de anos de história humana se desdobraram aqui, em uma complexa teia de sociedades que interagiam profundamente com a terra que habitavam. Vamos mergulhar no mundo dos Tupinambás, um dos grupos mais proeminentes que os europeus encontraram.
+                </p>
+
+                <div class="reveal" style="transition-delay: 0.4s;">
+                    <h2 class="subsection-title">Os Tupinambás: Sociedade e Cotidiano</h2>
+                    <p>Os Tupinambás, pertencentes ao tronco linguístico Tupi, dominavam grande parte da costa atlântica. Sua sociedade não era organizada em um estado centralizado, mas em aldeias independentes que podiam abrigar de centenas a milhares de pessoas. Essas aldeias eram frequentemente cercadas por paliçadas para defesa, e as moradias consistiam em grandes malocas coletivas, onde viviam várias famílias aparentadas.</p>
+                    <p>A vida era regida por um profundo senso de comunidade. A terra não era uma propriedade privada, mas de uso coletivo, cultivada através da coivara, uma técnica agrícola itinerante. Mandioca, milho, feijão e amendoim formavam a base de sua alimentação, complementada pela caça, pesca e coleta de frutos. A divisão do trabalho era clara: homens eram responsáveis pela guerra, caça e derrubada da mata, enquanto as mulheres cuidavam da agricultura, da preparação dos alimentos e da educação das crianças.</p>
+                </div>
+
+                <div class="reveal">
+                    <h2 class="subsection-title">Cosmologia e Guerra</h2>
+                    <p>A espiritualidade Tupinambá permeava todos os aspectos da vida. Seus pajés eram figuras centrais, mediadores entre o mundo dos vivos e o mundo dos espíritos, responsáveis por curas e rituais. Eles acreditavam em um universo povoado por diversas entidades e heróis mitológicos que moldaram o mundo. Não havia um deus único e supremo, mas uma rica cosmologia que explicava a origem de tudo.</p>
+                    <p>A guerra era uma instituição social fundamental, mas seu propósito era distinto do conceito europeu de conquista territorial ou econômica. Era uma atividade ritual, motivada principalmente pela vingança de injúrias passadas e pela captura de inimigos. O destino do prisioneiro era o ritual antropofágico, um ato complexo e carregado de simbolismo. Longe de ser um ato de barbárie por fome, era uma forma de honrar o inimigo corajoso e absorver sua força e bravura, em um ciclo de reciprocidade e equilíbrio cósmico.</p>
+                    <blockquote>
+                        <p>"Não o comemos por ódio, nem por fome, mas sim por grande amor e para que seu valor e coragem entrem em nós."</p>
+                        <footer>— Atribuído a um chefe Tupinambá, explicando o ritual.</footer>
+                    </blockquote>
+                </div>
+            </div>
+        </section>
+        
+        <!-- SEÇÃO 2: CHEGADA PORTUGUESA E ADMINISTRAÇÃO -->
+        <section id="chegada-portuguesa" class="topic-section">
+            <div class="section-container">
+                <h1 class="section-title reveal">O Encontro de Dois Mundos</h1>
+                <p class="section-intro reveal" style="transition-delay: 0.2s;">
+                    Em 1500, a chegada da esquadra de Pedro Álvares Cabral marcou o início de uma transformação irreversível. O contato inicial, embora aparentemente pacífico, foi o prelúdio de um longo e muitas vezes violento processo de colonização que reconfiguraria para sempre as terras e os povos desta região.
+                </p>
+
+                <div class="reveal" style="transition-delay: 0.4s;">
+                    <h2 class="subsection-title">Escambo, Feitorias e Pau-Brasil</h2>
+                    <p>Nos primeiros trinta anos, o interesse de Portugal na "Terra de Vera Cruz" foi predominantemente econômico e extrativista. A Coroa, focada no lucrativo comércio de especiarias com as Índias, não estabeleceu um projeto de povoamento imediato. A principal riqueza encontrada foi o pau-brasil, uma árvore cuja madeira avermelhada era valiosa na Europa para a tinturaria de tecidos de luxo.</p>
+                    <p>A extração era feita através do <strong>escambo</strong>: os portugueses trocavam com os indígenas objetos de pouco valor para eles — como espelhos, facas, machados e tecidos — pelo trabalho de corte e transporte das toras de pau-brasil. Para armazenar a madeira e defender a costa de corsários, principalmente franceses, foram criadas as <strong>feitorias</strong>, postos comerciais fortificados ao longo do litoral. Este foi o chamado "período pré-colonial".</p>
+                </div>
+
+                <div class="reveal">
+                    <h2 class="subsection-title">Administração e a Confederação dos Tamoios</h2>
+                    <p>Com a ameaça crescente de invasões e a necessidade de ocupar efetivamente a terra, Portugal implementou em 1534 o sistema de Capitanias Hereditárias e, em 1549, o Governo-Geral. Este avanço colonizador gerou conflitos cada vez mais intensos. A escravização de indígenas para os trabalhos nas lavouras incipientes e a invasão de seus territórios provocaram forte resistência.</p>
+                    <p>A <strong>Confederação dos Tamoios</strong> (1554-1567) foi uma das mais notáveis revoltas indígenas. Liderados por chefes como Cunhambebe, os Tupinambás da região entre o litoral de São Paulo e o Rio de Janeiro se uniram em uma poderosa aliança militar. Eles se aliaram aos franceses, que haviam estabelecido uma colônia na Baía de Guanabara (a França Antártica), para lutar contra os portugueses e seus aliados indígenas, os Tupiniquins. A guerra foi brutal e longa, terminando com a vitória luso-tupiniquim, a expulsão dos franceses e um massacre que dizimou grande parte da população Tamoio.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEÇÃO 3: CICLO DO AÇÚCAR -->
+        <section id="ciclo-acucar" class="topic-section">
+            <div class="section-container">
+                <h1 class="section-title reveal">A Era do Ouro Branco</h1>
+                <p class="section-intro reveal" style="transition-delay: 0.2s;">
+                    A partir de meados do século XVI, a produção de açúcar tornou-se a espinha dorsal da economia colonial brasileira. O "ouro branco", um produto de altíssimo valor na Europa, moldou a paisagem, a sociedade e a demografia da colônia, estabelecendo um modelo de exploração que deixaria marcas profundas e duradouras.
+                </p>
+
+                <div class="reveal" style="transition-delay: 0.4s;">
+                    <h2 class="subsection-title">O Engenho: Coração da Colônia</h2>
+                    <p>O engenho de açúcar era muito mais do que uma simples fazenda; era uma complexa unidade de produção agroindustrial. Ele se baseava no tripé: <strong>latifúndio</strong> (grandes extensões de terra), <strong>monocultura</strong> (cultivo exclusivo da cana-de-açúcar) e <strong>mão de obra escravizada</strong>. O engenho incluía não apenas os canaviais, mas também a "casa-grande" (residência do senhor de engenho), a senzala (alojamento dos escravizados) e as instalações de moagem e purificação, como a moenda, as fornalhas e a casa de purgar.</p>
+                </div>
+
+                <div class="reveal">
+                    <h2 class="subsection-title">A Força de Trabalho e a Resistência Africana</h2>
+                    <p>Inicialmente, os portugueses tentaram utilizar a mão de obra indígena, mas a resistência, as doenças e a oposição jesuítica dificultaram essa prática. A solução encontrada foi o tráfico transatlântico de africanos escravizados. Milhões de homens, mulheres e crianças foram sequestrados de diversas partes da África e trazidos à força para o Brasil para trabalhar em condições desumanas nos canaviais e engenhos.</p>
+                    <p>Apesar da brutalidade do sistema, a resistência era constante e multifacetada. Ia desde a sabotagem no trabalho e a preservação de práticas culturais e religiosas (sincretismo) até as revoltas e, principalmente, as fugas. Os fugitivos se organizavam em <strong>quilombos</strong>, comunidades autônomas que se tornaram símbolos da luta por liberdade. O Quilombo dos Palmares, liderado por figuras como Ganga Zumba e Zumbi, foi o maior e mais duradouro, resistindo por quase um século.</p>
+                </div>
+                
+                <div class="reveal">
+                    <h2 class="subsection-title">A Sociedade Açucareira</h2>
+                    <p>A sociedade que se formou em torno dos engenhos era profundamente hierarquizada, patriarcal e ruralizada. No topo estava a aristocracia rural, os <strong>senhores de engenho</strong>, que detinham o poder econômico, político e social. Abaixo deles, havia uma camada intermediária de homens livres, como capatazes, padres, artesãos e pequenos comerciantes. Na base da pirâmide, constituindo a vasta maioria da população, estavam os africanos escravizados, considerados meras propriedades e submetidos a uma vida de trabalho exaustivo e violência.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEÇÃO 4: INVASÕES E CRISE -->
+        <section id="invasoes-estrangeiras" class="topic-section">
+            <div class="section-container">
+                <h1 class="section-title reveal">Disputas pelo Atlântico Sul</h1>
+                <p class="section-intro reveal" style="transition-delay: 0.2s;">
+                    A riqueza gerada pelo açúcar brasileiro não passou despercebida por outras potências europeias. Excluídas pelo Tratado de Tordesilhas, nações como França e Holanda desafiaram o domínio ibérico, resultando em invasões, guerras e em uma reconfiguração geopolítica que abalaria as estruturas da colônia.
+                </p>
+
+                <div class="reveal" style="transition-delay: 0.4s;">
+                    <h2 class="subsection-title">União Ibérica e Invasões Holandesas</h2>
+                    <p>Em 1580, o rei de Portugal morreu sem deixar herdeiros diretos, levando o rei Filipe II da Espanha a assumir o trono português. Este período, conhecido como <strong>União Ibérica</strong> (1580-1640), unificou as duas coroas. Uma consequência direta foi que os inimigos da Espanha, como a Holanda (que lutava por sua independência), tornaram-se também inimigos de Portugal. Os holandeses, que antes eram os principais financiadores e distribuidores do açúcar brasileiro na Europa, foram proibidos de aportar em portos luso-espanhóis.</p>
+                    <p>Em resposta, a recém-criada Companhia Holandesa das Índias Ocidentais (WIC) organizou uma invasão ao Nordeste brasileiro, o coração da produção de açúcar. Após uma tentativa frustrada em Salvador (1624), eles conseguiram conquistar Olinda e Recife em 1630, estabelecendo a colônia da "Nova Holanda".</p>
+                </div>
+
+                <div class="reveal">
+                    <h2 class="subsection-title">O Brasil Holandês e a Insurreição Pernambucana</h2>
+                    <p>O período de maior florescimento da Nova Holanda ocorreu sob a administração do conde <strong>Maurício de Nassau</strong> (1637-1644). Ele pacificou a região, concedeu empréstimos para senhores de engenho reconstruírem suas propriedades, garantiu certa tolerância religiosa e promoveu uma notável modernização urbana e cultural em Recife, trazendo consigo artistas e cientistas.</p>
+                    <p>Contudo, após a partida de Nassau, a WIC aumentou a pressão sobre os senhores de engenho para o pagamento das dívidas. O descontentamento cresceu e, aproveitando que Portugal já havia restaurado sua independência da Espanha em 1640, os colonos luso-brasileiros iniciaram a <strong>Insurreição Pernambucana</strong> (1645-1654). Liderada por figuras de diferentes origens sociais, como André Vidal de Negreiros (branco), João Fernandes Vieira (branco), Henrique Dias (negro) e Filipe Camarão (indígena), a longa guerra culminou na expulsão definitiva dos holandeses.</p>
+                </div>
+
+                <div class="reveal">
+                    <h2 class="subsection-title">A Crise do Açúcar</h2>
+                    <p>A expulsão dos holandeses teve um preço alto. Ao deixarem o Brasil, eles levaram consigo as técnicas de produção de açúcar e as implementaram em suas colônias nas Antilhas (Caribe). O açúcar antilhano, de alta qualidade e mais próximo do mercado europeu, passou a concorrer diretamente com o brasileiro. Essa nova concorrência, somada ao desgaste da guerra e à queda dos preços internacionais, mergulhou a economia açucareira do Brasil em uma longa crise no final do século XVII, abrindo caminho para a ascensão de um novo ciclo econômico: o do ouro, nas Minas Gerais.</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+    
+    <footer>
+        <p>Página educacional desenvolvida como uma ferramenta de aprendizado. Design e conteúdo por L2.</p>
+    </footer>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // --- LÓGICA DE CARREGAMENTO ---
+        const loadingOverlay = document.querySelector('.loading-overlay');
+        const mainContent = document.getElementById('main-content');
+        const logoLetters = document.querySelectorAll('.loading-logo span');
+        logoLetters.forEach((letter, index) => {
+            letter.style.animationDelay = `${index * 0.1}s`;
+        });
+        setTimeout(() => {
+            loadingOverlay.classList.add('hidden');
+            mainContent.classList.add('loaded');
+        }, 2500);
+
+        // --- LÓGICA DE NAVEGAÇÃO DINÂMICA (V8) ---
+        const nav = document.querySelector('.main-nav');
+        const navLinks = document.querySelectorAll('.nav-link');
+        const sections = document.querySelectorAll('.topic-section');
+        let lastScrollY = window.scrollY;
+
+        window.addEventListener('scroll', () => {
+            if (window.innerWidth <= 1023) {
+                if (lastScrollY < window.scrollY) {
+                    nav.classList.remove('nav-visible');
+                } else {
+                    nav.classList.add('nav-visible');
+                }
+                lastScrollY = window.scrollY;
+            }
+        }, { passive: true });
+
+        const navObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const id = entry.target.getAttribute('id');
+                    navLinks.forEach(link => {
+                        link.classList.remove('active');
+                        if (link.getAttribute('href') === `#${id}`) {
+                            link.classList.add('active');
+                        }
+                    });
+                }
+            });
+        }, { root: null, rootMargin: '0px', threshold: 0.4 });
+
+        sections.forEach(section => navObserver.observe(section));
+
+        // --- ANIMAÇÃO DE SCROLL-REVEAL ---
+        const revealElements = document.querySelectorAll('.reveal');
+        const revealObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { root: null, rootMargin: '0px 0px -100px 0px', threshold: 0.1 });
+
+        revealElements.forEach(el => revealObserver.observe(el));
+    });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Circuitos Elétricos — Interativo</title>
+<style>
+  :root {
+    --bg: #0b0c10;
+    --fg: #e6edf3;
+    --muted: #9aa7b2;
+    --card: #111318;
+    --accent: #6ab0ff;
+    --accent-strong: #4aa3ff;
+    --ok: #22c55e;
+    --warn: #f59e0b;
+    --err: #ef4444;
+    --border: #1f242b;
+  }
+  [data-theme="light"] {
+    --bg: #f7f8fa;
+    --fg: #0b0c10;
+    --muted: #526070;
+    --card: #ffffff;
+    --accent: #0b74ff;
+    --accent-strong: #075ae6;
+    --ok: #1a9e4a;
+    --warn: #cc7a00;
+    --err: #c03737;
+    --border: #e7eaf0;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; height: 100%; background: var(--bg); color: var(--fg); font: clamp(15px, 1.1vw + 0.4rem, 18px)/1.6 system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Arial, "Apple Color Emoji", "Segoe UI Emoji"; }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .app { display: grid; grid-template-columns: 280px 1fr; min-height: 100vh; }
+  nav { border-right: 1px solid var(--border); background: linear-gradient(180deg, rgba(255,255,255,0.02), transparent); }
+  header { position: sticky; top: 0; z-index: 10; backdrop-filter: blur(8px); background: color-mix(in oklab, var(--bg) 85%, transparent); border-bottom: 1px solid var(--border); }
+  .container { max-width: 1100px; margin: 0 auto; padding: 16px 24px; }
+  .title { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .title h1 { margin: 0; font-size: 22px; }
+  .controls { display: flex; gap: 8px; align-items: center; }
+  .btn { cursor: pointer; border: 1px solid var(--border); background: var(--card); color: var(--fg); padding: 12px 14px; border-radius: 12px; transition: background .2s, transform .06s; min-height: 44px; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+  .btn:hover { background: color-mix(in oklab, var(--card) 85%, var(--accent) 15%); }
+  .btn:active { transform: scale(0.98); }
+  .btn.primary { background: var(--accent); color: #fff; border-color: transparent; }
+  .btn.primary:hover { background: var(--accent-strong); }
+  .skip { position: absolute; left: -10000px; top: auto; width: 1px; height: 1px; overflow: hidden; }
+  .skip:focus { left: 16px; top: 16px; width: auto; height: auto; padding: 8px 12px; background: var(--accent); color: #fff; border-radius: 8px; }
+  .sidebar { position: sticky; top: 0; height: 100vh; padding: 16px; overflow: auto; }
+  .sidebar h2 { font-size: 14px; margin: 8px 0 12px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: .08em; }
+  .toc { display: grid; gap: 6px; }
+  .toc a { padding: 8px 10px; border-radius: 8px; border: 1px solid transparent; }
+  .toc a:hover { background: color-mix(in oklab, var(--card) 80%, var(--accent) 20%); border-color: var(--border); }
+  main { padding-bottom: 48px; }
+  section { scroll-margin-top: 88px; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 16px; margin: 16px 0; box-shadow: 0 6px 24px rgba(0,0,0,.2); }
+  h2 { margin: 0 0 8px; font-size: 20px; }
+  h3 { margin: 10px 0 6px; font-size: 16px; color: var(--muted); }
+  .grid { display: grid; gap: 16px; grid-template-columns: repeat(12, 1fr); }
+  .col-6 { grid-column: span 6; }
+  .col-12 { grid-column: span 12; }
+  @media (max-width: 920px) {
+    .app { grid-template-columns: 1fr; }
+    .sidebar { position: relative; height: auto; border-bottom: 1px solid var(--border); }
+    .grid { grid-template-columns: repeat(6, 1fr); }
+    .col-6, .col-12 { grid-column: span 6; }
+  }
+  .input, select { width: 100%; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--border); background: color-mix(in oklab, var(--card) 88%, var(--bg) 12%); color: var(--fg); min-height: 44px; }
+  .row { display: grid; grid-template-columns: 160px 1fr; gap: 12px; align-items: center; margin: 8px 0; }
+  @media (max-width: 640px) {
+    .row { grid-template-columns: 1fr; }
+  }
+  .label { color: var(--muted); font-size: 14px; }
+  .out { background: color-mix(in oklab, var(--card) 92%, var(--bg) 8%); padding: 10px 12px; border-radius: 10px; }
+  .kv { display: grid; grid-template-columns: 1fr auto; gap: 6px; }
+  .small { font-size: 13px; color: var(--muted); }
+  .warn { color: var(--warn); }
+  .err { color: var(--err); }
+  .ok { color: var(--ok); }
+  .pill { display: inline-block; padding: 2px 8px; border-radius: 999px; background: color-mix(in oklab, var(--accent) 25%, transparent); color: var(--fg); border: 1px solid var(--border); font-size: 12px; }
+  .quiz { display: grid; gap: 8px; }
+  .quiz .option { display: flex; gap: 8px; align-items: center; padding: 8px; border: 1px solid var(--border); border-radius: 12px; }
+  .quiz .option[aria-checked="true"] { outline: 2px solid var(--accent); }
+  .quiz .feedback { min-height: 20px; font-weight: 600; }
+  .toast { position: fixed; right: 16px; bottom: 16px; background: var(--card); border: 1px solid var(--border); color: var(--fg); padding: 10px 12px; border-radius: 10px; box-shadow: 0 6px 24px rgba(0,0,0,.2); display: none; }
+  canvas { max-width: 100%; height: auto; }
+  .chart-wrap { display: grid; gap: 8px; }
+  .visually-hidden { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); border: 0; }
+  .svg-host { width: 100%; height: 260px; border: 1px dashed var(--border); border-radius: 12px; background: color-mix(in oklab, var(--card) 96%, var(--bg) 4%); }
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; animation: none !important; }
+  }
+  :focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; border-radius: 8px; }
+</style>
+</head>
+<body>
+<a class="skip" href="#conteudo">Pular para o conteúdo</a>
+<div class="app" id="app">
+  <nav class="sidebar" aria-label="Sumário">
+    <h2>Sumário</h2>
+    <div class="toc" id="toc"></div>
+  </nav>
+  <div>
+    <header>
+      <div class="container title">
+        <h1>Circuitos Elétricos — Interativo</h1>
+        <div class="controls">
+          <button class="btn" id="themeBtn" aria-pressed="false" title="Alternar tema">Tema</button>
+          <a class="btn" href="#" onclick="window.scrollTo({top:0, behavior:'smooth'})" title="Voltar ao topo">Topo</a>
+        </div>
+      </div>
+    </header>
+    <main id="conteudo" class="container" tabindex="-1">
+
+      <section id="objetivos" class="card" data-title="Objetivos">
+        <h2>Objetivos da Aula</h2>
+        <ul>
+          <li>Modelar geradores e receptores.</li>
+          <li>Aplicar Lei de Ohm e associações de resistores.</li>
+          <li>Identificar nós, ramos e malhas.</li>
+          <li>Resolver circuitos com as Leis de Kirchhoff.</li>
+        </ul>
+      </section>
+
+      <section id="geradores" class="card" data-title="Geradores">
+        <h2>Geradores</h2>
+        <p>Modelo: <span class="pill">U = ε − r<sub>i</sub> · i</span></p>
+        <div class="grid">
+          <div class="col-6">
+            <div class="card">
+              <h3>Calculadora de Gerador</h3>
+              <div class="row"><div class="label">ε (V)</div><input class="input" id="g_eps" type="number" step="any" value="9" aria-label="Força eletromotriz" /></div>
+              <div class="row"><div class="label">r<sub>i</sub> (Ω)</div><input class="input" id="g_ri" type="number" step="any" value="1" aria-label="Resistência interna" /></div>
+              <div class="row"><div class="label">R (Ω)</div><input class="input" id="g_R" type="number" step="any" value="5" aria-label="Resistência de carga" /></div>
+              <div class="row"><button class="btn primary" id="g_calc">Calcular</button><div class="small">Valida entradas e evita resultados inválidos.</div></div>
+              <div class="grid">
+                <div class="col-6">
+                  <div class="kv"><span>i (A)</span><span class="out" id="g_i">—</span></div>
+                  <div class="kv"><span>U (V)</span><span class="out" id="g_U">—</span></div>
+                </div>
+                <div class="col-6">
+                  <div class="kv"><span>P<sub>T</sub> (W)</span><span class="out" id="g_PT">—</span></div>
+                  <div class="kv"><span>P<sub>U</sub> (W)</span><span class="out" id="g_PU">—</span></div>
+                  <div class="kv"><span>P<sub>D</sub> (W)</span><span class="out" id="g_PD">—</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="card">
+              <h3>Notas</h3>
+              <ul>
+                <li>Potência total: P<sub>T</sub> = ε · i</li>
+                <li>Potência útil: P<sub>U</sub> = U · i</li>
+                <li>Potência dissipada: P<sub>D</sub> = r<sub>i</sub> · i²</li>
+                <li>Caso U = 0 ⇒ i<sub>cc</sub> = ε / r<sub>i</sub></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Gráfico U × i (Gerador)</h3>
+          <p class="small">Reta com intercepto em U(0) = ε e inclinação −r<sub>i</sub>. Atualiza com os valores acima.</p>
+          <div class="chart-wrap">
+            <canvas id="chart_gerador" aria-label="Gráfico tensão versus corrente do gerador" role="img"></canvas>
+            <div class="small" id="chart_gerador_desc">Descrição: a curva ilustra U = ε − r<sub>i</sub>·i para o gerador.</div>
+          </div>
+        </div>
+      </section>
+
+      <section id="receptores" class="card" data-title="Receptores">
+        <h2>Receptores</h2>
+        <p>Modelo: <span class="pill">U = ε' + r' · i</span></p>
+        <div class="grid">
+          <div class="col-6">
+            <div class="card">
+              <h3>Calculadora de Receptor</h3>
+              <div class="row"><div class="label">ε' (V)</div><input class="input" id="r_eps" type="number" step="any" value="6" aria-label="Força eletromotriz receptora" /></div>
+              <div class="row"><div class="label">r' (Ω)</div><input class="input" id="r_r" type="number" step="any" value="2" aria-label="Resistência interna receptora" /></div>
+              <div class="row"><div class="label">i (A)</div><input class="input" id="r_i" type="number" step="any" value="1" aria-label="Corrente" /></div>
+              <div class="row"><button class="btn primary" id="r_calc">Calcular</button><div class="small">Mostra U e potências.</div></div>
+              <div class="grid">
+                <div class="col-6">
+                  <div class="kv"><span>U (V)</span><span class="out" id="r_U">—</span></div>
+                </div>
+                <div class="col-6">
+                  <div class="kv"><span>P<sub>T</sub> (W)</span><span class="out" id="r_PT">—</span></div>
+                  <div class="kv"><span>P<sub>U</sub> (W)</span><span class="out" id="r_PU">—</span></div>
+                  <div class="kv"><span>P<sub>D</sub> (W)</span><span class="out" id="r_PD">—</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="card">
+              <h3>Notas</h3>
+              <ul>
+                <li>Com i = 0 ⇒ U = ε'</li>
+                <li>Potências análogas às do gerador (atentar aos sinais)</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Gráfico U × i (Receptor)</h3>
+          <p class="small">Reta com intercepto em U(0) = ε' e inclinação +r'. Atualiza com os valores acima.</p>
+          <div class="chart-wrap">
+            <canvas id="chart_receptor" aria-label="Gráfico tensão versus corrente do receptor" role="img"></canvas>
+            <div class="small" id="chart_receptor_desc">Descrição: a curva ilustra U = ε' + r'·i para o receptor.</div>
+          </div>
+        </div>
+      </section>
+
+      <section id="ohm" class="card" data-title="Resistores e Lei de Ohm">
+        <h2>Resistores e Lei de Ohm</h2>
+        <p>Lei de Ohm: <span class="pill">U = R · i</span> — Efeito Joule e comportamento ôhmico.</p>
+        <div class="grid">
+          <div class="col-6">
+            <div class="card">
+              <h3>Gráfico U × i (Resistor)</h3>
+              <div class="row"><div class="label">R (Ω)</div><input class="input" id="ohm_R" type="number" step="any" value="10" aria-label="Resistência do resistor" /></div>
+              <div class="chart-wrap">
+                <canvas id="chart_resistor" aria-label="Gráfico tensão versus corrente do resistor" role="img"></canvas>
+                <div class="small" id="chart_resistor_desc">Descrição: reta passando pela origem com inclinação R.</div>
+              </div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="card">
+              <h3>Explicação Intuitiva</h3>
+              <ul>
+                <li>Maior R → menor inclinação de i × U (para uma mesma tensão, a corrente é menor).</li>
+                <li>O efeito Joule converte energia elétrica em calor: P = R · i².</li>
+                <li>Materiais ôhmicos mantêm R aproximadamente constante em faixa de operação.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="associacoes" class="card" data-title="Associações de Resistores">
+        <h2>Associações de Resistores</h2>
+        <div class="grid">
+          <div class="col-6">
+            <div class="card">
+              <h3>Construtor de R<sub>eq</sub></h3>
+              <div class="row"><div class="label">Modo</div>
+                <select id="mode" aria-label="Modo de associação">
+                  <option value="serie">Série</option>
+                  <option value="paralelo">Paralelo</option>
+                </select>
+              </div>
+              <div id="resList"></div>
+              <div class="row"><button class="btn" id="addR">Adicionar Resistor</button><div class="small">Adicione valores em Ω</div></div>
+              <div class="kv"><span>R<sub>eq</sub> (Ω)</span><span id="req" class="out">—</span></div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="card">
+              <h3>Regras</h3>
+              <ul>
+                <li>Série: mesma corrente; somam-se tensões. <strong>R<sub>eq</sub> = ΣR</strong></li>
+                <li>Paralelo: mesma tensão; correntes se dividem. <strong>1/R<sub>eq</sub> = Σ(1/R)</strong></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Diagramas do Circuito</h3>
+          <p class="small">Representações SVG fiéis com símbolos de bateria e resistores (série e paralelo).</p>
+          <div class="grid">
+            <div class="col-6">
+              <h4>Série</h4>
+              <div id="circuit_series" class="svg-host" role="img" aria-label="Diagrama de circuito com três resistores em série e uma bateria com polaridades indicadas e seta de corrente"></div>
+              <div class="controls" style="margin-top:8px; gap:6px;">
+                <button class="btn" data-export-svg="circuit_series">Baixar SVG</button>
+                <button class="btn" data-export-png="circuit_series">Baixar PNG</button>
+              </div>
+            </div>
+            <div class="col-6">
+              <h4>Paralelo</h4>
+              <div id="circuit_parallel" class="svg-host" role="img" aria-label="Diagrama de circuito com dois resistores em paralelo ligados a uma bateria, com nós e correntes identificadas"></div>
+              <div class="controls" style="margin-top:8px; gap:6px;">
+                <button class="btn" data-export-svg="circuit_parallel">Baixar SVG</button>
+                <button class="btn" data-export-png="circuit_parallel">Baixar PNG</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="estrutura" class="card" data-title="Nós, Ramos e Malhas">
+        <h2>Conceitos de Circuitos</h2>
+        <ul>
+          <li><strong>Nó</strong>: ponto de conexão onde correntes se dividem/se encontram.</li>
+          <li><strong>Ramo</strong>: porção entre dois nós consecutivos com uma única corrente.</li>
+          <li><strong>Malha</strong>: caminho fechado em um circuito.</li>
+        </ul>
+        <div class="card">
+          <h3>Detalhamento</h3>
+          <ul>
+            <li>Em nós, aplica-se a conservação de carga (Lei dos Nós). Sinais importam.</li>
+            <li>Definir sentidos arbitrários de corrente ajuda a manter consistência nas equações.</li>
+            <li>Resultados negativos indicam que o sentido real é oposto ao escolhido.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section id="kirchhoff" class="card" data-title="Leis de Kirchhoff">
+        <h2>Leis de Kirchhoff</h2>
+        <div class="grid">
+          <div class="col-6">
+            <div class="card">
+              <h3>Lei dos Nós</h3>
+              <p>Conservação de carga: <span class="pill">Σ i<sub>entram</sub> = Σ i<sub>saiem</sub></span></p>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="card">
+              <h3>Lei das Malhas</h3>
+              <p>Conservação de energia: <span class="pill">Σ V = 0</span> — observar sinais para quedas/subidas de tensão.</p>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Exemplo Guiado</h3>
+          <div class="row"><button class="btn" id="k_show">Mostrar passos</button><div class="small">Revele a solução passo a passo.</div></div>
+          <ol id="k_steps" style="display:none">
+            <li>Definir sentidos das correntes.</li>
+            <li>Aplicar Lei dos Nós no nó A.</li>
+            <li>Escrever equações de malha com convenções de sinal.</li>
+            <li>Resolver o sistema e interpretar sinais (negativo indica sentido oposto).</li>
+          </ol>
+        </div>
+        <div class="card">
+          <h3>Diagrama: Duas Malhas</h3>
+          <p class="small">Duas fontes (ε1, ε2), resistores R1 e R2 nas laterais e resistor comum Rm ao centro. Correntes de malha i1 e i2.</p>
+          <div id="circuit_twoloop" class="svg-host" role="img" aria-label="Diagrama de duas malhas com resistor compartilhado e fontes independentes"></div>
+          <div class="controls" style="margin-top:8px; gap:6px;">
+            <button class="btn" data-export-svg="circuit_twoloop">Baixar SVG</button>
+            <button class="btn" data-export-png="circuit_twoloop">Baixar PNG</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="quiz" class="card" data-title="Quiz Rápido">
+        <h2>Quiz Rápido</h2>
+        <div class="quiz" role="group" aria-labelledby="quiz-title">
+          <div id="quiz-title" class="small">Verificação imediata de conceitos</div>
+          <div class="option" tabindex="0" role="radio" aria-checked="false" data-correct="true">Em série, a corrente é a mesma em todos os resistores.</div>
+          <div class="option" tabindex="0" role="radio" aria-checked="false" data-correct="false">Em paralelo, somam-se correntes e tensões nos resistores.</div>
+          <div class="option" tabindex="0" role="radio" aria-checked="false" data-correct="true">A soma das quedas de tensão em uma malha fechada é zero.</div>
+          <div class="feedback" aria-live="polite"></div>
+        </div>
+      </section>
+
+      <section id="exercicios" class="card" data-title="Exercícios">
+        <h2>Exercícios</h2>
+        <ol>
+          <li>Calcule i e as potências para ε = 9 V, r<sub>i</sub> = 1 Ω e R = 5 Ω.</li>
+          <li>Determine U para ε' = 6 V, r' = 2 Ω e i = 1 A.</li>
+          <li>Associe 10, 20, 30 e 40 Ω em paralelo e calcule R<sub>eq</sub>.</li>
+        </ol>
+        <div class="card">
+          <h3>Laboratório de Circuitos (Passo a passo)</h3>
+          <div class="grid">
+            <div class="col-12">
+              <div class="row"><div class="label">Cenário</div>
+                <select id="lab_scenario" aria-label="Escolher cenário">
+                  <option value="serie">Série (ε, r_i, R)</option>
+                  <option value="paralelo">Paralelo (ε, R1, R2)</option>
+                  <option value="duasmalhas">Duas Malhas (ε1, ε2, R1, R2, Rm)</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-12" id="lab_inputs"></div>
+            <div class="col-12"><button class="btn primary" id="lab_run">Resolver Sequencialmente</button></div>
+            <div class="col-12">
+              <ol id="lab_steps"></ol>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Banco de Exercícios</h3>
+          <div id="ex_bank"></div>
+          <div class="small" id="ex_history_title" style="margin-top:8px;">Histórico de tentativas</div>
+          <ul id="ex_history" class="small"></ul>
+        </div>
+      </section>
+
+      <section id="conclusao" class="card" data-title="Conclusão">
+        <h2>Conclusão</h2>
+        <p>As Leis de Kirchhoff, combinadas com modelos de geradores, receptores e resistores, permitem analisar sistematicamente circuitos de diferentes complexidades.</p>
+      </section>
+
+    </main>
+  </div>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script>
+(function(){
+  "use strict";
+
+  function showToast(message){
+    try {
+      const el = document.getElementById('toast');
+      if(!el) return;
+      el.textContent = message;
+      el.style.display = 'block';
+      clearTimeout(showToast._t);
+      showToast._t = setTimeout(()=>{ el.style.display = 'none'; }, 2500);
+    } catch(err) { /* noop */ }
+  }
+
+  function safelyGetNumber(input){
+    const v = Number(input.value);
+    if(!isFinite(v)) throw new Error('Valor inválido.');
+    return v;
+  }
+
+  function setOut(id, val){
+    const el = document.getElementById(id);
+    if(el){ el.textContent = String(val); }
+  }
+
+  function safeCompute(fn){
+    try { fn(); }
+    catch(err){ showToast(err && err.message ? err.message : 'Erro de cálculo.'); }
+  }
+
+  function clamp(val, min, max){
+    return Math.max(min, Math.min(max, val));
+  }
+
+  // Tema persistente
+  (function initTheme(){
+    try {
+      const saved = localStorage.getItem('theme');
+      if(saved){ document.documentElement.setAttribute('data-theme', saved); }
+    } catch(_) { /* storage not available */ }
+    const btn = document.getElementById('themeBtn');
+    if(btn){
+      btn.addEventListener('click', ()=>{
+        const current = document.documentElement.getAttribute('data-theme') || 'dark';
+        const next = current === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', next);
+        try { localStorage.setItem('theme', next); } catch(_){}
+        btn.setAttribute('aria-pressed', String(next === 'light'));
+      });
+    }
+  })();
+
+  // Mini Chart util — sem dependências, com fallback
+  function drawLineChart(canvas, points, opts){
+    try {
+      if(!canvas || !canvas.getContext) return;
+      const ctx = canvas.getContext('2d');
+      const width = canvas.clientWidth || 320;
+      const height = 220;
+      // Ajusta tamanho do canvas para densidade de pixels
+      const dpr = Math.max(1, window.devicePixelRatio || 1);
+      canvas.width = Math.floor(width * dpr);
+      canvas.height = Math.floor(height * dpr);
+      canvas.style.width = width + 'px';
+      canvas.style.height = height + 'px';
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+      // Estilos
+      const fg = getComputedStyle(document.documentElement).getPropertyValue('--fg') || '#ccc';
+      const muted = getComputedStyle(document.documentElement).getPropertyValue('--muted') || '#888';
+      const accent = getComputedStyle(document.documentElement).getPropertyValue('--accent') || '#09f';
+
+      ctx.clearRect(0,0,width,height);
+      ctx.fillStyle = 'transparent';
+      ctx.fillRect(0,0,width,height);
+
+      if(!points || points.length === 0) return;
+      const xs = points.map(p=>p[0]);
+      const ys = points.map(p=>p[1]);
+      const minX = Math.min(...xs), maxX = Math.max(...xs);
+      const minY = Math.min(...ys), maxY = Math.max(...ys);
+      const pad = 32;
+      const sx = (x)=> pad + (x - minX) / (maxX - minX || 1) * (width - pad*2);
+      const sy = (y)=> height - pad - (y - minY) / (maxY - minY || 1) * (height - pad*2);
+
+      // Eixos
+      ctx.strokeStyle = muted;
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(pad, pad);
+      ctx.lineTo(pad, height - pad);
+      ctx.lineTo(width - pad, height - pad);
+      ctx.stroke();
+
+      // Linha
+      ctx.strokeStyle = accent;
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      points.forEach((p,i)=>{
+        const x = sx(p[0]);
+        const y = sy(p[1]);
+        if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+      });
+      ctx.stroke();
+
+      // Pontos
+      ctx.fillStyle = fg;
+      points.forEach(p=>{
+        const x = sx(p[0]); const y = sy(p[1]);
+        ctx.beginPath(); ctx.arc(x,y,2.5,0,Math.PI*2); ctx.fill();
+      });
+    } catch(err){ /* noop */ }
+  }
+
+  // Atualização dos gráficos conforme valores
+  function updateGeneratorChart(){
+    const c = document.getElementById('chart_gerador'); if(!c) return;
+    try{
+      const eps = Number(document.getElementById('g_eps').value);
+      const ri = Number(document.getElementById('g_ri').value);
+      const iMax = Math.max(1, Math.abs(eps/(ri||1)) * 1.2);
+      const pts = [];
+      for(let i=0;i<=20;i++){
+        const ii = iMax * i/20;
+        const U = eps - ri*ii;
+        pts.push([ii, U]);
+      }
+      drawLineChart(c, pts);
+    }catch(_){}
+  }
+
+  function updateReceptorChart(){
+    const c = document.getElementById('chart_receptor'); if(!c) return;
+    try{
+      const eps = Number(document.getElementById('r_eps').value);
+      const rr = Number(document.getElementById('r_r').value);
+      const iMax = 5;
+      const pts = [];
+      for(let i=0;i<=20;i++){
+        const ii = iMax * i/20;
+        const U = eps + rr*ii;
+        pts.push([ii, U]);
+      }
+      drawLineChart(c, pts);
+    }catch(_){}
+  }
+
+  function updateOhmChart(){
+    const c = document.getElementById('chart_resistor'); if(!c) return;
+    try{
+      const R = Math.max(0, Number(document.getElementById('ohm_R').value));
+      const iMax = 5;
+      const pts = [];
+      for(let i=0;i<=20;i++){
+        const ii = iMax * i/20;
+        const U = R * ii;
+        pts.push([ii, U]);
+      }
+      drawLineChart(c, pts);
+    }catch(_){}
+  }
+
+  // Circuit SVG: elementos básicos (bateria, resistor) e montagem
+  function drawCircuitSeries(hostId){
+    const host = document.getElementById(hostId); if(!host) return;
+    host.innerHTML = '';
+    const svgNS = 'http://www.w3.org/2000/svg';
+    const svg = document.createElementNS(svgNS, 'svg');
+    svg.setAttribute('width','100%'); svg.setAttribute('height','100%');
+    const w = host.clientWidth || 320; const h = host.clientHeight || 220;
+    svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
+    const stroke = getComputedStyle(document.documentElement).getPropertyValue('--fg') || '#e6edf3';
+
+    function line(x1,y1,x2,y2){ const el = document.createElementNS(svgNS,'line'); el.setAttribute('x1',x1); el.setAttribute('y1',y1); el.setAttribute('x2',x2); el.setAttribute('y2',y2); el.setAttribute('stroke',stroke); el.setAttribute('stroke-width','2'); svg.appendChild(el); }
+    function resistor(x,y,len){
+      const seg = 8; const amp = 8; const step = len/8; let path = `M ${x} ${y}`; for(let i=1;i<=8;i++){ const nx = x + i*step; const ny = y + (i%2===0? -amp : amp); path += ` L ${nx} ${ny}`; } const p = document.createElementNS(svgNS,'path'); p.setAttribute('d',path); p.setAttribute('fill','none'); p.setAttribute('stroke',stroke); p.setAttribute('stroke-width','2'); svg.appendChild(p);
+    }
+    function battery(x,y){
+      // placas
+      line(x,y-24,x,y+24); // placa longa (+)
+      line(x+8,y-16,x+8,y+16); // placa curta (−)
+      // rótulos +/−
+      const plus = document.createElementNS(svgNS,'text'); plus.setAttribute('x', x-10); plus.setAttribute('y', y-28); plus.setAttribute('fill', stroke); plus.setAttribute('font-size','12'); plus.textContent = '+'; svg.appendChild(plus);
+      const minus = document.createElementNS(svgNS,'text'); minus.setAttribute('x', x+14); minus.setAttribute('y', y+26); minus.setAttribute('fill', stroke); minus.setAttribute('font-size','12'); minus.textContent = '−'; svg.appendChild(minus);
+    }
+
+    const cy = h/2; const left = 30; const right = w-30;
+    // Bateria à esquerda
+    battery(left, cy);
+    // Fio topo
+    line(left+20, cy-20, right-20, cy-20);
+    // 3 resistores em série
+    const len = (right-left-140)/3;
+    resistor(left+50, cy-20, len);
+    resistor(left+50+len, cy-20, len);
+    resistor(left+50+2*len, cy-20, len);
+    // rótulos
+    function label(text,x,y){ const t=document.createElementNS(svgNS,'text'); t.setAttribute('x',x); t.setAttribute('y',y); t.setAttribute('fill',stroke); t.setAttribute('font-size','12'); t.textContent=text; svg.appendChild(t); }
+    label('R1', left+50+len*0.35, cy-28);
+    label('R2', left+50+len*1.35, cy-28);
+    label('R3', left+50+len*2.35, cy-28);
+    // seta de corrente
+    const ax = (left+20 + right-20)/2; const ay = cy-32;
+    const arr = document.createElementNS(svgNS,'path');
+    arr.setAttribute('d', `M ${left+40} ${ay} L ${right-40} ${ay} M ${right-46} ${ay-4} L ${right-40} ${ay} L ${right-46} ${ay+4}`);
+    arr.setAttribute('stroke', stroke); arr.setAttribute('fill','none'); arr.setAttribute('stroke-width','2');
+    svg.appendChild(arr);
+    label('i', right-52, ay-6);
+    // Fio descida e base
+    line(right-20, cy-20, right-20, cy+20);
+    line(right-20, cy+20, left+20, cy+20);
+    line(left+20, cy+20, left+20, cy-20);
+
+    host.appendChild(svg);
+  }
+
+  function drawCircuitParallel(hostId){
+    const host = document.getElementById(hostId); if(!host) return;
+    host.innerHTML = '';
+    const svgNS = 'http://www.w3.org/2000/svg';
+    const svg = document.createElementNS(svgNS, 'svg');
+    svg.setAttribute('width','100%'); svg.setAttribute('height','100%');
+    const w = host.clientWidth || 360; const h = host.clientHeight || 220;
+    svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
+    const stroke = getComputedStyle(document.documentElement).getPropertyValue('--fg') || '#e6edf3';
+
+    function line(x1,y1,x2,y2){ const el = document.createElementNS(svgNS,'line'); el.setAttribute('x1',x1); el.setAttribute('y1',y1); el.setAttribute('x2',x2); el.setAttribute('y2',y2); el.setAttribute('stroke',stroke); el.setAttribute('stroke-width','2'); svg.appendChild(el); }
+    function hresistor(x,y,len){ const seg=8, amp=8, step=len/seg; let d=`M ${x} ${y}`; for(let i=1;i<=seg;i++){ const nx=x+i*step; const ny=y+(i%2===0?-amp:amp); d+=` L ${nx} ${ny}`;} const p=document.createElementNS(svgNS,'path'); p.setAttribute('d',d); p.setAttribute('fill','none'); p.setAttribute('stroke',stroke); p.setAttribute('stroke-width','2'); svg.appendChild(p);}    
+    function vresistor(x,y,len){ const seg=8, amp=8, step=len/seg; let d=`M ${x} ${y}`; for(let i=1;i<=seg;i++){ const nx=x+(i%2===0?-amp:amp); const ny=y+i*step; d+=` L ${nx} ${ny}`;} const p=document.createElementNS(svgNS,'path'); p.setAttribute('d',d); p.setAttribute('fill','none'); p.setAttribute('stroke',stroke); p.setAttribute('stroke-width','2'); svg.appendChild(p);}    
+    function battery(x,y){
+      line(x,y-24,x,y+24); // placa longa (+)
+      line(x+8,y-16,x+8,y+16); // placa curta (−)
+      const plus = document.createElementNS(svgNS,'text'); plus.setAttribute('x', x-10); plus.setAttribute('y', y-28); plus.setAttribute('fill', stroke); plus.setAttribute('font-size','12'); plus.textContent = '+'; svg.appendChild(plus);
+      const minus = document.createElementNS(svgNS,'text'); minus.setAttribute('x', x+14); minus.setAttribute('y', y+26); minus.setAttribute('fill', stroke); minus.setAttribute('font-size','12'); minus.textContent = '−'; svg.appendChild(minus);
+    }
+    function label(text,x,y){ const t=document.createElementNS(svgNS,'text'); t.setAttribute('x',x); t.setAttribute('y',y); t.setAttribute('fill',stroke); t.setAttribute('font-size','12'); t.textContent=text; svg.appendChild(t); }
+    function dot(x,y){ const d=document.createElementNS(svgNS,'circle'); d.setAttribute('cx',x); d.setAttribute('cy',y); d.setAttribute('r','3'); d.setAttribute('fill',stroke); svg.appendChild(d); }
+    function arrowDown(x,y,len){ const p=document.createElementNS(svgNS,'path'); p.setAttribute('d',`M ${x} ${y} L ${x} ${y+len} M ${x-4} ${y+len-6} L ${x} ${y+len} L ${x+4} ${y+len-6}`); p.setAttribute('stroke',stroke); p.setAttribute('fill','none'); p.setAttribute('stroke-width','2'); svg.appendChild(p); }
+
+    const top = 40, bottom = h-40, left = 40, right = w-40;
+    const railLeft = left+20, railRight = right-20;
+    const branch1 = left + (right-left) * 0.4; // x da primeira perna
+    const branch2 = left + (right-left) * 0.7; // x da segunda perna
+
+    // bateria à esquerda entre trilhos
+    const mid = (top+bottom)/2; battery(left, mid);
+
+    // trilhos superior e inferior
+    line(railLeft, top, railRight, top);
+    line(railLeft, bottom, railRight, bottom);
+    // trilhos verticais (laterais)
+    line(railLeft, top, railLeft, bottom);
+    line(railRight, top, railRight, bottom);
+    dot(railLeft, top); dot(railLeft, bottom); dot(railRight, top); dot(railRight, bottom);
+    label('A', railLeft-12, top-8); label('B', railRight+6, top-8);
+
+    // dois resistores verticais entre trilhos (paralelo real)
+    vresistor(branch1, top, bottom-top); label('R1', branch1+6, mid-6); arrowDown(branch1+18, top+6, (bottom-top)-12); label('i1', branch1+24, mid-10);
+    vresistor(branch2, top, bottom-top); label('R2', branch2+6, mid-6); arrowDown(branch2+18, top+6, (bottom-top)-12); label('i2', branch2+24, mid-10);
+
+    host.appendChild(svg);
+  }
+
+  // Duas malhas: fontes à esquerda de cada malha e resistor compartilhado ao centro
+  function drawCircuitTwoLoop(hostId){
+    const host = document.getElementById(hostId); if(!host) return;
+    host.innerHTML = '';
+    const svgNS = 'http://www.w3.org/2000/svg';
+    const svg = document.createElementNS(svgNS, 'svg');
+    svg.setAttribute('width','100%'); svg.setAttribute('height','100%');
+    const w = host.clientWidth || 360; const h = host.clientHeight || 260;
+    svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
+    const stroke = getComputedStyle(document.documentElement).getPropertyValue('--fg') || '#e6edf3';
+
+    function line(x1,y1,x2,y2){ const el = document.createElementNS(svgNS,'line'); el.setAttribute('x1',x1); el.setAttribute('y1',y1); el.setAttribute('x2',x2); el.setAttribute('y2',y2); el.setAttribute('stroke',stroke); el.setAttribute('stroke-width','2'); svg.appendChild(el); }
+    function resistor(x,y,len){ const amp=8, seg=8, step=len/seg; let d=`M ${x} ${y}`; for(let i=1;i<=seg;i++){ const nx=x+i*step; const ny=y+(i%2===0?-amp:amp); d+=` L ${nx} ${ny}`;} const p=document.createElementNS(svgNS,'path'); p.setAttribute('d',d); p.setAttribute('fill','none'); p.setAttribute('stroke',stroke); p.setAttribute('stroke-width','2'); svg.appendChild(p);}    
+    function battery(x,y){ line(x,y-24,x,y+24); line(x+8,y-16,x+8,y+16); const plus = document.createElementNS(svgNS,'text'); plus.setAttribute('x', x-10); plus.setAttribute('y', y-28); plus.setAttribute('fill', stroke); plus.setAttribute('font-size','12'); plus.textContent = '+'; svg.appendChild(plus); const minus=document.createElementNS(svgNS,'text'); minus.setAttribute('x', x+14); minus.setAttribute('y', y+26); minus.setAttribute('fill', stroke); minus.setAttribute('font-size','12'); minus.textContent='−'; svg.appendChild(minus);}    
+    function label(text,x,y){ const t=document.createElementNS(svgNS,'text'); t.setAttribute('x',x); t.setAttribute('y',y); t.setAttribute('fill',stroke); t.setAttribute('font-size','12'); t.textContent=text; svg.appendChild(t);}    
+
+    const top = 40, bottom = h-40, left=30, right=w-30, midx = w/2, midy = (top+bottom)/2;
+    // barras superior e inferior de cada malha
+    line(left, top, midx-20, top); // topo malha 1
+    line(midx+20, top, right, top); // topo malha 2
+    line(left, bottom, right, bottom); // base comum
+    // fontes verticais em cada malha (à esquerda de cada malha)
+    battery(left+10, midy); label('ε1', left+2, top+16);
+    battery(midx+10, midy); label('ε2', midx+2, top+16);
+    // resistores laterais (horizontais no topo de cada malha)
+    resistor((left+10+ (midx-20))/2-40, top, 80); label('R1', (left+midx)/2, top-8);
+    resistor((midx+20+ right)/2-40, top, 80); label('R2', (midx+right)/2, top-8);
+    // resistor compartilhado vertical (Rm) entre topo e base no centro
+    function vres(x){ const seg=8, amp=8, len=bottom-top, step=len/seg; let d=`M ${x} ${top}`; for(let i=1;i<=seg;i++){ const nx=x+(i%2===0?-amp:amp); const ny=top+i*step; d+=` L ${nx} ${ny}`;} const p=document.createElementNS(svgNS,'path'); p.setAttribute('d',d); p.setAttribute('fill','none'); p.setAttribute('stroke',stroke); p.setAttribute('stroke-width','2'); svg.appendChild(p);}    
+    vres(midx); label('Rm', midx+10, midy-6);
+    // conexões verticais das laterais para fechar malhas
+    line(midx-20, top, midx-20, bottom);
+    line(midx+20, top, midx+20, bottom);
+    // setas de correntes de malha (sentido horário)
+    function arrow(x1,y1,x2,y2){ const p=document.createElementNS(svgNS,'path'); p.setAttribute('d',`M ${x1} ${y1} L ${x2} ${y2} M ${x2-6} ${y2-4} L ${x2} ${y2} L ${x2-6} ${y2+4}`); p.setAttribute('stroke',stroke); p.setAttribute('fill','none'); p.setAttribute('stroke-width','2'); svg.appendChild(p);}    
+    arrow(left+60, top-14, midx-40, top-14); label('i1', midx-50, top-18);
+    arrow(midx+40, top-14, right-60, top-14); label('i2', right-70, top-18);
+
+    host.appendChild(svg);
+  }
+
+  function initChartsAndDiagrams(){
+    updateGeneratorChart();
+    updateReceptorChart();
+    updateOhmChart();
+    drawCircuitSeries('circuit_series');
+    drawCircuitParallel('circuit_parallel');
+    drawCircuitTwoLoop('circuit_twoloop');
+  }
+
+  window.addEventListener('resize', ()=>{
+    // Reajusta visualizações em resize
+    initChartsAndDiagrams();
+  });
+
+  // Sumário dinâmico
+  (function buildToc(){
+    const toc = document.getElementById('toc');
+    const sections = document.querySelectorAll('main section');
+    sections.forEach(sec=>{
+      const title = sec.getAttribute('data-title') || sec.querySelector('h2')?.textContent || 'Seção';
+      const a = document.createElement('a');
+      a.href = `#${sec.id}`;
+      a.textContent = title;
+      toc?.appendChild(a);
+    });
+  })();
+
+  // Calculadora de gerador
+  (function(){
+    const btn = document.getElementById('g_calc');
+    if(!btn) return;
+    btn.addEventListener('click', ()=> safeCompute(()=>{
+      const eps = clamp(safelyGetNumber(document.getElementById('g_eps')), -1e6, 1e6);
+      const ri  = clamp(safelyGetNumber(document.getElementById('g_ri')), 0, 1e6);
+      const R   = clamp(safelyGetNumber(document.getElementById('g_R')), 0, 1e6);
+      const Rtot = ri + R;
+      if(Rtot <= 0) throw new Error('Resistência total inválida.');
+      const i = eps / Rtot;
+      const U = eps - ri * i;
+      const PT = eps * i;
+      const PU = U * i;
+      const PD = ri * i * i;
+      setOut('g_i', i.toFixed(3));
+      setOut('g_U', U.toFixed(3));
+      setOut('g_PT', PT.toFixed(3));
+      setOut('g_PU', PU.toFixed(3));
+      setOut('g_PD', PD.toFixed(3));
+      updateGeneratorChart();
+    }));
+    ['g_eps','g_ri','g_R'].forEach(id=>{
+      const el = document.getElementById(id);
+      el?.addEventListener('input', ()=> updateGeneratorChart());
+    });
+  })();
+
+  // Calculadora de receptor
+  (function(){
+    const btn = document.getElementById('r_calc');
+    if(!btn) return;
+    btn.addEventListener('click', ()=> safeCompute(()=>{
+      const eps = clamp(safelyGetNumber(document.getElementById('r_eps')), -1e6, 1e6);
+      const rr  = clamp(safelyGetNumber(document.getElementById('r_r')), 0, 1e6);
+      const i   = clamp(safelyGetNumber(document.getElementById('r_i')), -1e6, 1e6);
+      const U = eps + rr * i;
+      const PT = eps * i;
+      const PU = U * i;
+      const PD = rr * i * i;
+      setOut('r_U', U.toFixed(3));
+      setOut('r_PT', PT.toFixed(3));
+      setOut('r_PU', PU.toFixed(3));
+      setOut('r_PD', PD.toFixed(3));
+      updateReceptorChart();
+    }));
+    ['r_eps','r_r','r_i'].forEach(id=>{
+      const el = document.getElementById(id);
+      el?.addEventListener('input', ()=> updateReceptorChart());
+    });
+  })();
+
+  // Construtor de R_eq
+  (function(){
+    const list = document.getElementById('resList');
+    const req = document.getElementById('req');
+    const add = document.getElementById('addR');
+    const mode = document.getElementById('mode');
+
+    function compute(){
+      safeCompute(()=>{
+        const inputs = list.querySelectorAll('input');
+        const values = Array.from(inputs).map(inp=>clamp(safelyGetNumber(inp), 0, 1e6));
+        let result = 0;
+        if(values.length === 0){ req.textContent = '—'; return; }
+        if(mode.value === 'serie'){
+          result = values.reduce((a,b)=>a+b, 0);
+        } else {
+          const inv = values.reduce((a,b)=> a + (b === 0 ? Infinity : 1/b), 0);
+          if(!isFinite(inv) || inv === 0){ result = 0; } else { result = 1 / inv; }
+        }
+        req.textContent = result.toFixed(3);
+      });
+    }
+
+    function addRow(v){
+      const row = document.createElement('div');
+      row.className = 'row';
+      row.innerHTML = `<div class="label">R (Ω)</div><input class="input" type="number" step="any" value="${v}" aria-label="Resistência" />`;
+      const input = row.querySelector('input');
+      input.addEventListener('input', compute);
+      list.appendChild(row);
+      compute();
+    }
+
+    add?.addEventListener('click', ()=> addRow(10));
+    mode?.addEventListener('change', compute);
+
+    addRow(10); addRow(20); addRow(30); addRow(40);
+  })();
+
+  // Exemplo guiado Kirchhoff
+  (function(){
+    const btn = document.getElementById('k_show');
+    const steps = document.getElementById('k_steps');
+    btn?.addEventListener('click', ()=>{
+      const vis = steps.style.display !== 'none';
+      steps.style.display = vis ? 'none' : 'block';
+      btn.textContent = vis ? 'Mostrar passos' : 'Ocultar passos';
+    });
+  })();
+
+  // Quiz
+  (function(){
+    const root = document.querySelector('#quiz .quiz');
+    if(!root) return;
+    const options = root.querySelectorAll('.option');
+    const feedback = root.querySelector('.feedback');
+    options.forEach(opt=>{
+      opt.addEventListener('click', ()=>select(opt));
+      opt.addEventListener('keydown', (e)=>{ if(e.key==='Enter' || e.key===' ') { e.preventDefault(); select(opt); } });
+    });
+    function select(opt){
+      options.forEach(o=>o.setAttribute('aria-checked','false'));
+      opt.setAttribute('aria-checked','true');
+      const correct = opt.getAttribute('data-correct') === 'true';
+      feedback.textContent = correct ? 'Correto! ✅' : 'Revise o conceito. ❌';
+      feedback.style.color = correct ? getComputedStyle(document.documentElement).getPropertyValue('--ok') : getComputedStyle(document.documentElement).getPropertyValue('--err');
+      // Persistência simples do resultado do quiz
+      try { localStorage.setItem('lastQuiz', JSON.stringify({time: Date.now(), correct})); } catch(_){}
+    }
+  })();
+
+  // Inicializa gráficos e diagramas após load
+  window.addEventListener('DOMContentLoaded', ()=>{
+    initChartsAndDiagrams();
+    const ohmR = document.getElementById('ohm_R');
+    ohmR?.addEventListener('input', ()=> updateOhmChart());
+
+    // Laboratório de Circuitos
+    const labScenario = document.getElementById('lab_scenario');
+    const labInputs = document.getElementById('lab_inputs');
+    const labRun = document.getElementById('lab_run');
+    const labSteps = document.getElementById('lab_steps');
+
+    function renderLabInputs(){
+      const mode = labScenario.value;
+      labInputs.innerHTML = '';
+      if(mode === 'serie'){
+        labInputs.innerHTML = `
+          <div class="row"><div class="label">ε (V)</div><input class="input" id="lab_eps" type="number" step="any" value="9" /></div>
+          <div class="row"><div class="label">r_i (Ω)</div><input class="input" id="lab_ri" type="number" step="any" value="1" /></div>
+          <div class="row"><div class="label">R (Ω)</div><input class="input" id="lab_R" type="number" step="any" value="5" /></div>
+        `;
+      } else {
+        if(mode === 'paralelo'){
+          labInputs.innerHTML = `
+            <div class="row"><div class="label">ε (V)</div><input class="input" id="lab_eps" type="number" step="any" value="12" /></div>
+            <div class="row"><div class="label">R1 (Ω)</div><input class="input" id="lab_R1" type="number" step="any" value="10" /></div>
+            <div class="row"><div class="label">R2 (Ω)</div><input class="input" id="lab_R2" type="number" step="any" value="20" /></div>
+          `;
+        } else {
+          labInputs.innerHTML = `
+            <div class="row"><div class="label">ε1 (V)</div><input class="input" id="lab_eps1" type="number" step="any" value="12" /></div>
+            <div class="row"><div class="label">ε2 (V)</div><input class="input" id="lab_eps2" type="number" step="any" value="6" /></div>
+            <div class="row"><div class="label">R1 (Ω)</div><input class="input" id="lab_R1" type="number" step="any" value="4" /></div>
+            <div class="row"><div class="label">R2 (Ω)</div><input class="input" id="lab_R2" type="number" step="any" value="6" /></div>
+            <div class="row"><div class="label">Rm (Ω)</div><input class="input" id="lab_Rm" type="number" step="any" value="12" /></div>
+          `;
+        }
+      }
+      labSteps.innerHTML = '';
+    }
+
+    function addStep(text){
+      const li = document.createElement('li');
+      li.textContent = text;
+      labSteps.appendChild(li);
+    }
+
+    function runLab(){
+      labSteps.innerHTML = '';
+      const mode = labScenario.value;
+      try {
+        if(mode === 'serie'){
+          const eps = clamp(safelyGetNumber(document.getElementById('lab_eps')), -1e6, 1e6);
+          const ri = clamp(safelyGetNumber(document.getElementById('lab_ri')), 0, 1e6);
+          const R = clamp(safelyGetNumber(document.getElementById('lab_R')), 0, 1e6);
+          const Rtot = ri + R; addStep(`1) R_total = r_i + R = ${ri} + ${R} = ${Rtot} Ω`);
+          if(Rtot <= 0) throw new Error('Resistência total inválida.');
+          const i = eps / Rtot; addStep(`2) i = ε / R_total = ${eps} / ${Rtot} = ${i.toFixed(3)} A`);
+          const U = eps - ri*i; addStep(`3) U = ε − r_i·i = ${eps} − ${ri}·${i.toFixed(3)} = ${U.toFixed(3)} V`);
+          const PT = eps*i, PU = U*i, PD = ri*i*i;
+          addStep(`4) P_T = ε·i = ${PT.toFixed(3)} W, P_U = U·i = ${PU.toFixed(3)} W, P_D = r_i·i² = ${PD.toFixed(3)} W`);
+        } else if(mode === 'paralelo') {
+          const eps = clamp(safelyGetNumber(document.getElementById('lab_eps')), -1e6, 1e6);
+          const R1 = clamp(safelyGetNumber(document.getElementById('lab_R1')), 0, 1e6);
+          const R2 = clamp(safelyGetNumber(document.getElementById('lab_R2')), 0, 1e6);
+          const inv = (R1 === 0 ? Infinity : 1/R1) + (R2 === 0 ? Infinity : 1/R2);
+          const Rp = inv ? 1/inv : 0; addStep(`1) 1/R_p = 1/R1 + 1/R2 → R_p = ${Rp.toFixed(3)} Ω`);
+          const iT = Rp === 0 ? 0 : eps / Rp; addStep(`2) i_T = ε / R_p = ${iT.toFixed(3)} A`);
+          const i1 = R1 === 0 ? Infinity : eps / R1; const i2 = R2 === 0 ? Infinity : eps / R2;
+          addStep(`3) i1 = ε/R1 = ${i1.toFixed ? i1.toFixed(3) : i1} A, i2 = ε/R2 = ${i2.toFixed ? i2.toFixed(3) : i2} A`);
+          const sum = (isFinite(i1)?i1:0) + (isFinite(i2)?i2:0);
+          addStep(`4) Verificação: i_T ≈ i1 + i2 → ${iT.toFixed(3)} ≈ ${sum.toFixed(3)}`);
+        } else {
+          // Duas malhas (sistema 2x2):
+          // Malha 1: (R1+Rm)i1 - (Rm)i2 = ε1
+          // Malha 2: -(Rm)i1 + (R2+Rm)i2 = ε2
+          const e1 = clamp(safelyGetNumber(document.getElementById('lab_eps1')), -1e6, 1e6);
+          const e2 = clamp(safelyGetNumber(document.getElementById('lab_eps2')), -1e6, 1e6);
+          const R1 = clamp(safelyGetNumber(document.getElementById('lab_R1')), 0, 1e6);
+          const R2 = clamp(safelyGetNumber(document.getElementById('lab_R2')), 0, 1e6);
+          const Rm = clamp(safelyGetNumber(document.getElementById('lab_Rm')), 0, 1e6);
+          addStep(`1) Equações de malha:`);
+          addStep(`   (R1+Rm)·i1 − Rm·i2 = ε1`);
+          addStep(`   −Rm·i1 + (R2+Rm)·i2 = ε2`);
+          const A = R1+Rm, B = -Rm, C = -Rm, D = R2+Rm;
+          const det = A*D - B*C; if(det === 0) throw new Error('Sistema singular (det = 0).');
+          const i1 = (e1*D - B*e2)/det; const i2 = (A*e2 - e1*C)/det;
+          addStep(`2) Determinante: det = (R1+Rm)(R2+Rm) − (−Rm)(−Rm) = ${det.toFixed(3)}`);
+          addStep(`3) i1 = ${(i1).toFixed(3)} A, i2 = ${(i2).toFixed(3)} A`);
+          addStep(`4) Interpretação: sinal negativo ⇢ sentido oposto ao escolhido.`);
+        }
+      } catch(err){ showToast(err && err.message ? err.message : 'Erro no laboratório.'); }
+    }
+
+    labScenario?.addEventListener('change', renderLabInputs);
+    labRun?.addEventListener('click', ()=> safeCompute(runLab));
+    renderLabInputs();
+
+    // Exportação de diagramas
+    function download(filename, dataUrl){
+      const a = document.createElement('a'); a.href = dataUrl; a.download = filename; a.click();
+    }
+    function exportSvg(hostId){
+      const host = document.getElementById(hostId); if(!host) return;
+      const svg = host.querySelector('svg'); if(!svg) { showToast('SVG não encontrado.'); return; }
+      const blob = new Blob([svg.outerHTML], {type:'image/svg+xml'});
+      const url = URL.createObjectURL(blob); download(`${hostId}.svg`, url); setTimeout(()=>URL.revokeObjectURL(url), 1000);
+    }
+    function exportPng(hostId){
+      const host = document.getElementById(hostId); if(!host) return;
+      const svg = host.querySelector('svg'); if(!svg){ showToast('SVG não encontrado.'); return; }
+      const xml = new Blob([svg.outerHTML], {type:'image/svg+xml;charset=utf-8'});
+      const url = URL.createObjectURL(xml);
+      const img = new Image(); img.onload = ()=>{
+        const canvas = document.createElement('canvas');
+        const w = host.clientWidth || 600; const h = host.clientHeight || 300;
+        canvas.width = w; canvas.height = h;
+        const ctx = canvas.getContext('2d'); ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--bg') || '#fff'; ctx.fillRect(0,0,w,h); ctx.drawImage(img,0,0,w,h);
+        download(`${hostId}.png`, canvas.toDataURL('image/png'));
+        URL.revokeObjectURL(url);
+      }; img.src = url;
+    }
+    document.querySelectorAll('[data-export-svg]')?.forEach(btn=>btn.addEventListener('click', ()=> exportSvg(btn.getAttribute('data-export-svg'))));
+    document.querySelectorAll('[data-export-png]')?.forEach(btn=>btn.addEventListener('click', ()=> exportPng(btn.getAttribute('data-export-png'))));
+
+    // Banco de exercícios com histórico
+    const bankRoot = document.getElementById('ex_bank');
+    const historyList = document.getElementById('ex_history');
+    const exercises = [
+      { id: 'ex1', text: 'Gerador: ε = 12 V, r_i = 2 Ω, R = 10 Ω. Calcule i e U.', solve: ()=>{ const eps=12, ri=2, R=10; const i=eps/(ri+R); const U=eps - ri*i; return {i: i.toFixed(3)+' A', U: U.toFixed(3)+' V'}; } },
+      { id: 'ex2', text: 'Paralelo: ε = 9 V, R1 = 9 Ω, R2 = 18 Ω. Calcule i_T.', solve: ()=>{ const eps=9, R1=9, R2=18; const Rp = 1/(1/R1 + 1/R2); const iT = eps/Rp; return {iT: iT.toFixed(3)+' A'}; } },
+      { id: 'ex3', text: 'Duas malhas: ε1=10 V, ε2=5 V, R1=4 Ω, R2=6 Ω, Rm=2 Ω. Calcule i1 e i2.', solve: ()=>{ const e1=10,e2=5,R1=4,R2=6,Rm=2; const A=R1+Rm, B=-Rm, C=-Rm, D=R2+Rm; const det=A*D-B*C; const i1=(e1*D - B*e2)/det; const i2=(A*e2 - e1*C)/det; return {i1: i1.toFixed(3)+' A', i2: i2.toFixed(3)+' A'}; } },
+    ];
+    function renderBank(){
+      if(!bankRoot) return;
+      bankRoot.innerHTML='';
+      exercises.forEach(ex=>{
+        const card = document.createElement('div'); card.className = 'card';
+        const p = document.createElement('p'); p.textContent = ex.text; card.appendChild(p);
+        const btn = document.createElement('button'); btn.className='btn'; btn.textContent='Mostrar solução';
+        const out = document.createElement('div'); out.className='small'; out.style.marginTop='6px';
+        btn.addEventListener('click', ()=>{
+          const res = ex.solve(); out.textContent = Object.entries(res).map(([k,v])=>`${k}: ${v}`).join(' | ');
+          try {
+            const item = { id: ex.id, time: new Date().toLocaleString(), result: res };
+            const prev = JSON.parse(localStorage.getItem('ex_history')||'[]');
+            prev.unshift(item); localStorage.setItem('ex_history', JSON.stringify(prev.slice(0,20)));
+            showHistory();
+          } catch(_){}
+        });
+        card.appendChild(btn); card.appendChild(out); bankRoot.appendChild(card);
+      });
+    }
+    function showHistory(){
+      if(!historyList) return;
+      try {
+        const prev = JSON.parse(localStorage.getItem('ex_history')||'[]');
+        historyList.innerHTML='';
+        prev.forEach(it=>{
+          const li = document.createElement('li');
+          li.textContent = `${it.time} — ${it.id}: ` + Object.entries(it.result).map(([k,v])=>`${k}=${v}`).join(', ');
+          historyList.appendChild(li);
+        });
+      } catch(_){}
+    }
+    renderBank(); showHistory();
+  });
+})();
+</script>
+</body>
+</html>

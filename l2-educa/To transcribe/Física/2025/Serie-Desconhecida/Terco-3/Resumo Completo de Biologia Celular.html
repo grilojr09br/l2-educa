@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resumo Completo de Biologia Celular</title>
+    <style>
+        /* --- GERAL & TEMA --- */
+        :root {
+            --bg-color-light: #f4f4f9;
+            --text-color-light: #333;
+            --container-bg-light: #ffffff;
+            --header-bg-light: #4a90e2;
+            --header-text-light: #ffffff;
+            --accent-color-light: #4a90e2;
+            --border-color-light: #ddd;
+            --code-bg-light: #eef;
+
+            --bg-color-dark: #121212;
+            --text-color-dark: #e0e0e0;
+            --container-bg-dark: #1e1e1e;
+            --header-bg-dark: #1f6aa5;
+            --header-text-dark: #ffffff;
+            --accent-color-dark: #63a4ff;
+            --border-color-dark: #444;
+            --code-bg-dark: #2a2a3a;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.7;
+            margin: 0;
+            padding: 20px;
+            background-color: var(--bg-color-light);
+            color: var(--text-color-light);
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        body.dark-mode {
+            background-color: var(--bg-color-dark);
+            color: var(--text-color-dark);
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: var(--container-bg-light);
+            padding: 20px 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: background-color 0.3s;
+        }
+
+        body.dark-mode .container {
+            background-color: var(--container-bg-dark);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+        }
+
+        /* --- CABEÇALHO --- */
+        header {
+            text-align: center;
+            padding: 20px;
+            margin: -20px -30px 30px -30px;
+            background-color: var(--header-bg-light);
+            color: var(--header-text-light);
+            border-radius: 12px 12px 0 0;
+            position: relative;
+            transition: background-color 0.3s;
+        }
+        
+        body.dark-mode header {
+            background-color: var(--header-bg-dark);
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 2.5em;
+        }
+
+        /* --- BOTÃO DE TEMA --- */
+        #theme-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: 2px solid var(--header-text-light);
+            color: var(--header-text-light);
+            font-size: 1.2em;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: transform 0.2s, background-color 0.2s;
+        }
+
+        #theme-toggle:hover {
+            transform: scale(1.1);
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        /* --- SEÇÕES RETRÁTEIS --- */
+        .collapsible {
+            background-color: var(--accent-color-light);
+            color: white;
+            cursor: pointer;
+            padding: 15px 20px;
+            width: 100%;
+            border: none;
+            text-align: left;
+            outline: none;
+            font-size: 1.3em;
+            font-weight: bold;
+            margin-top: 15px;
+            border-radius: 8px;
+            transition: background-color 0.3s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        body.dark-mode .collapsible {
+            background-color: var(--accent-color-dark);
+        }
+
+        .collapsible:hover, .collapsible.active {
+            filter: brightness(1.1);
+        }
+
+        .collapsible::after {
+            content: '+';
+            font-size: 1.5em;
+            font-weight: bold;
+            color: white;
+            transition: transform 0.3s;
+        }
+
+        .collapsible.active::after {
+            content: "−";
+            transform: rotate(180deg);
+        }
+
+        .content {
+            padding: 0 18px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-out, padding 0.3s;
+            background-color: transparent;
+            border-left: 3px solid var(--accent-color-light);
+            margin-left: 10px;
+        }
+        
+        body.dark-mode .content {
+             border-left: 3px solid var(--accent-color-dark);
+        }
+        
+        .content.show {
+            padding: 15px 18px;
+        }
+
+        /* --- ELEMENTOS DE TEXTO --- */
+        h2 {
+            font-size: 1.8em;
+            color: var(--accent-color-light);
+            border-bottom: 2px solid var(--border-color-light);
+            padding-bottom: 5px;
+            margin-top: 30px;
+            transition: color 0.3s, border-bottom-color 0.3s;
+        }
+
+        body.dark-mode h2 {
+            color: var(--accent-color-dark);
+            border-bottom-color: var(--border-color-dark);
+        }
+        
+        h3 {
+            font-size: 1.4em;
+            margin-top: 25px;
+        }
+
+        ul {
+            list-style-type: '→ ';
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        strong {
+            color: var(--accent-color-light);
+            font-weight: 600;
+        }
+        body.dark-mode strong {
+            color: var(--accent-color-dark);
+        }
+
+        /* --- TABELA --- */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid var(--border-color-light);
+            padding: 12px;
+            text-align: left;
+            transition: border-color 0.3s;
+        }
+        
+        body.dark-mode th, body.dark-mode td {
+            border-color: var(--border-color-dark);
+        }
+
+        th {
+            background-color: var(--bg-color-light);
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        
+        body.dark-mode th {
+            background-color: #2c2c2c;
+        }
+        
+        /* --- RESPONSIVIDADE --- */
+        @media (max-width: 768px) {
+            body { padding: 10px; }
+            .container { padding: 15px; }
+            header { padding: 15px; margin: -15px -15px 20px -15px; }
+            h1 { font-size: 2em; }
+            .collapsible { font-size: 1.1em; }
+            #theme-toggle { top: 15px; right: 15px; width: 35px; height: 35px; font-size: 1em; }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>Resumo Completo de Biologia Celular</h1>
+            <button id="theme-toggle">🌙</button>
+        </header>
+
+        <main>
+            <p>Este é um guia de estudo completo, expandido a partir das suas anotações. Clique nos títulos para expandir ou recolher as seções.</p>
+
+            <!-- Células: Procarióticas vs Eucarióticas -->
+            <button class="collapsible">Células: Procarióticas vs. Eucarióticas</button>
+            <div class="content">
+                <h2>Comparações Fundamentais</h2>
+                <p>As células são a unidade básica da vida. Elas se dividem em dois grandes tipos: procarióticas e eucarióticas.</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Característica</th>
+                            <th>Célula Procariótica</th>
+                            <th>Célula Eucariótica</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Evolução</strong></td>
+                            <td>Mais antigas e simples (surgiram ~3.5 bilhões de anos atrás)</td>
+                            <td>Mais recentes, complexas e evoluíram das procarióticas (surgiram ~1.5 bilhões de anos atrás)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Tamanho</strong></td>
+                            <td>Pequenas (geralmente 1-10 µm)</td>
+                            <td>Maiores (geralmente 10-100 µm)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Núcleo</strong></td>
+                            <td><strong>Ausente</strong>. O material genético (DNA) fica disperso no citoplasma em uma região chamada <strong>nucleoide</strong>.</td>
+                            <td><strong>Presente</strong>. O material genético é contido dentro de um núcleo delimitado por uma membrana (envoltório nuclear).</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Organelas</strong></td>
+                            <td><strong>Ausência de organelas membranosas</strong>. A única organela presente são os ribossomos.</td>
+                            <td><strong>Presença de organelas membranosas</strong> complexas (mitocôndrias, retículos, Golgi, etc.).</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Material Genético (DNA)</strong></td>
+                            <td>Molécula de <strong>DNA circular e única</strong>.</td>
+                            <td>Múltiplas moléculas de <strong>DNA lineares</strong>, associadas a proteínas (histonas) formando os cromossomos.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Organização</strong></td>
+                            <td>Sempre <strong>unicelulares</strong> (bactérias, arqueias).</td>
+                            <td>Podem ser <strong>unicelulares</strong> (protozoários, leveduras) ou <strong>pluricelulares</strong> (animais, plantas, fungos).</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <h3>Estruturas Comuns a AMBOS os Tipos:</h3>
+                <ul>
+                    <li><strong>Membrana Plasmática:</strong> Delimita a célula, controlando a entrada e saída de substâncias.</li>
+                    <li><strong>Citoplasma (ou Citosol):</strong> Meio gelatinoso que preenche a célula.</li>
+                    <li><strong>Ribossomos:</strong> Responsáveis pela síntese de proteínas (são menores e menos densos nos procariontes - 70S).</li>
+                </ul>
+            </div>
+
+            <!-- Membrana Plasmática e Transportes -->
+            <button class="collapsible">Membrana Plasmática e Transportes</button>
+            <div class="content">
+                <h2>1. Membrana Plasmática</h2>
+                <p>É uma estrutura fundamental presente em todas as células, com as seguintes características:</p>
+                <ul>
+                    <li><strong>Composição Lipoproteica:</strong> Formada por uma bicamada de fosfolipídios com proteínas inseridas ou associadas.</li>
+                    <li><strong>Modelo do Mosaico Fluido:</strong> Os componentes (lipídios e proteínas) não são estáticos, eles podem se mover, conferindo fluidez à membrana.</li>
+                    <li><strong>Permeabilidade Seletiva:</strong> Controla rigorosamente o que entra e o que sai da célula, mantendo o ambiente interno estável (homeostase).</li>
+                </ul>
+                
+                <h2>2. Transporte Através da Membrana</h2>
+                <h3>A. Transporte Passivo (Sem Gasto de ATP)</h3>
+                <p>Ocorre sempre a favor do gradiente de concentração (do meio mais concentrado para o menos concentrado).</p>
+                <ul>
+                    <li><strong>Difusão Simples:</strong> Passagem de pequenas moléculas apolares (O₂, CO₂) diretamente pela bicamada lipídica.</li>
+                    <li><strong>Difusão Facilitada:</strong> Passagem de moléculas maiores ou polares (glicose, aminoácidos) com o auxílio de <strong>proteínas de transporte (canais ou carreadoras)</strong>.</li>
+                    <li><strong>Osmose:</strong> É a difusão da <strong>água (solvente)</strong> através da membrana, do meio menos concentrado em soluto (<strong>hipotônico</strong>) para o mais concentrado (<strong>hipertônico</strong>), buscando o equilíbrio (<strong>isotônico</strong>).</li>
+                </ul>
+
+                <h3>B. Transporte Ativo (Com Gasto de ATP)</h3>
+                <p>Ocorre contra o gradiente de concentração, exigindo energia (ATP) e a participação de proteínas transportadoras (bombas).</p>
+                <ul>
+                    <li><strong>Bomba de Sódio e Potássio:</strong> Mecanismo vital que bombeia <strong>3 íons de Sódio (Na⁺) para fora</strong> da célula e <strong>2 íons de Potássio (K⁺) para dentro</strong>. Mantém o potencial elétrico da membrana, fundamental para neurônios e músculos.</li>
+                </ul>
+
+                <h3>C. Transporte por Vesículas (em Massa)</h3>
+                <p>Para partículas grandes. Envolve a deformação da membrana e gasto de ATP.</p>
+                <ul>
+                    <li><strong>Endocitose (Para Dentro):</strong>
+                        <ul>
+                            <li><strong>Fagocitose:</strong> Englobamento de partículas <strong>sólidas</strong> (ex: glóbulo branco comendo uma bactéria).</li>
+                            <li><strong>Pinocitose:</strong> Englobamento de fluidos ou partículas <strong>dissolvidas</strong>.</li>
+                        </ul>
+                    </li>
+                    <li><strong>Exocitose (Para Fora):</strong>
+                        <ul>
+                            <li><strong>Secreção:</strong> Liberação de substâncias <strong>úteis</strong> produzidas pela célula (ex: hormônios, neurotransmissores).</li>
+                            <li><strong>Excreção:</strong> Eliminação de <strong>resíduos</strong> metabólicos.</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            
+            <!-- Citoesqueleto -->
+            <button class="collapsible">Citoesqueleto</button>
+            <div class="content">
+                <h2>Rede de Proteínas do Citoplasma</h2>
+                <p>Presente apenas em células eucarióticas, é uma rede complexa de filamentos proteicos que dá forma, sustentação e capacidade de movimento à célula.</p>
+                
+                <h3>1. Microfilamentos (Filamentos de Actina)</h3>
+                <ul>
+                    <li><strong>Estrutura:</strong> Os mais finos, formados pela proteína globular <strong>actina</strong>. São dinâmicos e instáveis.</li>
+                    <li><strong>Funções:</strong>
+                        <ul>
+                            <li><strong>Movimento ameboide</strong> (emissão de pseudópodes).</li>
+                            <li><strong>Contração muscular</strong> (junto com a miosina).</li>
+                            <li>Formação do anel contrátil na <strong>divisão celular</strong> (citocinese).</li>
+                            <li>Sustentação das microvilosidades.</li>
+                            <li>Participa da endocitose e exocitose.</li>
+                        </ul>
+                    </li>
+                </ul>
+
+                <h3>2. Filamentos Intermediários</h3>
+                <ul>
+                    <li><strong>Estrutura:</strong> Espessura intermediária, formados por diversas proteínas fibrosas (ex: queratina, vimentina). São os mais <strong>estáveis e resistentes</strong>.</li>
+                    <li><strong>Funções:</strong>
+                        <ul>
+                            <li><strong>Sustentação estrutural</strong>, resistindo a tensões mecânicas.</li>
+                            <li><strong>Ancoragem do núcleo</strong> e de outras organelas.</li>
+                            <li>Formam a <strong>lâmina nuclear</strong>, que reveste internamente o núcleo.</li>
+                            <li>Componentes de junções celulares que unem células vizinhas.</li>
+                        </ul>
+                    </li>
+                </ul>
+
+                <h3>3. Microtúbulos</h3>
+                <ul>
+                    <li><strong>Estrutura:</strong> Os mais espessos, são tubos ocos formados pela proteína <strong>tubulina</strong>. São dinâmicos (polimerizam e despolimerizam).</li>
+                    <li><strong>Funções:</strong>
+                        <ul>
+                            <li><strong>"Estradas" intracelulares</strong> para o transporte de vesículas e organelas por proteínas motoras (cinesina e dineína).</li>
+                            <li>Formação do <strong>fuso mitótico</strong>, que separa os cromossomos durante a divisão celular.</li>
+                            <li>Estrutura central de <strong>cílios e flagelos</strong> (padrão 9+2), responsáveis pela locomoção celular.</li>
+                            <li>Organização geral do citoplasma.</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Organelas Citoplasmáticas -->
+            <button class="collapsible">Organelas Citoplasmáticas</button>
+            <div class="content">
+                <h2>As "Fábricas" da Célula</h2>
+                
+                <ol>
+                    <li><strong>Ribossomos:</strong>
+                        <ul>
+                            <li><strong>Função:</strong> Síntese de proteínas.</li>
+                            <li>Não são membranosos. Encontrados livres no citosol ou aderidos ao Retículo Endoplasmático Rugoso.</li>
+                        </ul>
+                    </li>
+                    <li><strong>Retículo Endoplasmático Rugoso (RER):</strong>
+                        <ul>
+                            <li><strong>Função:</strong> Síntese de proteínas que serão exportadas, inseridas na membrana ou enviadas para lisossomos. Também modifica e empacota essas proteínas.</li>
+                            <li>Possui ribossomos aderidos à sua superfície.</li>
+                        </ul>
+                    </li>
+                    <li><strong>Retículo Endoplasmático Liso (REL):</strong>
+                        <ul>
+                            <li><strong>Função:</strong> Síntese de lipídios (esteroides, fosfolipídios), <strong>desintoxicação celular</strong> (metaboliza toxinas, drogas e álcool, abundante no fígado) e armazenamento de íons de cálcio.</li>
+                            <li>Não possui ribossomos.</li>
+                        </ul>
+                    </li>
+                     <li><strong>Complexo de Golgi (ou Aparelho de Golgi):</strong>
+                        <ul>
+                            <li><strong>Função:</strong> O "centro de processamento e distribuição". Recebe, modifica, empacota e endereça as moléculas vindas dos retículos. Forma os lisossomos e o acrossomo do espermatozoide.</li>
+                        </ul>
+                    </li>
+                    <li><strong>Lisossomos:</strong>
+                        <ul>
+                            <li><strong>Função:</strong> Contêm enzimas digestivas para a <strong>digestão intracelular</strong>. Realizam a <strong>autofagia</strong> (digestão de organelas velhas) e participam da <strong>apoptose</strong> (morte celular programada).</li>
+                        </ul>
+                    </li>
+                    <li><strong>Peroxissomos:</strong>
+                        <ul>
+                            <li><strong>Função:</strong> Contêm enzimas oxidativas. Atuam na quebra de ácidos graxos e na <strong>neutralização de substâncias tóxicas</strong>, como o peróxido de hidrogênio (água oxigenada - H₂O₂), que é convertido em água e oxigênio pela enzima catalase.</li>
+                        </ul>
+                    </li>
+                    <li><strong>Mitocôndrias:</strong>
+                        <ul>
+                            <li><strong>Função:</strong> "Usina de energia" da célula. Realizam a <strong>respiração celular aeróbica</strong> para produzir grandes quantidades de <strong>ATP</strong>.</li>
+                            <li>Possuem dupla membrana, DNA próprio e ribossomos, reforçando a teoria da endossimbiose.</li>
+                        </ul>
+                    </li>
+                     <li><strong>Vacúolo Central (em Células Vegetais):</strong>
+                        <ul>
+                            <li><strong>Função:</strong> Armazena água, íons e nutrientes. É crucial para a <strong>regulação osmótica</strong> e manutenção da <strong>pressão de turgor</strong>, que dá rigidez à célula vegetal.</li>
+                        </ul>
+                    </li>
+                    <li><strong>Plastos (em Células Vegetais e Algas):</strong>
+                        <ul>
+                            <li><strong>Cloroplastos:</strong> Realizam a <strong>fotossíntese</strong>. Contêm clorofila. Assim como as mitocôndrias, têm dupla membrana, DNA e ribossomos próprios.</li>
+                            <li>Outros plastos incluem cromoplastos (armazenam outros pigmentos) e leucoplastos (armazenam amido).</li>
+                        </ul>
+                    </li>
+                </ol>
+            </div>
+            
+            <!-- Processos Energéticos -->
+            <button class="collapsible">Processos Energéticos: Respiração e Fotossíntese</button>
+            <div class="content">
+                <h2>1. Respiração Celular Aeróbica</h2>
+                <p>Processo de quebra da glicose na presença de oxigênio para produzir ATP. Ocorre em eucariontes e alguns procariontes.</p>
+                <h3>Etapas:</h3>
+                <ol>
+                    <li><strong>Glicólise:</strong>
+                        <ul>
+                            <li><strong>Local:</strong> Citoplasma.</li>
+                            <li><strong>Processo:</strong> Uma molécula de glicose (6C) é quebrada em duas moléculas de piruvato (3C).</li>
+                            <li><strong>Saldo:</strong> 2 ATP, 2 NADH.</li>
+                        </ul>
+                    </li>
+                    <li><strong>Ciclo de Krebs (ou Ciclo do Ácido Cítrico):</strong>
+                        <ul>
+                            <li><strong>Local:</strong> Matriz mitocondrial.</li>
+                            <li><strong>Processo:</strong> O piruvato é convertido em Acetil-CoA e entra no ciclo, onde é completamente oxidado.</li>
+                            <li><strong>Saldo (por glicose):</strong> 2 ATP, 6 NADH, 2 FADH₂, 4 CO₂.</li>
+                        </ul>
+                    </li>
+                    <li><strong>Fosforilação Oxidativa (Cadeia Respiratória):</strong>
+                        <ul>
+                            <li><strong>Local:</strong> Cristas mitocondriais.</li>
+                            <li><strong>Processo:</strong> Os elétrons de alta energia dos NADH e FADH₂ são passados por uma cadeia de proteínas. A energia liberada bombeia prótons (H⁺), criando um gradiente. O fluxo de prótons de volta através da enzima <strong>ATP sintase</strong> gera a maior parte do ATP (quimiosmose). O <strong>oxigênio</strong> é o aceptor final de elétrons, formando água.</li>
+                            <li><strong>Saldo:</strong> ~28-34 ATP.</li>
+                        </ul>
+                    </li>
+                </ol>
+                <p><strong>Rendimento total:</strong> Cerca de 32 a 38 moléculas de ATP por molécula de glicose.</p>
+
+                <h2>2. Fotossíntese</h2>
+                <p>Processo realizado por plantas, algas e cianobactérias para converter energia luminosa em energia química (glicose), usando CO₂ e H₂O.</p>
+                <p><strong>Equação Geral:</strong> 6CO₂ + 12H₂O + Luz → C₆H₁₂O₆ + 6O₂ + 6H₂O</p>
+                
+                <h3>Etapas:</h3>
+                <ol>
+                    <li><strong>Fase Fotoquímica (Fase Clara):</strong>
+                        <ul>
+                            <li><strong>Local:</strong> Membranas dos tilacoides (no cloroplasto).</li>
+                            <li><strong>Dependência:</strong> Diretamente dependente da luz.</li>
+                            <li><strong>Eventos principais:</strong>
+                                <ul>
+                                    <li>A luz excita a clorofila.</li>
+                                    <li><strong>Fotólise da água:</strong> A água é quebrada, liberando <strong>O₂</strong>, elétrons e prótons (H⁺).</li>
+                                    <li>A energia luminosa é usada para produzir <strong>ATP</strong> e <strong>NADPH</strong> (moléculas energéticas).</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                    <li><strong>Fase Química (Ciclo de Calvin ou Fase Escura):</strong>
+                        <ul>
+                            <li><strong>Local:</strong> Estroma (no cloroplasto).</li>
+                            <li><strong>Dependência:</strong> Não depende diretamente da luz, mas sim dos produtos da fase clara (ATP e NADPH).</li>
+                            <li><strong>Eventos principais:</strong>
+                                <ul>
+                                    <li>O <strong>CO₂</strong> é capturado do ar e "fixado" em um ciclo de reações.</li>
+                                    <li>O ATP e o NADPH da fase clara são usados para converter o CO₂ em <strong>glicose (C₆H₁₂O₆)</strong> e outras moléculas orgânicas.</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                </ol>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // --- SCRIPT PARA SEÇÕES RETRÁTEIS ---
+        const collapsibles = document.querySelectorAll(".collapsible");
+
+        collapsibles.forEach(item => {
+            item.addEventListener("click", function() {
+                this.classList.toggle("active");
+                const content = this.nextElementSibling;
+                if (content.style.maxHeight) {
+                    content.style.maxHeight = null;
+                    content.classList.remove("show");
+                } else {
+                    content.classList.add("show");
+                    content.style.maxHeight = content.scrollHeight + "px";
+                }
+            });
+        });
+
+        // --- SCRIPT PARA TEMA CLARO/ESCURO ---
+        const themeToggle = document.getElementById('theme-toggle');
+        const body = document.body;
+
+        // Função para aplicar o tema
+        const applyTheme = (theme) => {
+            if (theme === 'dark') {
+                body.classList.add('dark-mode');
+                themeToggle.textContent = '☀️';
+            } else {
+                body.classList.remove('dark-mode');
+                themeToggle.textContent = '🌙';
+            }
+        };
+
+        // Verifica o tema salvo no localStorage ao carregar a página
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        applyTheme(savedTheme);
+
+        // Adiciona o evento de clique ao botão
+        themeToggle.addEventListener('click', () => {
+            let newTheme = body.classList.contains('dark-mode') ? 'light' : 'dark';
+            applyTheme(newTheme);
+            localStorage.setItem('theme', newTheme);
+        });
+
+    </script>
+
+</body>
+</html>

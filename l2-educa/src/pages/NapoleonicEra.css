@@ -1,0 +1,527 @@
+.napoleonic-era-page {
+  min-height: 100vh;
+  padding: clamp(6rem, 10vw, 8rem) clamp(1rem, 5vw, 2rem) clamp(2rem, 5vw, 4rem);
+}
+
+.page-section {
+  max-width: 1200px;
+  margin: 0 auto clamp(5rem, 10vw, 8rem);
+}
+
+.section-header {
+  text-align: center;
+  margin-bottom: clamp(2rem, 5vw, 3rem);
+}
+
+.section-title {
+  font-size: clamp(2rem, 6vw, 3.5rem);
+  font-weight: 800;
+  background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 50%, #6366f1 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: clamp(1rem, 3vw, 1.5rem);
+  letter-spacing: -0.02em;
+}
+
+.section-intro {
+  font-size: clamp(1rem, 2.5vw, 1.2rem);
+  color: rgba(255, 255, 255, 0.8);
+  max-width: 900px;
+  margin: 0 auto;
+  line-height: 1.7;
+}
+
+.subsection-title {
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  color: #fff;
+  margin-bottom: 1.5rem;
+  font-weight: 700;
+}
+
+.text-content {
+  font-size: clamp(1rem, 2vw, 1.1rem);
+  color: rgba(255, 255, 255, 0.85);
+  line-height: 1.7;
+  margin-bottom: 1rem;
+}
+
+.content-list {
+  list-style: none;
+  padding: 0;
+  margin: 1.5rem 0;
+}
+
+.content-list li {
+  font-size: clamp(1rem, 2vw, 1.1rem);
+  color: rgba(255, 255, 255, 0.85);
+  padding: 0.5rem 0 0.5rem 1.5rem;
+  position: relative;
+  line-height: 1.6;
+}
+
+.content-list li::before {
+  content: '→';
+  position: absolute;
+  left: 0;
+  color: #3b82f6;
+  font-weight: bold;
+}
+
+/* Brumário Boxes */
+.context-box, .conspiracy-box, .execution-box, .outcome-box {
+  background: rgba(59, 130, 246, 0.08);
+  border: 2px solid rgba(59, 130, 246, 0.3);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+}
+
+.conspiracy-box {
+  border-color: rgba(139, 92, 246, 0.3);
+  background: rgba(139, 92, 246, 0.08);
+}
+
+.execution-box {
+  border-color: rgba(99, 102, 241, 0.3);
+  background: rgba(99, 102, 241, 0.08);
+}
+
+.outcome-box {
+  border-color: rgba(37, 99, 235, 0.4);
+  background: rgba(37, 99, 235, 0.1);
+}
+
+.context-box h3, .conspiracy-box h3, .execution-box h3, .outcome-box h3 {
+  color: #fff;
+  margin-bottom: 1rem;
+}
+
+.context-box ul, .conspiracy-box ul {
+  margin: 1rem 0;
+  padding-left: 1.5rem;
+}
+
+.context-box li, .conspiracy-box li {
+  margin: 0.5rem 0;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.quote {
+  font-style: italic;
+  color: rgba(255, 255, 255, 0.7);
+  border-left: 3px solid #3b82f6;
+  padding-left: 1rem;
+  margin: 1rem 0;
+}
+
+/* Consulado - Reform Cards */
+.consulate-intro {
+  margin-bottom: 2rem;
+  padding: 1rem;
+  background: rgba(59, 130, 246, 0.05);
+  border-radius: 8px;
+}
+
+.reform-cards {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  margin: 2rem 0;
+}
+
+.reform-card {
+  background: rgba(99, 102, 241, 0.08);
+  border: 2px solid rgba(99, 102, 241, 0.3);
+  border-radius: 12px;
+  padding: 1.5rem;
+}
+
+.reform-card.code {
+  border-color: rgba(139, 92, 246, 0.4);
+  background: rgba(139, 92, 246, 0.08);
+}
+
+.reform-card.concordat {
+  border-color: rgba(59, 130, 246, 0.4);
+  background: rgba(59, 130, 246, 0.08);
+}
+
+.reform-card.admin {
+  border-color: rgba(37, 99, 235, 0.4);
+  background: rgba(37, 99, 235, 0.08);
+}
+
+.reform-card.power {
+  border-color: rgba(79, 70, 229, 0.4);
+  background: rgba(79, 70, 229, 0.08);
+}
+
+.reform-card h3 {
+  color: #fff;
+  margin-bottom: 0.5rem;
+}
+
+.reform-subtitle {
+  color: rgba(255, 255, 255, 0.7);
+  font-style: italic;
+  margin-bottom: 1rem;
+}
+
+.principles-box, .contradictions-box, .impact-box {
+  background: rgba(0, 0, 0, 0.2);
+  padding: 1rem;
+  border-radius: 8px;
+  margin: 1rem 0;
+}
+
+.contradictions-box {
+  border-left: 3px solid #ef4444;
+}
+
+.impact-box {
+  border-left: 3px solid #22c55e;
+}
+
+.principles-box p, .contradictions-box p, .impact-box p {
+  margin-bottom: 0.5rem;
+  color: #fff;
+}
+
+.principles-box ul, .contradictions-box ul {
+  margin: 0.5rem 0;
+  padding-left: 1.5rem;
+}
+
+.principles-box li, .contradictions-box li {
+  margin: 0.5rem 0;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.reform-card ul {
+  margin: 1rem 0;
+  padding-left: 1.5rem;
+}
+
+.reform-card li {
+  margin: 0.5rem 0;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* Império */
+.coronation-box, .imperial-system {
+  background: rgba(139, 92, 246, 0.08);
+  border: 2px solid rgba(139, 92, 246, 0.3);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+}
+
+.imperial-system {
+  border-color: rgba(99, 102, 241, 0.3);
+  background: rgba(99, 102, 241, 0.08);
+}
+
+.coronation-box h3, .imperial-system h3 {
+  color: #fff;
+  margin-bottom: 1rem;
+}
+
+/* Battles Timeline */
+.wars-intro {
+  margin-bottom: 2rem;
+  padding: 1rem;
+  background: rgba(59, 130, 246, 0.05);
+  border-radius: 8px;
+}
+
+.battles-timeline {
+  margin: 2rem 0;
+}
+
+.battles-timeline h3 {
+  color: #fff;
+  margin-bottom: 1.5rem;
+  font-size: 1.3rem;
+}
+
+.battle-card {
+  background: rgba(59, 130, 246, 0.08);
+  border: 2px solid rgba(59, 130, 246, 0.3);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin: 1rem 0;
+  transition: all 0.3s ease;
+}
+
+.battle-card:hover {
+  transform: translateX(4px);
+  border-color: rgba(59, 130, 246, 0.5);
+}
+
+.battle-card.victory {
+  border-color: rgba(34, 197, 94, 0.4);
+  background: rgba(34, 197, 94, 0.08);
+}
+
+.battle-card.defeat {
+  border-color: rgba(239, 68, 68, 0.4);
+  background: rgba(239, 68, 68, 0.08);
+}
+
+.battle-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.battle-header strong {
+  color: #fff;
+  font-size: 1.1rem;
+}
+
+.battle-result {
+  padding: 0.4rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.victory-badge {
+  background: rgba(34, 197, 94, 0.2);
+  border: 1px solid rgba(34, 197, 94, 0.5);
+  color: #4ade80;
+}
+
+.defeat-badge {
+  background: rgba(239, 68, 68, 0.2);
+  border: 1px solid rgba(239, 68, 68, 0.5);
+  color: #f87171;
+}
+
+.battle-card p {
+  color: rgba(255, 255, 255, 0.85);
+  line-height: 1.6;
+}
+
+/* Fall Timeline */
+.fall-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin: 2rem 0;
+}
+
+.fall-stage {
+  background: rgba(239, 68, 68, 0.08);
+  border-left: 4px solid #ef4444;
+  border-radius: 8px;
+  padding: 1.5rem;
+}
+
+.fall-stage h3 {
+  color: #fff;
+  margin-bottom: 0.75rem;
+}
+
+.fall-stage p {
+  color: rgba(255, 255, 255, 0.85);
+  line-height: 1.6;
+}
+
+/* Congress of Vienna */
+.congress-intro {
+  margin-bottom: 2rem;
+  padding: 1rem;
+  background: rgba(99, 102, 241, 0.05);
+  border-radius: 8px;
+}
+
+.congress-leaders, .congress-principles, .congress-results {
+  margin: 2rem 0;
+}
+
+.congress-leaders h3, .congress-principles h3, .congress-results h3 {
+  color: #fff;
+  margin-bottom: 1rem;
+}
+
+.principle-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.principle-card {
+  background: rgba(99, 102, 241, 0.08);
+  border: 2px solid rgba(99, 102, 241, 0.3);
+  border-radius: 10px;
+  padding: 1.25rem;
+}
+
+.principle-card h4 {
+  color: #fff;
+  margin-bottom: 0.5rem;
+}
+
+.principle-card p {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+/* Legacy */
+.legacy-intro {
+  margin-bottom: 2rem;
+  padding: 1rem;
+  background: rgba(139, 92, 246, 0.05);
+  border-radius: 8px;
+}
+
+.legacy-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin: 2rem 0;
+}
+
+.legacy-card {
+  background: rgba(99, 102, 241, 0.08);
+  border: 2px solid rgba(99, 102, 241, 0.3);
+  border-radius: 12px;
+  padding: 1.5rem;
+}
+
+.legacy-card.positive {
+  border-color: rgba(34, 197, 94, 0.4);
+  background: rgba(34, 197, 94, 0.08);
+}
+
+.legacy-card.negative {
+  border-color: rgba(239, 68, 68, 0.4);
+  background: rgba(239, 68, 68, 0.08);
+}
+
+.legacy-card h3 {
+  color: #fff;
+  margin-bottom: 1rem;
+}
+
+.legacy-card ul {
+  margin: 0;
+  padding-left: 1.5rem;
+}
+
+.legacy-card li {
+  margin: 0.5rem 0;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.legacy-international {
+  margin: 2rem 0;
+}
+
+.legacy-international h3 {
+  color: #fff;
+  margin-bottom: 1rem;
+}
+
+.impact-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.impact-card {
+  background: rgba(59, 130, 246, 0.08);
+  border: 2px solid rgba(59, 130, 246, 0.3);
+  border-radius: 10px;
+  padding: 1.25rem;
+}
+
+.impact-card h4 {
+  color: #fff;
+  margin-bottom: 0.5rem;
+}
+
+.impact-card p {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.legacy-paradox {
+  background: rgba(139, 92, 246, 0.1);
+  border: 2px solid rgba(139, 92, 246, 0.4);
+  border-radius: 12px;
+  padding: 2rem;
+  margin: 2rem 0;
+}
+
+.legacy-paradox h3 {
+  color: #fff;
+  margin-bottom: 1rem;
+}
+
+.paradox-text {
+  color: rgba(255, 255, 255, 0.9);
+  line-height: 1.8;
+  font-size: 1.05rem;
+}
+
+/* Fixation */
+.steps-list {
+  margin: 1rem 0;
+  padding-left: 1.5rem;
+}
+
+.steps-list li {
+  margin: 1.5rem 0;
+  color: rgba(255, 255, 255, 0.85);
+  line-height: 1.7;
+}
+
+.answer {
+  color: rgba(255, 255, 255, 0.6);
+  margin-top: 0.5rem;
+  font-size: 0.95rem;
+  font-style: italic;
+  padding-left: 1rem;
+  border-left: 2px solid rgba(59, 130, 246, 0.3);
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .legacy-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .principle-cards {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .napoleonic-era-page {
+    padding: 5rem 1rem 2rem;
+  }
+
+  .page-section {
+    margin: 0 auto 3rem;
+  }
+  
+  .battle-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .impact-cards {
+    grid-template-columns: 1fr;
+  }
+}
+

@@ -1,0 +1,27 @@
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+  will-change: transform, opacity;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+  will-change: auto; /* Remove will-change after animation */
+}
+
+/* Graceful degradation */
+html.no-js .reveal {
+  opacity: 1;
+  transform: none;
+}
+
+/* Faster and simpler animations on mobile for better performance */
+@media (max-width: 768px) {
+  .reveal {
+    transform: translateY(10px); /* Reduced from 30px */
+    transition: opacity 0.4s ease-out, transform 0.4s ease-out; /* Reduced from 0.8s */
+  }
+}
+

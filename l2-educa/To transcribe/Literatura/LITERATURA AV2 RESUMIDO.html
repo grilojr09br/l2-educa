@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="no-js">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lygia e Cabral: Uma Análise Imersiva</title>
+    
+    <!-- Google Fonts: Poppins & Lora -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <!-- Google Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <!-- Habilita modo js (fallback iOS/WhatsApp) -->
+    <script>(function(d){var c=d.documentElement;c.className=c.className.replace('no-js','js');})(document);</script>
+
+    <style>
+        /* 1. RESET E CONFIGURAÇÕES GLOBAIS (V8) */
+        :root {
+            --primary-color: #F3E8FF; /* Lilás muito claro */
+            --secondary-color: #D8B4FE; /* Lilás médio */
+            --accent-color: #A855F7; /* Roxo vibrante */
+            --text-color: #F9FAFB;
+            --bg-color: #18181b; /* Cinza-chumbo */
+            /* REFINAMENTO: Transparência levemente ajustada para o efeito glass */
+            --card-bg: rgba(39, 39, 42, 0.3);
+            --border-color: rgba(168, 85, 247, 0.2);
+            --font-main: 'Poppins', sans-serif;
+            --font-serif: 'Lora', serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: var(--font-main);
+            line-height: 1.8;
+            overflow-x: hidden;
+        }
+
+        /* 2. ESTÉTICA "AURORA LÍQUIDA" APRIMORADA (V8) */
+        .aurora-background { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; z-index: -1; overflow: hidden; }
+        .aurora-shape { position: absolute; border-radius: 50%; filter: blur(180px); opacity: 0.4; }
+        .shape1 { width: 500px; height: 500px; background: #7c3aed; top: -150px; left: -150px; animation: move-aurora 25s infinite alternate ease-in-out; }
+        .shape2 { width: 400px; height: 400px; background: #db2777; bottom: -100px; right: -100px; animation: move-aurora 30s infinite alternate-reverse ease-in-out; }
+        .shape3 { width: 350px; height: 350px; background: #1d4ed8; top: 50%; left: 50%; transform: translate(-50%, -50%); animation: move-aurora 20s infinite ease-in-out; }
+        @keyframes move-aurora {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(100px, 50px) scale(1.2); }
+            100% { transform: translate(-50px, -100px) scale(1); }
+        }
+
+        /* 3. TELA DE CARREGAMENTO */
+        html.no-js .loading-overlay { display: none !important; }
+        .loading-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: var(--bg-color); display: none; flex-direction: column; justify-content: center; align-items: center; z-index: 1000; transition: opacity 0.8s ease-out; }
+        .loading-logo { font-size: clamp(2rem, 8vw, 4rem); font-weight: 700; color: var(--primary-color); margin-bottom: 2rem; }
+        .loading-logo span { opacity: 0; animation: letter-fade-in 0.5s forwards; }
+        @keyframes letter-fade-in { to { opacity: 1; } }
+        .progress-bar-container { width: 250px; height: 4px; background-color: rgba(255, 255, 255, 0.1); border-radius: 2px; overflow: hidden; }
+        .progress-bar { width: 0; height: 100%; background: linear-gradient(90deg, var(--secondary-color), var(--accent-color)); border-radius: 2px; animation: fill-progress 2s ease-out forwards; }
+        @keyframes fill-progress { to { width: 100%; } }
+        .loading-overlay.hidden { opacity: 0; pointer-events: none; }
+
+        /* 4. NAVEGAÇÃO DINÂMICA (V8 REFINADA) */
+        .main-nav {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--card-bg);
+            /* REFINAMENTO: Blur aumentado para mais elegância na difração */
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border-color);
+            border-radius: 50px;
+            padding: 0.5rem;
+            z-index: 500;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            /* REFINAMENTO: Transição mais fluida, "líquida" */
+            transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+        }
+        .main-nav ul { list-style: none; display: flex; align-items: center; gap: 0.25rem; }
+        .main-nav a {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem;
+            color: var(--primary-color);
+            text-decoration: none;
+            border-radius: 30px;
+            /* REFINAMENTO: Transição individual dos itens para efeito mais suave */
+            transition: background-color 0.4s ease, color 0.4s ease, transform 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            /* Necessário para o anel de progresso circular (desktop) */
+            z-index: 0;
+        }
+        /* Anel de progresso ao redor do item ativo (desktop) */
+        .main-nav a::after {
+            content: "";
+            position: absolute;
+            inset: -3px;
+            border-radius: 999px;
+            padding: 2px;
+            pointer-events: none;
+            background: conic-gradient(var(--accent-color) var(--progress, 0deg), rgba(255,255,255,0.06) 0deg);
+            -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+                    mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+            -webkit-mask-composite: xor;
+                    mask-composite: exclude;
+            opacity: 0;
+            transition: opacity .25s ease, background .15s linear;
+            z-index: 1;
+        }
+        @media (min-width: 1024px) {
+            .main-nav a.active::after { opacity: 1; }
+        }
+        .main-nav .nav-text {
+            font-weight: 500;
+            font-size: 0.9rem;
+            white-space: nowrap;
+            max-width: 0;
+            opacity: 0;
+            /* REFINAMENTO: Transição mais suave para o texto */
+            transition: max-width 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.3s ease;
+        }
+        .main-nav a:hover {
+            background-color: var(--primary-color);
+            color: var(--bg-color);
+            /* REFINAMENTO: Efeito de escala sutil no hover */
+            transform: scale(1.05);
+        }
+        .main-nav a.active {
+            background-color: var(--primary-color);
+            color: var(--bg-color);
+            transform: scale(1.05);
+        }
+        @media (min-width: 1024px) {
+            .main-nav:hover .nav-text { max-width: 150px; opacity: 1; margin-left: 0.25rem; }
+            .main-nav:hover a { padding: 0.75rem 1rem; }
+        }
+        @media (max-width: 1023px) {
+            html.js .main-nav { top: -100px; }
+            html.js .main-nav.nav-visible { top: 20px; }
+            .main-nav .nav-text { display: none; }
+        }
+
+        /* Bolha de progresso (mobile) — liquid glass quase imperceptível */
+        .progress-bubble {
+            position: fixed;
+            top: 14px;
+            left: 50%;
+            transform: translateX(-50%) scale(1);
+            width: 18px;
+            height: 18px;
+            border-radius: 999px;
+            z-index: 499;
+            pointer-events: none;
+            opacity: 0.55;
+            background:
+                radial-gradient(120px 80px at 18% 10%, rgba(255,255,255,0.14), transparent 70%),
+                linear-gradient(180deg, rgba(255,255,255,0.16), rgba(255,255,255,0.06));
+            backdrop-filter: blur(10px) saturate(1.25);
+            -webkit-backdrop-filter: blur(10px) saturate(1.25);
+            border: 1px solid rgba(255,255,255,0.18);
+            box-shadow: inset 0 0 0 1px rgba(255,255,255,0.05), 0 4px 16px rgba(0,0,0,0.25);
+            transition: transform .35s cubic-bezier(0.2, 0.8, 0.2, 1), opacity .35s ease;
+        }
+        .progress-bubble::after {
+            content: "";
+            position: absolute;
+            inset: -3px;
+            border-radius: inherit;
+            padding: 2px;
+            background: conic-gradient(var(--accent-color) var(--bubble-progress, 0deg), rgba(255,255,255,0.08) 0deg);
+            -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+                    mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+            -webkit-mask-composite: xor;
+                    mask-composite: exclude;
+        }
+        .progress-bubble.merge { opacity: 0; transform: translateX(-50%) scale(0.6); }
+        @media (min-width: 1024px) { .progress-bubble { display: none; } }
+
+        /* 5. LAYOUT E CONTEÚDO */
+        main { opacity: 1; transition: opacity 0.8s ease-in; }
+        html.js main { opacity: 0; }
+        html.js main.loaded { opacity: 1; }
+        .topic-section { min-height: 100vh; width: 100%; padding: 120px 5% 60px; display: flex; flex-direction: column; justify-content: center; align-items: center; position: relative; }
+        .section-container { max-width: 960px; width: 100%; margin: 0 auto; }
+        h1, h2, h3 { font-weight: 600; letter-spacing: -0.5px; margin-bottom: 1rem; text-shadow: 0 0 15px rgba(0,0,0,0.3); }
+        .section-title { font-size: clamp(2.5rem, 6vw, 4rem); text-align: center; color: var(--primary-color); line-height: 1.1; font-family: var(--font-serif); }
+        .section-intro { font-size: clamp(1rem, 2.5vw, 1.25rem); max-width: 750px; text-align: center; margin: 1rem auto 3rem; color: var(--secondary-color); font-weight: 300; }
+        .subsection-title { font-size: clamp(1.8rem, 4vw, 2.5rem); color: var(--primary-color); margin-top: 3rem; margin-bottom: 1.5rem; border-left: 4px solid var(--accent-color); padding-left: 1rem; font-family: var(--font-serif); }
+        p { margin-bottom: 1.5rem; font-size: clamp(1rem, 2vw, 1.1rem); }
+        strong { color: var(--secondary-color); font-weight: 600; }
+        blockquote { background: var(--card-bg); border-left: 4px solid var(--accent-color); margin: 2rem 0; padding: 1.5rem; border-radius: 0 8px 8px 0; font-family: var(--font-serif); font-style: italic; color: var(--secondary-color); }
+        blockquote footer { font-style: normal; text-align: right; margin-top: 1rem; font-size: 0.9rem; color: var(--primary-color); font-family: var(--font-main); }
+
+        /* 5.1 Legibilidade aprimorada (medida, alinhamento e hifenização) */
+        .section-container { --measure: 68ch; }
+        .section-container p:not(.section-intro) {
+            max-width: var(--measure);
+            margin-left: auto;
+            margin-right: auto;
+            text-align: left;
+            text-wrap: pretty;
+            -webkit-hyphens: auto;
+            -ms-hyphens: auto;
+            hyphens: auto;
+            line-height: 1.9;
+        }
+        .section-container .subsection-title {
+            max-width: calc(var(--measure) + 6ch);
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .section-container blockquote {
+            max-width: var(--measure);
+            margin-left: auto;
+            margin-right: auto;
+        }
+        /* Espaçamento mais orgânico entre parágrafos consecutivos */
+        .section-container p + p { margin-top: 0.5rem; }
+        /* Refinos tipográficos em telas grandes */
+        @media (min-width: 1024px) {
+            .section-container p:not(.section-intro) { font-size: 1.05rem; }
+        }
+
+        /* 6. ANIMAÇÕES E RODAPÉ */
+        .reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.8s ease-out, transform 0.8s ease-out; }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+        html.no-js .reveal { opacity: 1; transform: none; }
+        footer {
+            width: 100%;
+            text-align: center;
+            padding: 2rem;
+            font-size: 0.9rem;
+            color: var(--secondary-color);
+            background-color: rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="aurora-background"><div class="aurora-shape shape1"></div><div class="aurora-shape shape2"></div><div class="aurora-shape shape3"></div></div>
+
+    <div class="loading-overlay">
+        <div class="loading-logo"><span>L</span><span>2</span><span> </span><span>E</span><span>D</span><span>U</span><span>C</span><span>A</span></div>
+        <div class="progress-bar-container"><div class="progress-bar"></div></div>
+    </div>
+
+    <!-- Bolha de progresso (mobile) -->
+    <div class="progress-bubble" aria-hidden="true"></div>
+
+    <nav class="main-nav">
+        <ul>
+            <li><a href="#contexto" class="nav-link"><i class="material-icons">history_edu</i><span class="nav-text">Contexto</span></a></li>
+            <li><a href="#as-meninas" class="nav-link"><i class="material-icons">groups</i><span class="nav-text">As Meninas</span></a></li>
+            <li><a href="#cao-sem-plumas" class="nav-link"><i class="material-icons">waves</i><span class="nav-text">O Cão</span></a></li>
+            <li><a href="#analise" class="nav-link"><i class="material-icons">insights</i><span class="nav-text">Análise</span></a></li>
+        </ul>
+    </nav>
+    
+    <main id="main-content">
+
+        <!-- SEÇÃO 1: CONTEXTO HISTÓRICO E SOCIAL -->
+        <section id="contexto" class="topic-section">
+            <div class="section-container">
+                <h1 class="section-title reveal">O Brasil em Sombra e Tensão</h1>
+                <p class="section-intro reveal" style="transition-delay: 0.2s;">
+                    Para compreender a profundidade de *As Meninas* (1973) e a crueza de *O Cão sem Plumas* (1950), é preciso mergulhar no Brasil que os produziu. São obras nascidas de um país de contrastes agudos: de um lado, a modernização urbana e a promessa de desenvolvimento; de outro, a miséria endêmica e a brutalidade da repressão política.
+                </p>
+
+                <div class="reveal" style="transition-delay: 0.4s;">
+                    <h2 class="subsection-title">Os Anos de Chumbo</h2>
+                    <p>O romance de Lygia Fagundes Telles é um retrato fiel e sufocante do Brasil sob a Ditadura Militar (1964-1985), especificamente durante os "anos de chumbo", o período mais violento do regime, após o Ato Institucional Nº 5 (AI-5) de 1968. Este foi um tempo de censura prévia à imprensa e às artes, de perseguição política, de prisões arbitrárias, de tortura institucionalizada como método de interrogatório e de desaparecimentos forçados. A paranoia e o medo permeavam a sociedade, especialmente os meios universitários e intelectuais, onde a resistência se articulava. A narrativa de *As Meninas* capta essa atmosfera de claustrofobia, onde o perigo é onipresente, mas muitas vezes invisível, e o silêncio é uma forma de sobrevivência.</p>
+                </div>
+
+                <div class="reveal">
+                    <h2 class="subsection-title">Exclusão e o Espaço Urbano</h2>
+                    <p>João Cabral de Melo Neto, por sua vez, escreve em um contexto anterior, o do Brasil pós-guerra que iniciava um ciclo de industrialização e urbanização acelerada. No entanto, seu olhar se volta para a origem desse processo: o Nordeste agrário, estagnado e marcado pela miséria estrutural. *O Cão sem Plumas* denuncia a condição sub-humana da população que vive às margens do rio Capibaribe, em Recife. O poema expõe a ferida social de uma urbanização que não inclui, que apenas acentua a divisão entre a "cidade" oficial e a "cidade" dos mocambos, da lama, da fome. Ambas as obras, portanto, ainda que em contextos políticos distintos, utilizam o espaço urbano — o pensionato de freiras em São Paulo e as margens do rio em Recife — como palco para expor as fraturas e as violências, visíveis ou invisíveis, da sociedade brasileira.</p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- SEÇÃO 2: AS MENINAS -->
+        <section id="as-meninas" class="topic-section">
+            <div class="section-container">
+                <h1 class="section-title reveal">As Meninas: Polifonia do Abismo</h1>
+                <p class="section-intro reveal" style="transition-delay: 0.2s;">
+                    Publicado em 1973, em pleno auge da repressão, *As Meninas* é um dos mais corajosos e tecnicamente brilhantes romances sobre a ditadura militar. Lygia Fagundes Telles constrói um microcosmo da sociedade brasileira dentro de um pensionato de freiras em São Paulo, através do olhar de três jovens universitárias, cujas vidas se entrelaçam e colidem ao longo de um único dia.
+                </p>
+
+                <div class="reveal" style="transition-delay: 0.4s;">
+                    <h2 class="subsection-title">As Três Meninas: Lia, Lorena e Ana Clara</h2>
+                    <p>A genialidade da obra reside na construção de suas três protagonistas, cada uma representando uma faceta do Brasil da época. <strong>Lia (Raquel)</strong>, estudante de Ciências Sociais, é a militante política. Engajada na luta armada contra a ditadura, ela vive na clandestinidade, sob o peso da perseguição e da tortura sofrida por seu companheiro. Ela é a personificação da urgência, da ação e da resistência coletiva, mas também do medo e do trauma. Sua narrativa é fragmentada, marcada pela memória da violência e pela necessidade de se manter alerta.</p>
+                    <p><strong>Lorena</strong>, estudante de Letras, representa a elite alienada e decadente. Rica, virgem e viciada em pílulas, ela busca refúgio em um mundo de fantasias românticas, luxo e erudição. Seu universo é o da contemplação, da introspecção e da fuga da realidade brutal que a cerca. Ela se fecha em seu quarto, ouvindo música clássica e lendo poesia, tentando ignorar o "barulho" do mundo lá fora. Sua crise é existencial, uma busca por sentido em um mundo que lhe parece vazio.</p>
+                    <p><strong>Ana Clara</strong>, estudante de Psicologia, é talvez a personagem mais trágica. Vinda de uma família desestruturada, ela carrega as marcas de um abuso sexual na infância e busca no sexo e nas drogas uma forma de anestesiar sua dor. Ela representa o desajuste social, a marginalização e a autodestruição. Seu corpo é seu campo de batalha, e sua busca desesperada por amor e aceitação a leva a um caminho sem volta. Ela é o elo frágil, a ponte entre os mundos de Lia e Lorena, tocando tanto a miséria material quanto a espiritual.</p>
+                </div>
+
+                <div class="reveal">
+                    <h2 class="subsection-title">A Técnica Narrativa: Fluxo de Consciência</h2>
+                    <p>Para dar voz a essas três subjetividades tão distintas, Lygia utiliza com maestria o <strong>fluxo de consciência</strong> e o <strong>discurso indireto livre</strong>. O narrador em terceira pessoa mergulha profundamente na mente de cada personagem, fundindo seus pensamentos, memórias, sensações e percepções com a narração dos eventos externos. Não há uma fronteira clara entre o que é pensado e o que é dito, entre o passado e o presente. Essa técnica permite que o leitor experimente o mundo através da consciência de cada menina, sentindo a paranoia de Lia, a melancolia de Lorena e a angústia de Ana Clara de forma visceral e imediata.</p>
+                    <blockquote>
+                        <p>"As palavras vinham em farrapos, as lembranças vinham em farrapos, tudo em farrapos. Era preciso juntar os pedaços, um por um, e com eles refazer o quebra-cabeça da memória. Mas como, se as mãos tremiam tanto?"</p>
+                        <footer>— Exemplo do fluxo de consciência que reflete o estado mental de uma personagem.</footer>
+                    </blockquote>
+                    <p>Essa polifonia cria um painel complexo e multifacetado do Brasil. Como aponta a crítica Walnice Nogueira Galvão, o romance funciona como uma "caixa de ressonância" onde as tensões individuais ecoam as tensões coletivas do país, mostrando que o pessoal é, inescapavelmente, político.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEÇÃO 3: O CÃO SEM PLUMAS -->
+        <section id="cao-sem-plumas" class="topic-section">
+            <div class="section-container">
+                <h1 class="section-title reveal">O Cão sem Plumas: A Poética da Lama</h1>
+                <p class="section-intro reveal" style="transition-delay: 0.2s;">
+                    Escrito em 1950, *O Cão sem Plumas* é um poema longo e divisor de águas na obra de João Cabral de Melo Neto e na poesia brasileira. Nele, Cabral abandona o lirismo tradicional para construir uma linguagem "objetivista", precisa e quase mineral, com o objetivo de dissecar a realidade crua do rio Capibaribe e da população que vive em suas margens.
+                </p>
+
+                <div class="reveal" style="transition-delay: 0.4s;">
+                    <h2 class="subsection-title">A Metáfora Central: O Rio e o Cão</h2>
+                    <p>O poema é construído em torno de uma poderosa metáfora central: o rio Capibaribe é comparado a um cão. Mas não um cão qualquer. É um "cão sem plumas", uma imagem que evoca magreza, doença, sarna, uma vida despojada de qualquer adorno ou beleza. Esta ausência de "plumas" (que, no contexto, pode significar dignidade, vitalidade, ou mesmo a beleza da poesia tradicional) é a chave para entender a obra. O rio é descrito em sua materialidade mais abjeta: a lama, o lodo, os dejetos, a "espessura" de uma água que mal flui.</p>
+                    <p>Progressivamente, o poema revela que o rio e o homem que nele vive são indistinguíveis. O homem-caranguejo, que cata seu sustento na lama, se mimetiza com o rio. O cão, o rio e o homem formam uma trindade da miséria. A condição sub-humana daquela população é tão profunda que eles se tornam parte da paisagem desoladora. Como afirma o crítico Antonio Carlos Secchin, Cabral não embeleza a pobreza; ele a expõe com a precisão de um bisturi, forçando o leitor a encarar uma realidade que a sociedade prefere ignorar.</p>
+                    <blockquote>
+                        <p>Aquele rio<br>era como um cão sem plumas.<br>Nada sabia da chuva azul,<br>da fonte cor-de-rosa,<br>da água do copo de água,<br>da água de cântaro,<br>dos peixes de água,<br>da brisa na água.</p>
+                        <footer>— João Cabral de Melo Neto, *O Cão sem Plumas*</footer>
+                    </blockquote>
+                </div>
+
+                <div class="reveal">
+                    <h2 class="subsection-title">Estrutura e Linguagem: A Poesia do Engenheiro</h2>
+                    <p>O poema é dividido em quatro partes, seguindo um percurso geográfico e conceitual: "Paisagem do Capibaribe", "O Cão", "Fábula do Capibaribe" e "Discurso do Capibaribe". A linguagem de Cabral é deliberadamente anti-lírica. Ele busca o que chama de "poesia-coisa", evitando a subjetividade e o sentimentalismo. Utiliza versos curtos, ritmo quebrado, repetições e uma sintaxe rigorosa, como um engenheiro que constrói uma estrutura sólida e funcional. Flora Süssekind destaca esse "ascetismo verbal", onde cada palavra é pesada e escolhida por seu valor concreto e não por sua musicalidade.</p>
+                    <p>O resultado é uma poesia de impacto visual e intelectual. Cabral não nos diz para sentir pena; ele nos mostra, com uma clareza desconcertante, a "espessura" daquela vida. No final do poema, há um vislumbre de esperança, não uma esperança fácil, mas uma que nasce da própria lama: a força de trabalho e a teimosia da vida que insiste em brotar mesmo nas condições mais adversas, como uma "flor que se abre na lama".</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEÇÃO 4: ANÁLISE COMPARADA -->
+        <section id="analise" class="topic-section">
+            <div class="section-container">
+                <h1 class="section-title reveal">Diálogos e Contrastes</h1>
+                <p class="section-intro reveal" style="transition-delay: 0.2s;">
+                    Colocar Lygia Fagundes Telles e João Cabral de Melo Neto lado a lado é criar um diálogo poderoso entre duas formas distintas, mas complementares, de engajamento literário. Ambos expõem as feridas do Brasil, mas o fazem com ferramentas estilísticas radicalmente diferentes.
+                </p>
+
+                <div class="reveal" style="transition-delay: 0.4s;">
+                    <h2 class="subsection-title">Prosa Lírica vs. Poesia Objetivista</h2>
+                    <p>A principal diferença reside no estilo. Lygia opera no campo da <strong>prosa lírica e psicológica</strong>. Seu interesse está na "espessura" da subjetividade, no mundo interior de suas personagens. Ela usa o fluxo de consciência para explorar as nuances da alma, as contradições, os medos e os desejos. A realidade externa é filtrada e refratada pela percepção de Lia, Lorena e Ana Clara. A denúncia política em *As Meninas* é potente justamente porque é mostrada através do impacto que a repressão tem na vida íntima e concreta das pessoas.</p>
+                    <p>Cabral, em contraste, é o mestre da <strong>poesia objetivista</strong>. Ele desconfia do "eu" lírico e busca uma linguagem que se aproxime da precisão da arquitetura ou da geografia. Ele não mergulha na psicologia do homem do Capibaribe; ele o descreve de fora, como um elemento da paisagem, para mostrar como o meio o molda e o desumaniza. Sua crítica não vem da empatia sentimental, mas da constatação brutal e objetiva da realidade. Como aponta Leyla Perrone-Moisés, para Cabral, o compromisso do poeta é com a verdade da forma e da matéria, não com o derramamento de emoções.</p>
+                </div>
+
+                <div class="reveal">
+                    <h2 class="subsection-title">A Crítica da Exclusão</h2>
+                    <p>Apesar das diferenças, o ponto de convergência é a crítica contundente à exclusão social. Em *As Meninas*, a exclusão é política e existencial. Lia é excluída pela perseguição do regime; Ana Clara, pela sua condição social e traumas; Lorena, por sua própria incapacidade de se conectar com a realidade. O pensionato, que deveria ser um lugar de acolhimento, torna-se uma prisão simbólica. Em *O Cão sem Plumas*, a exclusão é total e material. O homem-cão é excluído da própria condição humana, negado em sua dignidade mais básica, vivendo em simbiose com a lama e os dejetos. Ambas as obras mostram um Brasil que marginaliza e descarta seus filhos, seja pela violência do Estado, seja pela indiferença da estrutura social. Ler Lygia e Cabral em conjunto é, portanto, ter uma visão panorâmica e profunda das múltiplas formas de violência que constituem a história do Brasil.</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+    
+    <footer>
+        <p>Página educacional desenvolvida como uma ferramenta de aprendizado. Design e conteúdo por L2.</p>
+    </footer>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // --- LÓGICA DE CARREGAMENTO ---
+        var loadingOverlay = document.querySelector('.loading-overlay');
+        var mainContent = document.getElementById('main-content');
+        var logoLetters = document.querySelectorAll('.loading-logo span');
+        for (var i = 0; i < logoLetters.length; i++) {
+            logoLetters[i].style.animationDelay = (i * 0.1) + 's';
+        }
+        function hideOverlay(){
+            if (!loadingOverlay) return;
+            loadingOverlay.classList.add('hidden');
+            if (mainContent) mainContent.classList.add('loaded');
+            var removed = false;
+            var cleanup = function(){
+                if (removed) return; removed = true;
+                if (loadingOverlay && loadingOverlay.parentNode) loadingOverlay.parentNode.removeChild(loadingOverlay);
+            };
+            loadingOverlay.addEventListener('transitionend', cleanup, { once: true });
+            setTimeout(cleanup, 1200);
+        }
+        if (loadingOverlay) {
+            loadingOverlay.style.display = 'flex';
+            setTimeout(hideOverlay, 2500);
+        }
+
+        // --- LÓGICA DE NAVEGAÇÃO DINÂMICA (V8 REFINADA) ---
+        const nav = document.querySelector('.main-nav');
+        const navLinks = document.querySelectorAll('.nav-link');
+        const sections = document.querySelectorAll('.topic-section');
+        const bubble = document.querySelector('.progress-bubble');
+        let lastScrollY = window.scrollY || window.pageYOffset || 0;
+        // REFINAMENTO: Adicionado um limiar para evitar ativação em scrolls pequenos
+        const scrollThreshold = 10; 
+        let isNavVisible = true;
+
+        window.addEventListener('scroll', () => {
+            if (window.innerWidth <= 1023) {
+                const scrollDown = window.scrollY > lastScrollY;
+                const scrollUp = window.scrollY < lastScrollY;
+                
+                if (scrollDown && window.scrollY > nav.offsetHeight) {
+                    if (isNavVisible) {
+                        nav.classList.remove('nav-visible');
+                        isNavVisible = false;
+                    }
+                } else if (scrollUp) {
+                    if (!isNavVisible) {
+                        nav.classList.add('nav-visible');
+                        isNavVisible = true;
+                    }
+                }
+            }
+            lastScrollY = window.scrollY;
+            // sincroniza a bolha com a visibilidade do menu
+            syncBubbleWithNavVisibility();
+        }, { passive: true });
+
+        // ===== Seção ativa robusta + progresso global =====
+        function computeActiveLink() {
+            const viewportMid = window.scrollY + window.innerHeight * 0.45;
+            let currentSection = sections[0] || null;
+            let bestDelta = Infinity;
+            sections.forEach(sec => {
+                const rect = sec.getBoundingClientRect();
+                const secMid = window.scrollY + rect.top + rect.height / 2;
+                const delta = Math.abs(secMid - viewportMid);
+                if (delta < bestDelta) { bestDelta = delta; currentSection = sec; }
+            });
+            const currentId = currentSection ? currentSection.id : '';
+            // Progresso dentro da seção ativa (0..1)
+            let sectionProgress = 0;
+            if (currentSection) {
+                const rect = currentSection.getBoundingClientRect();
+                const secTop = window.scrollY + rect.top;
+                const secHeight = Math.max(1, rect.height);
+                sectionProgress = Math.max(0, Math.min(1, (viewportMid - secTop) / secHeight));
+            }
+            const deg = (sectionProgress * 360).toFixed(2) + 'deg';
+            navLinks.forEach(link => {
+                const isActive = link.getAttribute('href') === `#${currentId}`;
+                link.classList.toggle('active', isActive);
+                if (isActive) link.style.setProperty('--progress', deg);
+            });
+        }
+
+        function updateGlobalProgress() {
+            const max = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+            const pct = Math.max(0, Math.min(1, window.scrollY / max));
+            const deg = (pct * 360).toFixed(2) + 'deg';
+            if (bubble) bubble.style.setProperty('--bubble-progress', deg);
+        }
+
+        function syncBubbleWithNavVisibility() {
+            if (!bubble) return;
+            const visible = nav.classList.contains('nav-visible');
+            bubble.classList.toggle('merge', visible);
+        }
+
+        function throttle(fn, delay) {
+            let last = 0, raf = null;
+            return (...args) => {
+                const now = performance.now();
+                const invoke = () => { last = now; raf = null; fn(...args); };
+                if (now - last >= delay) { invoke(); }
+                else if (!raf) { raf = requestAnimationFrame(invoke); }
+            };
+        }
+
+        const onScroll = throttle(() => { computeActiveLink(); updateGlobalProgress(); }, 80);
+        const onResize = throttle(() => { computeActiveLink(); updateGlobalProgress(); }, 120);
+        window.addEventListener('scroll', onScroll, { passive: true });
+        window.addEventListener('resize', onResize);
+        computeActiveLink();
+        updateGlobalProgress();
+        syncBubbleWithNavVisibility();
+
+        // --- ANIMAÇÃO DE SCROLL-REVEAL ---
+        const revealElements = document.querySelectorAll('.reveal');
+        const revealObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { root: null, rootMargin: '0px 0px -100px 0px', threshold: 0.1 });
+
+        revealElements.forEach(el => revealObserver.observe(el));
+    });
+    </script>
+</body>
+</html>

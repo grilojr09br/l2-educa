@@ -1,0 +1,1509 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tabela Periódica — Liquid Glass v3 (DEMO)</title>
+  <style>
+    :root {
+      --size: 72px;
+      --gap: 8px;
+
+      --bg: radial-gradient(1200px 800px at 20% 10%, #0b1020, transparent 60%),
+            radial-gradient(1200px 800px at 90% 80%, #1b2540, transparent 60%),
+            linear-gradient(180deg, #0b0f1a, #0c1220);
+
+      /* Paleta por categoria */
+      --cat-alkali: #ff6b6b;
+      --cat-alkaline: #ffa94d;
+      --cat-transition: #74c0fc;
+      --cat-post: #b197fc;
+      --cat-metalloid: #ffd166;
+      --cat-nonmetal: #6edc7f;
+      --cat-halogen: #f9c74f;
+      --cat-noble: #90caf9;
+      --cat-lanth: #94f2c0;
+      --cat-actinide: #ff99c8;
+
+      --glass: rgba(255,255,255,0.08);
+      --glass-strong: rgba(255,255,255,0.14);
+      --stroke: rgba(255,255,255,0.25);
+      --stroke-soft: rgba(255,255,255,0.12);
+
+      --text: #e6edf3;
+      --muted: #a9b6c6;
+      --muted-2: #7e8aa3;
+
+      --heat-low: #192c5a;   /* EN/Raio baixo */
+      --heat-mid: #3c83c9;   /* intermediário */
+      --heat-high: #f05d5e;  /* alto */
+
+      --legend-bg: linear-gradient(90deg, var(--heat-low), var(--heat-mid), var(--heat-high));
+
+      /* Intensidades do vidro ajustáveis */
+      --glass-top: 0.10;
+      --glass-bottom: 0.02;
+      --glass-caustic: 0.22;
+      --glass-diffract: 0.08;
+      --glass-contrast: 1.08;
+      --glass-noise: 0.05; /* intensidade de granulação sutil */
+
+      /* Glow (aparência) */
+      --glow-range: 220; /* px */
+      --glow-strength: 0.95; /* 0..1 */
+      --glow-opacity: 1; /* 0..1 */
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      color: var(--text);
+      background: var(--bg);
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    .app {
+      max-width: 1400px;
+      margin: 24px auto 64px auto;
+      padding: 0 16px 32px 16px;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(8px) saturate(1.2);
+      -webkit-backdrop-filter: blur(8px) saturate(1.2);
+      background: linear-gradient(180deg, rgba(12,18,32,0.75), rgba(12,18,32,0.35));
+      border-bottom: 1px solid var(--stroke-soft);
+      padding: 12px 8px;
+      margin: 0 -16px 16px -16px;
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 12px;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .controls .left,
+    .controls .right { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+
+    select, input[type="text"], button, label.file-label {
+      background: rgba(255,255,255,0.06);
+      color: var(--text);
+      border: 1px solid var(--stroke-soft);
+      border-radius: 10px;
+      padding: 8px 10px;
+      font-size: 14px;
+      outline: none;
+    }
+    select:hover, input[type="text"]:hover, button:hover, label.file-label:hover {
+      background: rgba(255,255,255,0.1);
+      border-color: var(--stroke);
+    }
+    button.primary { background: rgba(144,202,249,0.15); border-color: rgba(144,202,249,0.35); }
+    button.primary:hover { background: rgba(144,202,249,0.25); }
+
+    .headline {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      margin: 12px 0 16px 0;
+    }
+    .headline h1 { font-size: 22px; margin: 0; font-weight: 650; letter-spacing: 0.2px; }
+    .headline .tag { font-size: 12px; padding: 2px 8px; border: 1px solid var(--stroke-soft); border-radius: 999px; color: var(--muted); }
+
+    .board-wrap {
+      position: relative;
+    }
+
+    .groups {
+      display: grid;
+      grid-template-columns: repeat(18, minmax(0, 1fr));
+      gap: var(--gap);
+      width: calc(18 * var(--size) + 17 * var(--gap));
+      max-width: 100%;
+      overflow-x: auto;
+      padding-bottom: 8px;
+    }
+
+    .row-labels, .col-labels {
+      color: var(--muted);
+      font-size: 12px;
+      user-select: none;
+    }
+    .col-labels { display: grid; grid-template-columns: repeat(18, minmax(0, 1fr)); gap: var(--gap); margin-bottom: 6px; }
+    .col-labels span { text-align: center; opacity: 0.9; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(18, var(--size));
+      grid-auto-rows: var(--size);
+      gap: var(--gap);
+      position: relative;
+      width: calc(18 * var(--size) + 17 * var(--gap));
+      max-width: 100%;
+    }
+
+    .tile {
+      position: relative;
+      width: var(--size);
+      height: var(--size);
+      border-radius: 12px;
+      /* vidro: mais nítido e translúcido com leve difração */
+      background:
+        /* caustic highlight */
+        radial-gradient(120px 80px at 18% 10%, rgba(255,255,255,var(--glass-caustic)), transparent 70%),
+        /* difração sutil (arco-íris muito discreto) */
+        conic-gradient(from 210deg at 20% 8%, rgba(255,0,102,var(--glass-diffract)), rgba(255,230,0,var(--glass-diffract)), rgba(0,255,204,var(--glass-diffract)), rgba(0,153,255,var(--glass-diffract)), rgba(255,0,102,var(--glass-diffract))),
+        /* vidro base mais translúcido */
+        linear-gradient(180deg, rgba(255,255,255,var(--glass-top)), rgba(255,255,255,var(--glass-bottom)));
+      background-blend-mode: screen, soft-light, normal;
+      backdrop-filter: blur(12px) saturate(1.35) contrast(var(--glass-contrast));
+      -webkit-backdrop-filter: blur(12px) saturate(1.35) contrast(var(--glass-contrast));
+      border: 1px solid var(--stroke-soft);
+      overflow: hidden;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.035), 0 8px 22px rgba(0,0,0,0.28);
+      transition: transform 140ms ease, border-color 140ms ease, box-shadow 140ms ease, background 140ms ease;
+      outline: none;
+    }
+    .tile.selected { box-shadow: inset 0 0 0 1px rgba(255,255,255,0.15), 0 10px 24px rgba(0,0,0,0.32); border-color: var(--stroke); }
+    .tile.is-dim { opacity: 0.35; filter: saturate(0.7) contrast(0.9); }
+    .tile:focus-visible { box-shadow: 0 0 0 2px rgba(144,202,249,0.6), 0 8px 20px rgba(0,0,0,0.25); }
+    .tile:hover { transform: translateY(-1px) scale(1.01); }
+
+    /* Fita de cor (categoria) */
+    .tile .ribbon {
+      position: absolute;
+      inset: 0 0 auto 0;
+      height: 6px;
+      background: var(--cat-color, transparent);
+      opacity: 0.9;
+    }
+
+    /* Tinta sutil por categoria */
+    .tile .tint {
+      position: absolute;
+      inset: 0;
+      background: color-mix(in oklab, var(--cat-color) 20%, transparent);
+      opacity: 0.5;
+      pointer-events: none;
+    }
+
+    /* Vidro (camada de brilho adicional e reflexos) */
+    .tile::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        /* brilho especular deslizante */
+        linear-gradient( to bottom right, rgba(255,255,255,0.08), transparent 42% ),
+        /* véu do vidro */
+        linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.025) 60%, rgba(255,255,255,0.04) 100%),
+        /* granulação sutil aprox. */
+        repeating-linear-gradient(45deg,
+          rgba(255,255,255,0.0) 0px,
+          rgba(255,255,255,var(--glass-noise)) 1px,
+          rgba(255,255,255,0.0) 2px,
+          rgba(0,0,0,calc(var(--glass-noise) * 0.5)) 3px,
+          rgba(255,255,255,0.0) 4px
+        );
+      mix-blend-mode: screen;
+      pointer-events: none;
+    }
+
+    /* Glow de proximidade apenas nas bordas (anel) */
+    .tile::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 12px;
+      /* halo suave dentro do tile, controlado por --glow-color e posição local do mouse */
+      background: radial-gradient(220px 220px at var(--lx, 0px) var(--ly, 0px), var(--glow-color, rgba(0,0,0,0)) 0%, rgba(0,0,0,0) 60%);
+      filter: blur(10px);
+      opacity: calc(0.35 + var(--hover, 0) * 0.65);
+      pointer-events: none;
+      transition: background-position 50ms linear, opacity 120ms ease;
+      mix-blend-mode: screen;
+    }
+
+    /* Mostrar glow apenas no contorno quando 'border-only' estiver no body */
+    body.border-only .tile::after {
+      padding: 2px;
+      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+              mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      -webkit-mask-composite: xor;
+              mask-composite: exclude;
+    }
+
+    .tile .z { position: absolute; top: 8px; left: 10px; font-size: 12px; color: var(--muted); }
+    .tile .sym { position: absolute; top: 20px; left: 10px; font-weight: 700; font-size: 24px; letter-spacing: 0.2px; }
+    .tile .name { position: absolute; bottom: 8px; left: 10px; font-size: 12px; color: var(--muted-2); }
+    .tile .val { position: absolute; bottom: 8px; right: 10px; font-size: 12px; color: var(--muted); }
+
+    .legend { display: flex; align-items: center; gap: 10px; margin: 14px 0 4px 0; }
+    .legend .bar { width: 240px; height: 10px; border-radius: 999px; background: var(--legend-bg); border: 1px solid var(--stroke-soft); box-shadow: inset 0 0 0 1px rgba(0,0,0,0.2); }
+    .legend .labels { display: flex; justify-content: space-between; width: 240px; font-size: 12px; color: var(--muted); }
+    .legend .cat-legend { display: flex; gap: 8px; flex-wrap: wrap; }
+    .legend .pill { display: inline-flex; align-items: center; gap: 6px; padding: 4px 8px; border: 1px solid var(--stroke-soft); border-radius: 999px; font-size: 12px; color: var(--muted); background: rgba(255,255,255,0.06); }
+    .legend .dot { width: 10px; height: 10px; border-radius: 999px; }
+
+    .arrows { position: relative; height: 0; }
+    .arrow { position: absolute; color: var(--muted); font-size: 12px; opacity: 0.9; }
+    .arrow.en-right { top: -8px; right: 0; }
+    .arrow.en-up { top: -28px; right: 0; }
+    .arrow.r-left { top: -8px; left: 0; }
+    .arrow.r-down { top: 12px; left: 0; }
+
+    .lnac-wrap { margin-top: 10px; display: grid; gap: var(--gap); }
+    .series-label { font-size: 12px; color: var(--muted); margin: 2px 0 4px 2px; }
+    .series { display: grid; grid-template-columns: repeat(15, var(--size)); gap: var(--gap); }
+
+    .ghost { opacity: 0.7; color: var(--muted); font-weight: 600; display: flex; align-items: center; justify-content: center; }
+
+    .drawer {
+      position: fixed;
+      left: 0; right: 0; bottom: -420px;
+      background: linear-gradient(180deg, rgba(16,24,42,0.95), rgba(12,18,32,0.95));
+      backdrop-filter: blur(10px) saturate(1.2);
+      -webkit-backdrop-filter: blur(10px) saturate(1.2);
+      border-top: 1px solid var(--stroke);
+      box-shadow: 0 -20px 40px rgba(0,0,0,0.35);
+      transition: bottom 220ms ease;
+      z-index: 60;
+    }
+    .drawer.open { bottom: 0; }
+    .drawer .content { max-width: 980px; margin: 0 auto; padding: 16px; }
+    .drawer .row { display: grid; grid-template-columns: 1fr 2fr; gap: 16px; align-items: start; }
+    .drawer h3 { margin: 6px 0 8px 0; font-size: 16px; letter-spacing: 0.2px; }
+    .drawer .close { position: absolute; right: 12px; top: 8px; }
+    .kv { display: grid; grid-template-columns: 160px 1fr; row-gap: 6px; column-gap: 12px; }
+    .kv .k { color: var(--muted); }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+    .summary { margin-top: 12px; color: var(--muted); font-size: 13px; line-height: 1.5; }
+
+    .list-panel { margin-top: 18px; border: 1px solid var(--stroke-soft); border-radius: 12px; overflow: hidden; display: none; }
+    .list-panel.visible { display: block; }
+    table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    thead { background: rgba(255,255,255,0.06); }
+    th, td { padding: 10px 12px; border-bottom: 1px solid var(--stroke-soft); }
+    tbody tr:hover { background: rgba(255,255,255,0.04); }
+
+    /* Modal de comparação */
+    .modal {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+      display: none; align-items: center; justify-content: center; z-index: 70;
+    }
+    .modal.open { display: flex; }
+    .modal .box { width: min(1000px, 96vw); max-height: 80vh; overflow: auto; border:1px solid var(--stroke); border-radius:12px; background: linear-gradient(180deg, rgba(16,24,42,0.95), rgba(12,18,32,0.95)); padding: 16px; }
+    .modal .box h3 { margin: 0 0 8px 0; }
+    .modal .close { float: right; }
+
+    @media (max-width: 1200px) {
+      :root { --size: 64px; }
+    }
+
+    /* Painéis adicionais */
+    .panel { margin-top: 10px; padding: 12px; border: 1px solid var(--stroke-soft); border-radius: 12px; background: rgba(255,255,255,0.06); display: none; }
+    .panel.visible { display: block; }
+    .panel .row { display: flex; flex-wrap: wrap; gap: 12px 16px; align-items: center; }
+    .panel h4 { margin: 2px 0 8px 0; font-size: 14px; color: var(--muted); font-weight: 600; }
+
+    .chips { display:flex; flex-wrap:wrap; gap:6px; }
+    .chip { display:inline-flex; gap:6px; align-items:center; padding:4px 8px; border:1px solid var(--stroke-soft); border-radius:999px; background: rgba(255,255,255,0.06); font-size:12px; }
+    .chip button { border:none; background:transparent; color:var(--muted); cursor:pointer; }
+
+    .selection-bar { display:none; align-items:center; justify-content:space-between; gap:12px; margin-top:10px; padding:10px; border:1px solid var(--stroke-soft); border-radius:12px; background: rgba(255,255,255,0.06); }
+    .selection-bar.visible { display:flex; }
+    .selection-bar .left { display:flex; align-items:center; gap:10px; }
+
+    .overlay { pointer-events:none; position:relative; margin-top:6px; }
+    .overlay .label { position:absolute; font-size:12px; color:var(--muted); opacity:0.9; }
+    .overlay .block { position:absolute; border-radius:8px; background: rgba(255,255,255,0.04); border: 1px dashed var(--stroke-soft); }
+
+    /* Sliders */
+    input[type="range"] { width: 160px; }
+
+    /* Tema claro */
+    body.light {
+      --text:#101622; --muted:#3a4a62; --muted-2:#5a6b85;
+      --stroke: rgba(10,20,40,0.25); --stroke-soft: rgba(10,20,40,0.12);
+      --bg: linear-gradient(180deg,#f2f6fb,#e8eef7);
+    }
+    @media (max-width: 980px) {
+      :root { --size: 56px; }
+      .tile .sym { font-size: 20px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="topbar">
+      <div class="controls">
+        <div class="left">
+          <div class="headline">
+            <h1>Tabela Periódica</h1>
+            <span class="tag">Liquid Glass v3 · DEMO</span>
+          </div>
+          <label>
+            Visualização
+            <select id="vizSelect" title="Escolha a visualização">
+              <option value="en">Eletronegatividade (Pauling)</option>
+              <option value="radius">Raio covalente (pm)</option>
+              <option value="cat">Categorias</option>
+              <option value="mass">Massa atômica (u)</option>
+              <option value="density">Densidade (g/cm³)</option>
+              <option value="mpK">Ponto de fusão (K)</option>
+              <option value="bpK">Ponto de ebulição (K)</option>
+              <option value="ionization1">Energia de ionização 1ª (kJ/mol)</option>
+              <option value="electronAffinity">Afinidade eletrônica (kJ/mol)</option>
+              <option value="radiusAtomic">Raio atômico (pm)</option>
+              <option value="radiusVdw">Raio de van der Waals (pm)</option>
+              <option value="condElectric">Condutividade elétrica (S/m)</option>
+              <option value="condThermal">Condutividade térmica (W/m·K)</option>
+            </select>
+          </label>
+          <label>
+            Dados
+            <select id="dataMode" title="Escolha o modo de dados">
+              <option value="real">Reais (DEMO)</option>
+              <option value="full">Oficial (EXT)</option>
+              <option value="trend">Tendência</option>
+            </select>
+          </label>
+          <label>
+            Escala
+            <select id="scaleSelect" title="Escala de cor">
+              <option value="lin">Linear</option>
+              <option value="log">Log</option>
+            </select>
+          </label>
+          <label>
+            Normalização
+            <select id="normSelect" title="Escopo da normalização">
+              <option value="global">Global</option>
+              <option value="period">Por período</option>
+            </select>
+          </label>
+        </div>
+        <div class="right">
+          <input id="search" type="text" placeholder="Buscar por símbolo ou nome…" />
+          <button id="clearBtn" title="Limpar busca">Limpar</button>
+          <button id="toggleList" class="primary" title="Mostrar/ocultar lista">Lista</button>
+          <input id="fileInput" type="file" accept=".csv,.json" style="display:none" />
+          <label for="fileInput" class="file-label" title="Importar CSV/JSON">Importar CSV/JSON</label>
+          <button id="loadOfficial" class="primary" title="Carregar dados oficiais (online)">Dados oficiais</button>
+          <button id="settingsBtn" title="Aparência e preferências">Aparência</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="legend" id="legend"></div>
+
+    <div class="board-wrap">
+      <div class="col-labels row-labels" id="groupLabels"></div>
+      <div class="grid" id="grid"></div>
+      <div class="arrows">
+        <div class="arrow en-right">EN aumenta →</div>
+        <div class="arrow en-up">EN aumenta ↑</div>
+        <div class="arrow r-left">Raio aumenta ←</div>
+        <div class="arrow r-down">Raio aumenta ↓</div>
+      </div>
+    </div>
+
+    <div class="lnac-wrap">
+      <div>
+        <div class="series-label">Lantanídeos</div>
+        <div class="series" id="lanth"></div>
+      </div>
+      <div>
+        <div class="series-label">Actinídeos</div>
+        <div class="series" id="actin"></div>
+      </div>
+    </div>
+
+    <div class="list-panel" id="listPanel">
+      <table>
+        <thead>
+          <tr>
+            <th>Z</th>
+            <th>Símbolo</th>
+            <th>Nome</th>
+            <th>Categoria</th>
+            <th>EN (Pauling)</th>
+            <th>Raio covalente (pm)</th>
+          </tr>
+        </thead>
+        <tbody id="listBody"></tbody>
+      </table>
+    </div>
+
+    <!-- Painel Aparência/Preferências -->
+    <div class="panel" id="appearancePanel">
+      <h4>Aparência</h4>
+      <div class="row">
+        <label>Alcance do glow <input id="glowRange" type="range" min="80" max="400" step="5" /></label>
+        <label>Intensidade <input id="glowStrength" type="range" min="0" max="1" step="0.01" /></label>
+        <label>Transparência do vidro <input id="glassTop" type="range" min="0" max="0.2" step="0.005" /></label>
+        <label><input id="borderOnly" type="checkbox" /> Glow só nas bordas</label>
+        <label><input id="toggleTheme" type="checkbox" /> Tema claro</label>
+      </div>
+    </div>
+
+    <!-- Painel de filtros avançados -->
+    <div class="panel" id="filtersPanel">
+      <h4>Filtros avançados</h4>
+      <div class="row">
+        <label>Categoria
+          <select id="fCat">
+            <option value="">Todas</option>
+            <option value="alkali">Alcalinos</option>
+            <option value="alkaline">Alcalino-terrosos</option>
+            <option value="transition">Transição</option>
+            <option value="post">Pós-transição</option>
+            <option value="metalloid">Semimetais</option>
+            <option value="nonmetal">Não-metais</option>
+            <option value="halogen">Halogênios</option>
+            <option value="noble">Gases nobres</option>
+            <option value="lanth">Lantanídeos</option>
+            <option value="actinide">Actinídeos</option>
+          </select>
+        </label>
+        <label>Período
+          <select id="fPeriod">
+            <option value="">Todos</option>
+            <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option>
+          </select>
+        </label>
+        <label>Grupo
+          <select id="fGroup">
+            <option value="">Todos</option>
+            <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option><option>11</option><option>12</option><option>13</option><option>14</option><option>15</option><option>16</option><option>17</option><option>18</option>
+          </select>
+        </label>
+        <label>EN min <input id="fENmin" type="number" step="0.01" style="width:80px" /></label>
+        <label>EN max <input id="fENmax" type="number" step="0.01" style="width:80px" /></label>
+        <button id="filtersToggle" class="primary">Aplicar/limpar</button>
+      </div>
+      <div class="chips" id="chips"></div>
+    </div>
+
+    <div class="selection-bar" id="selectionBar">
+      <div class="left"><span id="selCount">0 selecionado(s)</span>
+        <button id="compareBtn" class="primary">Comparar</button>
+      </div>
+      <div>
+        <button id="exportSelection">Exportar seleção (CSV)</button>
+        <button id="clearSelection">Limpar seleção</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="drawer" id="drawer" role="dialog" aria-modal="true" aria-label="Detalhes do elemento">
+    <button class="close" id="drawerClose">Fechar</button>
+    <div class="content">
+      <div class="row">
+        <div>
+          <div class="tile" style="width:120px;height:120px;border-radius:16px" id="previewTile" aria-hidden="true">
+            <div class="ribbon"></div>
+            <div class="tint"></div>
+            <div class="z mono" style="top:10px;left:12px"></div>
+            <div class="sym" style="top:34px;left:12px;font-size:42px"></div>
+            <div class="name" style="bottom:12px;left:12px"></div>
+            <div class="val" style="bottom:12px;right:12px"></div>
+          </div>
+        </div>
+        <div>
+          <h3 id="dTitle">Elemento</h3>
+            <div class="kv">
+              <div class="k">Símbolo</div><div id="dSym" class="mono"></div>
+              <div class="k">Nome</div><div id="dName"></div>
+              <div class="k">Z</div><div id="dZ" class="mono"></div>
+              <div class="k">Período</div><div id="dPeriod"></div>
+              <div class="k">Grupo</div><div id="dGroup"></div>
+              <div class="k">Categoria</div><div id="dCat"></div>
+              <div class="k">Massa atômica</div><div id="dMass"></div>
+              <div class="k">Densidade</div><div id="dDensity"></div>
+              <div class="k">Fusão (K)</div><div id="dMP"></div>
+              <div class="k">Ebulição (K)</div><div id="dBP"></div>
+              <div class="k">Ionização 1ª</div><div id="dIon"></div>
+              <div class="k">Afinidade eletrônica</div><div id="dEA"></div>
+              <div class="k">Raio atômico</div><div id="dRAtomic"></div>
+              <div class="k">Raio de van der Waals</div><div id="dRVdw"></div>
+              <div class="k">Cond. elétrica</div><div id="dCondE"></div>
+              <div class="k">Cond. térmica</div><div id="dCondT"></div>
+              <div class="k">Estados de oxidação</div><div id="dOx"></div>
+              <div class="k">Config. eletrônica</div><div id="dECfg" class="mono"></div>
+              <div class="k">Estado (298 K)</div><div id="dState"></div>
+              <div class="k">Descoberta</div><div id="dDisc"></div>
+              <div class="k">CAS</div><div id="dCAS"></div>
+              <div class="k">Eletronegatividade</div><div id="dEN"></div>
+              <div class="k">Raio covalente</div><div id="dRadius"></div>
+            </div>
+            <div id="dSummary" class="summary"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+    <!-- Modal de comparação -->
+    <div class="modal" id="compareModal" role="dialog" aria-modal="true" aria-label="Comparar elementos">
+      <div class="box">
+        <button class="close" id="compareClose">Fechar</button>
+        <h3>Comparação</h3>
+        <div style="margin-bottom:8px; color: var(--muted); font-size: 13px;">Colunas: propriedade atual + EN + Raio (se disponíveis)</div>
+        <table>
+          <thead><tr id="cmpHead"></tr></thead>
+          <tbody id="cmpBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+  <script>
+  ;(() => {
+    // ======== Dados de layout (símbolos nos grupos 1–18) ========
+    const MAIN_LAYOUT = [
+      // Período 1
+      ["H", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "He"],
+      // Período 2
+      ["Li", "Be", "", "", "", "", "", "", "B", "C", "N", "O", "F", "Ne", "", "", "", ""],
+      // Período 3
+      ["Na", "Mg", "", "", "", "", "", "", "Al", "Si", "P", "S", "Cl", "Ar", "", "", "", ""],
+      // Período 4
+      ["K", "Ca", "Sc", "Ti", "V", "Cr", "Mn", "Fe", "Co", "Ni", "Cu", "Zn", "Ga", "Ge", "As", "Se", "Br", "Kr"],
+      // Período 5
+      ["Rb", "Sr", "Y", "Zr", "Nb", "Mo", "Tc", "Ru", "Rh", "Pd", "Ag", "Cd", "In", "Sn", "Sb", "Te", "I", "Xe"],
+      // Período 6 (grupo 3 é Lantanídeo)
+      ["Cs", "Ba", "", "Hf", "Ta", "W", "Re", "Os", "Ir", "Pt", "Au", "Hg", "Tl", "Pb", "Bi", "Po", "At", "Rn"],
+      // Período 7 (grupo 3 é Actinídeo)
+      ["Fr", "Ra", "", "Rf", "Db", "Sg", "Bh", "Hs", "Mt", "Ds", "Rg", "Cn", "Nh", "Fl", "Mc", "Lv", "Ts", "Og"],
+    ];
+
+    const LANTH_SERIES = [
+      "La","Ce","Pr","Nd","Pm","Sm","Eu","Gd","Tb","Dy","Ho","Er","Tm","Yb","Lu"
+    ];
+    const ACTIN_SERIES = [
+      "Ac","Th","Pa","U","Np","Pu","Am","Cm","Bk","Cf","Es","Fm","Md","No","Lr"
+    ];
+
+    // ======== Nome dos elementos (pt-BR) ========
+    const NAMES = {
+      H:"Hidrogênio", He:"Hélio", Li:"Lítio", Be:"Berílio", B:"Boro", C:"Carbono", N:"Nitrogênio", O:"Oxigênio", F:"Flúor", Ne:"Neônio",
+      Na:"Sódio", Mg:"Magnésio", Al:"Alumínio", Si:"Silício", P:"Fósforo", S:"Enxofre", Cl:"Cloro", Ar:"Argônio",
+      K:"Potássio", Ca:"Cálcio", Sc:"Escândio", Ti:"Titânio", V:"Vanádio", Cr:"Crômio", Mn:"Manganês", Fe:"Ferro", Co:"Cobalto", Ni:"Níquel", Cu:"Cobre", Zn:"Zinco", Ga:"Gálio", Ge:"Germânio", As:"Arsênio", Se:"Selênio", Br:"Bromo", Kr:"Criptônio",
+      Rb:"Rubídio", Sr:"Estrôncio", Y:"Ítrio", Zr:"Zircônio", Nb:"Nióbio", Mo:"Molibdênio", Tc:"Tecnécio", Ru:"Rutênio", Rh:"Ródio", Pd:"Paládio", Ag:"Prata", Cd:"Cádmio", In:"Índio", Sn:"Estanho", Sb:"Antimônio", Te:"Telúrio", I:"Iodo", Xe:"Xenônio",
+      Cs:"Césio", Ba:"Bário", La:"Lantânio", Ce:"Cério", Pr:"Praseodímio", Nd:"Neodímio", Pm:"Promécio", Sm:"Samário", Eu:"Európio", Gd:"Gadolínio", Tb:"Térbio", Dy:"Disprósio", Ho:"Hólmio", Er:"Érbio", Tm:"Túlio", Yb:"Itérbio", Lu:"Lutécio",
+      Hf:"Háfnio", Ta:"Tântalo", W:"Tungstênio", Re:"Rênio", Os:"Ósmio", Ir:"Irídio", Pt:"Platina", Au:"Ouro", Hg:"Mercúrio", Tl:"Tálio", Pb:"Chumbo", Bi:"Bismuto", Po:"Polônio", At:"Astato", Rn:"Radônio",
+      Fr:"Frâncio", Ra:"Rádio", Ac:"Actínio", Th:"Tório", Pa:"Protactínio", U:"Urânio", Np:"Neptúnio", Pu:"Plutônio", Am:"Amerício", Cm:"Cúrio", Bk:"Berquélio", Cf:"Califórnio", Es:"Einstênio", Fm:"Férmio", Md:"Mendelévio", No:"Nobélio", Lr:"Laurêncio",
+      Rf:"Rutherfórdio", Db:"Dúbnio", Sg:"Seabórgio", Bh:"Bóhrio", Hs:"Hássio", Mt:"Meitnério", Ds:"Darmstádio", Rg:"Roentgênio", Cn:"Copernício", Nh:"Nihônio", Fl:"Fleróvio", Mc:"Moscóvio", Lv:"Livermório", Ts:"Tenessino", Og:"Oganessônio"
+    };
+
+    // ======== Categorias (heurística) ========
+    function inferCategory(sym, period, group) {
+      if (LANTH_SERIES.includes(sym)) return 'lanth';
+      if (ACTIN_SERIES.includes(sym)) return 'actinide';
+      if (group === 18) return 'noble';
+      if (group === 17) return 'halogen';
+      if (group === 1 && sym !== 'H') return 'alkali';
+      if (group === 2) return 'alkaline';
+      // Metaloides conhecidos
+      const metalloids = new Set(['B','Si','Ge','As','Sb','Te','Po']);
+      if (metalloids.has(sym)) return 'metalloid';
+      // Não-metais (comuns)
+      const nonmetals = new Set(['H','C','N','O','P','S','Se']);
+      if (nonmetals.has(sym)) return 'nonmetal';
+      // Pós-transição (metais p)
+      const post = new Set(['Al','Ga','In','Sn','Tl','Pb','Bi','Po']);
+      if (post.has(sym)) return 'post';
+      // Transição (d-block)
+      if (group >= 3 && group <= 12) return 'transition';
+      // Fallback
+      return 'post';
+    }
+
+    const CAT_COLOR = {
+      alkali: getComputedStyle(document.documentElement).getPropertyValue('--cat-alkali').trim(),
+      alkaline: getComputedStyle(document.documentElement).getPropertyValue('--cat-alkaline').trim(),
+      transition: getComputedStyle(document.documentElement).getPropertyValue('--cat-transition').trim(),
+      post: getComputedStyle(document.documentElement).getPropertyValue('--cat-post').trim(),
+      metalloid: getComputedStyle(document.documentElement).getPropertyValue('--cat-metalloid').trim(),
+      nonmetal: getComputedStyle(document.documentElement).getPropertyValue('--cat-nonmetal').trim(),
+      halogen: getComputedStyle(document.documentElement).getPropertyValue('--cat-halogen').trim(),
+      noble: getComputedStyle(document.documentElement).getPropertyValue('--cat-noble').trim(),
+      lanth: getComputedStyle(document.documentElement).getPropertyValue('--cat-lanth').trim(),
+      actinide: getComputedStyle(document.documentElement).getPropertyValue('--cat-actinide').trim(),
+    };
+
+    // ======== Dados DEMO (parciais) ========
+    const DEMO_EN = {
+      H:2.20, He:null, Li:0.98, Be:1.57, B:2.04, C:2.55, N:3.04, O:3.44, F:3.98, Ne:null,
+      Na:0.93, Mg:1.31, Al:1.61, Si:1.90, P:2.19, S:2.58, Cl:3.16, Ar:null,
+      K:0.82, Ca:1.00, Sc:1.36, Ti:1.54, V:1.63, Cr:1.66, Mn:1.55, Fe:1.83, Co:1.88, Ni:1.91, Cu:1.90, Zn:1.65, Ga:1.81, Ge:2.01, As:2.18, Se:2.55, Br:2.96, Kr:null,
+      Rb:0.82, Sr:0.95, Y:1.22, Zr:1.33, Nb:1.60, Mo:2.16, Tc:1.90, Ru:2.20, Rh:2.28, Pd:2.20, Ag:1.93, Cd:1.69, In:1.78, Sn:1.96, Sb:2.05, Te:2.10, I:2.66, Xe:null
+    };
+    const DEMO_RADIUS = {
+      H:31, He:null, Li:128, Be:96, B:84, C:76, N:71, O:66, F:57, Ne:null,
+      Na:166, Mg:141, Al:121, Si:111, P:107, S:105, Cl:102, Ar:null,
+      K:203, Ca:176, Sc:170, Ti:160, V:153, Cr:139, Mn:139, Fe:132, Co:126, Ni:124, Cu:132, Zn:122, Ga:122, Ge:120, As:119, Se:120, Br:120, Kr:null,
+      Rb:216, Sr:191, Y:190, Zr:175, Nb:164, Mo:154, Tc:147, Ru:146, Rh:142, Pd:139, Ag:145, Cd:144, In:142, Sn:139, Sb:139, Te:138, I:139, Xe:null
+    };
+
+    // Substituído em tempo de execução por import CSV/JSON
+    let REAL_EN = { ...DEMO_EN };
+    let REAL_RADIUS = { ...DEMO_RADIUS };
+
+    // Estrutura de dataset completo (placeholder/resumo). Ao importar JSON completo, estes mapas serão preenchidos.
+    // Chaves por símbolo.
+    const FULL = {
+      mass: {},            // u
+      density: {},         // g/cm3
+      mpK: {},             // K
+      bpK: {},             // K
+      ionization1: {},     // kJ/mol
+      electronAffinity: {},// kJ/mol
+      radiusAtomic: {},    // pm
+      radiusVdw: {},       // pm
+      condElectric: {},    // S/m
+      condThermal: {},     // W/m·K
+      oxidation: {},       // array ou string
+      electronConfig: {},  // [Xe] 6s2 4f14 ...
+      discovery: {},       // ano, pessoa(s)
+      cas: {},
+      state298: {},        // s,l,g
+    };
+
+    // ======== Construção do dataset ========
+    function buildElements() {
+      const elements = [];
+      const bySymbol = new Map();
+
+      // Grupos 1–18 (períodos 1–7)
+      for (let period = 1; period <= MAIN_LAYOUT.length; period++) {
+        const row = MAIN_LAYOUT[period-1];
+        for (let group = 1; group <= 18; group++) {
+          const sym = row[group-1] || "";
+          if (!sym) continue;
+          const el = {
+            sym,
+            name: NAMES[sym] || sym,
+            period,
+            group,
+            category: inferCategory(sym, period, group),
+            isSeries: false,
+            // z definido depois
+          };
+          elements.push(el);
+          bySymbol.set(sym, el);
+        }
+      }
+
+      // Sérias separadas (Ln/Ac)
+      const lanths = LANTH_SERIES.map((sym, i) => ({
+        sym, name: NAMES[sym] || sym, period: 6, group: 3, category: 'lanth', isSeries: true, seriesIndex: i
+      }));
+      const actins = ACTIN_SERIES.map((sym, i) => ({
+        sym, name: NAMES[sym] || sym, period: 7, group: 3, category: 'actinide', isSeries: true, seriesIndex: i
+      }));
+
+      // Inserir placeholders no grid principal para Ln/Ac
+      elements.push({ sym:'Ln', name:'Lantanídeos', period:6, group:3, category:'lanth', isGhost:true });
+      elements.push({ sym:'Ac', name:'Actinídeos', period:7, group:3, category:'actinide', isGhost:true });
+
+      // Atribuir Z na ordem correta
+      // Períodos 1–5 completos
+      let seq = [];
+      for (let period = 1; period <= 5; period++) {
+        for (let group = 1; group <= 18; group++) {
+          const sym = (MAIN_LAYOUT[period-1][group-1]||"").trim();
+          if (sym) seq.push(sym);
+        }
+      }
+      // Período 6: grupos 1–2
+      seq.push(MAIN_LAYOUT[5][0], MAIN_LAYOUT[5][1]); // Cs, Ba
+      // Série Lantanídeos
+      seq = seq.concat(LANTH_SERIES);
+      // Período 6: grupos 4–18
+      for (let g=4; g<=18; g++) { const s = (MAIN_LAYOUT[5][g-1]||"").trim(); if (s) seq.push(s); }
+      // Período 7: grupos 1–2
+      seq.push(MAIN_LAYOUT[6][0], MAIN_LAYOUT[6][1]); // Fr, Ra
+      // Série Actinídeos
+      seq = seq.concat(ACTIN_SERIES);
+      // Período 7: grupos 4–18
+      for (let g=4; g<=18; g++) { const s = (MAIN_LAYOUT[6][g-1]||"").trim(); if (s) seq.push(s); }
+
+      // Aplicar Z
+      let z = 1;
+      const symbolToZ = new Map();
+      for (const sym of seq) { symbolToZ.set(sym, z++); }
+      // Atribuir Z aos elementos; placeholders mantêm sem Z
+      for (const el of elements) {
+        if (el.isGhost) continue;
+        el.z = symbolToZ.get(el.sym) || null;
+      }
+
+      // Mapas auxiliares
+      return {
+        elements,
+        bySymbol,
+        lanths,
+        actins,
+        symbolToZ,
+      };
+    }
+
+    const DATA = buildElements();
+
+    // ======== Renderização ========
+    const gridEl = document.getElementById('grid');
+    const lanthEl = document.getElementById('lanth');
+    const actinEl = document.getElementById('actin');
+    const legendEl = document.getElementById('legend');
+    const listPanel = document.getElementById('listPanel');
+    const listBody = document.getElementById('listBody');
+    const groupLabels = document.getElementById('groupLabels');
+
+    function catColor(cat) { return CAT_COLOR[cat] || 'transparent'; }
+
+    function makeTile(el) {
+      const div = document.createElement('div');
+      div.className = 'tile';
+      if (el.isGhost) div.classList.add('ghost');
+      div.tabIndex = el.isGhost ? -1 : 0;
+      div.setAttribute('role', 'button');
+      div.setAttribute('aria-label', `${el.sym} ${el.name}`);
+      div.dataset.sym = el.sym;
+      div.dataset.period = String(el.period);
+      div.dataset.group = String(el.group);
+      div.style.setProperty('--cat-color', catColor(el.category));
+
+      const ribbon = document.createElement('div'); ribbon.className = 'ribbon'; div.appendChild(ribbon);
+      const tint = document.createElement('div'); tint.className = 'tint'; div.appendChild(tint);
+      if (!el.isGhost) {
+        const z = document.createElement('div'); z.className = 'z'; z.textContent = el.z != null ? String(el.z) : '—'; div.appendChild(z);
+        const sym = document.createElement('div'); sym.className = 'sym'; sym.textContent = el.sym; div.appendChild(sym);
+        const name = document.createElement('div'); name.className = 'name'; name.textContent = el.name; div.appendChild(name);
+        const val = document.createElement('div'); val.className = 'val'; div.appendChild(val);
+      } else {
+        div.textContent = el.sym;
+      }
+
+      div.addEventListener('click', (ev) => { if (!el.isGhost) openDrawer(el.sym); });
+      // Ctrl/Cmd para seleção múltipla
+      div.addEventListener('mousedown', (ev) => {
+        if (el.isGhost) return;
+        if (ev.ctrlKey || ev.metaKey) {
+          ev.preventDefault();
+          toggleSelect(el.sym, div);
+        }
+      });
+      div.addEventListener('keydown', (ev) => {
+        if (el.isGhost) return;
+        if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); openDrawer(el.sym); }
+      });
+
+      return div;
+    }
+
+    function renderGrid() {
+      // Cabeçalhos de grupos 1–18
+      groupLabels.innerHTML = '';
+      for (let g=1; g<=18; g++) {
+        const s = document.createElement('span'); s.textContent = String(g); groupLabels.appendChild(s);
+      }
+
+      gridEl.innerHTML = '';
+      const byPos = new Map();
+      for (const el of DATA.elements) {
+        if (el.isSeries) continue; // séries renderizadas abaixo
+        const t = makeTile(el);
+        byPos.set(`${el.period}-${el.group}`, t);
+      }
+      // Preencher a grid com espaços vazios quando necessário
+      for (let period=1; period<=7; period++) {
+        for (let group=1; group<=18; group++) {
+          const key = `${period}-${group}`;
+          const node = byPos.get(key);
+          const cell = node || document.createElement('div');
+          if (!node) {
+            cell.className = 'tile';
+            cell.style.visibility = 'hidden';
+          }
+          gridEl.appendChild(cell);
+        }
+      }
+      // Inserir azulejos nas posições certas
+      for (let i=0; i<gridEl.children.length; i++) {
+        const child = gridEl.children[i];
+        // Já está em ordem correta pela varredura acima
+      }
+
+      // Render Ln/Ac
+      lanthEl.innerHTML = '';
+      for (const sym of LANTH_SERIES) {
+        const el = DATA.bySymbol.get(sym);
+        lanthEl.appendChild(makeTile(el));
+      }
+      actinEl.innerHTML = '';
+      for (const sym of ACTIN_SERIES) {
+        const el = DATA.bySymbol.get(sym);
+        actinEl.appendChild(makeTile(el));
+      }
+    }
+
+    // ======== Visualizações ========
+    const vizSelect = document.getElementById('vizSelect');
+    const dataModeSel = document.getElementById('dataMode');
+    const searchInput = document.getElementById('search');
+    const clearBtn = document.getElementById('clearBtn');
+    const toggleList = document.getElementById('toggleList');
+    const fileInput = document.getElementById('fileInput');
+    const settingsBtn = document.getElementById('settingsBtn');
+    const loadOfficialBtn = document.getElementById('loadOfficial');
+
+    function currentValue(sym) {
+      const mode = vizSelect.value;
+      const dataMode = dataModeSel.value;
+      if (mode === 'cat') return null;
+      if (dataMode === 'real') {
+        if (mode === 'en') return REAL_EN[sym] ?? null;
+        if (mode === 'radius') return REAL_RADIUS[sym] ?? null;
+      } else if (dataMode === 'full') {
+        // Dados completos (quando importados)
+        const M = {
+          en: REAL_EN,
+          radius: REAL_RADIUS,
+          mass: FULL.mass,
+          density: FULL.density,
+          mpK: FULL.mpK,
+          bpK: FULL.bpK,
+          ionization1: FULL.ionization1,
+          electronAffinity: FULL.electronAffinity,
+          radiusAtomic: FULL.radiusAtomic,
+          radiusVdw: FULL.radiusVdw,
+          condElectric: FULL.condElectric,
+          condThermal: FULL.condThermal,
+        };
+        return (M[mode] && sym in M[mode]) ? M[mode][sym] : null;
+      } else {
+        // Tendência: EN ↑ direita/cima | Raio ↑ esquerda/baixo
+        const el = DATA.bySymbol.get(sym);
+        if (!el) return null;
+        const g = el.group, p = el.period;
+        if (mode === 'en') {
+          const gNorm = (g-1)/17; // 0..1
+          const pNorm = (7-p)/6;  // 0..1
+          return 0.6*gNorm + 0.4*pNorm;
+        } else {
+          const gNorm = (18-g)/17; // 0..1
+          const pNorm = (p-1)/6;   // 0..1
+          return 0.6*gNorm + 0.4*pNorm;
+        }
+      }
+      return null;
+    }
+
+    function computeMinMax() {
+      const mode = vizSelect.value;
+      const dataMode = dataModeSel.value;
+      if (mode === 'cat') return null;
+      let min = +Infinity, max = -Infinity;
+      const norm = document.getElementById('normSelect').value;
+      for (const [sym, el] of DATA.bySymbol) {
+        if (!el || el.isGhost) continue;
+        let v = currentValue(sym);
+        if (v == null) continue;
+        if (norm === 'period') {
+          // Será normalizado mais tarde por período; aqui coletamos min/max globais só para legenda se precisar
+        }
+        if (v < min) min = v;
+        if (v > max) max = v;
+      }
+      if (!isFinite(min) || !isFinite(max)) return null;
+      return {min, max};
+    }
+
+    function lerpColor(a, b, t) {
+      // a e b são CSS colors; usaremos 3 pontos: low/mid/high
+      return t < 0.5 ? `color-mix(in oklab, var(--heat-low) ${100*(1-2*t)}%, var(--heat-mid))` : `color-mix(in oklab, var(--heat-mid) ${100*(2-2*(t-0.5))}%, var(--heat-high))`;
+    }
+
+    function normalizeValue(v, range) {
+      if (!range) return null;
+      const {min, max} = range;
+      if (max === min) return 0.5;
+      return (v - min) / (max - min);
+    }
+
+    function updateLegend() {
+      const mode = vizSelect.value;
+      const dataMode = dataModeSel.value;
+      legendEl.innerHTML = '';
+      if (mode === 'cat') {
+        const wrap = document.createElement('div');
+        wrap.className = 'cat-legend';
+        const entries = [
+          ['Alcalinos','alkali'], ['Alcalino-terrosos','alkaline'], ['Transição','transition'], ['Pós-transição','post'], ['Semimetais','metalloid'], ['Não-metais','nonmetal'], ['Halogênios','halogen'], ['Gases nobres','noble'], ['Lantanídeos','lanth'], ['Actinídeos','actinide']
+        ];
+        for (const [label, key] of entries) {
+          const pill = document.createElement('span'); pill.className = 'pill';
+          const dot = document.createElement('span'); dot.className = 'dot'; dot.style.background = catColor(key);
+          pill.appendChild(dot);
+          pill.appendChild(document.createTextNode(label));
+          wrap.appendChild(pill);
+        }
+        legendEl.appendChild(wrap);
+        return;
+      }
+
+      const range = computeMinMax();
+      const bar = document.createElement('div'); bar.className = 'bar'; legendEl.appendChild(bar);
+      const labels = document.createElement('div'); labels.className = 'labels';
+      const l1 = document.createElement('span');
+      const l2 = document.createElement('span');
+      if ((dataMode === 'real' || dataMode === 'full') && range) {
+        l1.textContent = range.min.toFixed(2);
+        l2.textContent = range.max.toFixed(2);
+      } else {
+        l1.textContent = 'Baixa';
+        l2.textContent = 'Alta';
+      }
+      labels.appendChild(l1); labels.appendChild(l2);
+      legendEl.appendChild(labels);
+    }
+
+    function paintTiles() {
+      const tiles = document.querySelectorAll('.tile');
+      const mode = vizSelect.value;
+      const dataMode = dataModeSel.value;
+      const range = computeMinMax();
+      const useLog = document.getElementById('scaleSelect').value === 'log';
+      const norm = document.getElementById('normSelect').value; // global ou period
+
+      // Para normalização por período, calculamos min/max por período
+      const byPeriod = {};
+      if (norm === 'period' && mode !== 'cat') {
+        for (const [sym, el] of DATA.bySymbol) {
+          if (!el || el.isGhost) continue;
+          const v = currentValue(sym);
+          if (v == null) continue;
+          const key = String(el.period);
+          if (!byPeriod[key]) byPeriod[key] = {min:+Infinity,max:-Infinity};
+          if (v < byPeriod[key].min) byPeriod[key].min = v;
+          if (v > byPeriod[key].max) byPeriod[key].max = v;
+        }
+      }
+      tiles.forEach(t => {
+        const sym = t.dataset.sym;
+        const valEl = t.querySelector('.val');
+        if (!sym || !valEl) return;
+        const v = currentValue(sym);
+        if (mode === 'cat') {
+          // Apenas cores de categoria, sem heat
+          valEl.textContent = DATA.bySymbol.get(sym) ? DATA.bySymbol.get(sym).category : '';
+          t.style.backgroundImage = 'linear-gradient(180deg, rgba(255,255,255,0.12), rgba(255,255,255,0.06))';
+        } else {
+          if (v == null) { valEl.textContent = '—'; t.style.removeProperty('background'); t.style.backgroundImage = 'linear-gradient(180deg, rgba(255,255,255,0.12), rgba(255,255,255,0.06))'; }
+          else {
+            // normalização
+            let n;
+            if (dataMode === 'trend') {
+              n = v;
+            } else if (norm === 'period') {
+              const pr = byPeriod[String(DATA.bySymbol.get(sym).period)];
+              n = normalizeValue(useLog ? Math.log(v+1e-9) : v, useLog ? {min:Math.log(pr.min+1e-9), max:Math.log(pr.max+1e-9)} : pr);
+            } else {
+              n = normalizeValue(useLog ? Math.log(v+1e-9) : v, useLog ? {min:Math.log(range.min+1e-9), max:Math.log(range.max+1e-9)} : range);
+            }
+            const c = lerpColor('low','high', Math.max(0, Math.min(1, n)));
+            const showNumber = (dataMode === 'real' || dataMode === 'full');
+            valEl.textContent = showNumber ? (typeof v === 'number' ? (Math.abs(v) >= 1000 ? v.toFixed(0) : v.toFixed(2)) : '') : '';
+            t.style.backgroundImage = `linear-gradient(180deg, color-mix(in oklab, ${c} 26%, rgba(255,255,255,0.06)), rgba(255,255,255,0.06))`;
+          }
+        }
+      });
+      applyFilters();
+    }
+
+    function renderList() {
+      listBody.innerHTML = '';
+      const rows = [];
+      for (const el of DATA.elements) {
+        if (el.isGhost || el.isSeries) continue;
+        rows.push(el);
+      }
+      rows.sort((a,b) => (a.z ?? 999) - (b.z ?? 999));
+      for (const el of rows) {
+        const tr = document.createElement('tr');
+        const td = (txt) => { const c=document.createElement('td'); c.textContent = txt; return c; };
+        tr.appendChild(td(el.z ?? '—'));
+        tr.appendChild(td(el.sym));
+        tr.appendChild(td(el.name));
+        tr.appendChild(td(el.category));
+        const en = REAL_EN[el.sym];
+        const r = REAL_RADIUS[el.sym];
+        tr.appendChild(td(en == null ? '—' : en.toFixed(2)));
+        tr.appendChild(td(r == null ? '—' : String(r)));
+        tr.addEventListener('click', () => openDrawer(el.sym));
+        listBody.appendChild(tr);
+      }
+    }
+
+    // ======== Busca e filtros ========
+    function applySearch() {
+      const q = (searchInput.value || '').trim().toLowerCase();
+      const tiles = document.querySelectorAll('.tile');
+      if (!q) { tiles.forEach(t => t.classList.remove('is-dim')); return; }
+      tiles.forEach(t => {
+        const sym = (t.dataset.sym||'').toLowerCase();
+        const el = sym ? DATA.bySymbol.get(t.dataset.sym) : null;
+        const name = el ? el.name.toLowerCase() : '';
+        const match = sym.includes(q) || name.includes(q);
+        if (!t.dataset.sym) return; // ignora vazios
+        if (match) t.classList.remove('is-dim'); else t.classList.add('is-dim');
+      });
+    }
+
+    // ======== Drawer ========
+    const drawer = document.getElementById('drawer');
+    const drawerClose = document.getElementById('drawerClose');
+    const dTitle = document.getElementById('dTitle');
+    const dSym = document.getElementById('dSym');
+    const dName = document.getElementById('dName');
+    const dZ = document.getElementById('dZ');
+    const dPeriod = document.getElementById('dPeriod');
+    const dGroup = document.getElementById('dGroup');
+    const dCat = document.getElementById('dCat');
+    const dEN = document.getElementById('dEN');
+    const dRadius = document.getElementById('dRadius');
+    const dMass = document.getElementById('dMass');
+    const dDensity = document.getElementById('dDensity');
+    const dMP = document.getElementById('dMP');
+    const dBP = document.getElementById('dBP');
+    const dIon = document.getElementById('dIon');
+    const dEA = document.getElementById('dEA');
+    const dRAtomic = document.getElementById('dRAtomic');
+    const dRVdw = document.getElementById('dRVdw');
+    const dCondE = document.getElementById('dCondE');
+    const dCondT = document.getElementById('dCondT');
+    const dOx = document.getElementById('dOx');
+    const dECfg = document.getElementById('dECfg');
+    const dState = document.getElementById('dState');
+    const dDisc = document.getElementById('dDisc');
+    const dCAS = document.getElementById('dCAS');
+    const dSummary = document.getElementById('dSummary');
+    const previewTile = document.getElementById('previewTile');
+
+    // Seleção múltipla
+    const selection = new Set();
+    const selectionBar = document.getElementById('selectionBar');
+    const selCount = document.getElementById('selCount');
+    const exportSelection = document.getElementById('exportSelection');
+    const clearSelection = document.getElementById('clearSelection');
+    const compareBtn = document.getElementById('compareBtn');
+    const compareModal = document.getElementById('compareModal');
+    const compareClose = document.getElementById('compareClose');
+    const cmpHead = document.getElementById('cmpHead');
+    const cmpBody = document.getElementById('cmpBody');
+
+    function updateSelectionUI(){
+      selCount.textContent = `${selection.size} selecionado(s)`;
+      selectionBar.classList.toggle('visible', selection.size > 0);
+    }
+
+    function toggleSelect(sym, elNode){
+      if (selection.has(sym)) selection.delete(sym); else selection.add(sym);
+      if (elNode) elNode.classList.toggle('selected');
+      updateSelectionUI();
+    }
+
+    function openDrawer(sym) {
+      const el = DATA.bySymbol.get(sym);
+      if (!el) return;
+      dTitle.textContent = `${el.name} (${el.sym})`;
+      dSym.textContent = el.sym;
+      dName.textContent = el.name;
+      dZ.textContent = el.z ?? '—';
+      dPeriod.textContent = el.period;
+      dGroup.textContent = el.group;
+      dCat.textContent = el.category;
+      dEN.textContent = REAL_EN[el.sym] == null ? '—' : `${REAL_EN[el.sym]} (Pauling)`;
+      dRadius.textContent = REAL_RADIUS[el.sym] == null ? '—' : `${REAL_RADIUS[el.sym]} pm`;
+      dMass.textContent = FULL.mass[el.sym] == null ? '—' : `${FULL.mass[el.sym]} u`;
+      dDensity.textContent = FULL.density[el.sym] == null ? '—' : `${FULL.density[el.sym]} g/cm³`;
+      dMP.textContent = FULL.mpK[el.sym] == null ? '—' : `${FULL.mpK[el.sym]}`;
+      dBP.textContent = FULL.bpK[el.sym] == null ? '—' : `${FULL.bpK[el.sym]}`;
+      dIon.textContent = FULL.ionization1[el.sym] == null ? '—' : `${FULL.ionization1[el.sym]} kJ/mol`;
+      dEA.textContent = FULL.electronAffinity[el.sym] == null ? '—' : `${FULL.electronAffinity[el.sym]} kJ/mol`;
+      dRAtomic.textContent = FULL.radiusAtomic[el.sym] == null ? '—' : `${FULL.radiusAtomic[el.sym]} pm`;
+      dRVdw.textContent = FULL.radiusVdw[el.sym] == null ? '—' : `${FULL.radiusVdw[el.sym]} pm`;
+      dCondE.textContent = FULL.condElectric[el.sym] == null ? '—' : `${FULL.condElectric[el.sym]} S/m`;
+      dCondT.textContent = FULL.condThermal[el.sym] == null ? '—' : `${FULL.condThermal[el.sym]} W/m·K`;
+      dOx.textContent = FULL.oxidation[el.sym] == null ? '—' : `${FULL.oxidation[el.sym]}`;
+      dECfg.textContent = FULL.electronConfig[el.sym] == null ? '—' : `${FULL.electronConfig[el.sym]}`;
+      dState.textContent = FULL.state298[el.sym] == null ? '—' : `${FULL.state298[el.sym]}`;
+      dDisc.textContent = FULL.discovery[el.sym] == null ? '—' : `${FULL.discovery[el.sym]}`;
+      dCAS.textContent = FULL.cas[el.sym] == null ? '—' : `${FULL.cas[el.sym]}`;
+      dSummary.textContent = FULL.summary && FULL.summary[el.sym] ? FULL.summary[el.sym] : '';
+
+      previewTile.style.setProperty('--cat-color', catColor(el.category));
+      previewTile.dataset.sym = el.sym;
+      previewTile.querySelector('.z').textContent = el.z ?? '—';
+      previewTile.querySelector('.sym').textContent = el.sym;
+      previewTile.querySelector('.name').textContent = el.name;
+      const val = currentValue(el.sym);
+      previewTile.querySelector('.val').textContent = val == null ? '' : (vizSelect.value==='radius' ? `${val}` : (typeof val === 'number' ? val.toFixed(2) : ''));
+
+      // Conteúdo extra (placeholder para abas avançadas)
+      // Aqui podemos injetar propriedades adicionais quando o dataset completo for carregado
+
+      drawer.classList.add('open');
+    }
+    function closeDrawer() { drawer.classList.remove('open'); }
+    drawerClose.addEventListener('click', closeDrawer);
+    window.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeDrawer(); });
+
+    // ======== Importação CSV/JSON ========
+    fileInput.addEventListener('change', async (e) => {
+      const f = e.target.files && e.target.files[0]; if (!f) return;
+      const text = await f.text();
+      try {
+        if (f.name.toLowerCase().endsWith('.json')) {
+          const data = JSON.parse(text);
+          // Suporta dois formatos: array simples (sym,en,radius) ou objeto com múltiplas propriedades
+          if (Array.isArray(data)) {
+            for (const row of data) {
+              const sym = String(row.sym || row.symbol || '').trim(); if (!sym) continue;
+              const en = row.en; const radius = row.radius;
+              if (en === null || en === '' || typeof en === 'undefined') delete REAL_EN[sym]; else REAL_EN[sym] = Number(en);
+              if (radius === null || radius === '' || typeof radius === 'undefined') delete REAL_RADIUS[sym]; else REAL_RADIUS[sym] = Number(radius);
+            }
+          } else {
+            // Objeto com chaves por símbolo e vários campos
+            for (const [symKey, props] of Object.entries(data)) {
+              const sym = String(symKey).trim(); if (!sym) continue;
+              const p = props || {};
+              if ('en' in p) REAL_EN[sym] = p.en == null || p.en === '' ? undefined : Number(p.en);
+              if ('radius' in p) REAL_RADIUS[sym] = p.radius == null || p.radius === '' ? undefined : Number(p.radius);
+              if ('mass' in p) FULL.mass[sym] = p.mass == null ? undefined : Number(p.mass);
+              if ('density' in p) FULL.density[sym] = p.density == null ? undefined : Number(p.density);
+              if ('mpK' in p) FULL.mpK[sym] = p.mpK == null ? undefined : Number(p.mpK);
+              if ('bpK' in p) FULL.bpK[sym] = p.bpK == null ? undefined : Number(p.bpK);
+              if ('ionization1' in p) FULL.ionization1[sym] = p.ionization1 == null ? undefined : Number(p.ionization1);
+              if ('electronAffinity' in p) FULL.electronAffinity[sym] = p.electronAffinity == null ? undefined : Number(p.electronAffinity);
+              if ('radiusAtomic' in p) FULL.radiusAtomic[sym] = p.radiusAtomic == null ? undefined : Number(p.radiusAtomic);
+              if ('radiusVdw' in p) FULL.radiusVdw[sym] = p.radiusVdw == null ? undefined : Number(p.radiusVdw);
+              if ('condElectric' in p) FULL.condElectric[sym] = p.condElectric == null ? undefined : Number(p.condElectric);
+              if ('condThermal' in p) FULL.condThermal[sym] = p.condThermal == null ? undefined : Number(p.condThermal);
+              if ('oxidation' in p) FULL.oxidation[sym] = p.oxidation || '';
+              if ('electronConfig' in p) FULL.electronConfig[sym] = p.electronConfig || '';
+              if ('discovery' in p) FULL.discovery[sym] = p.discovery || '';
+              if ('cas' in p) FULL.cas[sym] = p.cas || '';
+              if ('state298' in p) FULL.state298[sym] = p.state298 || '';
+              if ('summary' in p) { if (!FULL.summary) FULL.summary = {}; FULL.summary[sym] = p.summary || ''; }
+            }
+            // ao carregar um objeto completo, muda modo de dados para 'full'
+            dataModeSel.value = 'full';
+          }
+        } else {
+          // CSV simples: sym,en,radius
+          const lines = text.split(/\r?\n/).map(s=>s.trim()).filter(Boolean);
+          const header = lines.shift();
+          const cols = header.split(',').map(s=>s.trim().toLowerCase());
+          const iSym = cols.indexOf('sym');
+          const iEn = cols.indexOf('en');
+          const iRadius = cols.indexOf('radius');
+          for (const line of lines) {
+            const parts = line.split(',');
+            const sym = (parts[iSym]||'').trim(); if (!sym) continue;
+            const enStr = iEn>=0 ? (parts[iEn]||'').trim() : '';
+            const rStr = iRadius>=0 ? (parts[iRadius]||'').trim() : '';
+            if (enStr === '') delete REAL_EN[sym]; else REAL_EN[sym] = Number(enStr);
+            if (rStr === '') delete REAL_RADIUS[sym]; else REAL_RADIUS[sym] = Number(rStr);
+          }
+        }
+        updateLegend();
+        paintTiles();
+        renderList();
+        alert('Importação concluída (apenas em memória).');
+      } catch (err) {
+        console.error(err);
+        alert('Falha ao importar. Verifique o formato do arquivo.');
+      } finally {
+        fileInput.value = '';
+      }
+    });
+
+    // ======== Carregar dados oficiais (online) ========
+    async function loadOfficial() {
+      try {
+        const url = 'https://raw.githubusercontent.com/Bowserinator/Periodic-Table-JSON/master/PeriodicTableJSON.json';
+        const res = await fetch(url, { cache: 'no-store' });
+        if (!res.ok) throw new Error('Falha no fetch');
+        const data = await res.json();
+        if (!data || !Array.isArray(data.elements)) throw new Error('Formato inesperado');
+        for (const row of data.elements) {
+          const sym = String(row.symbol || '').trim(); if (!sym) continue;
+          // Mapear campos principais
+          if (row.electronegativity_pauling != null) REAL_EN[sym] = Number(row.electronegativity_pauling);
+          if (row.atomic_mass != null) FULL.mass[sym] = Number(row.atomic_mass);
+          if (row.density != null) FULL.density[sym] = Number(row.density);
+          if (row.melt != null) FULL.mpK[sym] = Number(row.melt);
+          if (row.boil != null) FULL.bpK[sym] = Number(row.boil);
+          if (Array.isArray(row.ionization_energies) && row.ionization_energies.length) FULL.ionization1[sym] = Number(row.ionization_energies[0]);
+          if (row.electron_affinity != null) FULL.electronAffinity[sym] = Number(row.electron_affinity);
+          if (row.electron_configuration_semantic) FULL.electronConfig[sym] = row.electron_configuration_semantic;
+          else if (row.electron_configuration) FULL.electronConfig[sym] = row.electron_configuration;
+          if (row.appearance) { /* opcional */ }
+          if (row.phase) FULL.state298[sym] = row.phase; // Solid/Liquid/Gas
+          if (row.discovered_by) FULL.discovery[sym] = row.discovered_by;
+          if (row.summary) { if (!FULL.summary) FULL.summary = {}; FULL.summary[sym] = row.summary; }
+          // Dados de raios podem não existir nesse dataset; mantemos placeholders
+        }
+        dataModeSel.value = 'full';
+        updateLegend();
+        paintTiles();
+        renderList();
+        alert('Dados oficiais carregados (fonte: Bowserinator).');
+      } catch (err) {
+        console.error(err);
+        alert('Não foi possível carregar os dados oficiais. Verifique sua conexão.');
+      }
+    }
+    loadOfficialBtn.addEventListener('click', loadOfficial);
+
+    // ======== Aparência/Preferências ========
+    const appearancePanel = document.getElementById('appearancePanel');
+    const glowRange = document.getElementById('glowRange');
+    const glowStrength = document.getElementById('glowStrength');
+    const glassTop = document.getElementById('glassTop');
+    const borderOnly = document.getElementById('borderOnly');
+    const toggleTheme = document.getElementById('toggleTheme');
+
+    function initAppearanceControls(){
+      const rs = getComputedStyle(document.documentElement);
+      glowRange.value = Number(rs.getPropertyValue('--glow-range').trim()) || 180;
+      glowStrength.value = Number(rs.getPropertyValue('--glow-strength').trim()) || 0.85;
+      glassTop.value = Number(rs.getPropertyValue('--glass-top').trim() || '0.08');
+      borderOnly.checked = document.body.classList.contains('border-only');
+      toggleTheme.checked = document.body.classList.contains('light');
+    }
+    settingsBtn.addEventListener('click', () => {
+      appearancePanel.classList.toggle('visible');
+      if (appearancePanel.classList.contains('visible')) initAppearanceControls();
+    });
+    glowRange.addEventListener('input', () => document.documentElement.style.setProperty('--glow-range', glowRange.value));
+    glowStrength.addEventListener('input', () => document.documentElement.style.setProperty('--glow-strength', glowStrength.value));
+    glassTop.addEventListener('input', () => document.documentElement.style.setProperty('--glass-top', glassTop.value));
+    borderOnly.addEventListener('change', () => document.body.classList.toggle('border-only', borderOnly.checked));
+    toggleTheme.addEventListener('change', () => document.body.classList.toggle('light', toggleTheme.checked));
+
+    // ======== Filtros ========
+    const filtersPanel = document.getElementById('filtersPanel');
+    const fCat = document.getElementById('fCat');
+    const fPeriod = document.getElementById('fPeriod');
+    const fGroup = document.getElementById('fGroup');
+    const fENmin = document.getElementById('fENmin');
+    const fENmax = document.getElementById('fENmax');
+    // Filtro por valor (dinâmico para a visualização atual)
+    const vMin = document.createElement('input'); vMin.type='number'; vMin.id='fVmin'; vMin.style.width='100px'; vMin.step='0.01';
+    const vMax = document.createElement('input'); vMax.type='number'; vMax.id='fVmax'; vMax.style.width='100px'; vMax.step='0.01';
+    const vWrap = document.createElement('label'); vWrap.textContent = 'Valor (viz.) '; vWrap.appendChild(vMin); const vSep = document.createTextNode(' a '); vWrap.appendChild(vSep); vWrap.appendChild(vMax);
+    // injeta após EN max
+    (function(){
+      const row = document.querySelector('#filtersPanel .row');
+      if (row) row.appendChild(vWrap);
+    })();
+    const filtersToggle = document.getElementById('filtersToggle');
+    const chips = document.getElementById('chips');
+
+    function filterActive(){
+      return Boolean(fCat.value || fPeriod.value || fGroup.value || fENmin.value || fENmax.value || vMin.value || vMax.value);
+    }
+    function applyFilters(){
+      const tiles = document.querySelectorAll('.tile');
+      chips.innerHTML='';
+      const addChip = (label) => { const c=document.createElement('span'); c.className='chip'; c.textContent=label; chips.appendChild(c); };
+      tiles.forEach(t => {
+        if (!t.dataset.sym) return;
+        const el = DATA.bySymbol.get(t.dataset.sym);
+        let ok = true;
+        if (fCat.value) ok = ok && el.category === fCat.value;
+        if (fPeriod.value) ok = ok && String(el.period) === fPeriod.value;
+        if (fGroup.value) ok = ok && String(el.group) === fGroup.value;
+        if (fENmin.value) ok = ok && (REAL_EN[el.sym] ?? Infinity) >= Number(fENmin.value);
+        if (fENmax.value) ok = ok && (REAL_EN[el.sym] ?? -Infinity) <= Number(fENmax.value);
+        // Filtro dinâmico por visualização
+        const mode = vizSelect.value;
+        if (mode !== 'cat') {
+          const val = currentValue(el.sym);
+          if (vMin.value) ok = ok && (val ?? Infinity) >= Number(vMin.value);
+          if (vMax.value) ok = ok && (val ?? -Infinity) <= Number(vMax.value);
+        }
+        t.style.opacity = ok ? '' : '0.25';
+        t.style.filter = ok ? '' : 'grayscale(0.7)';
+      });
+      if (filterActive()) {
+        if (fCat.value) addChip(`Categoria: ${fCat.selectedOptions[0].textContent}`);
+        if (fPeriod.value) addChip(`Período: ${fPeriod.value}`);
+        if (fGroup.value) addChip(`Grupo: ${fGroup.value}`);
+        if (fENmin.value || fENmax.value) addChip(`EN: ${fENmin.value||'−'} a ${fENmax.value||'−'}`);
+        if (vMin.value || vMax.value) addChip(`Valor: ${vMin.value||'−'} a ${vMax.value||'−'} (${vizSelect.selectedOptions[0].textContent})`);
+        filtersPanel.classList.add('visible');
+      } else {
+        // Mantém painel visível para fácil acesso
+        filtersPanel.classList.add('visible');
+      }
+    }
+    filtersToggle.addEventListener('click', () => {
+      if (filterActive()) {
+        fCat.value=''; fPeriod.value=''; fGroup.value=''; fENmin.value=''; fENmax.value=''; vMin.value=''; vMax.value='';
+      }
+      applyFilters();
+    });
+    // ======== Estado (localStorage) ========
+    function saveState() {
+      const state = {
+        viz: vizSelect.value,
+        data: dataModeSel.value,
+        search: searchInput.value
+      };
+      localStorage.setItem('ptable_state_v3', JSON.stringify(state));
+    }
+    function restoreState() {
+      try {
+        const raw = localStorage.getItem('ptable_state_v3');
+        if (!raw) return;
+        const s = JSON.parse(raw);
+        if (s.viz) vizSelect.value = s.viz;
+        if (s.data) dataModeSel.value = s.data; // sug.: 'trend' como padrão; mantemos 'real' para DEMO
+        if (s.search) searchInput.value = s.search;
+      } catch {}
+    }
+
+    // ======== Proximidade (glow) ========
+    let mouseX = 0, mouseY = 0;
+    window.addEventListener('mousemove', (e) => { mouseX = e.clientX; mouseY = e.clientY; });
+
+    let tilesCached = [];
+    function cacheRects() {
+      tilesCached = Array.from(document.querySelectorAll('.tile'))
+        .filter(el => el.dataset && el.dataset.sym) // apenas elementos reais, não vazios
+        .map(el => ({ el, rect: el.getBoundingClientRect() }));
+    }
+    function applyProximity() {
+      const RANGE = Number(getComputedStyle(document.documentElement).getPropertyValue('--glow-range')) || 180;
+      for (const t of tilesCached) {
+        const r = t.rect;
+        // Posição do mouse relativa ao tile
+        const localX = Math.max(0, Math.min(r.width, mouseX - r.left));
+        const localY = Math.max(0, Math.min(r.height, mouseY - r.top));
+
+        // Distância do ponteiro ao retângulo do tile (0 se dentro)
+        const dx = mouseX < r.left ? r.left - mouseX : mouseX > r.right ? mouseX - r.right : 0;
+        const dy = mouseY < r.top ? r.top - mouseY : mouseY > r.bottom ? mouseY - r.bottom : 0;
+        const dist = Math.hypot(dx, dy);
+        const prox = Math.max(0, Math.min(1, 1 - dist / RANGE));
+
+        // Cor do glow por família com base em var(--cat-color)
+        const style = getComputedStyle(t.el);
+        const cat = style.getPropertyValue('--cat-color').trim() || 'rgba(255,255,255,0.5)';
+        const strength = Number(getComputedStyle(document.documentElement).getPropertyValue('--glow-strength')) || 0.85;
+        const glow = `color-mix(in oklab, ${cat} ${Math.round(prox*strength*100)}%, rgba(255,255,255,0))`;
+
+        t.el.style.setProperty('--prox', String(prox));
+        t.el.style.setProperty('--lx', localX + 'px');
+        t.el.style.setProperty('--ly', localY + 'px');
+        t.el.style.setProperty('--glow-color', glow);
+        t.el.style.setProperty('--hover', prox > 0 ? '1' : '0');
+      }
+      requestAnimationFrame(applyProximity);
+    }
+
+    // ======== Navegação por teclado ========
+    gridEl.addEventListener('keydown', (e) => {
+      const target = e.target.closest('.tile');
+      if (!target || !target.dataset.sym) return;
+      const p = Number(target.dataset.period), g = Number(target.dataset.group);
+      let np = p, ng = g;
+      if (e.key === 'ArrowRight') { ng = Math.min(18, g+1); }
+      else if (e.key === 'ArrowLeft') { ng = Math.max(1, g-1); }
+      else if (e.key === 'ArrowDown') { np = Math.min(7, p+1); }
+      else if (e.key === 'ArrowUp') { np = Math.max(1, p-1); }
+      else return;
+      e.preventDefault();
+      const idx = (np-1)*18 + (ng-1);
+      const next = gridEl.children[idx];
+      if (next && next.tabIndex >= 0) next.focus();
+    });
+
+    exportSelection.addEventListener('click', () => {
+      if (selection.size === 0) return;
+      const rows = [];
+      for (const sym of selection) {
+        const el = DATA.bySymbol.get(sym);
+        const curVal = currentValue(sym);
+        rows.push({ Z: el.z, sym: el.sym, nome: el.name, categoria: el.category, viz: curVal ?? '', EN: REAL_EN[el.sym] ?? '', raio: REAL_RADIUS[el.sym] ?? '' });
+      }
+      const header = Object.keys(rows[0]||{Z:'Z',sym:'sym',nome:'nome',categoria:'categoria',viz:'viz',EN:'EN',raio:'raio'}).join(',');
+      const csv = [header, ...rows.map(r => [r.Z,r.sym,r.nome,r.categoria,r.viz,r.EN,r.raio].join(','))].join('\n');
+      const blob = new Blob([csv], {type:'text/csv'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href=url; a.download='selecionados.csv'; a.click(); URL.revokeObjectURL(url);
+    });
+    clearSelection.addEventListener('click', () => { selection.clear(); document.querySelectorAll('.tile.selected').forEach(t=>t.classList.remove('selected')); updateSelectionUI(); });
+
+    // Comparação
+    function renderComparison(){
+      cmpHead.innerHTML = '';
+      cmpBody.innerHTML = '';
+      if (selection.size === 0) return;
+      const headCols = ['Z','Símbolo','Nome', vizSelect.selectedOptions[0].textContent, 'EN (Pauling)','Raio covalente (pm)'];
+      for (const h of headCols) { const th=document.createElement('th'); th.textContent=h; cmpHead.appendChild(th); }
+      const arr = Array.from(selection).map(sym => DATA.bySymbol.get(sym)).filter(Boolean).sort((a,b)=>(a.z??999)-(b.z??999));
+      for (const el of arr) {
+        const tr = document.createElement('tr');
+        const curVal = currentValue(el.sym);
+        const cells = [el.z ?? '—', el.sym, el.name,
+          curVal == null ? '—' : (typeof curVal==='number' ? (Math.abs(curVal)>=1000 ? curVal.toFixed(0) : curVal.toFixed(3)) : String(curVal)),
+          REAL_EN[el.sym] == null ? '—' : REAL_EN[el.sym].toFixed(2),
+          REAL_RADIUS[el.sym] == null ? '—' : String(REAL_RADIUS[el.sym])
+        ];
+        for (const c of cells) { const td=document.createElement('td'); td.textContent=String(c); tr.appendChild(td); }
+        cmpBody.appendChild(tr);
+      }
+    }
+    compareBtn.addEventListener('click', () => { if (selection.size===0) return; renderComparison(); compareModal.classList.add('open'); });
+    compareClose.addEventListener('click', () => { compareModal.classList.remove('open'); });
+    compareModal.addEventListener('click', (e) => { if (e.target === compareModal) compareModal.classList.remove('open'); });
+
+    // ======== Eventos de UI ========
+    vizSelect.addEventListener('change', () => { updateLegend(); paintTiles(); saveState(); });
+    dataModeSel.addEventListener('change', () => { updateLegend(); paintTiles(); saveState(); });
+    searchInput.addEventListener('input', () => { applySearch(); saveState(); });
+    clearBtn.addEventListener('click', () => { searchInput.value=''; applySearch(); saveState(); });
+    toggleList.addEventListener('click', () => { listPanel.classList.toggle('visible'); });
+    // Deixa filtros visíveis por padrão (acesso rápido)
+    document.getElementById('filtersPanel').classList.add('visible');
+
+    // ======== Boot ========
+    renderGrid();
+    restoreState();
+    updateLegend();
+    paintTiles();
+    applySearch();
+    renderList();
+    cacheRects();
+    requestAnimationFrame(applyProximity);
+
+    window.addEventListener('resize', () => { cacheRects(); });
+  })();
+  </script>
+</body>
+</html>
+
+
