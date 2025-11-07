@@ -399,3 +399,6 @@ Isso ajudará a identificar padrões que ainda escapam.
 
 
 
+
+
+

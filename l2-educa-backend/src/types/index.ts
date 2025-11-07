@@ -24,6 +24,7 @@ export interface AuthResponse {
   accessToken: string;
   refreshToken: string;
   user: User;
+  emailVerified?: boolean;
 }
 
 export interface TokenPayload {

@@ -1,9 +1,14 @@
-import { defineConfig } from 'vite'
+import { defineConfig, loadEnv } from 'vite'
 import react from '@vitejs/plugin-react'
 import { copyFileSync } from 'fs'
 
 // https://vite.dev/config/
-export default defineConfig(({ mode }) => ({
+export default defineConfig(({ mode }) => {
+  // Load env file based on `mode` in the current working directory.
+  // Set the third parameter to '' to load all env regardless of the `VITE_` prefix.
+  const env = loadEnv(mode, process.cwd(), 'VITE_')
+  
+  return {
   plugins: [
     react(),
     // Copy service worker to dist after build
@@ -32,12 +37,56 @@ export default defineConfig(({ mode }) => ({
         }
         return null;
       }
+    },
+    // Validate environment variables on build
+    {
+      name: 'validate-env',
+      configResolved(config) {
+        const requiredVars = [
+          'VITE_SUPABASE_URL',
+          'VITE_SUPABASE_ANON_KEY',
+        ];
+        
+        const missing = requiredVars.filter(v => !env[v]);
+        
+        console.log('\n🔧 Build Mode:', mode);
+        console.log('📁 Looking for:', mode === 'production' ? '.env.production' : '.env');
+        
+        if (missing.length > 0) {
+          console.warn('\n⚠️  WARNING: Missing environment variables:');
+          missing.forEach(v => console.warn(`   - ${v}`));
+          console.warn('⚠️  The build may not work correctly without these variables.');
+          console.warn('⚠️  Copy env.example.txt to .env.production and fill in values.');
+          console.warn('⚠️  Make sure the file is in the l2-educa/ directory (same as package.json)\n');
+        }
+        
+        // Log loaded variables (without exposing sensitive data)
+        console.log('\n✅ Environment variables status:');
+        console.log(`   - VITE_SUPABASE_URL: ${env.VITE_SUPABASE_URL ? '✓ Loaded' : '✗ Missing'}`);
+        console.log(`   - VITE_SUPABASE_ANON_KEY: ${env.VITE_SUPABASE_ANON_KEY ? '✓ Loaded' : '✗ Missing'}`);
+        console.log(`   - VITE_BACKEND_URL: ${env.VITE_BACKEND_URL ? '✓ Loaded' : '⚠️  Using default'}`);
+        console.log(`   - VITE_SITE_URL: ${env.VITE_SITE_URL ? '✓ Loaded' : '⚠️  Using default'}`);
+        
+        if (env.VITE_SUPABASE_URL) {
+          console.log(`\n🔗 Supabase URL: ${env.VITE_SUPABASE_URL}`);
+        }
+        if (env.VITE_SITE_URL) {
+          console.log(`🌐 Site URL: ${env.VITE_SITE_URL}`);
+        }
+        console.log(''); // Empty line for readability
+      }
     }
   ],
   base: '/l2/', // Base path for subdirectory deployment
   build: {
     // Optimize for production with esbuild (faster and built-in)
     minify: 'esbuild',
+    // Drop console and debugger statements in production
+    ...(mode === 'production' && {
+      esbuild: {
+        drop: ['console', 'debugger'],
+      },
+    }),
     // Better code splitting for optimal caching
     rollupOptions: {
       output: {
@@ -99,4 +148,4 @@ export default defineConfig(({ mode }) => ({
   define: {
     'import.meta.env.MODE': JSON.stringify(mode)
   }
-}))
+}})

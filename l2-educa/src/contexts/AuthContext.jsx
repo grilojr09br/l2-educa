@@ -6,6 +6,7 @@ import {
   clearSessionTimeout,
   clearRateLimit 
 } from '../utils/securityUtils';
+import logger from '../utils/logger';
 
 const AuthContext = createContext(undefined);
 
@@ -17,11 +18,11 @@ export const AuthProvider = ({ children }) => {
 
   // Handle session timeout
   const handleSessionTimeout = useCallback(async () => {
-    console.log('⏱️ Session timeout - logging out');
+    logger.log('⏱️ Session timeout - logging out');
     try {
       await logout();
     } catch (error) {
-      console.error('Timeout logout error:', error);
+      logger.error('Timeout logout error:', error);
     }
   }, []);
 
@@ -41,7 +42,7 @@ export const AuthProvider = ({ children }) => {
       // Fallback if users table doesn't have the record yet
       return null;
     } catch (error) {
-      console.error('Error fetching user data:', error);
+      logger.error('Error fetching user data:', error);
       return null;
     }
   }, []);
@@ -54,13 +55,13 @@ export const AuthProvider = ({ children }) => {
       if (!isMounted) return;
       
       try {
-        console.log('🔍 Initial session check...');
+        logger.log('🔍 Initial session check...');
         const { data: { session: currentSession }, error: sessionError } = await supabase.auth.getSession();
         
         if (!isMounted) return;
         
         if (sessionError) {
-          console.error('❌ Session error:', sessionError);
+          logger.error('❌ Session error:', sessionError);
           setSession(null);
           setUser(null);
           setLoading(false);
@@ -68,7 +69,7 @@ export const AuthProvider = ({ children }) => {
           return;
         }
 
-        console.log('📦 Session found:', {
+        logger.log('📦 Session found:', {
           hasSession: !!currentSession,
           email: currentSession?.user?.email,
           emailConfirmed: !!currentSession?.user?.email_confirmed_at,
@@ -95,7 +96,7 @@ export const AuthProvider = ({ children }) => {
           setUser(null);
         }
       } catch (error) {
-        console.error('❌ Error checking session:', error);
+        logger.error('❌ Error checking session:', error);
         if (isMounted) {
           setSession(null);
           setUser(null);
@@ -115,7 +116,7 @@ export const AuthProvider = ({ children }) => {
       async (event, currentSession) => {
         if (!isMounted || !initialCheckDone) return;
         
-        console.log('🔐 Auth state changed:', event);
+        logger.log('🔐 Auth state changed:', event);
         
         // Don't set loading for auth state changes after initial check
         setSession(currentSession);
@@ -161,6 +162,9 @@ export const AuthProvider = ({ children }) => {
    */
   const register = async (email, password, username) => {
     try {
+      // Get production URL from env or fallback to current origin
+      const siteUrl = import.meta.env.VITE_SITE_URL || window.location.origin;
+      
       // Use Supabase Auth signup with username in metadata
       // Email confirmation is required (configure in Supabase dashboard)
       const { data: authData, error: authError } = await supabase.auth.signUp({
@@ -170,7 +174,7 @@ export const AuthProvider = ({ children }) => {
           data: {
             username,
           },
-          emailRedirectTo: `${window.location.origin}/#/verify-email`,
+          emailRedirectTo: `${siteUrl}/#/verify-email`,
         },
       });
 
@@ -189,7 +193,7 @@ export const AuthProvider = ({ children }) => {
       // Success! User needs to verify email before accessing the platform
       return { success: true, user: authData.user, requiresEmailVerification: true };
     } catch (error) {
-      console.error('❌ Registration error:', error);
+      logger.error('❌ Registration error:', error);
       throw error;
     }
   };
@@ -233,7 +237,7 @@ export const AuthProvider = ({ children }) => {
         emailVerified: !!data.session.user?.email_confirmed_at
       };
     } catch (error) {
-      console.error('❌ Login error:', error);
+      logger.error('❌ Login error:', error);
       throw error;
     }
   };
@@ -244,7 +248,7 @@ export const AuthProvider = ({ children }) => {
    */
   const logout = async () => {
     try {
-      console.log('🚪 Iniciando logout...');
+      logger.log('🚪 Iniciando logout...');
       
       // Force global signout (all sessions)
       const { error } = await supabase.auth.signOut({ scope: 'global' });
@@ -261,10 +265,10 @@ export const AuthProvider = ({ children }) => {
       localStorage.removeItem('l2educa_last_activity');
       sessionStorage.clear();
       
-      console.log('✅ Logout completo!');
+      logger.log('✅ Logout completo!');
       return { success: true };
     } catch (error) {
-      console.error('❌ Logout error:', error);
+      logger.error('❌ Logout error:', error);
       // Even if there's an error, clear local state
       setUser(null);
       setSession(null);
@@ -278,14 +282,17 @@ export const AuthProvider = ({ children }) => {
    */
   const resetPassword = async (email) => {
     try {
+      // Get production URL from env or fallback to current origin
+      const siteUrl = import.meta.env.VITE_SITE_URL || window.location.origin;
+      
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${window.location.origin}/reset-password`,
+        redirectTo: `${siteUrl}/#/reset-password`,
       });
 
       if (error) throw error;
       return { success: true };
     } catch (error) {
-      console.error('Password reset error:', error);
+      logger.error('Password reset error:', error);
       throw error;
     }
   };
@@ -302,7 +309,7 @@ export const AuthProvider = ({ children }) => {
       if (error) throw error;
       return { success: true };
     } catch (error) {
-      console.error('Update password error:', error);
+      logger.error('Update password error:', error);
       throw error;
     }
   };
@@ -322,7 +329,7 @@ export const AuthProvider = ({ children }) => {
       if (error) throw error;
       return { success: true };
     } catch (error) {
-      console.error('Update profile error:', error);
+      logger.error('Update profile error:', error);
       throw error;
     }
   };
@@ -343,7 +350,7 @@ export const AuthProvider = ({ children }) => {
       if (error) throw error;
       return data;
     } catch (error) {
-      console.error('Get profile error:', error);
+      logger.error('Get profile error:', error);
       throw error;
     }
   };
@@ -357,18 +364,21 @@ export const AuthProvider = ({ children }) => {
         throw new Error('Email não encontrado');
       }
 
+      // Get production URL from env or fallback to current origin
+      const siteUrl = import.meta.env.VITE_SITE_URL || window.location.origin;
+
       const { error } = await supabase.auth.resend({
         type: 'signup',
         email: user.email,
         options: {
-          emailRedirectTo: `${window.location.origin}/#/verify-email`,
+          emailRedirectTo: `${siteUrl}/#/verify-email`,
         },
       });
 
       if (error) throw error;
       return { success: true };
     } catch (error) {
-      console.error('❌ Resend verification error:', error);
+      logger.error('❌ Resend verification error:', error);
       throw error;
     }
   };

@@ -32,14 +32,34 @@ Para forçar verificação de email antes do acesso:
 Ainda em **Authentication** → **Settings**:
 
 1. Role até **URL Configuration**
-2. Em **Redirect URLs**, adicione:
+
+2. **Site URL:** Configure para produção:
    ```
+   https://silviosuperandolimites.com.br/l2
+   ```
+   ⚠️ **CRÍTICO:** Inclua o caminho `/l2` pois o site está nesse subdiretório!
+
+3. Em **Redirect URLs**, adicione:
+   ```
+   # Produção (OBRIGATÓRIO!)
+   https://silviosuperandolimites.com.br/l2#/verify-email
+   https://silviosuperandolimites.com.br/l2#/reset-password
+   https://silviosuperandolimites.com.br/l2/
+   
+   # Desenvolvimento (opcional - manter para testes)
    http://localhost:5173/#/verify-email
-   https://seu-dominio.com/#/verify-email
-   http://localhost:5173/#/
-   https://seu-dominio.com/#/
+   http://localhost:5173/#/reset-password
+   http://localhost:5173/
    ```
-3. Clique em **Save**
+   ⚠️ **Cada URL de produção DEVE incluir `/l2` antes do hash (#) ou barra final!**
+
+4. Clique em **Save**
+
+⚠️ **IMPORTANTE:** 
+- O Site URL define para onde os emails de confirmação redirecionam
+- Se estiver como `localhost`, emails em produção não funcionarão corretamente
+- SEMPRE use `https://silviosuperandolimites.com.br/l2` em produção
+- **NÃO esqueça o `/l2`** - sem ele, os links não funcionarão!
 
 ---
 
@@ -373,6 +393,89 @@ LIMIT 100;
 
 ---
 
+## 7. Novo: Seamless Login & Login por Username
+
+### Sistema de Login Inteligente
+
+A partir da nova versão, o L2 EDUCA possui um fluxo de login seamless (sem costura):
+
+**Como funciona:**
+1. Usuário entra com email ou username
+2. Sistema detecta automaticamente se usuário existe
+3. Se existe → mostra campo de senha (login)
+4. Se não existe → mostra formulário completo (registro)
+
+**Configuração no Supabase:**
+- Nenhuma configuração adicional necessária
+- O Supabase continua usando email para autenticação
+- O backend faz a conversão username → email internamente
+
+### Login por Username
+
+Agora os usuários podem fazer login usando:
+- ✅ Email: `usuario@exemplo.com`
+- ✅ Username: `usuario123`
+
+**Funcionamento:**
+1. Backend recebe identifier (email ou username)
+2. Se contém "@" → trata como email
+3. Se não contém "@" → busca email do username na tabela `users`
+4. Autentica com Supabase usando o email
+
+**Tabela users:**
+```sql
+-- Estrutura necessária
+CREATE TABLE users (
+  id UUID PRIMARY KEY REFERENCES auth.users(id),
+  email TEXT UNIQUE NOT NULL,
+  username TEXT UNIQUE NOT NULL,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Index para performance
+CREATE INDEX idx_users_username ON users(username);
+CREATE INDEX idx_users_email ON users(email);
+```
+
+### Endpoints Novos
+
+**POST /api/auth/check-user**
+```json
+{
+  "identifier": "usuario@exemplo.com"
+}
+```
+
+Resposta:
+```json
+{
+  "success": true,
+  "data": {
+    "exists": true,
+    "requiresRegistration": false,
+    "identifierType": "email"
+  }
+}
+```
+
+**POST /api/auth/login** (atualizado)
+```json
+{
+  "identifier": "usuario123",  // pode ser email OU username
+  "password": "senha123"
+}
+```
+
+### Proteção Contra User Enumeration
+
+O endpoint `check-user` possui:
+- Rate limiting muito restrito (menos tentativas que login)
+- Respostas genéricas em caso de erro
+- Audit logging de todas as verificações
+- IP-based rate limiting
+
+---
+
 ## 🎉 Conclusão
 
 Com estas configurações, você tem um sistema de autenticação:
@@ -380,10 +483,15 @@ Com estas configurações, você tem um sistema de autenticação:
 ✅ Seguro com RLS e rate limiting  
 ✅ Verificação de email obrigatória  
 ✅ Login social com Google  
+✅ **Login seamless (detecta automaticamente novo/existente)**  
+✅ **Login por email OU username**  
 ✅ Logout robusto que limpa tudo  
 ✅ Emails customizados em português  
+✅ **Redirecionamentos para domínio de produção**  
 ✅ Proteção contra tentativas excessivas  
+✅ Proteção contra user enumeration  
 ✅ Timeout de sessão automático  
+✅ **Campos preparados para chat (display_name, status, last_seen)**  
 
 **Parabéns! Você implementou um sistema de autenticação de nível enterprise! 🚀**
 

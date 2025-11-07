@@ -1,5 +1,5 @@
 import React from 'react';
-import LoginForm from '../components/auth/LoginForm';
+import EnhancedSeamlessLoginForm from '../components/auth/EnhancedSeamlessLoginForm';
 import EmailVerificationNotice from '../components/auth/EmailVerificationNotice';
 import AuroraBackground from '../components/AuroraBackground';
 import './AuthPages.css';
@@ -17,7 +17,7 @@ const Login = () => {
 
         <div className="auth-card">
           <EmailVerificationNotice />
-          <LoginForm />
+          <EnhancedSeamlessLoginForm />
         </div>
       </div>
     </div>

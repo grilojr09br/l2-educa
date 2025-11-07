@@ -96,6 +96,12 @@ RATE_LIMIT_MAX_REQUESTS=100
    - **anon/public** key → `SUPABASE_ANON_KEY`
    - **service_role** key → `SUPABASE_SERVICE_ROLE_KEY`
 
+#### **IMPORTANT: Production Domain Configuration**
+- `FRONTEND_URL` must be set to `https://silviosuperandolimites.com.br/l2`
+- **Note the `/l2` path** - this matches your deployment subdirectory
+- This is critical for email confirmation links to work correctly
+- Email links will redirect to this URL after verification
+
 #### **JWT Secret:**
 Generate a secure random string (min 32 characters):
 
@@ -261,7 +267,34 @@ Go back to Railway and update the `CORS_ORIGIN` variable:
 
 ---
 
-## Part 5: Test Complete Setup
+## Part 5: Configure Supabase for Production
+
+**CRITICAL STEP** - Email confirmations won't work without this!
+
+### **Update Supabase URLs**
+
+1. Go to Supabase Dashboard: https://app.supabase.com
+2. Select your project
+3. Go to **Settings** → **Authentication** → **URL Configuration**
+
+4. **Site URL:** Enter `https://silviosuperandolimites.com.br/l2`
+   - ⚠️ **CRITICAL:** Include the `/l2` path!
+
+5. **Redirect URLs:** Add these:
+   ```
+   https://silviosuperandolimites.com.br/l2#/verify-email
+   https://silviosuperandolimites.com.br/l2#/reset-password
+   https://silviosuperandolimites.com.br/l2/
+   ```
+   - ⚠️ **Note:** Each URL must include `/l2` before the hash or trailing slash
+
+6. Click **Save**
+
+7. **Verify:** Register a test account and check that the verification email links point to `silviosuperandolimites.com.br/l2` (NOT localhost and MUST include /l2!)
+
+---
+
+## Part 6: Test Complete Setup
 
 ### **Test 1: Backend Health Check**
 
@@ -275,20 +308,48 @@ curl https://your-app-production.up.railway.app/api/health
 
 ### **Test 2: Frontend Loading**
 
-1. Open your website: `https://yourdomain.com`
+1. Open your website: `https://silviosuperandolimites.com.br/l2`
 2. Open browser console (F12)
 3. Check for errors
 4. ✅ Should load without CORS errors
 
 ---
 
-### **Test 3: Login/Register**
+### **Test 3: Seamless Login Flow**
 
-1. Try creating an account
-2. Check email for verification
-3. Try logging in
-4. Upload an avatar
-5. ✅ Everything should work!
+1. Go to login page
+2. Enter a new email (not registered yet)
+3. Click "Continuar"
+4. ✅ Should show registration form (username, password fields)
+
+5. Fill in details and create account
+6. ✅ Should show "Conta Criada!" message
+
+### **Test 4: Email Verification (CRITICAL)**
+
+1. Check your email inbox (and spam!)
+2. ✅ Verification email received
+3. **CHECK THE LINK:** Should be `https://silviosuperandolimites.com.br/l2#/verify-email?token=...`
+4. ✅ **MUST include `/l2` in the path!**
+5. ✅ **NOT localhost!**
+6. Click the link
+7. ✅ Should redirect to your production site at `/l2`
+8. ✅ Should show "Email verificado com sucesso!"
+
+### **Test 5: Login with Email/Username**
+
+1. Try logging in with your email
+2. ✅ Should work
+3. Logout
+4. Try logging in with your username (without @)
+5. ✅ Should also work!
+
+### **Test 6: Profile & Avatar**
+
+1. Go to profile page
+2. Edit your profile
+3. Upload an avatar
+4. ✅ Everything should save correctly
 
 ---
 

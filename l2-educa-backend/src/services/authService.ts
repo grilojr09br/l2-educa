@@ -83,107 +83,178 @@ export class AuthService {
   }
 
   /**
-   * Check if user exists by email or username
+   * Check if user exists by email or username - ENHANCED
    */
   static async checkUserExists(identifier: string): Promise<{
     exists: boolean;
     requiresRegistration: boolean;
     identifierType: 'email' | 'username';
   }> {
-    // Determine if identifier is email or username
-    const isEmail = identifier.includes('@');
-    const identifierType = isEmail ? 'email' : 'username';
+    try {
+      // Validate input
+      if (!identifier || identifier.trim().length === 0) {
+        throw new Error('Identificador é obrigatório');
+      }
 
-    // Sanitize input
-    const sanitizedIdentifier = isEmail 
-      ? sanitizeEmail(identifier) 
-      : sanitizeUsername(identifier);
+      // Determine if identifier is email or username
+      const isEmail = identifier.includes('@');
+      const identifierType = isEmail ? 'email' : 'username';
 
-    // Check in users table
-    const query = supabaseAdmin
-      .from('users')
-      .select('id');
+      // Sanitize input
+      const sanitizedIdentifier = isEmail 
+        ? sanitizeEmail(identifier) 
+        : sanitizeUsername(identifier);
 
-    if (isEmail) {
-      query.eq('email', sanitizedIdentifier);
-    } else {
-      query.eq('username', sanitizedIdentifier);
+      // Additional validation
+      if (!sanitizedIdentifier) {
+        throw new Error(`${isEmail ? 'Email' : 'Username'} inválido`);
+      }
+
+      // Check in users table
+      const query = supabaseAdmin
+        .from('users')
+        .select('id, email, username');
+
+      if (isEmail) {
+        query.eq('email', sanitizedIdentifier);
+      } else {
+        query.eq('username', sanitizedIdentifier);
+      }
+
+      const { data, error } = await query.maybeSingle(); // Use maybeSingle instead of single
+
+      // Handle database errors
+      if (error && error.code !== 'PGRST116') { // PGRST116 = no rows found (expected)
+        console.error('Database error in checkUserExists:', error);
+        throw new Error('Erro ao verificar usuário. Tente novamente.');
+      }
+
+      // User exists if we found a record
+      const exists = !!data;
+
+      return {
+        exists,
+        requiresRegistration: !exists,
+        identifierType,
+      };
+    } catch (error) {
+      // Re-throw known errors
+      if (error instanceof Error && error.message.includes('inválido')) {
+        throw error;
+      }
+      // Wrap unknown errors
+      console.error('Unexpected error in checkUserExists:', error);
+      throw new Error('Erro ao verificar usuário. Tente novamente.');
     }
-
-    const { data, error } = await query.single();
-
-    // User exists if we found a record
-    const exists = !error && !!data;
-
-    return {
-      exists,
-      requiresRegistration: !exists,
-      identifierType,
-    };
   }
 
   /**
-   * Login user with email OR username
+   * Login user with email OR username - ENHANCED
    */
   static async login(identifier: string, password: string): Promise<AuthResponse> {
-    // Validate inputs
-    if (!identifier || !password) {
-      throw new Error('Email/username e senha são obrigatórios');
-    }
+    try {
+      // Validate inputs
+      if (!identifier || !password) {
+        throw new Error('Email/username e senha são obrigatórios');
+      }
 
-    // Determine if identifier is email or username
-    const isEmail = identifier.includes('@');
-    let emailToUse = identifier;
+      if (identifier.trim().length === 0) {
+        throw new Error('Email/username não pode estar vazio');
+      }
 
-    // If username provided, look up the email first
-    if (!isEmail) {
-      const sanitizedUsername = sanitizeUsername(identifier);
-      
-      const { data: userData, error: userError } = await supabaseAdmin
-        .from('users')
-        .select('email')
-        .eq('username', sanitizedUsername)
-        .single();
+      if (password.length < 6) {
+        throw new Error('Senha inválida');
+      }
 
-      if (userError || !userData) {
+      // Determine if identifier is email or username
+      const isEmail = identifier.includes('@');
+      let emailToUse = identifier;
+
+      // If username provided, look up the email first
+      if (!isEmail) {
+        const sanitizedUsername = sanitizeUsername(identifier);
+        
+        if (!sanitizedUsername || sanitizedUsername.length < 3) {
+          throw new Error('Username inválido');
+        }
+
+        const { data: userData, error: userError } = await supabaseAdmin
+          .from('users')
+          .select('email, username')
+          .eq('username', sanitizedUsername)
+          .maybeSingle();
+
+        if (userError || !userData) {
+          console.log(`Username not found: ${sanitizedUsername}`);
+          throw new Error('Email ou senha incorretos');
+        }
+
+        emailToUse = userData.email;
+        console.log(`Username "${sanitizedUsername}" resolved to email: ${emailToUse}`);
+      } else {
+        emailToUse = sanitizeEmail(identifier);
+      }
+
+      // Authenticate with Supabase using email
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: emailToUse,
+        password,
+      });
+
+      if (error) {
+        console.error('Supabase auth error:', error.message);
+        
+        // Handle specific auth errors
+        if (error.message.includes('Invalid login credentials')) {
+          throw new Error('Email ou senha incorretos');
+        }
+        if (error.message.includes('Email not confirmed')) {
+          throw new Error('EMAIL_NOT_CONFIRMED');
+        }
         throw new Error('Email ou senha incorretos');
       }
 
-      emailToUse = userData.email;
-    } else {
-      emailToUse = sanitizeEmail(identifier);
+      if (!data.user || !data.session) {
+        throw new Error('Email ou senha incorretos');
+      }
+
+      // Fetch user data
+      const { data: userData, error: userError } = await supabaseAdmin
+        .from('users')
+        .select('*')
+        .eq('id', data.user.id)
+        .maybeSingle();
+
+      if (userError || !userData) {
+        console.error('Error fetching user data:', userError);
+        throw new Error('Erro ao buscar dados do usuário');
+      }
+
+      // Generate JWT tokens
+      const accessToken = this.generateAccessToken(data.user.id, emailToUse);
+      const refreshToken = this.generateRefreshToken(data.user.id);
+
+      return {
+        accessToken,
+        refreshToken,
+        user: userData,
+        emailVerified: !!data.user.email_confirmed_at,
+      };
+    } catch (error) {
+      // Re-throw known errors (like EMAIL_NOT_CONFIRMED)
+      if (error instanceof Error && (
+        error.message.includes('EMAIL_NOT_CONFIRMED') ||
+        error.message.includes('inválido') ||
+        error.message.includes('incorretos') ||
+        error.message.includes('obrigatório')
+      )) {
+        throw error;
+      }
+      
+      // Log and wrap unexpected errors
+      console.error('Unexpected error in login:', error);
+      throw new Error('Erro ao fazer login. Tente novamente.');
     }
-
-    // Authenticate with Supabase using email
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email: emailToUse,
-      password,
-    });
-
-    if (error || !data.user || !data.session) {
-      throw new Error('Email ou senha incorretos');
-    }
-
-    // Fetch user data
-    const { data: userData, error: userError } = await supabaseAdmin
-      .from('users')
-      .select('*')
-      .eq('id', data.user.id)
-      .single();
-
-    if (userError || !userData) {
-      throw new Error('Erro ao buscar dados do usuário');
-    }
-
-    // Generate JWT tokens
-    const accessToken = this.generateAccessToken(data.user.id, emailToUse);
-    const refreshToken = this.generateRefreshToken(data.user.id);
-
-    return {
-      accessToken,
-      refreshToken,
-      user: userData,
-    };
   }
 
   /**
