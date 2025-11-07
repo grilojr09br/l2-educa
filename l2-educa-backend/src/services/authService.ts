@@ -83,20 +83,80 @@ export class AuthService {
   }
 
   /**
-   * Login user
+   * Check if user exists by email or username
    */
-  static async login(email: string, password: string): Promise<AuthResponse> {
-    // Sanitize email
-    const sanitizedEmail = sanitizeEmail(email);
+  static async checkUserExists(identifier: string): Promise<{
+    exists: boolean;
+    requiresRegistration: boolean;
+    identifierType: 'email' | 'username';
+  }> {
+    // Determine if identifier is email or username
+    const isEmail = identifier.includes('@');
+    const identifierType = isEmail ? 'email' : 'username';
 
-    // Validate inputs
-    if (!sanitizedEmail || !password) {
-      throw new Error('Email e senha são obrigatórios');
+    // Sanitize input
+    const sanitizedIdentifier = isEmail 
+      ? sanitizeEmail(identifier) 
+      : sanitizeUsername(identifier);
+
+    // Check in users table
+    const query = supabaseAdmin
+      .from('users')
+      .select('id');
+
+    if (isEmail) {
+      query.eq('email', sanitizedIdentifier);
+    } else {
+      query.eq('username', sanitizedIdentifier);
     }
 
-    // Authenticate with Supabase
+    const { data, error } = await query.single();
+
+    // User exists if we found a record
+    const exists = !error && !!data;
+
+    return {
+      exists,
+      requiresRegistration: !exists,
+      identifierType,
+    };
+  }
+
+  /**
+   * Login user with email OR username
+   */
+  static async login(identifier: string, password: string): Promise<AuthResponse> {
+    // Validate inputs
+    if (!identifier || !password) {
+      throw new Error('Email/username e senha são obrigatórios');
+    }
+
+    // Determine if identifier is email or username
+    const isEmail = identifier.includes('@');
+    let emailToUse = identifier;
+
+    // If username provided, look up the email first
+    if (!isEmail) {
+      const sanitizedUsername = sanitizeUsername(identifier);
+      
+      const { data: userData, error: userError } = await supabaseAdmin
+        .from('users')
+        .select('email')
+        .eq('username', sanitizedUsername)
+        .single();
+
+      if (userError || !userData) {
+        throw new Error('Email ou senha incorretos');
+      }
+
+      emailToUse = userData.email;
+    } else {
+      emailToUse = sanitizeEmail(identifier);
+    }
+
+    // Authenticate with Supabase using email
     const { data, error } = await supabase.auth.signInWithPassword({
-      email: sanitizedEmail,
+      email: emailToUse,
       password,
     });
 
@@ -116,7 +176,7 @@ export class AuthService {
     }
 
     // Generate JWT tokens
-    const accessToken = this.generateAccessToken(data.user.id, sanitizedEmail);
+    const accessToken = this.generateAccessToken(data.user.id, emailToUse);
     const refreshToken = this.generateRefreshToken(data.user.id);
 
     return {
@@ -164,9 +224,9 @@ export class AuthService {
   static async requestPasswordReset(email: string): Promise<void> {
     const sanitizedEmail = sanitizeEmail(email);
 
-    // Use Supabase's built-in password reset
+    // Use Supabase's built-in password reset with production URL
     const { error } = await supabase.auth.resetPasswordForEmail(sanitizedEmail, {
-      redirectTo: `${env.FRONTEND_URL}/reset-password`,
+      redirectTo: `${env.FRONTEND_URL}/#/reset-password`,
     });
 
     if (error) {

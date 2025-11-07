@@ -4,6 +4,8 @@ import { AuditService } from '../services/auditService';
 import {
   registerSchema,
   loginSchema,
+  legacyLoginSchema,
+  checkUserExistsSchema,
   passwordResetRequestSchema,
   passwordResetConfirmSchema,
   changePasswordSchema,
@@ -67,12 +69,12 @@ export class AuthController {
   }
 
   /**
-   * Login user
+   * Check if user exists (for seamless login flow)
    */
-  static async login(req: Request, res: Response): Promise<void> {
+  static async checkUserExists(req: Request, res: Response): Promise<void> {
     try {
       // Validate input
-      const validation = safeValidate(loginSchema, req.body);
+      const validation = safeValidate(checkUserExistsSchema, req.body);
       if (!validation.success) {
         res.status(400).json({
           success: false,
@@ -83,11 +85,58 @@ export class AuthController {
         return;
       }
 
-      const { email, password } = validation.data;
+      const { identifier } = validation.data;
+
+      // Check if user exists
+      const result = await AuthService.checkUserExists(identifier);
+
+      res.status(200).json({
+        success: true,
+        data: result,
+        statusCode: 200,
+      });
+    } catch (error) {
+      res.status(500).json({
+        success: false,
+        error: error instanceof Error ? error.message : 'Erro ao verificar usuário',
+        statusCode: 500,
+      });
+    }
+  }
+
+  /**
+   * Login user (supports email OR username)
+   */
+  static async login(req: Request, res: Response): Promise<void> {
+    try {
+      // Try new schema first (identifier field)
+      let validation = safeValidate(loginSchema, req.body);
+      
+      // Fallback to legacy schema (email field) for backward compatibility
+      if (!validation.success && req.body.email) {
+        const legacyValidation = safeValidate(legacyLoginSchema, req.body);
+        if (legacyValidation.success) {
+          // Convert legacy format to new format
+          req.body.identifier = req.body.email;
+          validation = safeValidate(loginSchema, req.body);
+        }
+      }
+
+      if (!validation.success) {
+        res.status(400).json({
+          success: false,
+          error: 'Dados inválidos',
+          details: validation.errors.issues,
+          statusCode: 400,
+        });
+        return;
+      }
+
+      const { identifier, password } = validation.data;
 
       try {
-        // Attempt login
-        const response = await AuthService.login(email, password);
+        // Attempt login with identifier (email or username)
+        const response = await AuthService.login(identifier, password);
 
         // Set refresh token as httpOnly cookie
         res.cookie('refreshToken', response.refreshToken, {
@@ -120,7 +169,7 @@ export class AuthController {
       } catch (loginError) {
         // Log failed login
         await AuditService.logLoginFailure(
-          email,
+          identifier,
           req.ip,
           req.headers['user-agent']
         );

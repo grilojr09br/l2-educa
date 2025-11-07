@@ -42,8 +42,14 @@ const validateEnvironment = (): Environment => {
     JWT_SECRET: process.env.JWT_SECRET!,
     JWT_EXPIRES_IN: process.env.JWT_EXPIRES_IN || '1h',
     REFRESH_TOKEN_EXPIRES_IN: process.env.REFRESH_TOKEN_EXPIRES_IN || '7d',
-    FRONTEND_URL: process.env.FRONTEND_URL || 'http://localhost:5173',
-    ALLOWED_ORIGINS: (process.env.ALLOWED_ORIGINS || 'http://localhost:5173,http://localhost:3000')
+    FRONTEND_URL: process.env.FRONTEND_URL || 
+      (process.env.NODE_ENV === 'production' 
+        ? 'https://silviosuperandolimites.com.br/l2' 
+        : 'http://localhost:5173'),
+    ALLOWED_ORIGINS: (process.env.ALLOWED_ORIGINS || 
+      (process.env.NODE_ENV === 'production'
+        ? 'https://silviosuperandolimites.com.br'
+        : 'http://localhost:5173,http://localhost:3000'))
       .split(',')
       .map((origin) => origin.trim()),
   };

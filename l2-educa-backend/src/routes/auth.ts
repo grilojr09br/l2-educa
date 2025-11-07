@@ -18,6 +18,12 @@ router.post(
 );
 
 router.post(
+  '/check-user',
+  strictRateLimiterMiddleware, // Very strict to prevent user enumeration
+  asyncHandler(AuthController.checkUserExists)
+);
+
+router.post(
   '/login',
   authRateLimiterMiddleware, // Stricter rate limit for login
   asyncHandler(AuthController.login)

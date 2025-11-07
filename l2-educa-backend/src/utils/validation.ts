@@ -29,8 +29,30 @@ export const registerSchema = z.object({
   username: usernameSchema,
 });
 
-// Login validation schema
+// Login identifier schema (accepts email OR username)
+export const loginIdentifierSchema = z
+  .string()
+  .min(1, 'Email ou username é obrigatório')
+  .refine(
+    (val) => {
+      // If it contains @, validate as email
+      if (val.includes('@')) {
+        return emailSchema.safeParse(val).success;
+      }
+      // Otherwise validate as username
+      return usernameSchema.safeParse(val).success;
+    },
+    { message: 'Email ou username inválido' }
+  );
+
+// Login validation schema (supports email OR username)
 export const loginSchema = z.object({
+  identifier: loginIdentifierSchema,
+  password: z.string().min(1, 'Senha é obrigatória'),
+});
+
+// Legacy login schema for backward compatibility
+export const legacyLoginSchema = z.object({
   email: emailSchema,
   password: z.string().min(1, 'Senha é obrigatória'),
 });
@@ -52,12 +74,20 @@ export const changePasswordSchema = z.object({
   newPassword: passwordSchema,
 });
 
-// Update profile schema
+// Check user exists schema
+export const checkUserExistsSchema = z.object({
+  identifier: loginIdentifierSchema,
+});
+
+// Update profile schema (enhanced for chat)
 export const updateProfileSchema = z.object({
   full_name: z.string().max(100).optional(),
+  display_name: z.string().min(2).max(50).optional(),
   bio: z.string().max(500).optional(),
-  avatar_url: z.string().url().optional(),
+  avatar_url: z.string().url().optional().or(z.literal('')),
   preferences: z.record(z.string(), z.any()).optional(),
+  status: z.enum(['online', 'offline', 'away']).optional(),
+  show_online_status: z.boolean().optional(),
 });
 
 // Email verification schema
