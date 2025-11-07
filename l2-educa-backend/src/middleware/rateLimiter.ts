@@ -75,8 +75,8 @@ class RateLimiter {
 
 // Create different rate limiters for different endpoints
 export const generalRateLimiter = new RateLimiter(15 * 60 * 1000, 100); // 100 req per 15 min
-export const authRateLimiter = new RateLimiter(15 * 60 * 1000, 5); // 5 req per 15 min (for login)
-export const strictRateLimiter = new RateLimiter(60 * 60 * 1000, 3); // 3 req per hour (for password reset)
+export const authRateLimiter = new RateLimiter(15 * 60 * 1000, 10); // 10 req per 15 min (for login)
+export const strictRateLimiter = new RateLimiter(15 * 60 * 1000, 20); // 20 req per 15 min (for testing - reduce in production!)
 
 // Export middleware functions
 export const rateLimiterMiddleware = generalRateLimiter.middleware;
