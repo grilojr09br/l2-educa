@@ -570,6 +570,405 @@ Once your code is on GitHub:
 
 ---
 
+## 🗑️ How to Remove Files from GitHub Repository
+
+Sometimes you need to remove files from your GitHub repository. Here's how:
+
+---
+
+### **Scenario 1: Remove File from Git (Keep it Locally)** ⭐ Most Common
+
+Use this when you want to keep the file on your computer but remove it from GitHub (e.g., `.env`, `node_modules/`).
+
+```bash
+# Remove a single file
+git rm --cached filename.ext
+
+# Remove a folder
+git rm --cached -r folder_name/
+
+# Examples:
+git rm --cached .env
+git rm --cached -r node_modules/
+git rm --cached -r dist/
+```
+
+Then commit and push:
+
+```bash
+git commit -m "Remove unnecessary files from repository"
+git push
+```
+
+✅ **Result:** File is removed from GitHub but stays on your computer.
+
+---
+
+### **Scenario 2: Remove File from Git AND Locally**
+
+Use this when you want to delete the file completely.
+
+```bash
+# Remove a single file
+git rm filename.ext
+
+# Remove a folder
+git rm -r folder_name/
+
+# Examples:
+git rm old-file.js
+git rm -r old-folder/
+```
+
+Then commit and push:
+
+```bash
+git commit -m "Delete old files"
+git push
+```
+
+⚠️ **Warning:** This deletes the file from your computer too!
+
+---
+
+### **Scenario 3: Remove Multiple Files by Pattern**
+
+Remove all files matching a pattern:
+
+```bash
+# Remove all .log files
+git rm --cached *.log
+
+# Remove all files in a specific pattern
+git rm --cached "**/*.tmp"
+
+# Remove all node_modules folders
+git rm --cached -r "**/node_modules/"
+```
+
+Commit and push:
+
+```bash
+git commit -m "Remove log and temp files"
+git push
+```
+
+---
+
+### **Scenario 4: Remove Sensitive File from History** 🔐 Important!
+
+If you accidentally committed sensitive data (passwords, API keys), removing it normally still leaves it in git history. Use this to completely erase it:
+
+#### **Option A: Using git filter-repo (Recommended)**
+
+1. **Install git filter-repo:**
+
+```bash
+# Windows (using pip)
+pip install git-filter-repo
+
+# Mac
+brew install git-filter-repo
+
+# Linux
+sudo apt-get install git-filter-repo
+```
+
+2. **Remove the file from history:**
+
+```bash
+# Remove a specific file
+git filter-repo --path .env --invert-paths
+
+# Remove a folder
+git filter-repo --path secrets/ --invert-paths
+```
+
+3. **Force push to GitHub:**
+
+```bash
+git push origin --force --all
+```
+
+⚠️ **Warning:** This rewrites git history! Anyone else working on the project will need to re-clone.
+
+#### **Option B: Using BFG Repo-Cleaner (Easier)**
+
+1. **Download BFG:**
+   - Go to: https://rtyley.github.io/bfg-repo-cleaner/
+   - Download `bfg.jar`
+
+2. **Run BFG:**
+
+```bash
+# Remove a file
+java -jar bfg.jar --delete-files .env
+
+# Remove a folder
+java -jar bfg.jar --delete-folders node_modules
+
+# Remove all files larger than 100MB
+java -jar bfg.jar --strip-blobs-bigger-than 100M
+```
+
+3. **Clean and push:**
+
+```bash
+git reflog expire --expire=now --all
+git gc --prune=now --aggressive
+git push origin --force --all
+```
+
+---
+
+### **Scenario 5: Prevent File from Being Committed Again**
+
+After removing a file, prevent it from being re-added:
+
+1. **Add to .gitignore:**
+
+```bash
+echo ".env" >> .gitignore
+echo "node_modules/" >> .gitignore
+echo "*.log" >> .gitignore
+```
+
+2. **Commit .gitignore:**
+
+```bash
+git add .gitignore
+git commit -m "Update .gitignore"
+git push
+```
+
+✅ Now these files will be ignored in future commits.
+
+---
+
+### **Common Files to Remove:**
+
+```bash
+# Environment files (NEVER commit these!)
+git rm --cached .env
+git rm --cached .env.local
+git rm --cached .env.production
+
+# Dependencies (too large)
+git rm --cached -r node_modules/
+git rm --cached -r l2-educa/node_modules/
+git rm --cached -r l2-educa-backend/node_modules/
+
+# Build files (if you want to build on server)
+git rm --cached -r dist/
+git rm --cached -r build/
+
+# IDE files
+git rm --cached -r .vscode/
+git rm --cached -r .idea/
+
+# OS files
+git rm --cached .DS_Store
+git rm --cached Thumbs.db
+
+# Large archives
+git rm --cached *.zip
+git rm --cached *.rar
+
+# Log files
+git rm --cached -r logs/
+git rm --cached *.log
+```
+
+Then add them to `.gitignore` and commit:
+
+```bash
+# Add to .gitignore
+cat >> .gitignore << EOF
+.env
+.env.*
+node_modules/
+dist/
+build/
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*.zip
+*.rar
+logs/
+*.log
+EOF
+
+# Commit changes
+git add .gitignore
+git commit -m "Remove unnecessary files and update .gitignore"
+git push
+```
+
+---
+
+### **Quick Commands Reference:**
+
+```bash
+# Remove file from git, keep locally
+git rm --cached filename
+
+# Remove folder from git, keep locally
+git rm --cached -r foldername/
+
+# Remove file from git and locally
+git rm filename
+
+# Remove from history (using filter-repo)
+git filter-repo --path filename --invert-paths
+git push --force --all
+
+# Check what would be removed (dry run)
+git rm --cached --dry-run filename
+```
+
+---
+
+### **🚨 Troubleshooting:**
+
+#### **Problem: "fatal: pathspec 'file' did not match any files"**
+
+**Cause:** File doesn't exist in git.
+
+**Solution:**
+```bash
+# Check if file is tracked
+git ls-files | grep filename
+
+# If not tracked, just add to .gitignore
+echo "filename" >> .gitignore
+```
+
+#### **Problem: "error: the following file has changes staged in the index"**
+
+**Cause:** File has uncommitted changes.
+
+**Solution:**
+```bash
+# Either commit changes first
+git commit -m "Commit before removal"
+git rm --cached filename
+
+# OR force removal
+git rm --cached -f filename
+```
+
+#### **Problem: Files reappear after removal**
+
+**Cause:** Files not in `.gitignore`.
+
+**Solution:**
+```bash
+# Add to .gitignore first
+echo "filename" >> .gitignore
+git add .gitignore
+git commit -m "Add file to gitignore"
+
+# Then remove from git
+git rm --cached filename
+git commit -m "Remove file from repository"
+git push
+```
+
+#### **Problem: Repository is too large**
+
+**Cause:** Large files in history.
+
+**Solution:**
+```bash
+# Find large files
+git rev-list --objects --all | \
+  git cat-file --batch-check='%(objecttype) %(objectname) %(objectsize) %(rest)' | \
+  sed -n 's/^blob //p' | \
+  sort --numeric-sort --key=2 | \
+  tail -10
+
+# Remove large files using BFG
+java -jar bfg.jar --strip-blobs-bigger-than 100M
+git reflog expire --expire=now --all
+git gc --prune=now --aggressive
+git push --force
+```
+
+---
+
+### **✅ Recommended Cleanup for L2 EDUCA:**
+
+Here's what you should typically remove from your repository:
+
+```bash
+# 1. Remove node_modules (if committed)
+git rm --cached -r l2-educa/node_modules/
+git rm --cached -r l2-educa-backend/node_modules/
+git rm --cached -r node_modules/
+
+# 2. Remove environment files (if committed)
+git rm --cached .env
+git rm --cached l2-educa/.env
+git rm --cached l2-educa-backend/.env
+git rm --cached l2-educa-backend/.env.local
+
+# 3. Remove build artifacts (if you want to build on deployment)
+# Keep dist/ if you're deploying pre-built files to Hostinger
+# git rm --cached -r dist/
+
+# 4. Remove archives
+git rm --cached *.zip
+git rm --cached *.rar
+git rm --cached favicon.zip
+git rm --cached l2-educa.rar
+
+# 5. Remove IDE settings (optional)
+git rm --cached -r .vscode/
+git rm --cached -r .idea/
+
+# 6. Commit all removals
+git commit -m "Clean up repository: remove node_modules, env files, and archives"
+git push
+```
+
+Then update your `.gitignore`:
+
+```gitignore
+# Add these if not already present
+.env
+.env.*
+node_modules/
+*.zip
+*.rar
+.vscode/
+.idea/
+*.log
+logs/
+```
+
+---
+
+### **⚠️ Important Notes:**
+
+1. **Backup First:** Before removing files from history, make a backup of your repository
+2. **Coordinate with Team:** If others are working on the project, warn them before force pushing
+3. **Re-clone After Force Push:** After rewriting history, everyone needs to re-clone the repository
+4. **Check File Size:** GitHub has a 100MB file size limit and 1GB repository limit
+5. **Use .gitignore:** Always add removed files to `.gitignore` to prevent re-adding them
+
+---
+
+### **💡 Pro Tips:**
+
+- Use `git status` to see what's tracked before removing files
+- Use `git ls-files` to list all files currently in git
+- Add `.gitignore` BEFORE committing files (prevention is better!)
+- For sensitive data, consider rotating API keys/passwords after removal
+- Use `--dry-run` flag to test commands before executing
+
+---
+
 ## 🎉 You're Ready!
 
 Once your code is on GitHub, you can:

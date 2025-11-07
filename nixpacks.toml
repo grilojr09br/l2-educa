@@ -2,7 +2,7 @@
 nixPkgs = ["nodejs_20"]
 
 [phases.install]
-cmds = ["cd l2-educa-backend && npm ci"]
+cmds = ["cd l2-educa-backend && npm install"]
 
 [phases.build]
 cmds = ["cd l2-educa-backend && npm run build"]
