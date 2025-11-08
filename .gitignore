@@ -44,3 +44,6 @@ desktop.ini
 .cache/
 .temp/
 
+# Dev utilities and scripts (local only)
+dev-utils/
+
