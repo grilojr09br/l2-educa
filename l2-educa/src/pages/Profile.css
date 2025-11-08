@@ -10,6 +10,82 @@
   margin: 0 auto;
 }
 
+/* Back to Home Button */
+.btn-back-home {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 1.75rem;
+  margin-bottom: 2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 
+    0 4px 16px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-back-home::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg, 
+    rgba(99, 102, 241, 0.2) 0%, 
+    rgba(168, 85, 247, 0.2) 50%,
+    rgba(59, 130, 246, 0.2) 100%
+  );
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.btn-back-home:hover::before {
+  opacity: 1;
+}
+
+.btn-back-home:hover {
+  transform: translateY(-4px) translateX(-2px);
+  border-color: rgba(99, 102, 241, 0.5);
+  box-shadow: 
+    0 12px 32px rgba(99, 102, 241, 0.3),
+    0 8px 16px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.btn-back-home:active {
+  transform: translateY(-2px) translateX(-1px);
+  box-shadow: 
+    0 6px 20px rgba(99, 102, 241, 0.25),
+    0 4px 8px rgba(0, 0, 0, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+.btn-back-home .material-icons {
+  font-size: 1.5rem;
+  position: relative;
+  z-index: 1;
+  transition: transform 0.3s ease;
+}
+
+.btn-back-home:hover .material-icons {
+  transform: scale(1.1) rotate(-5deg);
+}
+
+.btn-back-home .btn-text {
+  position: relative;
+  z-index: 1;
+  letter-spacing: 0.01em;
+}
+
 /* Profile Header */
 .profile-header {
   display: flex;
@@ -265,6 +341,15 @@
   .btn-logout,
   .btn-cancel {
     width: 100%;
+  }
+
+  .btn-back-home {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .btn-back-home .btn-text {
+    font-size: 0.95rem;
   }
 }
 

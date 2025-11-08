@@ -5,6 +5,7 @@ import { z } from 'zod';
 import { useAuth } from '../../contexts/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
 import PasswordStrengthMeter from './PasswordStrengthMeter';
+import { isEmailVerificationRequired } from '../../config/emailVerification';
 import './AuthForms.css';
 
 const registerSchema = z.object({
@@ -28,12 +29,13 @@ const registerSchema = z.object({
 });
 
 const RegisterForm = () => {
-  const { register: registerUser } = useAuth();
+  const { register: registerUser, login } = useAuth();
   const navigate = useNavigate();
   const [apiError, setApiError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [userEmail, setUserEmail] = useState('');
+  const [requiresVerification, setRequiresVerification] = useState(true);
 
   const {
     register,
@@ -50,18 +52,63 @@ const RegisterForm = () => {
     setApiError(null);
     setIsLoading(true);
 
+    // Safety timeout - prevent infinite hang
+    const safetyTimeout = setTimeout(() => {
+      console.error('Registration timeout - resetting form');
+      setIsLoading(false);
+      setApiError('Tempo de resposta excedido. Por favor, tente novamente.');
+    }, 30000);
+
     try {
-      const result = await registerUser(data.email, data.password, data.username);
-      setUserEmail(data.email);
-      setSuccess(true);
+      // Register with timeout protection
+      const registerPromise = registerUser(data.email, data.password, data.username);
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Registration timeout')), 20000)
+      );
       
-      // Store email verification pending flag
-      localStorage.setItem('emailVerificationPending', 'true');
-      localStorage.setItem('emailVerificationEmail', data.email);
+      const result = await Promise.race([registerPromise, timeoutPromise]);
+      
+      clearTimeout(safetyTimeout);
+      setUserEmail(data.email);
+      
+      // Check if email verification is required
+      const verificationRequired = isEmailVerificationRequired();
+      setRequiresVerification(verificationRequired);
+      
+      if (verificationRequired) {
+        // Store email verification pending flag
+        localStorage.setItem('emailVerificationPending', 'true');
+        localStorage.setItem('emailVerificationEmail', data.email);
+        setSuccess(true); // Show verification screen
+      } else {
+        // Auto-login the user with timeout protection
+        try {
+          const loginPromise = login(data.email, data.password);
+          const loginTimeoutPromise = new Promise((_, reject) => 
+            setTimeout(() => reject(new Error('Login timeout')), 10000)
+          );
+          
+          await Promise.race([loginPromise, loginTimeoutPromise]);
+          
+          // Navigate to home immediately
+          setTimeout(() => {
+            navigate('/', { replace: true });
+          }, 300);
+        } catch (loginError) {
+          console.error('Auto-login error:', loginError);
+          // If auto-login fails, show success screen and redirect to login
+          setSuccess(true);
+        }
+      }
     } catch (error) {
+      clearTimeout(safetyTimeout);
+      console.error('Registration error:', error);
+      
       let errorMessage = 'Erro ao criar conta';
       
-      if (error.message?.includes('already registered')) {
+      if (error.message === 'Registration timeout' || error.message === 'Login timeout') {
+        errorMessage = 'Tempo de resposta excedido. Por favor, tente novamente.';
+      } else if (error.message?.includes('already registered')) {
         errorMessage = 'Este email já está cadastrado';
       } else if (error.message?.includes('Username already exists')) {
         errorMessage = 'Este username já está em uso';
@@ -71,20 +118,28 @@ const RegisterForm = () => {
       
       setApiError(errorMessage);
     } finally {
+      clearTimeout(safetyTimeout);
       setIsLoading(false);
     }
   };
 
-  // Auto-redirect after success
+  // Auto-redirect after success (only if verification is required)
   useEffect(() => {
-    if (success) {
+    if (success && requiresVerification) {
       const timer = setTimeout(() => {
         navigate('/login');
       }, 5000);
       
       return () => clearTimeout(timer);
+    } else if (success && !requiresVerification) {
+      // If no verification required, redirect immediately to login
+      const timer = setTimeout(() => {
+        navigate('/login');
+      }, 1500);
+      
+      return () => clearTimeout(timer);
     }
-  }, [success, navigate]);
+  }, [success, requiresVerification, navigate]);
 
   if (success) {
     return (

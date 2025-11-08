@@ -1,10 +1,14 @@
 import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
+import { shouldBlockAccessUntilVerified } from '../../config/emailVerification';
 
 const ProtectedRoute = ({ children, requireEmailVerification = false }) => {
   const { isAuthenticated, isEmailVerified, loading, user, session } = useAuth();
   const location = useLocation();
+  
+  // Override requireEmailVerification based on global config
+  const shouldRequireVerification = requireEmailVerification && shouldBlockAccessUntilVerified();
 
   // Debug logs (can be removed in production)
   React.useEffect(() => {
@@ -15,9 +19,11 @@ const ProtectedRoute = ({ children, requireEmailVerification = false }) => {
       isEmailVerified,
       hasUser: !!user,
       hasSession: !!session,
-      requireEmailVerification
+      requireEmailVerification,
+      shouldRequireVerification,
+      globalConfig: shouldBlockAccessUntilVerified()
     });
-  }, [loading, isAuthenticated, isEmailVerified, location.pathname, user, session, requireEmailVerification]);
+  }, [loading, isAuthenticated, isEmailVerified, location.pathname, user, session, requireEmailVerification, shouldRequireVerification]);
 
   // Show loading state while checking authentication
   if (loading) {
@@ -60,8 +66,8 @@ const ProtectedRoute = ({ children, requireEmailVerification = false }) => {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
-  // Second check: Email must be verified (ONLY if explicitly required)
-  if (requireEmailVerification && !isEmailVerified) {
+  // Second check: Email must be verified (ONLY if explicitly required AND global config allows)
+  if (shouldRequireVerification && !isEmailVerified) {
     console.log('⚠️ Email not verified, redirecting to verify-email');
     // Redirect to email verification page
     return <Navigate to="/verify-email" replace />;

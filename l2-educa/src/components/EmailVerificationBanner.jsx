@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useNotification } from '../contexts/NotificationContext';
+import { shouldShowVerificationBanner } from '../config/emailVerification';
 import './EmailVerificationBanner.css';
 
 const EmailVerificationBanner = () => {
@@ -17,6 +18,9 @@ const EmailVerificationBanner = () => {
       return () => clearTimeout(timer);
     }
   }, [countdown]);
+
+  // Check configuration first - if email verification is disabled, never show
+  if (!shouldShowVerificationBanner()) return null;
 
   // Don't show while loading or if no user
   if (loading || !user || !session) return null;

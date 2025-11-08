@@ -534,10 +534,11 @@ echo  [2] 🔧 Install Frontend Dependencies Only
 echo  [3] 🧪 Run Backend Tests
 echo  [4] 🧪 Run Frontend Tests
 echo  [5] 📋 Show Environment Info
-echo  [6] 🔙 Back to Main Menu
+echo  [6] 📧 Email Verification Settings
+echo  [7] 🔙 Back to Main Menu
 echo.
 
-set /p adv="Enter choice (1-6): "
+set /p adv="Enter choice (1-7): "
 
 if "%adv%"=="1" (
     cd "%BACKEND_DIR%" && npm install && cd ..
@@ -560,7 +561,8 @@ if "%adv%"=="4" (
     goto ADVANCED_OPTIONS
 )
 if "%adv%"=="5" goto ENV_INFO
-if "%adv%"=="6" goto MENU
+if "%adv%"=="6" goto EMAIL_VERIFICATION_SETTINGS
+if "%adv%"=="7" goto MENU
 goto ADVANCED_OPTIONS
 
 :ENV_INFO
@@ -591,6 +593,86 @@ dir /B /AD 2>nul
 echo.
 pause
 goto ADVANCED_OPTIONS
+
+:: ================================================================
+:: EMAIL VERIFICATION SETTINGS
+:: ================================================================
+:EMAIL_VERIFICATION_SETTINGS
+cls
+echo.
+echo ================================================================
+echo        Email Verification Settings Manager
+echo ================================================================
+echo.
+
+powershell -Command "Get-Host" >nul 2>&1
+if errorlevel 1 (
+    echo ERROR: PowerShell is not available!
+    echo.
+    pause
+    goto ADVANCED_OPTIONS
+)
+
+if not exist "%FRONTEND_DIR%\scripts\toggle-email-verification.ps1" (
+    echo ERROR: Script not found!
+    echo.
+    pause
+    goto ADVANCED_OPTIONS
+)
+
+echo  [1] Enable Email Verification
+echo  [2] Disable Email Verification
+echo  [3] Show Current Status
+echo  [4] Back to Advanced Options
+echo.
+
+set /p email_action="Enter choice (1-4): "
+
+if "%email_action%"=="1" (
+    cls
+    echo.
+    echo ================================================================
+    echo.
+    powershell -ExecutionPolicy Bypass -File "%FRONTEND_DIR%\scripts\toggle-email-verification.ps1" -Action enable
+    echo.
+    echo ================================================================
+    echo.
+    pause
+    goto ADVANCED_OPTIONS
+)
+
+if "%email_action%"=="2" (
+    cls
+    echo.
+    echo ================================================================
+    echo.
+    powershell -ExecutionPolicy Bypass -File "%FRONTEND_DIR%\scripts\toggle-email-verification.ps1" -Action disable
+    echo.
+    echo ================================================================
+    echo.
+    pause
+    goto ADVANCED_OPTIONS
+)
+
+if "%email_action%"=="3" (
+    cls
+    echo.
+    echo ================================================================
+    echo.
+    powershell -ExecutionPolicy Bypass -File "%FRONTEND_DIR%\scripts\toggle-email-verification.ps1" -Action status
+    echo.
+    echo ================================================================
+    echo.
+    pause
+    goto ADVANCED_OPTIONS
+)
+
+if "%email_action%"=="4" goto ADVANCED_OPTIONS
+
+echo.
+echo Invalid choice.
+timeout /t 2 >nul
+goto EMAIL_VERIFICATION_SETTINGS
 
 :: ================================================================
 :: HELPER FUNCTIONS

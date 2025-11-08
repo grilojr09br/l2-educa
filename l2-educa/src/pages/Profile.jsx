@@ -186,6 +186,16 @@ const Profile = () => {
       <AuroraBackground />
 
       <div className="profile-content">
+        {/* Back to Home Button */}
+        <button 
+          onClick={() => navigate('/')} 
+          className="btn-back-home"
+          aria-label="Voltar para a tela inicial"
+        >
+          <span className="material-icons">home</span>
+          <span className="btn-text">Ir para a Tela Inicial</span>
+        </button>
+
         <GlassCard>
           <div className="profile-header">
             <h1 className="profile-title">Meu Perfil</h1>

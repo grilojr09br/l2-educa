@@ -5,13 +5,23 @@ distributions/
 node_modules/
 
 # Ignore
-DOCS/
+# DOCS/  # <- Comentado: DOCS agora deve ser versionado
+
 Creation/
 
+Dist/
+
+# Supabase warnings (temporary local files)
+supabasewarnings.json
+supabaseperfwarnings.json
 # Environment files
 .env
 .env.local
 .env.production
+
+# Deployment credentials (NEVER commit!)
+l2-educa/scripts/deploy-config.json
+**/deploy-config.json
 
 # Build artifacts
 *.log

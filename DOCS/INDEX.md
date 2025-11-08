@@ -27,6 +27,8 @@ Toda a documentação do projeto está organizada aqui.
 - **[SUPABASE_AUTH_CONFIG.md](SUPABASE_AUTH_CONFIG.md)** - Configuração do Supabase Auth
 - **[SUPABASE_QUICK_CONFIG.md](SUPABASE_QUICK_CONFIG.md)** - Configuração rápida do Supabase
 - **[SUPABASE_STORAGE_SETUP.md](SUPABASE_STORAGE_SETUP.md)** - Setup do Storage do Supabase
+- **[SUPABASE_WARNINGS_FIX_GUIDE.md](SUPABASE_WARNINGS_FIX_GUIDE.md)** - ⭐ **[NOVO]** Correção de 35 warnings (guia completo)
+- **[SUPABASE_WARNINGS_QUICK_FIX.md](SUPABASE_WARNINGS_QUICK_FIX.md)** - ⚡ **[NOVO]** Quick fix de 5 minutos
 - **[EMAIL_TEMPLATES.md](EMAIL_TEMPLATES.md)** - Templates de email
 
 ### Funcionalidades Específicas
@@ -99,9 +101,10 @@ Toda a documentação do projeto está organizada aqui.
 
 ---
 
-## 🔗 GitHub
+## 🔗 GitHub & Git Tools
 
 - **[GITHUB_SETUP_GUIDE.md](GITHUB_SETUP_GUIDE.md)** - Guia de setup do GitHub
+- **[GIT_PUSH_DASHBOARD_GUIDE.md](GIT_PUSH_DASHBOARD_GUIDE.md)** - ⭐ **[NOVO]** Dashboard profissional para Git Push (dev-manager.bat)
 
 ---
 
@@ -130,10 +133,14 @@ _...e muitas outras regras (veja os arquivos individuais)_
 
 ## 📊 Estatísticas
 
-- **Total de documentos:** 134 arquivos .md
+- **Total de documentos:** 138 arquivos .md
 - **Última atualização:** Novembro 2025
 - **Status:** ✅ Documentação 100% organizada
 - **Localização:** Pasta `/DOCS`
+- **Últimos adds:** 
+  - Git Push Dashboard Guide (dev-manager.bat)
+  - Supabase Warnings Fix Guide (35 warnings)
+  - Supabase Quick Fix (5 minutos)
 
 ---
 

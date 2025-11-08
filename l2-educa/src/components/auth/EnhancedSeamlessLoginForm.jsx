@@ -5,6 +5,7 @@ import { z } from 'zod';
 import { useAuth } from '../../contexts/AuthContext';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { checkRateLimit, recordFailedAttempt } from '../../utils/securityUtils';
+import { isEmailVerificationRequired } from '../../config/emailVerification';
 import './AuthForms.css';
 
 // ============================================================================
@@ -209,8 +210,10 @@ const EnhancedSeamlessLoginForm = () => {
     try {
       const result = await login(data.identifier, data.password);
 
-      // Check if email is verified
-      if (!result.emailVerified) {
+      // Check if email verification is required AND email is not verified
+      const requiresVerification = isEmailVerificationRequired();
+      
+      if (requiresVerification && !result.emailVerified) {
         setApiError('Por favor, verifique seu email antes de fazer login.');
 
         localStorage.setItem('emailVerificationPending', 'true');
@@ -220,7 +223,7 @@ const EnhancedSeamlessLoginForm = () => {
         return;
       }
 
-      // Email is verified, clear any pending flags
+      // Email verification not required OR email is verified, clear any pending flags
       localStorage.removeItem('emailVerificationPending');
       localStorage.removeItem('emailVerificationEmail');
 
@@ -234,8 +237,11 @@ const EnhancedSeamlessLoginForm = () => {
       // Record failed attempt
       recordFailedAttempt(data.identifier);
 
-      // Handle EMAIL_NOT_CONFIRMED specially
-      if (error.message === 'EMAIL_NOT_CONFIRMED') {
+      // Check if email verification is required before showing email-related errors
+      const requiresVerification = isEmailVerificationRequired();
+      
+      // Handle EMAIL_NOT_CONFIRMED specially (only if verification is required)
+      if (requiresVerification && error.message === 'EMAIL_NOT_CONFIRMED') {
         setApiError('Por favor, verifique seu email antes de fazer login.');
         localStorage.setItem('emailVerificationPending', 'true');
         localStorage.setItem('emailVerificationEmail', data.identifier);
@@ -253,23 +259,75 @@ const EnhancedSeamlessLoginForm = () => {
     }
   };
 
-  // Handle registration submission (Step 2b)
+  // Handle registration submission (Step 2b) - ANTI-HANG PROTECTION
   const onRegisterSubmit = async (data) => {
     setApiError(null);
     setIsLoading(true);
 
+    // Safety timeout - auto-reset after 30 seconds to prevent infinite hang
+    const safetyTimeout = setTimeout(() => {
+      console.error('Registration timeout - resetting form');
+      setIsLoading(false);
+      setApiError('Tempo de resposta excedido. Por favor, tente novamente.');
+    }, 30000);
+
     try {
-      await registerUser(data.identifier, data.password, data.username);
+      // Register with timeout protection
+      const registerPromise = registerUser(data.identifier, data.password, data.username);
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Registration timeout')), 20000)
+      );
+      
+      await Promise.race([registerPromise, timeoutPromise]);
+      
+      // Clear safety timeout if successful
+      clearTimeout(safetyTimeout);
 
-      // Store email for verification notice
-      localStorage.setItem('emailVerificationPending', 'true');
-      localStorage.setItem('emailVerificationEmail', data.identifier);
+      // Check if email verification is required
+      const requiresVerification = isEmailVerificationRequired();
 
-      // Show success message
-      setApiError(null);
-      setStep('verification');
+      if (requiresVerification) {
+        // Store email for verification notice
+        localStorage.setItem('emailVerificationPending', 'true');
+        localStorage.setItem('emailVerificationEmail', data.identifier);
+
+        // Show success message and verification screen
+        setApiError(null);
+        setStep('verification');
+      } else {
+        // Email verification is disabled, log the user in automatically
+        try {
+          // Login with timeout protection
+          const loginPromise = login(data.identifier, data.password);
+          const loginTimeoutPromise = new Promise((_, reject) => 
+            setTimeout(() => reject(new Error('Login timeout')), 10000)
+          );
+          
+          await Promise.race([loginPromise, loginTimeoutPromise]);
+          
+          // Wait a bit to ensure auth state is updated
+          await new Promise((resolve) => setTimeout(resolve, 500));
+          
+          // Force redirect to home
+          const from = location.state?.from?.pathname || '/';
+          navigate(from, { replace: true });
+        } catch (loginError) {
+          console.error('Auto-login error:', loginError);
+          // If auto-login fails, redirect to login page
+          setIsLoading(false);
+          setApiError('Conta criada! Redirecionando para login...');
+          setTimeout(() => {
+            navigate('/login', { replace: true });
+          }, 1500);
+        }
+      }
     } catch (error) {
-      if (error.message.includes('já está em uso') || error.message.includes('already')) {
+      clearTimeout(safetyTimeout);
+      console.error('Registration error:', error);
+      
+      if (error.message === 'Registration timeout' || error.message === 'Login timeout') {
+        setApiError('Tempo de resposta excedido. Por favor, tente novamente.');
+      } else if (error.message.includes('já está em uso') || error.message.includes('already')) {
         setApiError('Este username já está em uso. Escolha outro.');
       } else if (error.message.includes('já está cadastrado') || error.message.includes('registered')) {
         setApiError('Este email já está cadastrado. Use outro ou faça login.');
@@ -277,6 +335,7 @@ const EnhancedSeamlessLoginForm = () => {
         setApiError(error.message || 'Erro ao criar conta. Tente novamente.');
       }
     } finally {
+      clearTimeout(safetyTimeout);
       setIsLoading(false);
     }
   };

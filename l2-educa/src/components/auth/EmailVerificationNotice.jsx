@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
+import { shouldShowLoginNotice } from '../../config/emailVerification';
 import './EmailVerificationNotice.css';
 
 const EmailVerificationNotice = () => {
@@ -10,6 +11,12 @@ const EmailVerificationNotice = () => {
   const { resendVerificationEmail } = useAuth();
 
   useEffect(() => {
+    // Check configuration first - if email verification is disabled, never show
+    if (!shouldShowLoginNotice()) {
+      setShow(false);
+      return;
+    }
+
     // Check if user just registered and needs to verify email
     const pending = localStorage.getItem('emailVerificationPending');
     const pendingEmail = localStorage.getItem('emailVerificationEmail');
@@ -93,6 +100,8 @@ const EmailVerificationNotice = () => {
 };
 
 export default EmailVerificationNotice;
+
+
 
 
 
