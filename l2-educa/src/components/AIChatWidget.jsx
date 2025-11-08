@@ -1,6 +1,7 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState, useCallback } from 'react';
 import { useChatbot } from '../contexts/ChatbotContext';
 import { useNavigation } from '../contexts/NavigationContext';
+import { useNotification } from '../contexts/NotificationContext';
 import { SUBJECTS_CONFIG } from '../config/subjectsConfig';
 import {
   fixMalformedTokens,
@@ -11,6 +12,14 @@ import {
   parseFollowUpToken,
   validateFollowUp
 } from '../utils/chatbotTokens';
+import { 
+  isValidRoute, 
+  validateRouteDetailed,
+  validateNavigateToken 
+} from '../utils/routeValidator';
+import { ChunkAccumulator, cleanAIResponse } from '../utils/streamOptimizer';
+import { useAIStreamingState } from '../hooks/useAIStreamingState';
+import EnterpriseThinkingIndicator from './EnterpriseThinkingIndicator';
 import './AIChatWidget.css';
 
 // Icons (high-quality SVG components)
@@ -123,6 +132,7 @@ export function AIChatWidget() {
   } = useChatbot();
   
   const { navigateWithTransition, currentSubject, currentTopic } = useNavigation();
+  const { showNotification } = useNotification();
   
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
@@ -131,6 +141,12 @@ export function AIChatWidget() {
   const [showInitialSuggestions, setShowInitialSuggestions] = useState(true);
   const [showClearMenu, setShowClearMenu] = useState(false);
   const [completedMessageId, setCompletedMessageId] = useState(null);
+  const [streamingContent, setStreamingContent] = useState(''); // For smooth streaming
+  const [isStreamingActive, setIsStreamingActive] = useState(false);
+  
+  // ENTERPRISE-LEVEL AI State Management
+  const lastMessage = messages[messages.length - 1];
+  const aiStreamState = useAIStreamingState(loading, messages, lastMessage);
   
   const logRef = useRef(null);
   const savedScrollPosition = useRef(0);
@@ -224,7 +240,7 @@ export function AIChatWidget() {
   // Detect streaming completion for premium flash effect
   useEffect(() => {
     const lastMsg = messages[messages.length - 1];
-    const isCurrentlyStreaming = loading && lastMsg?.role === 'assistant' && lastMsg?.content?.includes('\u2588');
+    const isCurrentlyStreaming = loading && lastMsg?.role === 'assistant';
     
     // If was streaming and now stopped, trigger completion effect
     if (wasStreamingRef.current && !isCurrentlyStreaming && lastMsg?.role === 'assistant') {
@@ -244,7 +260,7 @@ export function AIChatWidget() {
     
     const isNewMessage = messages.length > lastMessageCountRef.current;
     const lastMsg = messages[messages.length - 1];
-    const isStreaming = loading && lastMsg?.content?.includes('\u2588');
+    const isStreaming = loading;
     const isAssistantStreaming = isStreaming && lastMsg?.role === 'assistant';
     
     if (isNewMessage) {
@@ -385,33 +401,51 @@ export function AIChatWidget() {
     return { html, tokens };
   };
   
-  // Validate if path exists in the app
-  const isValidPath = (path) => {
-    // Homepage
-    if (path === '/' || path === '') return true;
-    
-    // Check if it's a subject page
-    const isSubjectPage = Object.values(SUBJECTS_CONFIG).some(subject => subject.path === path);
-    if (isSubjectPage) return true;
-    
-    // Check if it's a topic page
-    const isTopicPage = Object.values(SUBJECTS_CONFIG).some(subject => 
-      subject.topics && subject.topics.some(topic => topic.path === path)
-    );
-    if (isTopicPage) return true;
-    
-    return false;
-  };
+  // ============================================
+  // LAYERED ROUTE VALIDATION SYSTEM
+  // ============================================
   
-  // Handle NAVIGATE button click
+  /**
+   * Handle NAVIGATE button click with strict validation
+   * Blocks invalid routes and shows user notification
+   */
   const handleNavigate = (path, color = 'purple') => {
-    // Validate path before navigation
-    if (!isValidPath(path)) {
-      console.warn(`⚠️ Invalid navigation path attempted: ${path}`);
-      // Still navigate but log warning
-      // In the future, we could show a toast notification to the user
+    console.log('🔍 Validating navigation to:', path);
+    
+    // Layer 1: Basic validation
+    if (!path || typeof path !== 'string') {
+      console.error('❌ BLOCKED: Invalid path type');
+      showNotification('Erro: Link inválido detectado', 'error');
+      return;
     }
     
+    // Layer 2: Route existence validation
+    const validation = validateRouteDetailed(path);
+    
+    if (!validation.isValid) {
+      console.error('❌ BLOCKED: Route does not exist');
+      console.error('📋 Attempted path:', path);
+      console.error('💡 Error:', validation.error);
+      
+      if (validation.suggestions && validation.suggestions.length > 0) {
+        console.log('💡 Did you mean:', validation.suggestions);
+        showNotification(
+          `Página "${path}" não encontrada. A IA pode ter sugerido um link incorreto.`,
+          'error'
+        );
+      } else {
+        showNotification(
+          'Página não encontrada. A IA sugeriu um link inválido.',
+          'error'
+        );
+      }
+      
+      // DO NOT navigate to invalid routes
+      return;
+    }
+    
+    // Layer 3: Navigation approved
+    console.log('✅ APPROVED: Navigating to', path);
     navigateWithTransition(path, color);
     handleClose();
   };
@@ -546,11 +580,19 @@ export function AIChatWidget() {
                       .replace(/\[INST\].*?\[\/INST\]/g, '')
                       .replace(/<<SYS>>.*?<</g, '')
                       .replace(/\[\s*\]$/g, '')
+                      // Remove think tags and reasoning artifacts
+                      .replace(/<think>[\s\S]*?<\/think>/gi, '')
+                      .replace(/<\/think>/gi, '')
+                      .replace(/<think>/gi, '')
+                      .replace(/\[think\][\s\S]*?\[\/think\]/gi, '')
+                      // Remove @ prefix from URLs
+                      .replace(/@(https?:\/\/)/g, '$1')
+                      .replace(/@\//g, '/')
                       .trim();
                     
                     setMessages(m => {
                       const copy = [...m];
-                      copy[copy.length - 1] = { role: 'assistant', content: displayContent + '\u2588' };
+                      copy[copy.length - 1] = { role: 'assistant', content: displayContent };
                       return copy;
                     });
                   }
@@ -567,6 +609,14 @@ export function AIChatWidget() {
                 .replace(/\[INST\].*?\[\/INST\]/g, '')
                 .replace(/<<SYS>>.*?<</g, '')
                 .replace(/\[\s*\]$/g, '')
+                // Remove think tags and reasoning artifacts
+                .replace(/<think>[\s\S]*?<\/think>/gi, '')
+                .replace(/<\/think>/gi, '')
+                .replace(/<think>/gi, '')
+                .replace(/\[think\][\s\S]*?\[\/think\]/gi, '')
+                // Remove @ prefix from URLs
+                .replace(/@(https?:\/\/)/g, '$1')
+                .replace(/@\//g, '/')
                 .trim();
               
               setMessages(m => {
@@ -658,11 +708,19 @@ export function AIChatWidget() {
                     .replace(/\[INST\].*?\[\/INST\]/g, '')
                     .replace(/<<SYS>>.*?<</g, '')
                     .replace(/\[\s*\]$/g, '')
+                    // Remove think tags and reasoning artifacts
+                    .replace(/<think>[\s\S]*?<\/think>/gi, '')
+                    .replace(/<\/think>/gi, '')
+                    .replace(/<think>/gi, '')
+                    .replace(/\[think\][\s\S]*?\[\/think\]/gi, '')
+                    // Remove @ prefix from URLs
+                    .replace(/@(https?:\/\/)/g, '$1')
+                    .replace(/@\//g, '/')
                     .trim();
                   
                   setMessages(m => {
                     const copy = [...m];
-                    copy[copy.length - 1] = { role: 'assistant', content: displayContent + '\u2588' };
+                    copy[copy.length - 1] = { role: 'assistant', content: displayContent };
                     return copy;
                   });
                 }
@@ -678,6 +736,14 @@ export function AIChatWidget() {
             .replace(/\[INST\].*?\[\/INST\]/g, '')
             .replace(/<<SYS>>.*?<</g, '')
             .replace(/\[\s*\]$/g, '')
+            // Remove think tags and reasoning artifacts
+            .replace(/<think>[\s\S]*?<\/think>/gi, '')
+            .replace(/<\/think>/gi, '')
+            .replace(/<think>/gi, '')
+            .replace(/\[think\][\s\S]*?\[\/think\]/gi, '')
+            // Remove @ prefix from URLs
+            .replace(/@(https?:\/\/)/g, '$1')
+            .replace(/@\//g, '/')
             .trim();
           
           setMessages(m => {
@@ -802,17 +868,13 @@ export function AIChatWidget() {
                       // Check if this message is currently streaming
                       const isStreaming = loading && 
                                          i === messages.length - 1 && 
-                                         m.role === 'assistant' && 
-                                         m.content?.includes('\u2588');
+                                         m.role === 'assistant';
                       
                       // Check if this message just completed streaming
                       const isCompleted = i === completedMessageId;
                       
-                      // Replace basic cursor with premium cursor
+                      // No more cursor - we use ThinkingIndicator now
                       let displayHtml = richHtml;
-                      if (isStreaming) {
-                        displayHtml = richHtml.replace(/\u2588/g, '<span class="ai-chat-streaming-cursor"></span>');
-                      }
                       
                       return (
                         <React.Fragment key={i}>
@@ -821,7 +883,30 @@ export function AIChatWidget() {
                               <div className="ai-chat-message-gloss"></div>
                               <div className="ai-chat-message-content">
                                 {m.role === 'assistant' ? (
-                                  <div dangerouslySetInnerHTML={{ __html: displayHtml }} />
+                                  <>
+                                    {/* ENTERPRISE THINKING INDICATOR - Multiple fallback layers */}
+                                    {i === messages.length - 1 && aiStreamState.shouldShowThinking ? (
+                                      <div className="enterprise-thinking-container">
+                                        {/* Primary: Full featured indicator */}
+                                        <EnterpriseThinkingIndicator 
+                                          mode="primary"
+                                          debug={false}
+                                          onRenderError={(error) => console.error('ThinkingIndicator error:', error)}
+                                        />
+                                        
+                                        {/* Diagnostic info (dev only) */}
+                                        {import.meta.env.DEV && (
+                                          <div style={{ fontSize: '10px', opacity: 0.5, marginTop: '4px' }}>
+                                            State: {aiStreamState.aiState} | 
+                                            Loading: {loading ? 'YES' : 'NO'} | 
+                                            Content: {m.content.length} chars
+                                          </div>
+                                        )}
+                                      </div>
+                                    ) : (
+                                      <div dangerouslySetInnerHTML={{ __html: displayHtml }} />
+                                    )}
+                                  </>
                                 ) : (
                                   m.content
                                 )}
@@ -885,7 +970,7 @@ export function AIChatWidget() {
                     })}
                     
                     {/* Typing indicator */}
-                    {loading && messages.length > 0 && !messages[messages.length - 1]?.content?.includes('\u2588') && (
+                    {loading && messages.length > 0 && messages[messages.length - 1]?.role === 'user' && (
                       <div className="ai-chat-message assistant">
                         <div className="ai-chat-typing-indicator">
                           <div className="ai-chat-typing-dot"></div>

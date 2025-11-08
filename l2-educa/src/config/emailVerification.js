@@ -17,16 +17,16 @@
 
 export const EMAIL_VERIFICATION_CONFIG = {
   // Main toggle: Set to false to disable all email verification
-  REQUIRE_EMAIL_VERIFICATION: false,
+  REQUIRE_EMAIL_VERIFICATION: true,
   
   // Show verification notice on login page after registration
-  SHOW_LOGIN_NOTICE: false,
+  SHOW_LOGIN_NOTICE: true,
   
   // Show banner for logged-in users with unverified email
-  SHOW_BANNER_WHEN_LOGGED_IN: false,
+  SHOW_BANNER_WHEN_LOGGED_IN: true,
   
   // Block access to protected routes until email is verified
-  BLOCK_ACCESS_UNTIL_VERIFIED: false,
+  BLOCK_ACCESS_UNTIL_VERIFIED: true,
 };
 
 // Helper function to check if email verification is required

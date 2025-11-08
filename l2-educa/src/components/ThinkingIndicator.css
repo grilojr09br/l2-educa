@@ -1,0 +1,266 @@
+/* ============================================
+   THINKING INDICATOR - AI Loading Animation
+   ============================================ */
+
+.thinking-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  background: linear-gradient(
+    135deg,
+    rgba(99, 102, 241, 0.1) 0%,
+    rgba(168, 85, 247, 0.1) 50%,
+    rgba(236, 72, 153, 0.1) 100%
+  );
+  border: 1px solid rgba(168, 85, 247, 0.2);
+  border-radius: 16px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 
+    0 4px 16px rgba(168, 85, 247, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  animation: thinkingPulse 2s ease-in-out infinite;
+  margin: 8px 0;
+}
+
+@keyframes thinkingPulse {
+  0%, 100% {
+    box-shadow: 
+      0 4px 16px rgba(168, 85, 247, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  }
+  50% {
+    box-shadow: 
+      0 4px 24px rgba(168, 85, 247, 0.2),
+      0 0 40px rgba(168, 85, 247, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  }
+}
+
+/* ============================================
+   BRAIN ICON WRAPPER
+   ============================================ */
+
+.thinking-icon-wrapper {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.thinking-brain-icon {
+  width: 32px;
+  height: 32px;
+  filter: drop-shadow(0 2px 8px rgba(168, 85, 247, 0.3));
+  animation: thinkingBrainFloat 3s ease-in-out infinite;
+}
+
+@keyframes thinkingBrainFloat {
+  0%, 100% {
+    transform: translateY(0px) scale(1);
+  }
+  50% {
+    transform: translateY(-4px) scale(1.05);
+  }
+}
+
+/* Glow circle animation */
+.thinking-glow-circle {
+  animation: thinkingGlowPulse 2s ease-in-out infinite;
+}
+
+@keyframes thinkingGlowPulse {
+  0%, 100% {
+    r: 10;
+    opacity: 0.2;
+  }
+  50% {
+    r: 12;
+    opacity: 0.4;
+  }
+}
+
+/* Brain path subtle pulse */
+.thinking-brain-path {
+  animation: thinkingBrainPulse 2s ease-in-out infinite;
+  transform-origin: center;
+}
+
+@keyframes thinkingBrainPulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.85;
+  }
+}
+
+/* ============================================
+   TEXT ANIMATION
+   ============================================ */
+
+.thinking-text {
+  display: flex;
+  align-items: baseline;
+  gap: 2px;
+  font-size: 15px;
+  font-weight: 500;
+  color: #e0e7ff;
+  letter-spacing: 0.3px;
+}
+
+.thinking-main-text {
+  background: linear-gradient(
+    135deg,
+    #6366f1 0%,
+    #a855f7 50%,
+    #ec4899 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 600;
+  animation: thinkingTextShimmer 3s ease-in-out infinite;
+}
+
+@keyframes thinkingTextShimmer {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* ============================================
+   ANIMATED DOTS
+   ============================================ */
+
+.thinking-dots {
+  display: inline-flex;
+  gap: 2px;
+  margin-left: 2px;
+}
+
+.thinking-dot {
+  color: #a855f7;
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 1;
+  animation: thinkingDotBounce 1.4s ease-in-out infinite;
+}
+
+.thinking-dot-1 {
+  animation-delay: 0s;
+}
+
+.thinking-dot-2 {
+  animation-delay: 0.2s;
+}
+
+.thinking-dot-3 {
+  animation-delay: 0.4s;
+}
+
+@keyframes thinkingDotBounce {
+  0%, 60%, 100% {
+    transform: translateY(0);
+    opacity: 0.6;
+  }
+  30% {
+    transform: translateY(-6px);
+    opacity: 1;
+  }
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+@media (max-width: 768px) {
+  .thinking-indicator {
+    padding: 10px 16px;
+    gap: 10px;
+  }
+  
+  .thinking-icon-wrapper {
+    width: 36px;
+    height: 36px;
+  }
+  
+  .thinking-brain-icon {
+    width: 28px;
+    height: 28px;
+  }
+  
+  .thinking-text {
+    font-size: 14px;
+  }
+}
+
+/* ============================================
+   DARK MODE OPTIMIZATION
+   ============================================ */
+
+@media (prefers-color-scheme: dark) {
+  .thinking-indicator {
+    background: linear-gradient(
+      135deg,
+      rgba(99, 102, 241, 0.15) 0%,
+      rgba(168, 85, 247, 0.15) 50%,
+      rgba(236, 72, 153, 0.15) 100%
+    );
+    border-color: rgba(168, 85, 247, 0.25);
+  }
+  
+  .thinking-main-text {
+    -webkit-text-fill-color: transparent;
+  }
+}
+
+/* ============================================
+   ACCESSIBILITY
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .thinking-indicator,
+  .thinking-brain-icon,
+  .thinking-glow-circle,
+  .thinking-brain-path,
+  .thinking-main-text,
+  .thinking-dot {
+    animation: none !important;
+  }
+  
+  .thinking-brain-icon {
+    opacity: 0.9;
+  }
+  
+  .thinking-dot {
+    opacity: 0.7;
+  }
+}
+
+/* ============================================
+   PERFORMANCE OPTIMIZATION
+   ============================================ */
+
+.thinking-indicator {
+  will-change: box-shadow;
+  contain: layout style paint;
+}
+
+.thinking-brain-icon {
+  will-change: transform;
+}
+
+.thinking-dot {
+  will-change: transform, opacity;
+}
+

@@ -1,9 +1,11 @@
 /**
  * Dynamic System Prompt Generator for Educational AI Chatbot
  * Generates context-aware prompts based on current subject, topic, and available content
+ * Now with layered route validation to prevent invalid navigation links
  */
 
 import { SUBJECTS_CONFIG, getSubjectFromPath, getTopicFromPath } from '../config/subjectsConfig';
+import { formatRouteMapForPrompt, getValidPathsArray } from './routeValidator';
 
 /**
  * Generate a comprehensive system prompt based on current context
@@ -200,44 +202,59 @@ const buildValidPathsList = () => {
 
 /**
  * Build available topics section with full platform overview
+ * Now uses the centralized route validator for accuracy
  */
 const buildAvailableTopicsSection = (currentSubject) => {
   const contentMap = buildAvailableContentMap();
-  const validPaths = buildValidPathsList();
+  const allValidPaths = getValidPathsArray();
   
   // If viewing a specific subject, show its topics with EXACT paths
   if (currentSubject && currentSubject.topics && currentSubject.topics.length > 0) {
     const topicsList = currentSubject.topics
       .map(topic => `  - **${topic.title || topic.name}**
-    ID: ${topic.id}
-    Caminho: ${topic.path}`)
+    ID: \`${topic.id}\`
+    Caminho: \`${topic.path}\``)
       .join('\n');
     
-    return `## 🗺️ Navegação - Páginas Disponíveis na Plataforma
+    return `## 🗺️ NAVEGAÇÃO - SISTEMA DE VALIDAÇÃO EM CAMADAS ATIVO
 
-**⚠️ CRÍTICO - USE APENAS ESTES CAMINHOS EXATOS:**
+**🚨 ATENÇÃO CRÍTICA - VALIDAÇÃO RIGOROSA ATIVADA 🚨**
 
-### Tópicos Disponíveis em ${currentSubject.name}:
+Todos os caminhos são verificados em 3 camadas:
+1. **Validação de Tipo** - Deve ser string válida
+2. **Validação de Existência** - Deve existir nas rotas registradas
+3. **Validação de Segurança** - Bloqueio automático de links inválidos
+
+### ✅ Tópicos Disponíveis em ${currentSubject.name}:
 ${topicsList}
 
-### Todas as Matérias Disponíveis:
-${contentMap.subjects.map(s => `  - ${s.name}: ${s.path}`).join('\n')}
+### ✅ Todas as Matérias Disponíveis:
+${contentMap.subjects.map(s => `  - ${s.name}: \`${s.path}\``).join('\n')}
 
-**REGRAS DE NAVEGAÇÃO:**
-1. Use [[TOPIC:${currentSubject.topics[0]?.id}]] para tópicos DENTRO de ${currentSubject.name}
-2. Use [[NAVIGATE:Label|CAMINHO_EXATO|icon]] para QUALQUER página
-3. SEMPRE copie o caminho EXATAMENTE como mostrado acima
-4. NUNCA invente ou modifique caminhos
-5. Se não tiver certeza do caminho, NÃO crie o botão
+**REGRAS OBRIGATÓRIAS (VIOLAÇÃO = BLOQUEIO AUTOMÁTICO):**
+1. ✅ Use [[TOPIC:\`${currentSubject.topics[0]?.id}\`]] para tópicos DENTRO de ${currentSubject.name}
+2. ✅ Use [[NAVIGATE:Label|CAMINHO_EXATO|icon]] com caminhos entre \` \`
+3. ✅ COPIE o caminho EXATAMENTE como mostrado (incluindo /)
+4. ❌ NUNCA invente, modifique ou adivinhe caminhos
+5. ❌ Se não tiver 100% de certeza, NÃO crie botão de navegação
+6. 🚨 **NUNCA traduza paths para português** (paths são sempre em inglês!)
 
-**Exemplo correto:**
-[[NAVIGATE:Ver Matemática|/matematica|calculate]]
-[[TOPIC:${currentSubject.topics[0]?.id}]]`;
+**Exemplo APROVADO:**
+[[NAVIGATE:Ver Matemática|/math|calculate]]
+[[NAVIGATE:Ver ${currentSubject.name}|${currentSubject.path}|${currentSubject.icon}]]
+[[TOPIC:${currentSubject.topics[0]?.id}]]
+
+**BLOQUEADOS (causam erro ao usuário):**
+[[NAVIGATE:Matemática|/matematica|calculate]] ❌ Path traduzido para português
+[[NAVIGATE:${currentSubject.name}|/${currentSubject.id}|icon]] ❌ Caminho inventado
+[[NAVIGATE:Álgebra|/math/algebra|calculate]] ❌ Rota não existe
+
+**🔴 LEMBRE-SE: Paths são SEMPRE em inglês mesmo que o label seja em português!**`;
   }
   
   // Homepage - show ALL available paths explicitly
   const subjectsList = contentMap.subjects
-    .map(subject => `  - **${subject.name}** → ${subject.path}`)
+    .map(subject => `  - **${subject.name}** → \`${subject.path}\``)
     .join('\n');
   
   // Show sample topics from each subject
@@ -245,43 +262,81 @@ ${contentMap.subjects.map(s => `  - ${s.name}: ${s.path}`).join('\n')}
   Object.entries(SUBJECTS_CONFIG).forEach(([key, subject]) => {
     if (subject.topics && subject.topics.length > 0) {
       const sampleTopics = subject.topics.slice(0, 3).map(t => 
-        `    • ${t.title || t.name} → ${t.path}`
+        `    • ${t.title || t.name} → \`${t.path}\``
       ).join('\n');
       topicsPreview += `\n### ${subject.name}:\n${sampleTopics}`;
       if (subject.topics.length > 3) {
-        topicsPreview += `\n    (+ ${subject.topics.length - 3} outros tópicos)`;
+        topicsPreview += `\n    (+ ${subject.topics.length - 3} outros tópicos disponíveis)`;
       }
     }
   });
   
-  return `## 🗺️ Navegação - Mapa Completo da Plataforma
+  return `## 🗺️ NAVEGAÇÃO - SISTEMA DE VALIDAÇÃO EM CAMADAS ATIVO
 
-**⚠️ CRÍTICO - USE APENAS ESTES CAMINHOS EXATOS:**
+**🚨 ATENÇÃO CRÍTICA - VALIDAÇÃO RIGOROSA ATIVADA 🚨**
+
+Todos os caminhos são verificados em 3 camadas antes da navegação:
+1. **Layer 1**: Validação de tipo e formato
+2. **Layer 2**: Verificação de existência na aplicação
+3. **Layer 3**: Bloqueio automático com notificação ao usuário
+
+**${allValidPaths.length} ROTAS VÁLIDAS NO SISTEMA**
 
 ### Página Inicial:
-  - **Terminal** → /
+  - **Terminal** → \`/\`
 
 ### Matérias Disponíveis:
 ${subjectsList}
 
-### Exemplos de Tópicos:${topicsPreview}
+### Exemplos de Tópicos por Matéria:${topicsPreview}
 
 **TOTAL**: ${contentMap.totalSubjects} matérias | ${contentMap.totalTopics} tópicos
 
-**REGRAS DE NAVEGAÇÃO OBRIGATÓRIAS:**
-1. SEMPRE use o caminho EXATO mostrado acima (ex: /matematica, /fisica)
-2. NUNCA invente caminhos (ex: /mat, /matematica-basica, /mat/algebra)
-3. SEMPRE copie e cole o caminho SEM modificações
-4. Se não tiver certeza, pergunte ao invés de adivinhar
-5. Prefira [[TOPIC:id]] para tópicos da matéria atual
+**⚠️ REGRAS DE NAVEGAÇÃO (VIOLAÇÃO = BLOQUEIO + NOTIFICAÇÃO DE ERRO):**
 
-**Exemplos CORRETOS:**
-[[NAVIGATE:Ir para Matemática|/matematica|calculate]]
-[[NAVIGATE:Ver Física|/fisica|science]]
+✅ **PERMITIDO:**
+1. Caminhos EXATOS listados acima (copie-e-cole)
+2. Format: [[NAVIGATE:Label|\`/caminho-exato\`|icon]]
+3. Preferir [[TOPIC:id]] para tópicos da matéria atual
 
-**Exemplos INCORRETOS (NUNCA FAÇA ISSO):**
-[[NAVIGATE:Matemática Básica|/mat-basica|calculate]] ❌ Caminho inventado
-[[NAVIGATE:Álgebra|/matematica/algebra|calculate]] ❌ Subcaminho não existe`;
+❌ **BLOQUEADO AUTOMATICAMENTE:**
+1. Caminhos inventados ou modificados
+2. Caminhos com typos ou variações
+3. Sub-rotas não documentadas
+4. Nomes ao invés de paths
+5. ⚠️ **CRÍTICO**: Paths traduzidos para português (ex: /biologia, /fisica, /matematica)
+
+**🚨 ATENÇÃO: PATHS SÃO EM INGLÊS! 🚨**
+- ✅ CORRETO: /biology, /physics, /math, /history
+- ❌ ERRADO: /biologia, /fisica, /matematica, /historia
+- ⚠️ Paths NUNCA são traduzidos, sempre em inglês!
+
+**Exemplos CORRETOS (serão aprovados):**
+\`\`\`
+[[NAVIGATE:Ir para Matemática|/math|calculate]]
+[[NAVIGATE:Ver Física|/physics|science]]
+[[TOPIC:numeros-complexos]]
+\`\`\`
+
+**Exemplos BLOQUEADOS (causam erro ao usuário):**
+\`\`\`
+[[NAVIGATE:Matemática|/matematica|calculate]] ❌ Path traduzido (use /math)
+[[NAVIGATE:Física|/fisica|science]] ❌ Path traduzido (use /physics)
+[[NAVIGATE:Biologia|/biologia|nature]] ❌ Path traduzido (use /biology)
+[[NAVIGATE:História|/historia|book]] ❌ Path traduzido (use /history)
+[[NAVIGATE:Álgebra|/math/algebra|calculate]] ❌ Rota não existe
+\`\`\`
+
+**🔴 ERRO COMUM: NUNCA TRADUZA OS PATHS!**
+Matérias têm nomes em português mas paths em INGLÊS:
+- Matemática → /math ✅ (NÃO /matematica ❌)
+- Física → /physics ✅ (NÃO /fisica ❌)
+- Química → /chemistry ✅ (NÃO /quimica ❌)
+- Biologia → /biology ✅ (NÃO /biologia ❌)
+- História → /history ✅ (NÃO /historia ❌)
+
+**🔒 LISTA COMPLETA DE PATHS VÁLIDOS (copie exatamente):**
+${allValidPaths.filter(p => p !== '/login' && p !== '/register' && p !== '/forgot-password' && p !== '/reset-password' && p !== '/verify-email').map(p => `\`${p}\``).join(', ')}`;
 };
 
 /**
