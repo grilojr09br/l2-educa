@@ -199,12 +199,13 @@ export const AuthProvider = ({ children }) => {
   };
 
   /**
-   * Login user with enhanced error handling
+   * Login user with enhanced error handling (EMAIL ONLY)
    */
   const login = async (email, password) => {
     try {
+      // Authenticate with Supabase using email
       const { data, error } = await supabase.auth.signInWithPassword({
-        email,
+        email: email.trim(),
         password,
       });
 
@@ -244,36 +245,53 @@ export const AuthProvider = ({ children }) => {
 
 
   /**
-   * Logout user - ULTRA ROBUSTO
+   * Logout user - ULTRA ROBUST WITH FORCED CLEANUP
    */
   const logout = async () => {
     try {
-      logger.log('🚪 Iniciando logout...');
+      logger.log('🚪 Starting logout...');
       
-      // Force global signout (all sessions)
-      const { error } = await supabase.auth.signOut({ scope: 'global' });
-      if (error) throw error;
+      // 1. Sign out from Supabase (all sessions)
+      try {
+        await supabase.auth.signOut({ scope: 'global' });
+        logger.log('✅ Supabase session cleared');
+      } catch (error) {
+        logger.error('⚠️ Supabase signout error (continuing anyway):', error);
+      }
       
-      // Clear all local states
+      // 2. Clear all local states IMMEDIATELY
       setUser(null);
       setSession(null);
       
-      // Clear security-related storage
+      // 3. Clear security-related storage
       clearSessionTimeout();
       
-      // Clear any cached data
+      // 4. Clear ALL storage (force cleanup)
       localStorage.removeItem('l2educa_last_activity');
+      localStorage.removeItem('emailVerificationPending');
+      localStorage.removeItem('emailVerificationEmail');
       sessionStorage.clear();
       
-      logger.log('✅ Logout completo!');
+      // 5. Clear any Supabase cached items
+      Object.keys(localStorage).forEach(key => {
+        if (key.startsWith('sb-')) {
+          localStorage.removeItem(key);
+        }
+      });
+      
+      logger.log('✅ Logout complete! All data cleared.');
       return { success: true };
     } catch (error) {
       logger.error('❌ Logout error:', error);
-      // Even if there's an error, clear local state
+      
+      // FORCE cleanup even on error
       setUser(null);
       setSession(null);
       clearSessionTimeout();
-      throw error;
+      localStorage.clear();
+      sessionStorage.clear();
+      
+      return { success: true }; // Return success anyway to allow navigation
     }
   };
 
@@ -317,19 +335,52 @@ export const AuthProvider = ({ children }) => {
   /**
    * Update user profile
    */
+  /**
+   * Update user profile - ROBUST with upsert
+   */
   const updateProfile = async (profileData) => {
     try {
       if (!user) throw new Error('Usuário não autenticado');
 
-      const { error } = await supabase
-        .from('user_profiles')
-        .update(profileData)
-        .eq('user_id', user.id);
+      logger.log('📝 Updating profile...', { userId: user.id, data: profileData });
 
-      if (error) throw error;
+      // First, ensure profile row exists (upsert)
+      const { error: upsertError } = await supabase
+        .from('user_profiles')
+        .upsert(
+          {
+            user_id: user.id,
+            ...profileData,
+          },
+          {
+            onConflict: 'user_id',
+            ignoreDuplicates: false,
+          }
+        );
+
+      if (upsertError) {
+        logger.error('❌ Profile upsert failed:', upsertError);
+        throw new Error(`Erro ao salvar perfil: ${upsertError.message}`);
+      }
+
+      logger.log('✅ Profile saved to database');
+
+      // Verify the data was actually saved
+      const { data: verifyData, error: verifyError } = await supabase
+        .from('user_profiles')
+        .select('*')
+        .eq('user_id', user.id)
+        .single();
+
+      if (verifyError) {
+        logger.error('❌ Failed to verify profile update:', verifyError);
+      } else {
+        logger.log('✅ Profile verified in database:', verifyData);
+      }
+
       return { success: true };
     } catch (error) {
-      logger.error('Update profile error:', error);
+      logger.error('❌ Update profile error:', error);
       throw error;
     }
   };

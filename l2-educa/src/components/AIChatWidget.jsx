@@ -491,7 +491,7 @@ export function AIChatWidget() {
         ...m,
         {
           role: 'assistant',
-          content: '⚠️ **Chaves de API não configuradas**\n\nPara ativar o assistente de estudos:\n\n**1.** Crie um arquivo `.env` na pasta `l2-educa/`\n\n**2.** Adicione sua chave:\n```\nVITE_OPENROUTER_API_KEY=sua-chave-aqui\nVITE_OPENROUTER_MODEL=deepseek/deepseek-chat-v3.1:free\n```\n\n**3.** Reinicie o servidor: `npm run dev`\n\n📚 Veja `CHATBOT_SETUP.md` para instruções completas.'
+          content: '😊 Desculpe, o assistente está temporariamente indisponível.\n\nEstamos trabalhando para voltar logo! Por enquanto, você pode:\n\n📚 Explorar os conteúdos disponíveis no menu\n✏️ Resolver exercícios das matérias\n📖 Estudar os conceitos de cada tópico\n\nObrigado pela compreensão! 💙'
         }
       ]);
       return;
@@ -503,13 +503,9 @@ export function AIChatWidget() {
       const conversation = getConversation();
       conversation.push({ role: 'user', content: query });
       
-      // Debug: Log system prompt (first message)
-      if (conversation[0]?.role === 'system') {
-        console.log('🤖 System Prompt Preview:', conversation[0].content.substring(0, 500) + '...');
-      }
-      
-      // Try backend proxy first if configured
-      if (apiConfig.backendUrl) {
+      // Backend is only for authentication, NOT for chat
+      // Chat goes directly to OpenRouter for better reliability
+      if (false && apiConfig.backendUrl) {
         try {
           const response = await fetch(`${apiConfig.backendUrl}/api/chat/complete`, {
             method: 'POST',
@@ -703,12 +699,13 @@ export function AIChatWidget() {
     try {
       await streamWithAvailableKey();
     } catch (e) {
-      console.error('API error:', e);
-      let errorMessage = 'Estou com instabilidade no momento. Tente novamente em alguns instantes.';
-      
-      if (e.message === 'no-available-keys') {
-        errorMessage = '⚠️ **Erro de Autenticação**\n\nSuas chaves de API parecem estar **inválidas ou expiradas**.\n\n**Soluções:**\n\n• Verifique se a chave está correta no arquivo `.env`\n• Gere uma nova chave em [openrouter.ai/keys](https://openrouter.ai/keys)\n• Reinicie o servidor após alterar o `.env`\n\n💡 **Dica:** Use o modelo gratuito `deepseek/deepseek-chat-v3.1:free` para testes!\n\n📚 Consulte `CHATBOT_SETUP.md` para mais detalhes.';
+      // Only log errors in development
+      if (import.meta.env.DEV) {
+        console.error('API error:', e);
       }
+      
+      // Friendly error message for production
+      const errorMessage = '😊 Desculpe o incômodo!\n\nO servidor está em manutenção no momento. Por favor, tente novamente em alguns instantes.\n\nEnquanto isso, aproveite para explorar nossos conteúdos de estudo! 📚\n\nObrigado pela paciência! 💙';
       
       setMessages(m => [
         ...m,

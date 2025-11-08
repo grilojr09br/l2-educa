@@ -1,19 +1,29 @@
-# Glassmorphic Component - Standalone Demo
+# L2 EDUCA Backend Authentication Service
 
-Beautiful WebGL-powered glassmorphic effects for modern React applications.
+Secure, production-ready authentication backend built with Node.js, Express, TypeScript, and Supabase.
 
-![Glassmorphic Component](https://img.shields.io/badge/React-18.3-61DAFB?style=flat-square&logo=react) ![WebGL](https://img.shields.io/badge/WebGL-Powered-990000?style=flat-square) ![Vite](https://img.shields.io/badge/Vite-6.0-646CFF?style=flat-square&logo=vite)
+## 🚀 Features
 
-## ✨ Features
+- ✅ **Secure Authentication** - JWT-based with access and refresh tokens
+- ✅ **Email/Password Registration** - With email verification
+- ✅ **Password Management** - Change password, forgot password flow
+- ✅ **Rate Limiting** - Protection against brute force attacks
+- ✅ **Audit Logging** - Track all authentication events
+- ✅ **Input Validation** - Zod schemas for all inputs
+- ✅ **XSS Prevention** - Input sanitization
+- ✅ **CORS Protection** - Whitelist-based origins
+- ✅ **Security Headers** - Helmet.js configuration
+- ✅ **Row Level Security** - Supabase RLS for data isolation
+- 🔜 **2FA Support** - Ready for future implementation
+- 🔜 **OAuth Integration** - Ready for Google, GitHub, etc.
 
-- 🎨 **Beautiful glass effects** - Real-time blur, distortion, and chromatic aberration
-- ⚡ **GPU-accelerated** - Smooth 60fps WebGL rendering
-- 🎯 **Simple API** - Easy-to-use React component
-- 📱 **Responsive** - Auto-adapts to container size
-- 🎭 **Customizable** - 10+ props for fine-tuning
-- 🚀 **Production ready** - Optimized and tested
+## 📋 Prerequisites
 
-## 🚀 Quick Start
+- Node.js >= 18.0.0
+- npm >= 9.0.0
+- Supabase account and project
+
+## 🛠️ Installation
 
 ### 1. Install Dependencies
 
@@ -21,242 +31,386 @@ Beautiful WebGL-powered glassmorphic effects for modern React applications.
 npm install
 ```
 
-### 2. Run Development Server
+### 2. Set Up Supabase
+
+#### A. Create Supabase Project
+
+1. Go to [supabase.com](https://supabase.com)
+2. Create a new project
+3. Note your project URL and API keys
+
+#### B. Run SQL Schema
+
+Execute the SQL file in your Supabase SQL Editor:
+
+```sql
+-- See supabase-schema.sql for complete schema
+```
+
+### 3. Configure Environment Variables
+
+Copy `.env.example` to `.env` and fill in your values:
+
+```bash
+cp .env.example .env
+```
+
+Required variables:
+- `SUPABASE_URL` - Your Supabase project URL
+- `SUPABASE_SERVICE_KEY` - Service role key (from Supabase dashboard)
+- `SUPABASE_ANON_KEY` - Anonymous key (from Supabase dashboard)
+- `JWT_SECRET` - Generate a secure 64+ character random string
+
+### 4. Generate JWT Secret
+
+```bash
+node -e "console.log(require('crypto').randomBytes(64).toString('hex'))"
+```
+
+## 🚀 Running the Server
+
+### Development
 
 ```bash
 npm run dev
 ```
 
-The app will open automatically at `http://localhost:3000`
+Server will start on `http://localhost:3001`
 
-### 3. Build for Production
+### Production
 
 ```bash
 npm run build
+npm start
 ```
 
-The built files will be in the `dist/` directory.
+## 📚 API Documentation
 
-## 📦 Project Structure
+### Base URL
 
 ```
-Glassmorphic-Component-Standalone/
+http://localhost:3001/api/auth
+```
+
+### Endpoints
+
+#### Public Endpoints
+
+##### Register
+
+```http
+POST /api/auth/register
+Content-Type: application/json
+
+{
+  "email": "user@example.com",
+  "password": "SecurePass123!",
+  "username": "johndoe"
+}
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "data": {
+    "user": {
+      "id": "uuid",
+      "email": "user@example.com",
+      "username": "johndoe"
+    }
+  },
+  "message": "Usuário registrado com sucesso",
+  "statusCode": 201
+}
+```
+
+##### Login
+
+```http
+POST /api/auth/login
+Content-Type: application/json
+
+{
+  "email": "user@example.com",
+  "password": "SecurePass123!"
+}
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "data": {
+    "accessToken": "eyJhbGciOiJIUzI1NiIs...",
+    "user": {
+      "id": "uuid",
+      "email": "user@example.com",
+      "username": "johndoe"
+    }
+  },
+  "message": "Login realizado com sucesso",
+  "statusCode": 200
+}
+```
+
+**Note:** Refresh token is set as an HttpOnly cookie.
+
+##### Refresh Token
+
+```http
+POST /api/auth/refresh-token
+Cookie: refreshToken=...
+```
+
+##### Forgot Password
+
+```http
+POST /api/auth/forgot-password
+Content-Type: application/json
+
+{
+  "email": "user@example.com"
+}
+```
+
+##### Reset Password
+
+```http
+POST /api/auth/reset-password
+Content-Type: application/json
+
+{
+  "token": "reset_token_from_email",
+  "newPassword": "NewSecurePass123!"
+}
+```
+
+##### Verify Email
+
+```http
+GET /api/auth/verify-email?token=verification_token
+```
+
+#### Protected Endpoints
+
+**Note:** Include JWT token in Authorization header:
+```
+Authorization: Bearer <access_token>
+```
+
+##### Get Current User
+
+```http
+GET /api/auth/me
+Authorization: Bearer <token>
+```
+
+##### Change Password
+
+```http
+POST /api/auth/change-password
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{
+  "currentPassword": "OldPass123!",
+  "newPassword": "NewPass123!"
+}
+```
+
+##### Update Profile
+
+```http
+PATCH /api/auth/profile
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{
+  "full_name": "John Doe",
+  "bio": "Software developer",
+  "avatar_url": "https://example.com/avatar.jpg",
+  "preferences": {
+    "theme": "dark",
+    "notifications": true
+  }
+}
+```
+
+##### Logout
+
+```http
+POST /api/auth/logout
+Authorization: Bearer <token>
+```
+
+### Rate Limits
+
+- **General endpoints:** 100 requests per 15 minutes
+- **Login:** 5 requests per 15 minutes
+- **Password reset:** 3 requests per hour
+
+## 🔐 Security Features
+
+### Password Requirements
+
+- Minimum 8 characters
+- At least one uppercase letter
+- At least one lowercase letter
+- At least one number
+- At least one special character
+
+### Token Management
+
+- **Access Token:** Expires in 1 hour
+- **Refresh Token:** Expires in 7 days, stored in HttpOnly cookie
+
+### Protection Mechanisms
+
+1. **Rate Limiting** - Prevent brute force attacks
+2. **Input Validation** - Zod schemas for all inputs
+3. **Input Sanitization** - Prevent XSS attacks
+4. **SQL Injection Prevention** - Parameterized queries via Supabase
+5. **CSRF Protection** - SameSite cookies
+6. **Security Headers** - Helmet.js configuration
+7. **CORS Protection** - Origin whitelist
+8. **Audit Logging** - Track all authentication events
+
+## 🧪 Testing
+
+```bash
+# Run all tests
+npm test
+
+# Run unit tests only
+npm run test:unit
+
+# Run integration tests only
+npm run test:integration
+
+# Watch mode
+npm run test:watch
+```
+
+## 📁 Project Structure
+
+```
+l2-educa-backend/
 ├── src/
-│   ├── components/
-│   │   ├── GlassShader.jsx          # WebGL shader renderer
-│   │   ├── GlassmorphicPanel.jsx    # Main component
-│   │   └── GlassmorphicPanel.css    # Component styles
-│   ├── App.jsx                       # Demo examples
-│   ├── App.css                       # Demo styles
-│   ├── main.jsx                      # Entry point
-│   └── index.css                     # Global styles
-├── index.html
+│   ├── config/           # Configuration files
+│   │   ├── environment.ts
+│   │   └── supabase.ts
+│   ├── middleware/       # Express middleware
+│   │   ├── auth.ts
+│   │   ├── rateLimiter.ts
+│   │   └── errorHandler.ts
+│   ├── services/         # Business logic
+│   │   ├── authService.ts
+│   │   └── auditService.ts
+│   ├── controllers/      # Request handlers
+│   │   └── authController.ts
+│   ├── routes/           # API routes
+│   │   └── auth.ts
+│   ├── types/            # TypeScript types
+│   │   └── index.ts
+│   ├── utils/            # Utility functions
+│   │   ├── validation.ts
+│   │   └── sanitization.ts
+│   ├── app.ts            # Express app setup
+│   └── server.ts         # Server entry point
+├── tests/                # Test files
+│   ├── unit/
+│   └── integration/
+├── .env.example          # Example environment variables
+├── .gitignore
 ├── package.json
-├── vite.config.js
+├── tsconfig.json
 └── README.md
 ```
 
-## 🎨 Basic Usage
+## 🚢 Deployment
 
-```jsx
-import GlassmorphicPanel from './components/GlassmorphicPanel';
+### Environment Variables for Production
 
-function MyComponent() {
-  return (
-    <GlassmorphicPanel
-      width={300}
-      height={120}
-      tint="#f8fff0"
-      blur={2.5}
-      cornerRadius={24}
-    >
-      <div>
-        <h2>Your Content Here</h2>
-        <p>Add any JSX content</p>
-      </div>
-    </GlassmorphicPanel>
-  );
-}
-```
-
-## 🎛️ Props API
-
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `children` | ReactNode | - | Content to display inside the glass panel |
-| `width` | number | 300 | Width of the glass effect in pixels |
-| `height` | number | 120 | Height of the glass effect in pixels |
-| `blur` | number | 2.5 | Blur intensity (0-5) |
-| `distortion` | number | 2.5 | Glass distortion effect (0-5) |
-| `tint` | string | '#f8fff0' | Tint color in hex format |
-| `cornerRadius` | number | 24 | Border radius in pixels |
-| `backgroundImage` | string | null | URL of background image |
-| `showShadow` | boolean | true | Show drop shadow |
-| `className` | string | '' | Additional CSS classes |
-| `style` | object | {} | Additional inline styles |
-| `onClick` | function | null | Click handler |
-| `onHover` | function | null | Hover handler |
-
-## 💡 Examples in Demo
-
-The demo (`App.jsx`) includes 8 different examples, each with unique SVG backgrounds to showcase the glass effects:
-
-1. **Basic Panel** - Gradient circles background showing blur and distortion
-2. **Custom Tint** - Wave patterns with sky blue tint
-3. **Extra Blur** - Geometric shapes with high blur for dreamy effect
-4. **Sharp Glass** - Striped pattern with minimal blur for clarity
-5. **Interactive Button** - Dotted pattern with clickable hover effect
-6. **Wide Card** - Abstract shapes for feature card layout
-7. **No Shadow** - Grid pattern with flat style
-8. **Custom Background** - Mountain scene with external image
-
-## 🎨 Customization Tips
-
-### Change Background
-
-The demo uses a gradient background. You can change it in `App.css`:
-
-```css
-.app {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  /* Or use an image */
-  background: url('your-image.jpg') center/cover;
-}
-```
-
-### Create Your Own Variant
-
-```jsx
-// Purple glass button
-<GlassmorphicPanel
-  width={200}
-  height={80}
-  tint="#e0e7ff"
-  blur={2}
-  cornerRadius={40}
-  onClick={() => console.log('Clicked!')}
->
-  <h3>Custom Button</h3>
-</GlassmorphicPanel>
-```
-
-### Use Custom Background Image
-
-```jsx
-<GlassmorphicPanel
-  width={350}
-  height={150}
-  backgroundImage="https://your-image-url.jpg"
->
-  <div style={{ color: 'white' }}>
-    <h2>With Custom Background</h2>
-  </div>
-</GlassmorphicPanel>
-```
-
-## ⚡ Performance
-
-- **GPU Accelerated**: Uses WebGL for hardware rendering
-- **Optimized**: Cached uniforms and efficient render loop
-- **Responsive**: Automatically adapts to container size
-- **Best Practice**: Limit to 3-5 panels per page for optimal performance
-
-## 🌐 Browser Support
-
-- ✅ Chrome 56+
-- ✅ Firefox 51+
-- ✅ Safari 10+
-- ✅ Edge 79+
-- ⚠️ IE 11 (requires WebGL polyfill)
-
-**WebGL Required**: This component requires WebGL support. Check compatibility:
-```javascript
-const canvas = document.createElement('canvas');
-const gl = canvas.getContext('webgl');
-if (!gl) {
-  console.error('WebGL not supported');
-}
-```
-
-## 🔧 Development
-
-### Run in Development Mode
+Ensure the following are set in production:
 
 ```bash
-npm run dev
+NODE_ENV=production
+JWT_SECRET=your_production_secret_here
+FRONTEND_URL=https://your-frontend-domain.com
+ALLOWED_ORIGINS=https://your-frontend-domain.com
 ```
 
-### Build for Production
+### Docker Deployment
 
 ```bash
-npm run build
+# Build
+docker build -t l2-educa-backend .
+
+# Run
+docker run -p 3001:3001 --env-file .env l2-educa-backend
 ```
 
-### Preview Production Build
+### Security Checklist
 
-```bash
-npm run preview
-```
-
-## 📝 Code Architecture
-
-### GlassShader.jsx
-- WebGL rendering engine
-- GLSL fragment shaders for glass effects
-- Handles textures, uniforms, and animation loop
-- Optimized with cached uniform locations
-
-### GlassmorphicPanel.jsx
-- High-level wrapper component
-- Manages glass positioning and sizing
-- Converts hex colors to RGB
-- Provides simple prop-based API
-
-## 🎓 Learn More
-
-### Key Technologies
-- **React 18** - Component framework
-- **WebGL** - Hardware-accelerated graphics
-- **GLSL** - Shader programming language
-- **Vite** - Fast build tool
-
-### Shader Features
-- Signed Distance Functions (SDF) for shapes
-- Gaussian blur with noise sampling
-- Chromatic aberration simulation
-- Real-time refraction effects
-- Soft shadow rendering
-
-## 🤝 Credits
-
-This component is based on the **Glass Material Editor** created by [Daniela Muntyan](https://danielamuntyan.com/) for [Figma Make](https://www.figma.com/make/).
-
-Original design: https://www.figma.com/design/VsEQXAvvklWz4NNWvslLOp/Glass-Material-Editor
-
-## 📄 License
-
-This is a demonstration project. Feel free to use and modify for your own projects.
+- [ ] Change JWT_SECRET to a strong random value
+- [ ] Enable HTTPS in production
+- [ ] Configure proper CORS origins
+- [ ] Enable email verification in Supabase
+- [ ] Set up database backups
+- [ ] Configure logging and monitoring
+- [ ] Review and test rate limits
+- [ ] Enable Supabase RLS policies
+- [ ] Set up SSL certificates
 
 ## 🐛 Troubleshooting
 
-### Component not rendering?
-- Check if WebGL is supported in your browser
-- Open browser console for error messages
-- Ensure container has sufficient height (min 300px recommended)
+### Common Issues
 
-### Performance issues?
-- Reduce `blur` and `distortion` values
-- Limit number of panels on the page (3-5 recommended)
-- Use smaller background images
+**Error: Missing environment variable**
+- Ensure all required variables in `.env.example` are set in your `.env` file
 
-### Content not visible?
-- Check that container has minimum height set
-- Verify text color contrasts with glass tint
-- Ensure content is wrapped in a div element
+**Error: JWT_SECRET must be at least 32 characters**
+- Generate a new secret using the command in the setup section
 
----
+**Error: Connection to Supabase failed**
+- Verify your SUPABASE_URL and keys are correct
+- Check if your Supabase project is active
 
-**Made with ❤️ using React + WebGL**
+**Error: CORS blocked**
+- Add your frontend URL to ALLOWED_ORIGINS in `.env`
 
-For questions or improvements, feel free to modify and extend this component!
+## 📖 Further Documentation
+
+- [Supabase Documentation](https://supabase.com/docs)
+- [Express.js Documentation](https://expressjs.com/)
+- [TypeScript Documentation](https://www.typescriptlang.org/)
+- [Zod Documentation](https://zod.dev/)
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Run tests
+5. Submit a pull request
+
+## 📄 License
+
+MIT License - See LICENSE file for details
+
+## 👥 Authors
+
+L2 EDUCA Team
+
+## 🔮 Future Enhancements
+
+- [ ] Two-Factor Authentication (2FA)
+- [ ] OAuth Integration (Google, GitHub)
+- [ ] Email templates customization
+- [ ] Advanced audit logging dashboard
+- [ ] User roles and permissions
+- [ ] Account lockout after failed attempts
+- [ ] Password history
+- [ ] Session management dashboard
 

@@ -54,8 +54,9 @@ export const ChatbotProvider = ({ children }) => {
           if (Array.isArray(arr)) return arr.map(s => String(s).trim().replace(/^"|"$/g, '')).filter(Boolean);
         }
       } catch {}
+      // Split ONLY by comma (not by spaces, semicolons, etc)
       return value
-        .split(/[\n,;\\s]+/)
+        .split(',')
         .map(s => s.trim().replace(/^"|"$/g, ''))
         .filter(Boolean);
     };
@@ -65,6 +66,12 @@ export const ChatbotProvider = ({ children }) => {
     const singleParsed = parseKeyList(singleKey);
     const multiParsed = parseKeyList(multiKeys);
     const keyPool = (multiParsed.length ? multiParsed : singleParsed).filter(Boolean);
+    
+    // Debug: Log API keys (only in development)
+    if (import.meta.env.DEV) {
+      console.log('🔑 API Keys loaded:', keyPool.length, 'keys');
+      console.log('🔑 Keys preview:', keyPool.map(k => k.substring(0, 20) + '...'));
+    }
     
     setApiConfig(prev => ({
       ...prev,

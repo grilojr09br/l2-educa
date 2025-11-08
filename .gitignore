@@ -4,6 +4,10 @@ distributions/
 # Dependencies
 node_modules/
 
+# Ignore
+DOCS/
+Creation/
+
 # Environment files
 .env
 .env.local

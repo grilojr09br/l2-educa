@@ -34,12 +34,13 @@ echo  [6] 🧹 Clean Install (Remove node_modules)
 echo  [7] 📊 Check Server Status
 echo  [8] 📝 View Logs Directory
 echo  [9] 🔧 Advanced Options
+echo  [10] 📤 Git Push Dashboard
 echo  [0] ❌ Exit
 echo.
 echo ════════════════════════════════════════════════════════════
 echo.
 
-set /p choice="Enter your choice (0-9): "
+set /p choice="Enter your choice (0-10): "
 
 if "%choice%"=="1" goto START_SERVERS
 if "%choice%"=="2" goto STOP_SERVERS
@@ -50,6 +51,7 @@ if "%choice%"=="6" goto CLEAN_INSTALL
 if "%choice%"=="7" goto CHECK_STATUS
 if "%choice%"=="8" goto VIEW_LOGS
 if "%choice%"=="9" goto ADVANCED_OPTIONS
+if "%choice%"=="10" goto GIT_PUSH_DASHBOARD
 if "%choice%"=="0" goto EXIT
 echo Invalid choice. Please try again.
 timeout /t 2 >nul
@@ -676,6 +678,259 @@ for /f "tokens=5" %%a in ('netstat -aon ^| findstr ":%FRONTEND_PORT%" ^| findstr
     taskkill /F /PID %%a >nul 2>&1
 )
 goto :eof
+
+:: ================================================================
+:: GIT PUSH DASHBOARD
+:: ================================================================
+:GIT_PUSH_DASHBOARD
+cls
+echo.
+echo ╔════════════════════════════════════════════════════════════╗
+echo ║                  Git Push Dashboard 📤                     ║
+echo ║                   Professional Workflow                    ║
+echo ╚════════════════════════════════════════════════════════════╝
+echo.
+
+:: Check if git is installed
+git --version >nul 2>&1
+if errorlevel 1 (
+    echo ❌ ERROR: Git is not installed or not in PATH!
+    echo.
+    echo 💡 Please install Git from: https://git-scm.com/downloads
+    echo.
+    pause
+    goto MENU
+)
+
+:: Check if we're in a git repository
+git rev-parse --git-dir >nul 2>&1
+if errorlevel 1 (
+    echo ❌ ERROR: Not a git repository!
+    echo.
+    echo 💡 Initialize a git repository first:
+    echo    git init
+    echo    git remote add origin [your-repo-url]
+    echo.
+    pause
+    goto MENU
+)
+
+:: Show current git status
+echo ┌────────────────────────────────────────────────────────────┐
+echo │                    Current Git Status                      │
+echo └────────────────────────────────────────────────────────────┘
+echo.
+git status --short
+if errorlevel 1 (
+    git status
+)
+echo.
+
+:: Check current branch
+for /f "tokens=*" %%a in ('git rev-parse --abbrev-ref HEAD 2^>nul') do set "CURRENT_BRANCH=%%a"
+echo 🌿 Current Branch: %CURRENT_BRANCH%
+echo.
+
+:: Check if there are changes to commit
+git diff-index --quiet HEAD -- 2>nul
+if not errorlevel 1 (
+    echo ℹ️  No changes detected in tracked files.
+    echo.
+    echo 💡 Checking for untracked files...
+    git ls-files --others --exclude-standard >nul 2>&1
+    if errorlevel 1 (
+        echo    No untracked files found.
+        echo.
+        set /p force="Continue anyway? (Y/N): "
+        if /i not "!force!"=="Y" goto MENU
+    )
+)
+
+echo ════════════════════════════════════════════════════════════
+echo.
+
+:: Select commit type
+:SELECT_COMMIT_TYPE
+echo ┌────────────────────────────────────────────────────────────┐
+echo │                    Select Commit Type                      │
+echo └────────────────────────────────────────────────────────────┘
+echo.
+echo  [1] ✨ feat      - New feature
+echo  [2] 🐛 fix       - Bug fix
+echo  [3] 📚 docs      - Documentation changes
+echo  [4] 💎 style     - Code style/formatting
+echo  [5] ♻️  refactor - Code refactoring
+echo  [6] ✅ test      - Adding/updating tests
+echo  [7] 🔧 chore     - Maintenance tasks
+echo  [8] ⚡ perf      - Performance improvements
+echo  [9] 🎨 ui        - UI/UX improvements
+echo  [0] 🔙 Back to Main Menu
+echo.
+
+set /p commit_type="Enter commit type (0-9): "
+
+if "%commit_type%"=="1" set "COMMIT_PREFIX=feat"
+if "%commit_type%"=="2" set "COMMIT_PREFIX=fix"
+if "%commit_type%"=="3" set "COMMIT_PREFIX=docs"
+if "%commit_type%"=="4" set "COMMIT_PREFIX=style"
+if "%commit_type%"=="5" set "COMMIT_PREFIX=refactor"
+if "%commit_type%"=="6" set "COMMIT_PREFIX=test"
+if "%commit_type%"=="7" set "COMMIT_PREFIX=chore"
+if "%commit_type%"=="8" set "COMMIT_PREFIX=perf"
+if "%commit_type%"=="9" set "COMMIT_PREFIX=ui"
+if "%commit_type%"=="0" goto MENU
+
+if not defined COMMIT_PREFIX (
+    echo.
+    echo ❌ Invalid choice. Please try again.
+    echo.
+    timeout /t 2 >nul
+    goto SELECT_COMMIT_TYPE
+)
+
+echo.
+echo ════════════════════════════════════════════════════════════
+echo.
+
+:: Get commit message
+echo ┌────────────────────────────────────────────────────────────┐
+echo │                    Commit Message                          │
+echo └────────────────────────────────────────────────────────────┘
+echo.
+echo 💡 Enter a clear, descriptive message
+echo    Example: "add user authentication system"
+echo.
+
+set /p "COMMIT_MSG=📝 Message: "
+
+if not defined COMMIT_MSG (
+    echo.
+    echo ❌ Commit message cannot be empty!
+    echo.
+    pause
+    goto GIT_PUSH_DASHBOARD
+)
+
+:: Build full commit message
+set "FULL_COMMIT_MSG=%COMMIT_PREFIX%: %COMMIT_MSG%"
+
+echo.
+echo ════════════════════════════════════════════════════════════
+echo.
+
+:: Show summary
+echo ┌────────────────────────────────────────────────────────────┐
+echo │                    Commit Summary                          │
+echo └────────────────────────────────────────────────────────────┘
+echo.
+echo 🌿 Branch:  %CURRENT_BRANCH%
+echo 📦 Type:    %COMMIT_PREFIX%
+echo 📝 Message: %FULL_COMMIT_MSG%
+echo.
+echo ⚠️  This will execute:
+echo    1. git add .
+echo    2. git commit -m "%FULL_COMMIT_MSG%"
+echo    3. git push origin %CURRENT_BRANCH%
+echo.
+
+set /p confirm="✅ Confirm and push? (Y/N): "
+if /i not "%confirm%"=="Y" (
+    echo.
+    echo ❌ Operation cancelled.
+    echo.
+    pause
+    goto MENU
+)
+
+echo.
+echo ════════════════════════════════════════════════════════════
+echo.
+
+:: Execute git workflow
+echo ┌────────────────────────────────────────────────────────────┐
+echo │                    Executing Git Push                      │
+echo └────────────────────────────────────────────────────────────┘
+echo.
+
+:: Step 1: Add all files
+echo [1/3] 📂 Adding all files...
+git add .
+if errorlevel 1 (
+    echo    ❌ Failed to add files!
+    echo.
+    pause
+    goto MENU
+)
+echo      ✅ Files added successfully
+echo.
+
+:: Step 2: Commit
+echo [2/3] 💾 Committing changes...
+git commit -m "%FULL_COMMIT_MSG%"
+if errorlevel 1 (
+    echo    ❌ Commit failed!
+    echo.
+    echo 💡 This might happen if there are no changes to commit.
+    echo    Run 'git status' to check your repository state.
+    echo.
+    pause
+    goto MENU
+)
+echo      ✅ Commit created successfully
+echo.
+
+:: Step 3: Push
+echo [3/3] 🚀 Pushing to remote...
+git push origin %CURRENT_BRANCH%
+if errorlevel 1 (
+    echo    ❌ Push failed!
+    echo.
+    echo 💡 Possible reasons:
+    echo    - No remote repository configured
+    echo    - Authentication failed
+    echo    - Network issues
+    echo    - Branch needs to be set upstream
+    echo.
+    echo 🔧 Try setting upstream:
+    echo    git push --set-upstream origin %CURRENT_BRANCH%
+    echo.
+    set /p retry="Try with --set-upstream flag? (Y/N): "
+    if /i "!retry!"=="Y" (
+        echo.
+        echo 🔄 Retrying with --set-upstream...
+        git push --set-upstream origin %CURRENT_BRANCH%
+        if errorlevel 1 (
+            echo    ❌ Still failed. Please check your git configuration.
+            pause
+            goto MENU
+        )
+        echo    ✅ Push successful with upstream!
+    ) else (
+        pause
+        goto MENU
+    )
+) else (
+    echo      ✅ Push completed successfully
+)
+
+echo.
+echo ╔════════════════════════════════════════════════════════════╗
+echo ║              Git Push Completed Successfully! 🎉           ║
+echo ╚════════════════════════════════════════════════════════════╝
+echo.
+echo 📤 Commit: %FULL_COMMIT_MSG%
+echo 🌿 Branch: %CURRENT_BRANCH%
+echo ✅ Status: Pushed to remote
+echo.
+
+:: Show final status
+echo 🔍 Final repository status:
+echo.
+git status
+echo.
+
+pause
+goto MENU
 
 :: ================================================================
 :: EXIT

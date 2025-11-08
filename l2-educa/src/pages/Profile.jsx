@@ -84,12 +84,19 @@ const Profile = () => {
         bio: formData.bio,
       });
       
-      // Update users table (avatar_url - already handled by AvatarUpload)
-      // No need to update here since AvatarUpload handles it directly
-      
+      // Reload profile data immediately
       await loadProfile();
+      
+      // Exit edit mode
       setIsEditing(false);
+      
+      // Show success message
       setMessage({ type: 'success', text: 'Perfil atualizado com sucesso!' });
+      
+      // Force a small delay to ensure UI updates
+      setTimeout(() => {
+        window.location.reload();
+      }, 500);
     } catch (error) {
       setMessage({ type: 'error', text: error.message || 'Erro ao atualizar perfil' });
     } finally {
@@ -144,10 +151,33 @@ const Profile = () => {
 
   const handleLogout = async () => {
     try {
+      // Call logout (will clear everything)
       await logout();
-      navigate('/login');
+      
+      // ROBUST: Get base URL with /l2 subdirectory
+      // Method 1: Use env variable
+      let baseUrl = import.meta.env.VITE_SITE_URL;
+      
+      // Method 2: Detect from current URL (backup)
+      if (!baseUrl) {
+        const currentPath = window.location.pathname;
+        if (currentPath.includes('/l2')) {
+          baseUrl = window.location.origin + '/l2';
+        } else {
+          baseUrl = window.location.origin;
+        }
+      }
+      
+      // Force navigate to login with correct URL
+      window.location.href = `${baseUrl}/#/login`;
     } catch (error) {
       console.error('Logout error:', error);
+      // Force navigate anyway with correct URL
+      const baseUrl = import.meta.env.VITE_SITE_URL || 
+                      (window.location.pathname.includes('/l2') 
+                        ? window.location.origin + '/l2' 
+                        : window.location.origin);
+      window.location.href = `${baseUrl}/#/login`;
     }
   };
 
@@ -317,8 +347,26 @@ const Profile = () => {
                 <label className="form-label">
                   Foto de Perfil
                 </label>
+                
+                {/* Show current avatar preview */}
+                {(formData.avatar_url || user?.avatar_url) && (
+                  <div style={{ marginBottom: '1rem', textAlign: 'center' }}>
+                    <img
+                      src={formData.avatar_url || user.avatar_url}
+                      alt="Avatar atual"
+                      style={{
+                        width: '100px',
+                        height: '100px',
+                        borderRadius: '50%',
+                        objectFit: 'cover',
+                        border: '3px solid rgba(139, 92, 246, 0.5)',
+                      }}
+                    />
+                  </div>
+                )}
+                
                 <AvatarUpload
-                  currentAvatar={formData.avatar_url}
+                  currentAvatar={formData.avatar_url || user?.avatar_url}
                   onUploadSuccess={async (url) => {
                     // Atualizar no estado local
                     setFormData({ ...formData, avatar_url: url });
@@ -333,7 +381,12 @@ const Profile = () => {
                       if (error) throw error;
                       
                       setMessage({ type: 'success', text: 'Foto atualizada com sucesso!' });
+                      
+                      // Reload profile AND force page refresh to update all components
                       await loadProfile();
+                      setTimeout(() => {
+                        window.location.reload();
+                      }, 500);
                     } catch (err) {
                       console.error('Erro ao atualizar avatar:', err);
                       setMessage({ type: 'error', text: 'Erro ao salvar foto' });

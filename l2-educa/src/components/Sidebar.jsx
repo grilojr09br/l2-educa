@@ -285,7 +285,22 @@ const Sidebar = () => {
                   className="sidebar-auth-button profile-button"
                   onClick={() => setIsOpen(false)}
                 >
-                  <span className="material-icons button-icon">account_circle</span>
+                  {user?.avatar_url ? (
+                    <img 
+                      src={user.avatar_url} 
+                      alt="Avatar" 
+                      className="button-icon sidebar-avatar"
+                      style={{
+                        width: '24px',
+                        height: '24px',
+                        borderRadius: '50%',
+                        objectFit: 'cover',
+                        border: '2px solid rgba(255,255,255,0.3)'
+                      }}
+                    />
+                  ) : (
+                    <span className="material-icons button-icon">account_circle</span>
+                  )}
                   <span className="button-label">
                     {user?.username || 'Perfil'}
                     {isAuthenticated && !isEmailVerified && <span className="unverified-badge" title="Email não verificado">⚠</span>}
@@ -299,10 +314,27 @@ const Sidebar = () => {
                       setIsOpen(false);
                       await logout();
                       success('Você saiu com sucesso!');
-                      navigate('/login');
+                      
+                      // ROBUST: Get base URL with /l2 subdirectory
+                      let baseUrl = import.meta.env.VITE_SITE_URL;
+                      if (!baseUrl) {
+                        const currentPath = window.location.pathname;
+                        baseUrl = currentPath.includes('/l2') 
+                          ? window.location.origin + '/l2'
+                          : window.location.origin;
+                      }
+                      
+                      window.location.href = `${baseUrl}/#/login`;
                     } catch (err) {
                       error('Erro ao fazer logout. Tente novamente.');
                       console.error('Logout error:', err);
+                      
+                      // Force redirect with correct URL
+                      const baseUrl = import.meta.env.VITE_SITE_URL || 
+                                      (window.location.pathname.includes('/l2') 
+                                        ? window.location.origin + '/l2' 
+                                        : window.location.origin);
+                      window.location.href = `${baseUrl}/#/login`;
                     }
                   }}
                 >

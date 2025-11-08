@@ -8,26 +8,18 @@ import { checkRateLimit, recordFailedAttempt } from '../../utils/securityUtils';
 import './AuthForms.css';
 
 // ============================================================================
-// VALIDATION SCHEMAS - Enterprise Level
+// VALIDATION SCHEMAS - Enterprise Level (EMAIL ONLY)
 // ============================================================================
 
 const identifierSchema = z.object({
   identifier: z
     .string()
-    .min(1, 'Email ou username é obrigatório')
-    .refine((val) => {
-      // Either valid email or valid username
-      if (val.includes('@')) {
-        return z.string().email().safeParse(val).success;
-      }
-      return /^[a-zA-Z0-9_]{3,20}$/.test(val);
-    }, {
-      message: 'Email inválido ou username deve ter 3-20 caracteres (apenas letras, números e underscore)',
-    }),
+    .min(1, 'Email é obrigatório')
+    .email('Email inválido'),
 });
 
 const loginSchema = z.object({
-  identifier: z.string().min(1, 'Email ou username é obrigatório'),
+  identifier: z.string().min(1, 'Email é obrigatório').email('Email inválido'),
   password: z.string().min(1, 'Senha é obrigatória'),
 });
 
@@ -67,7 +59,6 @@ const EnhancedSeamlessLoginForm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isCheckingUser, setIsCheckingUser] = useState(false);
   const [userExists, setUserExists] = useState(null);
-  const [identifierType, setIdentifierType] = useState(null);
   const [rateLimit, setRateLimit] = useState({ allowed: true, minutesLeft: 0 });
   const [retryCount, setRetryCount] = useState(0);
 
@@ -91,24 +82,14 @@ const EnhancedSeamlessLoginForm = () => {
   // HELPER FUNCTIONS
   // ============================================================================
 
-  // Detect identifier type (email vs username)
-  const detectIdentifierType = (value) => {
-    if (!value) return null;
-    return value.includes('@') ? 'email' : 'username';
-  };
-
-  // Get placeholder text based on identifier type
+  // Get placeholder text
   const getPlaceholder = () => {
-    if (identifierType === 'email') return 'seu@email.com';
-    if (identifierType === 'username') return 'seu_username';
-    return 'Email ou Username';
+    return 'seu@email.com';
   };
 
-  // Get icon based on identifier type
+  // Get icon
   const getIdentifierIcon = () => {
-    if (identifierType === 'email') return '✉️';
-    if (identifierType === 'username') return '👤';
-    return '🔑';
+    return '✉️';
   };
 
   // ============================================================================
@@ -123,11 +104,6 @@ const EnhancedSeamlessLoginForm = () => {
     }
   }, [identifier]);
 
-  // Auto-detect identifier type
-  useEffect(() => {
-    const type = detectIdentifierType(identifier);
-    setIdentifierType(type);
-  }, [identifier]);
 
   // ============================================================================
   // API CALLS - WITH RETRY LOGIC
@@ -187,11 +163,6 @@ const EnhancedSeamlessLoginForm = () => {
         setStep('login');
       } else {
         // User doesn't exist, go to register step
-        // For registration, identifier must be email
-        if (!identifierValue.includes('@')) {
-          setApiError('Para criar uma conta, use um endereço de email válido');
-          return;
-        }
         setStep('register');
       }
     } catch (error) {
@@ -269,7 +240,7 @@ const EnhancedSeamlessLoginForm = () => {
         localStorage.setItem('emailVerificationPending', 'true');
         localStorage.setItem('emailVerificationEmail', data.identifier);
       } else if (error.message.includes('Invalid login credentials') || error.message.includes('incorretos')) {
-        setApiError('Email/username ou senha incorretos. Verifique suas credenciais.');
+        setApiError('Email ou senha incorretos. Verifique suas credenciais.');
       } else {
         setApiError(error.message || 'Erro ao fazer login. Tente novamente.');
       }
@@ -324,12 +295,12 @@ const EnhancedSeamlessLoginForm = () => {
 
   return (
     <div className="auth-form-container">
-      {/* STEP 1: Enter Email or Username */}
+      {/* STEP 1: Enter Email */}
       {step === 'identifier' && (
         <>
           <div className="auth-form-header">
             <h2 className="auth-form-title">Bem-vindo ao L2 EDUCA</h2>
-            <p className="auth-form-subtitle">Entre com seu email ou username para continuar</p>
+            <p className="auth-form-subtitle">Entre com seu email para continuar</p>
           </div>
 
           <form onSubmit={handleSubmit(onIdentifierSubmit)} className="auth-form">
@@ -346,16 +317,16 @@ const EnhancedSeamlessLoginForm = () => {
             <div className="form-group">
               <label htmlFor="identifier" className="form-label">
                 <span className="identifier-icon">{getIdentifierIcon()}</span>
-                Email ou Username
+                Email
               </label>
               <input
                 id="identifier"
-                type="text"
+                type="email"
                 {...registerField('identifier')}
                 disabled={isCheckingUser || !rateLimit.allowed}
                 className={`form-input ${errors.identifier ? 'form-input-error' : ''}`}
                 placeholder={getPlaceholder()}
-                autoComplete="username"
+                autoComplete="email"
                 autoFocus
               />
               {errors.identifier && <span className="form-error">{errors.identifier.message}</span>}
