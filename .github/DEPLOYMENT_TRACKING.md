@@ -9,7 +9,7 @@
 
 GitHub Actions workflows are now configured to automatically track and display all deployments in the **GitHub Deployments** section.
 
-**View Deployments:** `https://github.com/YOUR_USERNAME/l2-educa/deployments`
+**View Deployments:** `https://github.com/grilojr09br/l2-educa/deployments`
 
 ---
 
@@ -79,7 +79,7 @@ GitHub Actions workflows are now configured to automatically track and display a
 
 After pushing, you'll see deployments at:
 ```
-https://github.com/YOUR_USERNAME/l2-educa/deployments
+https://github.com/grilojr09br/l2-educa/deployments
 ```
 
 **Each deployment shows:**
@@ -251,9 +251,9 @@ deploy-hostinger.bat
 Add to README.md:
 
 ```markdown
-![Frontend Deployment](https://github.com/YOUR_USERNAME/l2-educa/actions/workflows/frontend-deployment.yml/badge.svg)
-![Backend Deployment](https://github.com/YOUR_USERNAME/l2-educa/actions/workflows/backend-deployment.yml/badge.svg)
-![Deployment Status](https://github.com/YOUR_USERNAME/l2-educa/actions/workflows/deployment-status.yml/badge.svg)
+![Frontend Deployment](https://github.com/grilojr09br/l2-educa/actions/workflows/frontend-deployment.yml/badge.svg)
+![Backend Deployment](https://github.com/grilojr09br/l2-educa/actions/workflows/backend-deployment.yml/badge.svg)
+![Deployment Status](https://github.com/grilojr09br/l2-educa/actions/workflows/deployment-status.yml/badge.svg)
 ```
 
 ---
@@ -279,9 +279,9 @@ Add to README.md:
 
 ## 🔗 Useful Links
 
-- **Deployments:** `https://github.com/YOUR_USERNAME/l2-educa/deployments`
-- **Actions:** `https://github.com/YOUR_USERNAME/l2-educa/actions`
-- **Workflows:** `https://github.com/YOUR_USERNAME/l2-educa/tree/main/.github/workflows`
+- **Deployments:** `https://github.com/grilojr09br/l2-educa/deployments`
+- **Actions:** `https://github.com/grilojr09br/l2-educa/actions`
+- **Workflows:** `https://github.com/grilojr09br/l2-educa/tree/main/.github/workflows`
 
 ---
 

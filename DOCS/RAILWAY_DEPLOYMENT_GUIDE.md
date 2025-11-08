@@ -47,7 +47,7 @@ git push
 
 1. **Click "New Project"**
 2. **Select "Deploy from GitHub repo"**
-3. **Choose your repository:** `your-username/l2-educa`
+3. **Choose your repository:** `grilojr09br/l2-educa`
 4. **Click "Deploy Now"**
 
 Railway will start building your backend! 🚀

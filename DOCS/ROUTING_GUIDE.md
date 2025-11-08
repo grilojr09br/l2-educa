@@ -55,7 +55,7 @@ Create `vercel.json`:
 Add this to your `vite.config.js`:
 ```javascript
 export default defineConfig({
-  base: '/your-repo-name/',
+  base: '/l2-educa/',
   // ... rest of config
 })
 ```

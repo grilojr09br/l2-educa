@@ -78,7 +78,7 @@ sudo yum install git      # CentOS/RHEL
 
 5. **Copy the repository URL** shown on the next page:
    ```
-   https://github.com/your-username/l2-educa.git
+   https://github.com/grilojr09br/l2-educa.git
    ```
    Keep this URL handy!
 
@@ -270,10 +270,10 @@ The `-m` flag adds a message describing what changed.
 Use the URL you copied from GitHub earlier:
 
 ```bash
-git remote add origin https://github.com/your-username/l2-educa.git
+git remote add origin https://github.com/grilojr09br/l2-educa.git
 ```
 
-Replace `your-username` with your actual GitHub username!
+Using GitHub username: `grilojr09br`
 
 Example:
 ```bash
@@ -287,8 +287,8 @@ git remote -v
 
 Should show:
 ```
-origin  https://github.com/your-username/l2-educa.git (fetch)
-origin  https://github.com/your-username/l2-educa.git (push)
+origin  https://github.com/grilojr09br/l2-educa.git (fetch)
+origin  https://github.com/grilojr09br/l2-educa.git (push)
 ```
 
 ---
@@ -352,7 +352,7 @@ cat ~/.ssh/id_ed25519.pub
 # 4. Click "Add SSH key"
 
 # Change remote to SSH
-git remote set-url origin git@github.com:your-username/l2-educa.git
+git remote set-url origin git@github.com:grilojr09br/l2-educa.git
 
 # Push again
 git push -u origin main
@@ -362,7 +362,7 @@ git push -u origin main
 
 ### **Step 4: Verify Upload**
 
-1. Go to your GitHub repository: `https://github.com/your-username/l2-educa`
+1. Go to your GitHub repository: `https://github.com/grilojr09br/l2-educa`
 2. You should see all your files!
 3. ✅ Success!
 
@@ -423,7 +423,7 @@ git checkout main
 git pull
 
 # Clone repository to another computer
-git clone https://github.com/your-username/l2-educa.git
+git clone https://github.com/grilojr09br/l2-educa.git
 ```
 
 ---
@@ -539,7 +539,7 @@ git add .
 git commit -m "Initial commit"
 
 # 4. Connect to GitHub
-git remote add origin https://github.com/your-username/l2-educa.git
+git remote add origin https://github.com/grilojr09br/l2-educa.git
 
 # 5. Rename branch
 git branch -M main
