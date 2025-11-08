@@ -1,6 +1,6 @@
 import React from 'react';
 import EnhancedSeamlessLoginForm from '../components/auth/EnhancedSeamlessLoginForm';
-import EmailVerificationNotice from '../components/auth/EmailVerificationNotice';
+// import EmailVerificationNotice from '../components/auth/EmailVerificationNotice'; // ⚠️ DEACTIVATED - Email verification disabled
 import AuroraBackground from '../components/AuroraBackground';
 import './AuthPages.css';
 
@@ -16,7 +16,7 @@ const Login = () => {
         </div>
 
         <div className="auth-card">
-          <EmailVerificationNotice />
+          {/* <EmailVerificationNotice /> */} {/* ⚠️ DEACTIVATED - Email verification disabled */}
           <EnhancedSeamlessLoginForm />
         </div>
       </div>

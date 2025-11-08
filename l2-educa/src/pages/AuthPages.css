@@ -39,10 +39,11 @@
 
 .logo-subtitle {
   font-size: clamp(0.95rem, 2vw, 1.1rem);
-  color: rgba(255, 255, 255, 0.6);
-  font-weight: 500;
-  letter-spacing: 0.05em;
+  color: var(--color-text-tertiary, rgba(255, 255, 255, 0.7));
+  font-weight: var(--font-weight-medium, 500);
+  letter-spacing: var(--letter-spacing-wide, 0.05em);
   text-transform: uppercase;
+  line-height: var(--line-height-normal, 1.5);
 }
 
 /* Auth Card */

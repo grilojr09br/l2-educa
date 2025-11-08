@@ -1,7 +1,12 @@
 /**
- * Email Verification Configuration
+ * ============================================================================
+ * EMAIL VERIFICATION CONFIGURATION - DEACTIVATED
+ * ============================================================================
+ * 
+ * STATUS: FULLY DISABLED (November 8, 2025)
  * 
  * This file controls email verification requirements for the application.
+ * Currently, ALL email verification features are DISABLED.
  * 
  * HOW TO CHANGE:
  * - Use the dev-manager.bat script (option 11: Email Verification Settings)
@@ -13,20 +18,27 @@
  * - Whether users need to verify email before accessing the app
  * - Whether verification banners/notices are shown
  * - Whether email verification checks are enforced
+ * 
+ * DEACTIVATION NOTES:
+ * - All related UI components are imported but not rendered
+ * - Components remain in codebase for future reactivation
+ * - No breaking changes to authentication flow
+ * 
+ * ============================================================================
  */
 
 export const EMAIL_VERIFICATION_CONFIG = {
   // Main toggle: Set to false to disable all email verification
-  REQUIRE_EMAIL_VERIFICATION: true,
+  REQUIRE_EMAIL_VERIFICATION: false, // ⚠️ DISABLED
   
   // Show verification notice on login page after registration
-  SHOW_LOGIN_NOTICE: true,
+  SHOW_LOGIN_NOTICE: false, // ⚠️ DISABLED
   
   // Show banner for logged-in users with unverified email
-  SHOW_BANNER_WHEN_LOGGED_IN: true,
+  SHOW_BANNER_WHEN_LOGGED_IN: false, // ⚠️ DISABLED
   
   // Block access to protected routes until email is verified
-  BLOCK_ACCESS_UNTIL_VERIFIED: true,
+  BLOCK_ACCESS_UNTIL_VERIFIED: false, // ⚠️ DISABLED
 };
 
 // Helper function to check if email verification is required

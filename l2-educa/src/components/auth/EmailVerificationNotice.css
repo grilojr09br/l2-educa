@@ -1,6 +1,6 @@
 .email-verification-notice {
-  margin-bottom: 1.5rem;
-  animation: slideDown 0.3s ease-out;
+  margin-bottom: var(--spacing-6, 1.5rem);
+  animation: slideDown var(--transition-slow, 0.3s) var(--ease-out, ease-out);
   width: 100%;
   max-width: 100%;
 }
@@ -19,30 +19,32 @@
 .notice-content {
   display: flex;
   align-items: flex-start;
-  gap: 1rem;
-  padding: 1.25rem;
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(99, 102, 241, 0.15));
-  border: 1px solid rgba(59, 130, 246, 0.4);
-  border-radius: 12px;
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  gap: var(--spacing-4, 1rem);
+  padding: var(--spacing-5, 1.25rem);
+  max-width: 100%;
+  background: var(--color-info-bg, rgba(59, 130, 246, 0.15));
+  border: 1px solid var(--color-info-border, rgba(59, 130, 246, 0.4));
+  border-radius: var(--radius-lg, 12px);
+  backdrop-filter: var(--backdrop-blur-lg, blur(20px));
+  -webkit-backdrop-filter: var(--backdrop-blur-lg, blur(20px));
+  box-shadow: var(--shadow-xl, 0 20px 25px rgba(0, 0, 0, 0.15));
+  transition: var(--transition-all);
 }
 
 .notice-icon {
   flex-shrink: 0;
-  width: 48px;
-  height: 48px;
+  width: var(--touch-target-comfortable, 48px);
+  height: var(--touch-target-comfortable, 48px);
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(59, 130, 246, 0.2);
-  border-radius: 50%;
+  background: var(--color-info-bg, rgba(59, 130, 246, 0.2));
+  border-radius: var(--radius-full, 50%);
 }
 
 .notice-icon .material-icons {
-  font-size: 24px;
-  color: #3b82f6;
+  font-size: var(--font-size-2xl, 24px);
+  color: var(--color-info-light, #60a5fa);
 }
 
 .notice-text {
@@ -50,34 +52,35 @@
 }
 
 .notice-title {
-  margin: 0 0 0.5rem 0;
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: #fff;
+  margin: 0 0 var(--spacing-2, 0.5rem) 0;
+  font-size: var(--font-size-lg, 1.1rem);
+  font-weight: var(--font-weight-bold, 700);
+  color: var(--color-text-primary, #fff);
+  line-height: var(--line-height-tight, 1.2);
 }
 
 .notice-message {
   margin: 0;
-  font-size: 0.95rem;
-  line-height: 1.5;
-  color: rgba(255, 255, 255, 0.85);
+  font-size: var(--font-size-base, 0.95rem);
+  line-height: var(--line-height-normal, 1.5);
+  color: var(--color-text-secondary, rgba(255, 255, 255, 0.85));
 }
 
 .notice-message strong {
-  color: #fff;
-  font-weight: 600;
+  color: var(--color-text-primary, #fff);
+  font-weight: var(--font-weight-semibold, 600);
 }
 
 .resend-success {
-  margin-top: 0.75rem;
-  padding: 0.5rem 0.75rem;
-  background: rgba(16, 185, 129, 0.15);
-  border: 1px solid rgba(16, 185, 129, 0.3);
-  border-radius: 6px;
-  color: #10b981;
-  font-size: 0.9rem;
-  font-weight: 500;
-  animation: fadeIn 0.3s ease-out;
+  margin-top: var(--spacing-3, 0.75rem);
+  padding: var(--spacing-2, 0.5rem) var(--spacing-3, 0.75rem);
+  background: var(--color-success-bg, rgba(16, 185, 129, 0.15));
+  border: 1px solid var(--color-success-border, rgba(16, 185, 129, 0.3));
+  border-radius: var(--radius-md, 6px);
+  color: var(--color-success-light, #34d399);
+  font-size: var(--font-size-sm, 0.9rem);
+  font-weight: var(--font-weight-medium, 500);
+  animation: fadeIn var(--transition-slow, 0.3s) var(--ease-out, ease-out);
 }
 
 @keyframes fadeIn {
@@ -96,50 +99,109 @@
 }
 
 .btn-resend {
-  padding: 0.625rem 1rem;
-  background: rgba(59, 130, 246, 0.2);
-  border: 1px solid rgba(59, 130, 246, 0.4);
-  border-radius: 8px;
-  color: #fff;
-  font-size: 0.875rem;
-  font-weight: 600;
+  padding: var(--spacing-2, 0.625rem) var(--spacing-4, 1rem);
+  background: var(--color-info-bg, rgba(59, 130, 246, 0.2));
+  border: 1px solid var(--color-info-border, rgba(59, 130, 246, 0.4));
+  border-radius: var(--radius-md, 8px);
+  color: var(--color-text-primary, #fff);
+  font-size: var(--font-size-sm, 0.875rem);
+  font-weight: var(--font-weight-semibold, 600);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: var(--transition-all);
   white-space: nowrap;
+  min-height: var(--touch-target-min, 44px);
 }
 
 .btn-resend:hover:not(:disabled) {
-  background: rgba(59, 130, 246, 0.3);
-  border-color: rgba(59, 130, 246, 0.6);
+  background: var(--color-info, #3b82f6);
+  border-color: var(--color-info-light, #60a5fa);
   transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.btn-resend:active:not(:disabled) {
+  transform: translateY(0) scale(0.98);
+}
+
+.btn-resend:focus-visible {
+  outline: var(--focus-outline);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--focus-ring-shadow);
 }
 
 .btn-resend:disabled {
-  opacity: 0.6;
+  opacity: 0.5;
   cursor: not-allowed;
 }
 
 .btn-dismiss {
-  padding: 0.5rem;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
-  color: rgba(255, 255, 255, 0.7);
+  padding: var(--spacing-2, 0.5rem);
+  background: var(--color-bg-secondary, rgba(255, 255, 255, 0.05));
+  border: 1px solid var(--color-border-primary, rgba(255, 255, 255, 0.1));
+  border-radius: var(--radius-md, 8px);
+  color: var(--color-text-muted, rgba(255, 255, 255, 0.6));
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: var(--transition-all);
   display: flex;
   align-items: center;
   justify-content: center;
+  min-width: var(--touch-target-min, 44px);
+  min-height: var(--touch-target-min, 44px);
 }
 
 .btn-dismiss:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.2);
-  color: #fff;
+  background: var(--color-bg-tertiary, rgba(255, 255, 255, 0.1));
+  border-color: var(--color-border-secondary, rgba(255, 255, 255, 0.2));
+  color: var(--color-text-primary, #fff);
+  transform: scale(1.05);
+}
+
+.btn-dismiss:active {
+  transform: scale(0.95);
+}
+
+.btn-dismiss:focus-visible {
+  outline: var(--focus-outline);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--focus-ring-shadow);
 }
 
 .btn-dismiss .material-icons {
-  font-size: 20px;
+  font-size: var(--font-size-xl, 20px);
+}
+
+/* ============================================================================
+ * RESPONSIVE BREAKPOINTS
+ * ============================================================================ */
+
+/* Desktop - Enhanced spacing and layout */
+@media (min-width: 1024px) {
+  .notice-content {
+    padding: var(--spacing-6, 1.5rem) var(--spacing-8, 2rem);
+    gap: var(--spacing-6, 1.5rem);
+    max-width: 100%;
+  }
+
+  .notice-icon {
+    width: 56px;
+    height: 56px;
+  }
+
+  .notice-icon .material-icons {
+    font-size: 28px;
+  }
+
+  .notice-title {
+    font-size: var(--font-size-xl, 1.25rem);
+  }
+
+  .notice-message {
+    font-size: var(--font-size-lg, 1.05rem);
+  }
+
+  .notice-actions {
+    gap: var(--spacing-3, 0.75rem);
+  }
 }
 
 /* Mobile responsive */

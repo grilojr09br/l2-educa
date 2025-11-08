@@ -13,11 +13,12 @@ import Sidebar from './components/Sidebar';
 import ScrollToTop from './components/ScrollToTop';
 import AdminGuard from './components/AdminGuard';
 import NotificationToast from './components/NotificationToast';
-import EmailVerificationBanner from './components/EmailVerificationBanner';
+// import EmailVerificationBanner from './components/EmailVerificationBanner'; // ⚠️ DEACTIVATED - Email verification disabled
 import { updateOrientationClass } from './utils/mobileDetection';
 import { autoPreloadMathJax } from './utils/mathJaxPreloader';
 import { usePageCache } from './hooks/usePageCache';
 import ErrorBoundary from './components/ErrorBoundary';
+import './styles/design-tokens.css';
 import './App.css';
 
 // Lazy load AI Chatbot for performance
@@ -142,7 +143,7 @@ function AppContent() {
           <PageTransition />
           <ScrollToTop />
           <Sidebar />
-          <EmailVerificationBanner />
+          {/* <EmailVerificationBanner /> */} {/* ⚠️ DEACTIVATED - Email verification disabled */}
           <NotificationToast />
           {/* Hide AI chatbot on auth pages */}
           {!location.pathname.match(/^\/(login|register|forgot-password|reset-password|verify-email)$/) && (
