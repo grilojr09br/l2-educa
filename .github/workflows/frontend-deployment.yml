@@ -1,0 +1,96 @@
+name: Frontend Deployment (Hostinger)
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'l2-educa/**'
+      - '!l2-educa/DOCS/**'
+      - '!l2-educa/*.md'
+
+  workflow_dispatch:
+
+jobs:
+  build-and-track:
+    name: Build & Track Frontend Deployment
+    runs-on: ubuntu-latest
+    
+    environment:
+      name: production-frontend
+      url: https://silviosuperandolimites.com.br/l2
+
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 📦 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: l2-educa/package-lock.json
+
+      - name: 🔧 Install dependencies
+        working-directory: l2-educa
+        run: npm ci
+
+      - name: 🏗️ Build frontend
+        working-directory: l2-educa
+        run: npm run build
+        env:
+          NODE_ENV: production
+
+      - name: ✅ Build successful
+        run: |
+          echo "✅ Frontend built successfully!"
+          echo "📦 Build size: $(du -sh l2-educa/dist | cut -f1)"
+          echo "📁 Files: $(find l2-educa/dist -type f | wc -l)"
+
+      - name: 📊 Deployment info
+        run: |
+          echo "🚀 Deployment Target: Hostinger"
+          echo "🌐 URL: https://silviosuperandolimites.com.br/l2"
+          echo "📝 Commit: ${{ github.sha }}"
+          echo "👤 Author: ${{ github.actor }}"
+          echo ""
+          echo "⚠️ Note: Manual deployment to Hostinger required!"
+          echo "Run: deploy-hostinger.bat to complete deployment"
+
+      - name: 💾 Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-build-${{ github.sha }}
+          path: l2-educa/dist
+          retention-days: 7
+
+      - name: 📝 Create deployment record
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const deployment = await github.rest.repos.createDeployment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: context.sha,
+              environment: 'production-frontend',
+              description: 'Frontend deployment to Hostinger',
+              auto_merge: false,
+              required_contexts: [],
+              production_environment: true
+            });
+            
+            await github.rest.repos.createDeploymentStatus({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              deployment_id: deployment.data.id,
+              state: 'success',
+              log_url: `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`,
+              description: 'Frontend built successfully - Manual deployment to Hostinger required',
+              environment_url: 'https://silviosuperandolimites.com.br/l2'
+            });
+
+      - name: 🎉 Deployment tracked
+        run: |
+          echo "✅ Deployment recorded in GitHub!"
+          echo "View at: https://github.com/${{ github.repository }}/deployments"
+
