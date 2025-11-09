@@ -1,0 +1,47 @@
+.doc-search {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  margin: 20px auto;
+}
+
+.doc-search input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+.doc-search ul {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-top: none;
+  border-radius: 0 0 5px 5px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  z-index: 1000;
+}
+
+.doc-search li {
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.doc-search li:last-child {
+  border-bottom: none;
+}
+
+.doc-search a {
+  text-decoration: none;
+  color: #333;
+}
+
+.doc-search a:hover {
+  color: #007bff;
+}

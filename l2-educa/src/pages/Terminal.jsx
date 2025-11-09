@@ -4,6 +4,7 @@ import { useNavigation } from '../contexts/NavigationContext';
 import { useAdmin } from '../contexts/AdminContext';
 import GlassCard from '../components/GlassCard';
 import ScrollReveal from '../components/ScrollReveal';
+import DocSearch from '../components/DocSearch';
 import './Terminal.css';
 
 // Force HMR reload - Terminal cleaned of formulaCache
@@ -96,6 +97,9 @@ const Terminal = () => {
           </div>
         </ScrollReveal>
       </div>
+
+      {/* Documentation Search */}
+      <DocSearch />
 
       {/* Grid de disciplinas */}
       <div className="subjects-grid">

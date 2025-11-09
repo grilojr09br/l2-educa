@@ -81,6 +81,7 @@ const VerifyEmail = lazy(() => import('./pages/VerifyEmail'));
 
 // Import ProtectedRoute - NOT LAZY (needs to check auth immediately)
 import ProtectedRoute from './components/auth/ProtectedRoute';
+import SuspendedProtectedRoute from './components/auth/SuspendedProtectedRoute';
 
 function AppContent() {
   const location = useLocation();
@@ -172,94 +173,76 @@ function AppContent() {
             <Route path="/register" element={<Register />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/reset-password" element={<ResetPassword />} />
-            <Route path="/verify-email" element={
-              <Suspense fallback={<div>Carregando...</div>}>
-                <ProtectedRoute requireEmailVerification={false}>
-                  <VerifyEmail />
-                </ProtectedRoute>
-              </Suspense>
-            } />
+            <Route path="/verify-email" element={<SuspendedProtectedRoute requireEmailVerification={false}><VerifyEmail /></SuspendedProtectedRoute>} />
             
             {/* Profile - Protected */}
-            <Route path="/profile" element={
-              <ProtectedRoute>
-                <Suspense fallback={<div>Carregando...</div>}>
-                  <Profile />
-                </Suspense>
-              </ProtectedRoute>
-            } />
+            <Route path="/profile" element={<SuspendedProtectedRoute><Profile /></SuspendedProtectedRoute>} />
             
             {/* Terminal/Hub - Protected */}
-            <Route path="/" element={
-              <ProtectedRoute>
-                <Suspense fallback={<div>Carregando...</div>}>
-                  <Terminal />
-                </Suspense>
-              </ProtectedRoute>
-            } />
+            <Route path="/" element={<SuspendedProtectedRoute><Terminal /></SuspendedProtectedRoute>} />
             
             {/* Math Subject - All Protected */}
-            <Route path="/math" element={<Suspense fallback={<div>Carregando...</div>}><ProtectedRoute><MathSubject /></ProtectedRoute></Suspense>} />
-            <Route path="/math/numeros-complexos" element={<Suspense fallback={<div>Carregando...</div>}><ProtectedRoute><ComplexNumbers /></ProtectedRoute></Suspense>} />
-            <Route path="/math/polinomios" element={<Suspense fallback={<div>Carregando...</div>}><ProtectedRoute><Polynomials /></ProtectedRoute></Suspense>} />
-            <Route path="/math/geometria-analitica" element={<Suspense fallback={<div>Carregando...</div>}><ProtectedRoute><AnalyticGeometry /></ProtectedRoute></Suspense>} />
-            <Route path="/math/equacao-circunferencia" element={<Suspense fallback={<div>Carregando...</div>}><ProtectedRoute><CircleEquation /></ProtectedRoute></Suspense>} />
-            <Route path="/math/excentricidade" element={<Suspense fallback={<div>Carregando...</div>}><ProtectedRoute><Eccentricity /></ProtectedRoute></Suspense>} />
+            <Route path="/math" element={<SuspendedProtectedRoute><MathSubject /></SuspendedProtectedRoute>} />
+            <Route path="/math/numeros-complexos" element={<SuspendedProtectedRoute><ComplexNumbers /></SuspendedProtectedRoute>} />
+            <Route path="/math/polinomios" element={<SuspendedProtectedRoute><Polynomials /></SuspendedProtectedRoute>} />
+            <Route path="/math/geometria-analitica" element={<SuspendedProtectedRoute><AnalyticGeometry /></SuspendedProtectedRoute>} />
+            <Route path="/math/equacao-circunferencia" element={<SuspendedProtectedRoute><CircleEquation /></SuspendedProtectedRoute>} />
+            <Route path="/math/excentricidade" element={<SuspendedProtectedRoute><Eccentricity /></SuspendedProtectedRoute>} />
             
             {/* Physics Subject - All Protected */}
-            <Route path="/physics" element={<Suspense fallback={<div>Carregando...</div>}><ProtectedRoute><PhysicsSubject /></ProtectedRoute></Suspense>} />
-            <Route path="/physics/exercicios-enem" element={<Suspense fallback={<div>Carregando...</div>}><ProtectedRoute><PhysicsExercises /></ProtectedRoute></Suspense>} />
-            <Route path="/physics/optica" element={<Suspense fallback={<div>Carregando...</div>}><ProtectedRoute><PhysicsOptics /></ProtectedRoute></Suspense>} />
-            <Route path="/physics/eletromagnetismo" element={<Suspense fallback={<div>Carregando...</div>}><ProtectedRoute><PhysicsElectromagnetism /></ProtectedRoute></Suspense>} />
-            <Route path="/physics/transformadores" element={<Suspense fallback={<div>Carregando...</div>}><ProtectedRoute><PhysicsTransformers /></ProtectedRoute></Suspense>} />
-            <Route path="/physics/magnetismo" element={<Suspense fallback={<div>Carregando...</div>}><ProtectedRoute><PhysicsMagnetism /></ProtectedRoute></Suspense>} />
-            <Route path="/physics/espelhos-planos" element={<Suspense fallback={<div>Carregando...</div>}><ProtectedRoute><PhysicsPlainMirrors /></ProtectedRoute></Suspense>} />
-            <Route path="/physics/espelhos-esfericos" element={<Suspense fallback={<div>Carregando...</div>}><ProtectedRoute><PhysicsSphericalMirrors /></ProtectedRoute></Suspense>} />
+            <Route path="/physics" element={<SuspendedProtectedRoute><PhysicsSubject /></SuspendedProtectedRoute>} />
+            <Route path="/physics/exercicios-enem" element={<SuspendedProtectedRoute><PhysicsExercises /></SuspendedProtectedRoute>} />
+            <Route path="/physics/optica" element={<SuspendedProtectedRoute><PhysicsOptics /></SuspendedProtectedRoute>} />
+            <Route path="/physics/eletromagnetismo" element={<SuspendedProtectedRoute><PhysicsElectromagnetism /></SuspendedProtectedRoute>} />
+            <Route path="/physics/transformadores" element={<SuspendedProtectedRoute><PhysicsTransformers /></SuspendedProtectedRoute>} />
+            <Route path="/physics/magnetismo" element={<SuspendedProtectedRoute><PhysicsMagnetism /></SuspendedProtectedRoute>} />
+            <Route path="/physics/espelhos-planos" element={<SuspendedProtectedRoute><PhysicsPlainMirrors /></SuspendedProtectedRoute>} />
+            <Route path="/physics/espelhos-esfericos" element={<SuspendedProtectedRoute><PhysicsSphericalMirrors /></SuspendedProtectedRoute>} />
             
             {/* Chemistry Subject - Protected */}
-            <Route path="/chemistry" element={<Suspense fallback={<div>Carregando...</div>}><ProtectedRoute><ChemistrySubject /></ProtectedRoute></Suspense>} />
+            <Route path="/chemistry" element={<SuspendedProtectedRoute><ChemistrySubject /></SuspendedProtectedRoute>} />
             
             {/* Biology Subject - Protected */}
-            <Route path="/biology" element={<Suspense fallback={<div>Carregando...</div>}><ProtectedRoute><BiologySubject /></ProtectedRoute></Suspense>} />
-            <Route path="/biology/filos-animais" element={<Suspense fallback={<div>Carregando...</div>}><ProtectedRoute><BiologyFilos /></ProtectedRoute></Suspense>} />
+            <Route path="/biology" element={<SuspendedProtectedRoute><BiologySubject /></SuspendedProtectedRoute>} />
+            <Route path="/biology/filos-animais" element={<SuspendedProtectedRoute><BiologyFilos /></SuspendedProtectedRoute>} />
             
             {/* Philosophy Subject - Protected */}
-            <Route path="/philosophy" element={<Suspense fallback={<div>Carregando...</div>}><ProtectedRoute><PhilosophySubject /></ProtectedRoute></Suspense>} />
+            <Route path="/philosophy" element={<SuspendedProtectedRoute><PhilosophySubject /></SuspendedProtectedRoute>} />
             
             {/* History Subject - Protected */}
-            <Route path="/history" element={<Suspense fallback={<div>Carregando...</div>}><ProtectedRoute><HistorySubject /></ProtectedRoute></Suspense>} />
-            <Route path="/history/revolucao-francesa" element={<Suspense fallback={<div>Carregando...</div>}><ProtectedRoute><FrenchRevolution /></ProtectedRoute></Suspense>} />
-            <Route path="/history/era-napoleonica" element={<Suspense fallback={<div>Carregando...</div>}><ProtectedRoute><NapoleonicEra /></ProtectedRoute></Suspense>} />
+            <Route path="/history" element={<SuspendedProtectedRoute><HistorySubject /></SuspendedProtectedRoute>} />
+            <Route path="/history/revolucao-francesa" element={<SuspendedProtectedRoute><FrenchRevolution /></SuspendedProtectedRoute>} />
+            <Route path="/history/era-napoleonica" element={<SuspendedProtectedRoute><NapoleonicEra /></SuspendedProtectedRoute>} />
             
             {/* Portuguese Subject - Protected */}
-            <Route path="/portuguese" element={<Suspense fallback={<div>Carregando...</div>}><ProtectedRoute><PortugueseSubject /></ProtectedRoute></Suspense>} />
-            <Route path="/portuguese/interpretacao" element={<Suspense fallback={<div>Carregando...</div>}><ProtectedRoute><PortugueseInterpretacao /></ProtectedRoute></Suspense>} />
-            <Route path="/portuguese/concordancia" element={<Suspense fallback={<div>Carregando...</div>}><ProtectedRoute><PortugueseConcordancia /></ProtectedRoute></Suspense>} />
-            <Route path="/portuguese/regencia" element={<Suspense fallback={<div>Carregando...</div>}><ProtectedRoute><PortugueseRegencia /></ProtectedRoute></Suspense>} />
-            <Route path="/portuguese/crase" element={<Suspense fallback={<div>Carregando...</div>}><ProtectedRoute><PortugueseCrase /></ProtectedRoute></Suspense>} />
-            <Route path="/portuguese/pontuacao" element={<Suspense fallback={<div>Carregando...</div>}><ProtectedRoute><PortuguesePontuacao /></ProtectedRoute></Suspense>} />
+            <Route path="/portuguese" element={<SuspendedProtectedRoute><PortugueseSubject /></SuspendedProtectedRoute>} />
+            <Route path="/portuguese/interpretacao" element={<SuspendedProtectedRoute><PortugueseInterpretacao /></SuspendedProtectedRoute>} />
+            <Route path="/portuguese/concordancia" element={<SuspendedProtectedRoute><PortugueseConcordancia /></SuspendedProtectedRoute>} />
+            <Route path="/portuguese/regencia" element={<SuspendedProtectedRoute><PortugueseRegencia /></SuspendedProtectedRoute>} />
+            <Route path="/portuguese/crase" element={<SuspendedProtectedRoute><PortugueseCrase /></SuspendedProtectedRoute>} />
+            <Route path="/portuguese/pontuacao" element={<SuspendedProtectedRoute><PortuguesePontuacao /></SuspendedProtectedRoute>} />
             
             {/* Geography Subject - Protected */}
-            <Route path="/geography" element={<Suspense fallback={<div>Carregando...</div>}><ProtectedRoute><GeographySubject /></ProtectedRoute></Suspense>} />
-            <Route path="/geografia/industrializacao" element={<Suspense fallback={<div>Carregando...</div>}><ProtectedRoute><GeographyIndustrialization /></ProtectedRoute></Suspense>} />
-            <Route path="/geografia/urbanizacao" element={<Suspense fallback={<div>Carregando...</div>}><ProtectedRoute><GeographyUrbanization /></ProtectedRoute></Suspense>} />
-            <Route path="/geografia/agricultura" element={<Suspense fallback={<div>Carregando...</div>}><ProtectedRoute><GeographyAgriculture /></ProtectedRoute></Suspense>} />
+            <Route path="/geography" element={<SuspendedProtectedRoute><GeographySubject /></SuspendedProtectedRoute>} />
+            <Route path="/geografia/industrializacao" element={<SuspendedProtectedRoute><GeographyIndustrialization /></SuspendedProtectedRoute>} />
+            <Route path="/geografia/urbanizacao" element={<SuspendedProtectedRoute><GeographyUrbanization /></SuspendedProtectedRoute>} />
+            <Route path="/geografia/agricultura" element={<SuspendedProtectedRoute><GeographyAgriculture /></SuspendedProtectedRoute>} />
             
             {/* Sociology Subject - Protected */}
-            <Route path="/sociology" element={<Suspense fallback={<div>Carregando...</div>}><ProtectedRoute><SociologySubject /></ProtectedRoute></Suspense>} />
+            <Route path="/sociology" element={<SuspendedProtectedRoute><SociologySubject /></SuspendedProtectedRoute>} />
             
             {/* Literature Subject - Protected */}
-            <Route path="/literature" element={<Suspense fallback={<div>Carregando...</div>}><ProtectedRoute><LiteratureSubject /></ProtectedRoute></Suspense>} />
-            <Route path="/literature/modernismo-portugues" element={<Suspense fallback={<div>Carregando...</div>}><ProtectedRoute><ModernismoPortugues /></ProtectedRoute></Suspense>} />
-            <Route path="/literature/modernismo-brasileiro-segunda-fase" element={<Suspense fallback={<div>Carregando...</div>}><ProtectedRoute><ModernismoBrasileiroSegundaFase /></ProtectedRoute></Suspense>} />
-            <Route path="/literature/modernismo-brasileiro-terceira-fase" element={<Suspense fallback={<div>Carregando...</div>}><ProtectedRoute><ModernismoBrasileiroTerceiraFase /></ProtectedRoute></Suspense>} />
-            <Route path="/literature/movimentos-posteriores" element={<Suspense fallback={<div>Carregando...</div>}><ProtectedRoute><MovimentosLiterariosPosteriores /></ProtectedRoute></Suspense>} />
+            <Route path="/literature" element={<SuspendedProtectedRoute><LiteratureSubject /></SuspendedProtectedRoute>} />
+            <Route path="/literature/modernismo-portugues" element={<SuspendedProtectedRoute><ModernismoPortugues /></SuspendedProtectedRoute>} />
+            <Route path="/literature/modernismo-brasileiro-segunda-fase" element={<SuspendedProtectedRoute><ModernismoBrasileiroSegundaFase /></SuspendedProtectedRoute>} />
+            <Route path="/literature/modernismo-brasileiro-terceira-fase" element={<SuspendedProtectedRoute><ModernismoBrasileiroTerceiraFase /></SuspendedProtectedRoute>} />
+            <Route path="/literature/movimentos-posteriores" element={<SuspendedProtectedRoute><MovimentosLiterariosPosteriores /></SuspendedProtectedRoute>} />
             
             {/* Arts Subject - Protected */}
-            <Route path="/arts" element={<Suspense fallback={<div>Carregando...</div>}><ProtectedRoute><ArtsSubject /></ProtectedRoute></Suspense>} />
+            <Route path="/arts" element={<SuspendedProtectedRoute><ArtsSubject /></SuspendedProtectedRoute>} />
             
             {/* English Subject - Protected */}
-            <Route path="/english" element={<Suspense fallback={<div>Carregando...</div>}><ProtectedRoute><EnglishSubject /></ProtectedRoute></Suspense>} />
+            <Route path="/english" element={<SuspendedProtectedRoute><EnglishSubject /></SuspendedProtectedRoute>} />
             
             {/* Admin Panel - DEV ONLY */}
             {import.meta.env.MODE === 'development' && AdminPanel && (
